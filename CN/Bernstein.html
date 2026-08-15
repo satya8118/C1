@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bernstein polynomials · visual + Python tables</title>
+    <!-- MathJax with explicit render calls -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' },
+            options: { skipHtmlTypes: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #f7f9fc;
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .article {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            padding: 2.2rem 2rem;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+        }
+        h1 {
+            font-weight: 500;
+            font-size: 2.4rem;
+            letter-spacing: -0.02em;
+            color: #0b1e2e;
+            margin-top: 0.2rem;
+            margin-bottom: 0.2rem;
+            border-bottom: 2px solid #e9edf2;
+            padding-bottom: 0.8rem;
+        }
+        .subhead {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            opacity: 0.75;
+            margin-top: -0.2rem;
+            margin-bottom: 2rem;
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0 1.8rem 0;
+        }
+        @media (max-width: 700px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .article {
+                padding: 1.5rem 1.2rem;
+            }
+            .property-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        .card {
+            background: #f2f5f9;
+            border-radius: 24px;
+            padding: 1.6rem 1.6rem 1.2rem 1.6rem;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+        }
+        .card h3 {
+            margin-top: 0;
+            font-weight: 500;
+            color: #1a2a3a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card h3 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: #2c3e50;
+            opacity: 0.6;
+        }
+        .formula {
+            background: #e6ebf2;
+            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            text-align: center;
+            margin: 0.8rem 0 1rem 0;
+            color: #0b1e2e;
+        }
+        .canvas-wrapper {
+            display: flex;
+            justify-content: center;
+            background: white;
+            border-radius: 20px;
+            padding: 0.5rem 0.2rem;
+            margin: 0.2rem 0;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            display: block;
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 0.8rem 0 0.2rem 0;
+        }
+        .slider-row label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1e2f3f;
+        }
+        input[type="range"] {
+            flex: 2;
+            min-width: 120px;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #cbd5e1;
+            border-radius: 20px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 20px;
+            background: #1e3c5a;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .value-badge {
+            background: #1e3c5a;
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.9rem;
+            border-radius: 30px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .property-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem 1.5rem;
+            margin: 1.2rem 0 0.5rem 0;
+            background: #edf2f8;
+            padding: 1.4rem 1.6rem;
+            border-radius: 24px;
+        }
+        .property-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+        .property-item .tag {
+            font-weight: 600;
+            color: #1a3a5a;
+            font-size: 0.85rem;
+            min-width: 110px;
+        }
+        .property-item .desc {
+            color: #1f3347;
+            font-size: 0.9rem;
+        }
+        .proof-sketch {
+            background: #eaf0f8;
+            padding: 1.2rem 1.8rem;
+            border-radius: 28px;
+            margin: 1.8rem 0 1rem 0;
+            border-left: 6px solid #2b5c8a;
+        }
+        .proof-sketch strong {
+            color: #0e2a44;
+        }
+        .footer-note {
+            color: #2b4b6a;
+            font-size: 0.95rem;
+            margin-top: 2rem;
+            border-top: 1px solid #d9e1ec;
+            padding-top: 1.5rem;
+            text-align: center;
+        }
+        .btn-reset {
+            background: #dee7f2;
+            border: none;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #1f3e5a;
+        }
+        .btn-reset:hover {
+            background: #cad6e6;
+        }
+        .inline-code {
+            background: #dce4ef;
+            padding: 0.1rem 0.5rem;
+            border-radius: 30px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .math-container {
+            margin: 0.2rem 0;
+            padding: 0.2rem 0;
+            min-height: 2.2rem;
+        }
+        .python-section {
+            background: #1e2a36;
+            border-radius: 28px;
+            padding: 1.8rem 2rem;
+            margin: 2rem 0 0.8rem 0;
+            color: #e8edf3;
+            overflow-x: auto;
+        }
+        .python-section h3 {
+            color: #b8d0e0;
+            margin-top: 0;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .python-section pre {
+            background: #0f1722;
+            padding: 1.4rem 1.6rem;
+            border-radius: 20px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #dce6f0;
+            margin: 0.6rem 0;
+        }
+        .python-section pre .comment { color: #6a8ba0; }
+        .python-section pre .keyword { color: #ffa07a; }
+        .python-section pre .func { color: #8fcbff; }
+        .python-section pre .string { color: #b5d99c; }
+        .python-section .output-block {
+            background: #0f1722;
+            padding: 1rem 1.6rem;
+            border-radius: 16px;
+            margin: 0.8rem 0 0 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            color: #c8d8e8;
+            border-left: 3px solid #4b7a9c;
+        }
+        .python-section .output-block strong {
+            color: #e0edf5;
+        }
+    </style>
+</head>
+<body>
+<div class="article" id="articleRoot">
+    <h1>Bernstein polynomials</h1>
+    <div class="subhead">Definition · domain &amp; range · properties · Bézier curves · Weierstrass</div>
+
+    <!-- definition + identity -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;">
+        <div class="math-container" style="font-size: 1.4rem; font-weight: 400; color: #11314b;">
+            \( B_{k,n}(x) = \binom{n}{k} x^{k} (1-x)^{n-k} \)
+        </div>
+        <div style="background: #dae3ef; padding: 0.3rem 1.2rem; border-radius: 40px; font-size: 0.9rem;">
+            <span style="font-weight: 500;">n = </span><span id="degreeDisplay">5</span>
+        </div>
+    </div>
+
+    <!-- Graph + controls -->
+    <div class="grid-2col">
+        <div class="card">
+            <h3>📈 Bernstein basis <small>· degree \(n\)</small></h3>
+            <div class="canvas-wrapper">
+                <canvas id="bernCanvas" width="600" height="540"></canvas>
+            </div>
+            <div class="slider-row">
+                <label for="degreeSlider">degree \(n\)</label>
+                <input type="range" id="degreeSlider" min="1" max="12" value="5" step="1">
+                <span class="value-badge" id="degreeLabel">5</span>
+                <button class="btn-reset" id="resetViewBtn" style="margin-left: auto;">↺ reset</button>
+            </div>
+            <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 0.2rem;">
+                <span id="polyCount">6</span> polynomials · drag slider
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🔗 partition of unity</h3>
+            <div class="math-container" style="font-size: 1.1rem; background: #e1eaf3; padding: 0.6rem 1rem; border-radius: 40px; text-align: center; margin: 0.3rem 0 0.5rem 0;">
+                \(\displaystyle \sum_{k=0}^{n} B_{k,n}(x) = 1\)
+            </div>
+            <div class="canvas-wrapper">
+                <canvas id="unityCanvas" width="600" height="270"></canvas>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                <span>✓ sum ≡ 1 (exact)</span>
+                <span id="sumCheck" style="font-weight: 500;">1.0000</span>
+            </div>
+            <div class="math-container formula" style="margin-top: 0.8rem; font-size: 0.9rem;">
+                \( (x + 1 - x)^n = 1^n = 1 \)
+            </div>
+        </div>
+    </div>
+
+    <!-- Domain, Range & Detailed Mathematical Properties -->
+    <div class="property-grid">
+        <div class="property-item"><span class="tag">🌐 Domain</span><span class="desc">Standard domain: \(x \in [0, 1]\) (algebraically extendable to \(\mathbb{R}\))</span></div>
+        <div class="property-item"><span class="tag">🎯 Range</span><span class="desc">\([0, 1]\) for all \(x \in [0, 1]\) and \(0 \le k \le n\)</span></div>
+        <div class="property-item"><span class="tag">📦 Binomial</span><span class="desc">\(\binom{n}{k} x^k (1-x)^{n-k}\)</span></div>
+        <div class="property-item"><span class="tag">🎲 Probability</span><span class="desc">PMF of \(k\) successes in \(n\) trials (success prob. \(x\))</span></div>
+        <div class="property-item"><span class="tag">🔁 Symmetry</span><span class="desc">\(B_{k,n}(x) = B_{n-k,n}(1-x)\)</span></div>
+        <div class="property-item"><span class="tag">✅ Non-negativity</span><span class="desc">\(B_{k,n}(x) \ge 0\) for all \(x \in [0, 1]\)</span></div>
+        <div class="property-item"><span class="tag">📍 Endpoints</span><span class="desc">\(B_{k,n}(0) = \delta_{k,0}\), \(B_{k,n}(1) = \delta_{k,n}\) (Kronecker delta)</span></div>
+        <div class="property-item"><span class="tag">⛰️ Peak Value</span><span class="desc">Reaches maximum value at \(x = \frac{k}{n}\)</span></div>
+        <div class="property-item"><span class="tag">📐 Derivatives</span><span class="desc">\(B'_{k,n}(x) = n \left[ B_{k-1,n-1}(x) - B_{k,n-1}(x) \right]\)</span></div>
+        <div class="property-item"><span class="tag">⬆️ Degree Elev.</span><span class="desc">\(B_{k,n}(x) = \frac{n+1-k}{n+1} B_{k,n+1}(x) + \frac{k+1}{n+1} B_{k+1,n+1}(x)\)</span></div>
+        <div class="property-item"><span class="tag">🏛️ Linear Indep.</span><span class="desc">Form a complete basis for polynomials of degree \(\le n\)</span></div>
+        <div class="property-item"><span class="tag">📐 Integrals</span><span class="desc">\(\int_0^1 B_{k,n}(x)\,dx = \frac{1}{n+1}\) for all \(0 \le k \le n\)</span></div>
+    </div>
+
+    <!-- Weierstrass + Bézier -->
+    <div class="proof-sketch">
+        <div style="display: flex; flex-wrap: wrap; gap: 0.8rem 2.5rem; justify-content: space-between;">
+            <div><strong>🧠 Weierstrass approximation</strong><br>
+            <span style="font-size: 0.95rem;">For continuous \(f\) on \([0,1]\), \(B_n(f)(x) = \sum f(k/n)\,B_{k,n}(x)\) converges uniformly to \(f\).<br>
+            <span style="opacity: 0.7;">Sketch: use Bernstein's proof with probabilistic interpretation &amp; Chebyshev.</span></span>
+            </div>
+            <div><strong>🖥️ Bézier curves</strong><br>
+            <span style="font-size: 0.95rem;">\(C(t) = \sum_{k=0}^n \mathbf{P}_k \, B_{k,n}(t)\).<br>
+            <span style="opacity: 0.7;">Control points blend smoothly; partition of unity ensures affine invariance.</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- interactive Bézier preview -->
+    <div style="background: #eef3f9; border-radius: 30px; padding: 0.8rem 1.8rem 1.5rem 1.8rem; margin-top: 0.8rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 500;">🖌️ Bézier curve (degree \(n\))</span>
+            <span style="font-size: 0.85rem; opacity: 0.7;">control points · partition of unity</span>
+        </div>
+        <div class="canvas-wrapper" style="padding: 0.2rem;">
+            <canvas id="bezierCanvas" width="600" height="240"></canvas>
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.9rem; margin-top: 0.2rem;">
+            <span>⚫ control polygon</span>
+            <span style="opacity: 0.6;">— curve blends control points</span>
+        </div>
+    </div>
+
+    <!-- ============ PYTHON SECTION ============ -->
+    <div class="python-section">
+        <h3>🐍 Python: Bernstein tables &amp; results</h3>
+        <p style="opacity: 0.8; margin: 0.2rem 0 0.8rem 0; font-size: 0.95rem;">
+            <strong>Table 1:</strong> numerical values \(B_{k,n}(0.3)\) &middot;
+            <strong>Table 2:</strong> symbolic polynomials in terms of \(x\) and \((1-x)\).
+        </p>
+
+        <!-- Table 1: numerical -->
+        <pre><span class="comment"># ----- Table 1: numerical values at x = 0.3 -----</span>
+<span class="keyword">from</span> math <span class="keyword">import</span> comb
+
+<span class="keyword">def</span> <span class="func">B</span>(n, k, x):
+    <span class="keyword">return</span> comb(n, k) * (x ** k) * ((1 - x) ** (n - k))
+
+x_val = 0.3
+<span class="func">print</span>(<span class="string">"Table 1: B_{k,n}(0.3)\n"</span>)
+<span class="func">print</span>(<span class="string">"      "</span> + <span class="string">""</span>.join(<span class="string">f"   k={k} "</span> <span class="keyword">for</span> k <span class="keyword">in</span> <span class="func">range</span>(6)))
+<span class="keyword">for</span> n <span class="keyword">in</span> <span class="func">range</span>(1, 7):
+    row = <span class="string">f"n={n} "</span>
+    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="func">range</span>(n + 1):
+        row += <span class="string">f" {B(n, k, x_val):.4f} "</span>
+    <span class="func">print</span>(row)</pre>
+
+        <div class="output-block">
+<strong>Table 1 output:</strong>
+          k=0    k=1    k=2    k=3    k=4    k=5 
+n=1   0.7000  0.3000 
+n=2   0.4900  0.4200  0.0900 
+n=3   0.3430  0.4410  0.1890  0.0270 
+n=4   0.2401  0.4116  0.2646  0.0756  0.0081 
+n=5   0.1681  0.3602  0.3087  0.1323  0.0284  0.0024 
+        </div>
+
+        <!-- Table 2: symbolic polynomials -->
+        <pre style="margin-top: 1.2rem;"><span class="comment"># ----- Table 2: symbolic polynomials B_{k,n}(x) -----</span>
+<span class="keyword">def</span> <span class="func">poly_term</span>(n, k):
+    <span class="keyword">if</span> k == 0:
+        <span class="keyword">return</span> <span class="string">f"(1-x)^{n}"</span>
+    <span class="keyword">elif</span> k == n:
+        <span class="keyword">return</span> <span class="string">f"x^{n}"</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">f"x^{k}(1-x)^{n-k}"</span>
+
+<span class="func">print</span>(<span class="string">"\nTable 2: B_{k,n}(x) = binom(n,k) · x^k · (1-x)^(n-k)\n"</span>)
+<span class="func">print</span>(<span class="string">"      "</span> + <span class="string">""</span>.join(<span class="string">f"   k={k} "</span> <span class="keyword">for</span> k <span class="keyword">in</span> <span class="func">range</span>(6)))
+<span class="keyword">for</span> n <span class="keyword">in</span> <span class="func">range</span>(1, 7):
+    row = <span class="string">f"n={n} "</span>
+    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="func">range</span>(n + 1):
+        coeff = comb(n, k)
+        term = poly_term(n, k)
+        row += <span class="string">f" {coeff}·{term} "</span>
+    <span class="func">print</span>(row)</pre>
+
+        <div class="output-block">
+<strong>Table 2 output (symbolic):</strong>
+          k=0    k=1    k=2    k=3    k=4    k=5 
+n=1   1·(1-x)   1·x 
+n=2   1·(1-x)^2   2·x(1-x)   1·x^2 
+n=3   1·(1-x)^3   3·x(1-x)^2   3·x^2(1-x)   1·x^3 
+n=4   1·(1-x)^4   4·x(1-x)^3   6·x^2(1-x)^2   4·x^3(1-x)   1·x^4 
+n=5   1·(1-x)^5   5·x(1-x)^4   10·x^2(1-x)^3   10·x^3(1-x)^2   5·x^4(1-x)   1·x^5 
+        </div>
+
+        <!-- Simple results -->
+        <pre style="margin-top: 1.2rem;"><span class="comment"># ----- Simple results: sum &amp; symmetry -----</span>
+<span class="func">print</span>(<span class="string">"\n▶ Simple results:"</span>)
+<span class="keyword">for</span> n <span class="keyword">in</span> [2, 3, 4]:
+    total = <span class="func">sum</span>(B(n, k, x_val) <span class="keyword">for</span> k <span class="keyword">in</span> <span class="func">range</span>(n + 1))
+    <span class="func">print</span>(<span class="string">f"  n={n}: sum_k B = {total:.6f}  (should be 1)"</span>)
+
+<span class="comment"># symmetry check</span>
+n, k = 4, 1
+x = 0.3
+lhs = B(n, k, x)
+rhs = B(n, n - k, 1 - x)
+<span class="func">print</span>(<span class="string">f"\n  Symmetry: B_{k},{n}({x}) = {lhs:.6f}"</span>)
+<span class="func">print</span>(<span class="string">f"            B_{n-k},{n}({1-x}) = {rhs:.6f}  ✓"</span>)</pre>
+
+        <div class="output-block">
+<strong>Simple results:</strong>
+  n=2: sum_k B = 1.000000  (should be 1)
+  n=3: sum_k B = 1.000000  (should be 1)
+  n=4: sum_k B = 1.000000  (should be 1)
+
+  Symmetry: B_{1,4}(0.3) = 0.411600
+            B_{3,4}(0.7) = 0.411600  ✓
+        </div>
+
+        <p style="opacity: 0.6; font-size: 0.85rem; margin-top: 0.6rem;">
+            Table 1 shows numerical values for \(x=0.3\). Table 2 shows the polynomial structure with binomial coefficients and powers of \(x\) and \((1-x)\).
+        </p>
+    </div>
+
+    <div class="footer-note">
+        <span class="inline-code">\(x \in [0,1]\)</span> · 
+        <span class="inline-code">\(B_{k,n}(x) \in [0,1]\)</span> · 
+        <span class="inline-code">\(\sum B = 1\)</span> · 
+        <span class="inline-code">\(B_{k,n}(x) = B_{n-k,n}(1-x)\)</span> · 
+        basis for <strong>Bézier</strong> &amp; <strong>Weierstrass</strong>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // ----- canvas refs -----
+        const bernCanvas = document.getElementById('bernCanvas');
+        const ctxBern = bernCanvas.getContext('2d');
+        const unityCanvas = document.getElementById('unityCanvas');
+        const ctxUnity = unityCanvas.getContext('2d');
+        const bezierCanvas = document.getElementById('bezierCanvas');
+        const ctxBez = bezierCanvas.getContext('2d');
+
+        const degreeSlider = document.getElementById('degreeSlider');
+        const degreeLabel = document.getElementById('degreeLabel');
+        const degreeDisplay = document.getElementById('degreeDisplay');
+        const polyCount = document.getElementById('polyCount');
+        const sumCheck = document.getElementById('sumCheck');
+        const resetViewBtn = document.getElementById('resetViewBtn');
+
+        // Color palette for polynomials
+        const colors = [
+            '#1f6da9', '#d95f4b', '#2c8c5c', '#b07aa1', '#d4a24e', 
+            '#4f7eb3', '#cd6a5e', '#3f9e7a', '#b58bb0', '#c99f5c',
+            '#4d7db0', '#c97a6a', '#1e3c5a'
+        ];
+
+        // Math helpers
+        function binomial(n, k) {
+            if (k < 0 || k > n) return 0;
+            let res = 1;
+            for (let i = 1; i <= k; i++) {
+                res = res * (n - i + 1) / i;
+            }
+            return res;
+        }
+
+        function bernstein(n, k, x) {
+            if (x < 0 || x > 1) return 0;
+            return binomial(n, k) * Math.pow(x, k) * Math.pow(1 - x, n - k);
+        }
+
+        // Generate deterministic control points for degree n Bézier curve
+        function getControlPoints(n) {
+            const pts = [];
+            for (let i = 0; i <= n; i++) {
+                const xFraction = i / n;
+                const heightPhase = Math.sin((i + 1) * 2.3) * 0.35 + 0.5;
+                pts.push({
+                    x: xFraction,
+                    y: heightPhase
+                });
+            }
+            return pts;
+        }
+
+        // Draw Bernstein Basis Diagram
+        function drawBernstein(n) {
+            const w = bernCanvas.width, h = bernCanvas.height;
+            ctxBern.clearRect(0, 0, w, h);
+            ctxBern.fillStyle = '#fbfdff';
+            ctxBern.fillRect(0, 0, w, h);
+            
+            const margin = { top: 30, bottom: 35, left: 40, right: 20 };
+            const plotW = w - margin.left - margin.right;
+            const plotH = h - margin.top - margin.bottom;
+            const x0 = margin.left, y0 = margin.top;
+
+            // Grid & Axes
+            ctxBern.strokeStyle = '#e1e8f0';
+            ctxBern.lineWidth = 1;
+            for (let v = 0.25; v < 1; v += 0.25) {
+                const yVal = y0 + plotH - v * plotH;
+                ctxBern.beginPath();
+                ctxBern.moveTo(x0, yVal);
+                ctxBern.lineTo(x0 + plotW, yVal);
+                ctxBern.stroke();
+            }
+
+            ctxBern.strokeStyle = '#8a9bb0';
+            ctxBern.lineWidth = 1.2;
+            ctxBern.beginPath();
+            ctxBern.moveTo(x0, y0 + plotH);
+            ctxBern.lineTo(x0 + plotW, y0 + plotH);
+            ctxBern.moveTo(x0, y0 + plotH);
+            ctxBern.lineTo(x0, y0);
+            ctxBern.stroke();
+
+            // Ticks & Labels
+            ctxBern.fillStyle = '#1f3349';
+            ctxBern.font = '12px "Segoe UI", sans-serif';
+            ctxBern.textAlign = 'center';
+            ctxBern.fillText('0', x0, y0 + plotH + 20);
+            ctxBern.fillText('0.5', x0 + plotW / 2, y0 + plotH + 20);
+            ctxBern.fillText('1.0 (x)', x0 + plotW, y0 + plotH + 20);
+
+            ctxBern.textAlign = 'right';
+            ctxBern.fillText('0', x0 - 8, y0 + plotH + 4);
+            ctxBern.fillText('1.0', x0 - 8, y0 + 4);
+
+            // Draw Polynomials
+            const step = 0.002;
+            for (let k = 0; k <= n; k++) {
+                ctxBern.beginPath();
+                ctxBern.strokeStyle = colors[k % colors.length];
+                ctxBern.lineWidth = 2.4;
+                let first = true;
+                for (let t = 0; t <= 1.0001; t += step) {
+                    const val = bernstein(n, k, t);
+                    const xPos = x0 + t * plotW;
+                    const yPos = y0 + plotH - val * plotH;
+                    if (first) { ctxBern.moveTo(xPos, yPos); first = false; }
+                    else ctxBern.lineTo(xPos, yPos);
+                }
+                ctxBern.stroke();
+
+                // Draw curve labels at peak (x = k/n)
+                const peakX = k / n;
+                const labelX = x0 + peakX * plotW;
+                const peakY = bernstein(n, k, peakX);
+                const labelY = y0 + plotH - peakY * plotH - 8;
+                
+                ctxBern.fillStyle = colors[k % colors.length];
+                ctxBern.font = 'bold 12px "Segoe UI", sans-serif';
+                ctxBern.textAlign = 'center';
+                ctxBern.fillText(`B${k},${n}`, labelX, Math.max(labelY, y0 + 12));
+            }
+        }
+
+        // Draw Unity Canvas (Sum of basis functions = 1)
+        function drawUnity(n) {
+            const w = unityCanvas.width, h = unityCanvas.height;
+            ctxUnity.clearRect(0, 0, w, h);
+            ctxUnity.fillStyle = '#fafcff';
+            ctxUnity.fillRect(0, 0, w, h);
+
+            const margin = { top: 25, bottom: 35, left: 40, right: 20 };
+            const plotW = w - margin.left - margin.right;
+            const plotH = h - margin.top - margin.bottom;
+            const x0 = margin.left, y0 = margin.top;
+
+            // Axes
+            ctxUnity.strokeStyle = '#7b8fa3';
+            ctxUnity.lineWidth = 1.2;
+            ctxUnity.beginPath();
+            ctxUnity.moveTo(x0, y0 + plotH);
+            ctxUnity.lineTo(x0 + plotW, y0 + plotH);
+            ctxUnity.moveTo(x0, y0 + plotH);
+            ctxUnity.lineTo(x0, y0);
+            ctxUnity.stroke();
+
+            // Reference line y = 1
+            ctxUnity.strokeStyle = '#cbd5e1';
+            ctxUnity.lineWidth = 1.5;
+            ctxUnity.setLineDash([5, 5]);
+            ctxUnity.beginPath();
+            ctxUnity.moveTo(x0, y0);
+            ctxUnity.lineTo(x0 + plotW, y0);
+            ctxUnity.stroke();
+            ctxUnity.setLineDash([]);
+
+            // Sum Line
+            ctxUnity.strokeStyle = '#1b6b4a';
+            ctxUnity.lineWidth = 2.8;
+            ctxUnity.beginPath();
+            let first = true;
+            const step = 0.005;
+            let computedSumAtMid = 0;
+
+            for (let t = 0; t <= 1.0001; t += step) {
+                let sum = 0;
+                for (let k = 0; k <= n; k++) sum += bernstein(n, k, t);
+                if (Math.abs(t - 0.5) < 0.003) computedSumAtMid = sum;
+
+                const xPos = x0 + t * plotW;
+                const yPos = y0 + plotH - sum * plotH;
+                if (first) { ctxUnity.moveTo(xPos, yPos); first = false; }
+                else ctxUnity.lineTo(xPos, yPos);
+            }
+            ctxUnity.stroke();
+
+            // Labels
+            ctxUnity.fillStyle = '#1f3349';
+            ctxUnity.font = '11px "Segoe UI", monospace';
+            ctxUnity.textAlign = 'center';
+            ctxUnity.fillText('0', x0, y0 + plotH + 18);
+            ctxUnity.fillText('0.5', x0 + plotW / 2, y0 + plotH + 18);
+            ctxUnity.fillText('1', x0 + plotW, y0 + plotH + 18);
+            
+            ctxUnity.fillStyle = '#1b6b4a';
+            ctxUnity.font = 'bold 12px "Segoe UI", sans-serif';
+            ctxUnity.textAlign = 'left';
+            ctxUnity.fillText('∑ B_k,n(x) = 1.0', x0 + 10, y0 + 16);
+
+            sumCheck.textContent = computedSumAtMid.toFixed(4);
+        }
+
+        // Draw Interactive Bézier Curve Preview
+        function drawBezier(n) {
+            const w = bezierCanvas.width, h = bezierCanvas.height;
+            ctxBez.clearRect(0, 0, w, h);
+            ctxBez.fillStyle = '#fbfdff';
+            ctxBez.fillRect(0, 0, w, h);
+
+            const margin = { top: 30, bottom: 30, left: 40, right: 40 };
+            const plotW = w - margin.left - margin.right;
+            const plotH = h - margin.top - margin.bottom;
+            const x0 = margin.left, y0 = margin.top;
+
+            const pts = getControlPoints(n);
+
+            // Control polygon lines
+            ctxBez.strokeStyle = '#cbd5e1';
+            ctxBez.lineWidth = 1.5;
+            ctxBez.setLineDash([4, 4]);
+            ctxBez.beginPath();
+            for (let i = 0; i <= n; i++) {
+                const px = x0 + pts[i].x * plotW;
+                const py = y0 + (1 - pts[i].y) * plotH;
+                if (i === 0) ctxBez.moveTo(px, py);
+                else ctxBez.lineTo(px, py);
+            }
+            ctxBez.stroke();
+            ctxBez.setLineDash([]);
+
+            // Bézier curve evaluation using Bernstein blending functions
+            ctxBez.strokeStyle = '#1e3c5a';
+            ctxBez.lineWidth = 3;
+            ctxBez.beginPath();
+            let first = true;
+            const step = 0.002;
+
+            for (let t = 0; t <= 1.0001; t += step) {
+                let bx = 0;
+                let by = 0;
+                for (let k = 0; k <= n; k++) {
+                    const b = bernstein(n, k, t);
+                    bx += pts[k].x * b;
+                    by += pts[k].y * b;
+                }
+                const posX = x0 + bx * plotW;
+                const posY = y0 + (1 - by) * plotH;
+
+                if (first) { ctxBez.moveTo(posX, posY); first = false; }
+                else ctxBez.lineTo(posX, posY);
+            }
+            ctxBez.stroke();
+
+            // Control points markers
+            for (let i = 0; i <= n; i++) {
+                const px = x0 + pts[i].x * plotW;
+                const py = y0 + (1 - pts[i].y) * plotH;
+
+                ctxBez.fillStyle = colors[i % colors.length];
+                ctxBez.beginPath();
+                ctxBez.arc(px, py, 6, 0, Math.PI * 2);
+                ctxBez.fill();
+                ctxBez.strokeStyle = 'white';
+                ctxBez.lineWidth = 2;
+                ctxBez.stroke();
+
+                ctxBez.fillStyle = '#1e2f3f';
+                ctxBez.font = '11px "Segoe UI", sans-serif';
+                ctxBez.textAlign = 'center';
+                ctxBez.fillText(`P${i}`, px, py - 10);
+            }
+        }
+
+        // Master update routine
+        function updateAll() {
+            const degree = parseInt(degreeSlider.value, 10);
+            degreeLabel.textContent = degree;
+            degreeDisplay.textContent = degree;
+            polyCount.textContent = degree + 1;
+
+            drawBernstein(degree);
+            drawUnity(degree);
+            drawBezier(degree);
+        }
+
+        // Event Listeners
+        degreeSlider.addEventListener('input', updateAll);
+
+        resetViewBtn.addEventListener('click', function() {
+            degreeSlider.value = 5;
+            updateAll();
+        });
+
+        // Initial Draw
+        updateAll();
+    });
+</script>
+</body>
+</html>

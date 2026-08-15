@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exponential Functions — Interactive Exploration</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#0c0c14;--surface:#13131f;--surface2:#1a1a2a;--border:#2a2a3e;--gold:#d4a24e;--gold-light:#f0d090;--teal:#2dd4bf;--red:#f87171;--green:#4ade80;--blue:#60a5fa;--coral:#fb923c;--purple:#c084fc;--text:#e8e6e0;--muted:#7a7a8c}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',serif}
+.katex{font-size:1.05em!important}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(12,12,20,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:box-shadow .3s}
+nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.5)}
+.nav-link{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:600;letter-spacing:.03em;transition:color .25s;position:relative}
+.nav-link:hover,.nav-link.active{color:var(--gold)}
+.nav-link.active::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:var(--gold);border-radius:1px}
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.35}
+.hero-content{position:relative;z-index:2;text-align:center}
+.hero-content h1{font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;line-height:1.1;background:linear-gradient(135deg,var(--gold-light),var(--gold),#c07830);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(1rem,2.5vw,1.35rem);color:var(--muted);margin-top:1rem;font-weight:300}
+.hero-formula{margin-top:2rem;font-size:1.5rem;color:var(--gold)}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);animation:bounce 2s infinite;color:var(--muted);font-size:1.5rem}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+.section-reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
+.section-reveal.visible{opacity:1;transform:translateY(0)}
+section{padding:5rem 0}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;margin-bottom:.5rem}
+.section-subtitle{color:var(--muted);font-size:1.05rem;margin-bottom:2.5rem}
+.gold-line{width:60px;height:3px;background:var(--gold);border-radius:2px;margin-bottom:1.5rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:border-color .3s,box-shadow .3s}
+.card:hover{border-color:rgba(212,162,78,.3);box-shadow:0 8px 40px rgba(212,162,78,.06)}
+.canvas-wrap{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.canvas-wrap canvas{display:block;width:100%}
+.canvas-label{position:absolute;bottom:12px;left:16px;font-size:.8rem;color:var(--muted);font-weight:600;letter-spacing:.05em}
+.def-block{border-left:3px solid var(--gold);padding:1.2rem 1.5rem;background:rgba(212,162,78,.04);border-radius:0 12px 12px 0;margin:1rem 0}
+.def-block-alt{border-left:3px solid var(--teal);padding:1.2rem 1.5rem;background:rgba(45,212,191,.04);border-radius:0 12px 12px 0;margin:1rem 0}
+.def-block-coral{border-left:3px solid var(--coral);padding:1.2rem 1.5rem;background:rgba(251,146,60,.04);border-radius:0 12px 12px 0;margin:1rem 0}
+.def-block-purple{border-left:3px solid var(--purple);padding:1.2rem 1.5rem;background:rgba(192,132,252,.04);border-radius:0 12px 12px 0;margin:1rem 0}
+.law-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:border-color .3s,transform .2s}
+.law-item:hover{border-color:var(--gold);transform:translateX(4px)}
+.law-num{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--gold);color:var(--bg);font-weight:700;border-radius:50%;flex-shrink:0;font-size:.9rem}
+.slider-group{margin:1rem 0}
+.slider-group label{display:flex;justify-space-between;font-size:.9rem;color:var(--muted);margin-bottom:.3rem}
+.slider-group label span.val{color:var(--gold);font-weight:700}
+input[type="range"]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:var(--border);outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 10px rgba(212,162,78,.4)}
+.toggle-btn{padding:.5rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s}
+.toggle-btn.active{border-color:currentColor;background:rgba(255,255,255,.05)}
+.quiz-option{display:block;width:100%;padding:.8rem 1.2rem;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);text-align:left;cursor:pointer;transition:all .25s;font-size:.95rem}
+.quiz-option:hover{border-color:var(--gold)}
+.quiz-option.correct{border-color:var(--green);background:rgba(74,222,128,.08);color:var(--green)}
+.quiz-option.wrong{border-color:var(--red);background:rgba(248,113,113,.08);color:var(--red)}
+.quiz-option:disabled{cursor:default;opacity:.7}
+.toast{position:fixed;bottom:2rem;right:2rem;padding:1rem 1.5rem;border-radius:12px;font-weight:600;z-index:200;transform:translateY(100px);opacity:0;transition:all .4s ease}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:rgba(74,222,128,.15);border:1px solid var(--green);color:var(--green)}
+.toast.error{background:rgba(248,113,113,.15);border:1px solid var(--red);color:var(--red)}
+.graph-tooltip{position:absolute;padding:6px 12px;background:rgba(20,20,32,.95);border:1px solid var(--border);border-radius:8px;font-size:.8rem;color:var(--gold-light);pointer-events:none;opacity:0;transition:opacity .15s;white-space:nowrap;z-index:10}
+.graph-tooltip.show{opacity:1}
+.approx-table{width:100%;border-collapse:collapse;font-size:.95rem}
+.approx-table th,.approx-table td{padding:.6rem 1rem;text-align:center;border-bottom:1px solid var(--border)}
+.approx-table th{color:var(--gold);font-weight:600;font-size:.85rem;letter-spacing:.04em}
+.approx-table tr:last-child td{border-bottom:none}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,162,78,.3)}50%{box-shadow:0 0 20px 4px rgba(212,162,78,.15)}}
+.pulse-glow{animation:pulseGlow 3s ease-in-out infinite}
+.fig-pair{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.theorem-box{background:var(--surface);border:2px solid var(--gold);border-radius:16px;padding:2rem;position:relative;overflow:hidden}
+.theorem-box::before{content:'THEOREM';position:absolute;top:0;left:0;right:0;padding:.4rem 1.2rem;background:var(--gold);color:var(--bg);font-size:.75rem;font-weight:700;letter-spacing:.1em}
+.proof-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.proof-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;cursor:pointer;transition:background .2s;user-select:none}
+.proof-header:hover{background:rgba(255,255,255,.02)}
+.proof-body{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .3s ease;padding:0 1.5rem}
+.proof-body.open{max-height:3000px;padding:0 1.5rem 1.5rem}
+.proof-step{margin:1.2rem 0;padding:1rem 1.2rem;background:var(--surface2);border-radius:12px;border-left:3px solid var(--border);transition:border-color .3s}
+.proof-step:hover{border-color:var(--gold)}
+.proof-step-label{font-size:.75rem;font-weight:700;letter-spacing:.08em;margin-bottom:.4rem}
+.qed{display:inline-block;text-align:right;font-size:1.1rem;color:var(--gold);margin-top:.8rem;font-style:italic}
+.step-toggle{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--surface2);color:var(--muted);font-size:.75rem;transition:transform .3s,background .2s;flex-shrink:0}
+.step-toggle.open{transform:rotate(180deg);background:var(--gold);color:var(--bg)}
+@media(max-width:768px){section{padding:3rem 0}.card{padding:1.5rem}.law-item{flex-direction:column;text-align:center;gap:.5rem}.fig-pair{grid-template-columns:1fr}.theorem-box{padding:1.5rem}.theorem-box::before{padding:.3rem .8rem;font-size:.65rem}}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
+    <span class="text-sm font-bold tracking-wide" style="color:var(--gold);font-family:'Playfair Display',serif;">f(x) = a<sup>x</sup></span>
+    <div class="flex gap-4 lg:gap-6 flex-wrap justify-end">
+      <a href="#definition" class="nav-link hidden xl:inline">Definition</a>
+      <a href="#graphs" class="nav-link hidden xl:inline">Graphs</a>
+      <a href="#tangent" class="nav-link hidden xl:inline">Tangents</a>
+      <a href="#laws" class="nav-link hidden xl:inline">Laws</a>
+      <a href="#proof" class="nav-link hidden xl:inline">Proof</a>
+      <a href="#logarithm" class="nav-link hidden lg:inline">Logarithm</a>
+      <a href="#derivative" class="nav-link hidden lg:inline">Derivative</a>
+      <a href="#playground" class="nav-link">Playground</a>
+    </div>
+  </div>
+</nav>
+
+<header id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content px-6">
+    <h1>Exponential<br>Functions</h1>
+    <p class="hero-sub">Chapter 1 — Functions and Models</p>
+    <div class="hero-formula" id="hero-formula"></div>
+  </div>
+  <div class="scroll-hint"><i class="fas fa-chevron-down"></i></div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6">
+
+  <!-- Definition -->
+  <section id="definition" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Definition of the Exponential Function</h2>
+    <p class="section-subtitle">Building the function $f(x)=a^x$ from the ground up.</p>
+    <div class="def-block"><p class="font-semibold mb-2" style="color:var(--gold);">Exponential Function</p><p>If $a$ is a positive constant, the <em>exponential function</em> with base $a$ is defined as</p><div class="my-3 text-center text-xl" id="def-formula"></div><p>where the domain is gradually extended from integers to rationals to all real numbers.</p></div>
+    <div class="grid md:grid-cols-2 gap-4 mt-6">
+      <div class="card"><h4 class="text-sm font-bold tracking-wider mb-3" style="color:var(--gold);">POSITIVE INTEGER EXPONENT</h4><p>If $n$ is a positive integer, then</p><div class="my-2 text-center" id="def-pos"></div><p class="text-sm" style="color:var(--muted);">$a^n$ is the product of $n$ factors of $a$.</p></div>
+      <div class="card"><h4 class="text-sm font-bold tracking-wider mb-3" style="color:var(--gold);">ZERO EXPONENT</h4><p>For any non-zero base $a$,</p><div class="my-2 text-center" id="def-zero"></div><p class="text-sm" style="color:var(--muted);">Ensures consistency with the laws of exponents.</p></div>
+      <div class="card"><h4 class="text-sm font-bold tracking-wider mb-3" style="color:var(--gold);">NEGATIVE INTEGER EXPONENT</h4><p>If $n$ is a positive integer, then</p><div class="my-2 text-center" id="def-neg"></div><p class="text-sm" style="color:var(--muted);">A negative exponent means "take the reciprocal."</p></div>
+      <div class="card"><h4 class="text-sm font-bold tracking-wider mb-3" style="color:var(--gold);">RATIONAL EXPONENT</h4><p>If $x = p/q$ where $p,q$ are integers and $q>0$, then</p><div class="my-2 text-center" id="def-rat"></div><p class="text-sm" style="color:var(--muted);">This connects exponents to roots.</p></div>
+    </div>
+  </section>
+
+  <!-- Figure 1 -->
+  <section id="graphs" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Graphing on the Rationals</h2>
+    <p class="section-subtitle">Figure 1 — $y = 2^x$ at rational $x$-values reveals "holes."</p>
+    <div class="canvas-wrap pulse-glow" style="max-width:640px;margin:0 auto;"><canvas id="fig1" data-w="640" data-h="440"></canvas><div class="canvas-label">FIGURE 1 &mdash; $y = 2^x$, $x$ rational</div><div class="graph-tooltip" id="fig1-tip"></div></div>
+  </section>
+
+  <!-- Extending to Reals -->
+  <section class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Extending to All Real Numbers</h2>
+    <p class="section-subtitle">Filling the holes by defining $f(x) = 2^x$ for irrational $x$.</p>
+    <div class="def-block-alt"><p class="font-semibold mb-2" style="color:var(--teal);">Irrational Exponents</p><p>We define $2^x$ for every real number $x$ by filling in the "holes" in the graph of $y = 2^x$ (where $x$ is rational). The result is a continuous function defined on the entire real line.</p></div>
+    <div class="card mt-6">
+      <h4 class="font-semibold mb-3" style="color:var(--teal);">Example: Approximating $2^{\sqrt{3}}$</h4>
+      <div class="overflow-x-auto"><table class="approx-table"><thead><tr><th>Rational $x$</th><th>Expression</th><th>Value of $2^x$</th></tr></thead><tbody>
+        <tr><td>$1.7 = \frac{17}{10}$</td><td>$2^{17/10} = \sqrt[10]{2^{17}}$</td><td>3.24901</td></tr>
+        <tr><td>$1.73 = \frac{173}{100}$</td><td>$2^{173/100}$</td><td>3.31728</td></tr>
+        <tr><td>$1.732 = \frac{1732}{1000}$</td><td>$2^{1732/1000}$</td><td>3.32188</td></tr>
+        <tr><td>$1.7321 = \frac{17321}{10000}$</td><td>$2^{17321/10000}$</td><td>3.32220</td></tr>
+        <tr style="color:var(--gold);font-weight:600;"><td>$\sqrt{3}$</td><td>$2^{\sqrt{3}}$</td><td>$\approx 3.322$</td></tr>
+      </tbody></table></div>
+    </div>
+  </section>
+
+  <!-- Figure 2 -->
+  <section class="section-reveal"><div class="gold-line"></div><h2 class="section-title">The Complete Curve</h2><p class="section-subtitle">Figure 2 — $y = 2^x$ smooth and continuous.</p><div class="canvas-wrap" style="max-width:640px;margin:0 auto;"><canvas id="fig2" data-w="640" data-h="440"></canvas><div class="canvas-label">FIGURE 2 &mdash; $y = 2^x$, $x \in \mathbb{R}$</div></div></section>
+
+  <!-- Figure 3 -->
+  <section class="section-reveal"><div class="gold-line"></div><h2 class="section-title">A Family of Exponential Curves</h2><p class="section-subtitle">Figure 3 — How does the base $a$ affect $y = a^x$?</p><div class="canvas-wrap" style="max-width:640px;margin:0 auto;"><canvas id="fig3" data-w="640" data-h="480"></canvas><div class="canvas-label">FIGURE 3 &mdash; Family of curves $y = a^x$</div></div><div class="mt-4" style="max-width:500px;margin-left:auto;margin-right:auto;"><div class="slider-group"><label>Base $a$ <span class="val" id="fig3-val">2.00</span></label><input type="range" id="fig3-slider" min="0.1" max="8" step="0.01" value="2"></div><div id="fig3-props" class="text-sm" style="color:var(--muted);"></div></div>
+    <div class="card mt-6"><h4 class="font-semibold mb-2">Effect of the Base</h4><ul class="space-y-2 text-sm" style="color:var(--muted);"><li><span style="color:var(--gold);">If $a > 1$:</span> <strong style="color:var(--text);">Increasing.</strong></li><li><span style="color:var(--teal);">If $0 < a < 1$:</span> <strong style="color:var(--text);">Decreasing.</strong></li><li><span style="color:var(--muted);">If $a = 1$:</span> Constant: $1^x = 1$.</li></ul></div>
+  </section>
+
+  <!-- Figure 4 -->
+  <section class="section-reveal"><div class="gold-line"></div><h2 class="section-title">Three Types of Exponential Functions</h2><p class="section-subtitle">Figure 4 — Comparing $0 < a < 1$, $a = 1$, and $a > 1$.</p><div class="canvas-wrap" style="max-width:640px;margin:0 auto;"><canvas id="fig4" data-w="640" data-h="460"></canvas><div class="canvas-label">FIGURE 4 &mdash; Three types of $y = a^x$</div></div>
+    <div class="grid md:grid-cols-3 gap-4 mt-6">
+      <div class="card text-center" style="border-top:3px solid var(--teal);"><div class="text-2xl font-bold mb-1" style="color:var(--teal);">$0 < a < 1$</div><p class="text-sm" style="color:var(--muted);">Decreasing<br>Passes through $(0,1)$<br>Asymptote: $y=0$</p></div>
+      <div class="card text-center" style="border-top:3px solid var(--muted);"><div class="text-2xl font-bold mb-1" style="color:var(--muted);">$a = 1$</div><p class="text-sm" style="color:var(--muted);">Constant: $y = 1$<br>Horizontal line</p></div>
+      <div class="card text-center" style="border-top:3px solid var(--gold);"><div class="text-2xl font-bold mb-1" style="color:var(--gold);">$a > 1$</div><p class="text-sm" style="color:var(--muted);">Increasing<br>Passes through $(0,1)$<br>Asymptote: $y=0$</p></div>
+    </div>
+  </section>
+
+  <!-- Tangent Lines and e -->
+  <section id="tangent" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Tangent Lines and the Number $e$</h2>
+    <p class="section-subtitle">Of all possible bases, there is one most convenient for calculus.</p>
+    <div class="def-block-coral"><p class="font-semibold mb-2" style="color:var(--coral);">Why the Choice of Base Matters</p><p>The slope of the tangent to $y = a^x$ at $(0,1)$ depends on $a$. We choose $a$ so this slope is <strong>exactly 1</strong>.</p></div>
+    <div class="fig-pair mt-6">
+      <div><div class="canvas-wrap"><canvas id="fig10" data-w="480" data-h="400"></canvas><div class="canvas-label">FIGURE 10 &mdash; $y=2^x$ tangent at $(0,1)$</div></div><p class="text-center mt-3 text-sm" style="color:var(--blue);">Slope: <strong>$m \approx 0.7$</strong></p></div>
+      <div><div class="canvas-wrap"><canvas id="fig11" data-w="480" data-h="400"></canvas><div class="canvas-label">FIGURE 11 &mdash; $y=3^x$ tangent at $(0,1)$</div></div><p class="text-center mt-3 text-sm" style="color:var(--coral);">Slope: <strong>$m \approx 1.1$</strong></p></div>
+    </div>
+    <div class="card mt-6"><h4 class="font-semibold mb-3" style="color:var(--coral);">Measuring the Slopes</h4><p class="mb-3">The derivative at $x = 0$ is $f'(0) = \ln a$:</p>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="text-center p-4 rounded-xl" style="background:var(--surface2);"><div class="text-2xl font-bold mb-1" style="color:var(--blue);">$y = 2^x$</div><div id="slope-2" class="text-lg mb-1"></div><div class="text-sm" style="color:var(--muted);">Slope $< 1$</div></div>
+        <div class="text-center p-4 rounded-xl" style="background:rgba(212,162,78,0.08);border:1px solid rgba(212,162,78,0.2);"><div class="text-2xl font-bold mb-1" style="color:var(--gold);">$y = e^x$</div><div id="slope-e" class="text-lg mb-1"></div><div class="text-sm font-bold" style="color:var(--gold);">Slope $= 1$ exactly</div></div>
+        <div class="text-center p-4 rounded-xl" style="background:var(--surface2);"><div class="text-2xl font-bold mb-1" style="color:var(--coral);">$y = 3^x$</div><div id="slope-3" class="text-lg mb-1"></div><div class="text-sm" style="color:var(--muted);">Slope $> 1$</div></div>
+      </div>
+    </div>
+    <div class="canvas-wrap mt-6" style="max-width:600px;margin-left:auto;margin-right:auto;"><canvas id="fig-e" data-w="600" data-h="440"></canvas><div class="canvas-label">$y = e^x$ with tangent $y = x + 1$ at $(0,1)$</div></div>
+    <div class="canvas-wrap mt-8" style="max-width:640px;margin-left:auto;margin-right:auto;"><canvas id="fig-combined" data-w="640" data-h="480"></canvas><div class="canvas-label">$2^x$, $e^x$, and $3^x$ — $e^x$ lies between</div><div class="graph-tooltip" id="fig-combined-tip"></div></div>
+    <div class="flex flex-wrap gap-3 mt-4 justify-center">
+      <button class="toggle-btn active" id="tog-2x" style="color:var(--blue);" onclick="toggleCombined(0)"><i class="fas fa-circle" style="font-size:.6rem;margin-right:4px;"></i> $y = 2^x$</button>
+      <button class="toggle-btn active" id="tog-ex" style="color:var(--gold);" onclick="toggleCombined(1)"><i class="fas fa-circle" style="font-size:.6rem;margin-right:4px;"></i> $y = e^x$</button>
+      <button class="toggle-btn active" id="tog-3x" style="color:var(--coral);" onclick="toggleCombined(2)"><i class="fas fa-circle" style="font-size:.6rem;margin-right:4px;"></i> $y = 3^x$</button>
+      <button class="toggle-btn active" id="tog-tan" style="color:var(--muted);" onclick="toggleCombined(3)"><i class="fas fa-minus" style="font-size:.6rem;margin-right:4px;"></i> Tangents</button>
+    </div>
+    <div class="def-block mt-6"><p class="font-semibold mb-2" style="color:var(--gold);">The Natural Exponential Base</p><p>Since $\ln 2 \approx 0.693 < 1$ and $\ln 3 \approx 1.099 > 1$, there is a number $e$ between $2$ and $3$ with $\ln e = 1$.</p><div class="my-3 text-center text-xl" id="e-value"></div><p>The derivative of $e^x$ is simply $e^x$ itself.</p></div>
+  </section>
+
+  <!-- Laws of Exponents -->
+  <section id="laws" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Laws of Exponents</h2>
+    <p class="section-subtitle">Fundamental rules that govern all exponential expressions.</p>
+    <div class="space-y-3">
+      <div class="law-item"><div class="law-num">1</div><div id="law1"></div></div>
+      <div class="law-item"><div class="law-num">2</div><div id="law2"></div></div>
+      <div class="law-item"><div class="law-num">3</div><div id="law3"></div></div>
+      <div class="law-item"><div class="law-num">4</div><div id="law4"></div></div>
+    </div>
+  </section>
+
+  <!-- Proof of Monotonicity -->
+  <section id="proof" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Proof: Monotonicity of $a^x$</h2>
+    <p class="section-subtitle">A rigorous proof that $a^x$ is increasing when $a > 1$ and decreasing when $0 < a < 1$.</p>
+    <div class="theorem-box mt-2 mb-8">
+      <p class="mt-6 text-lg font-semibold" style="color:var(--gold);">Theorem</p>
+      <p class="mt-2">Let $a > 0$, $a \neq 1$. The exponential function $f(x) = a^x$ satisfies:</p>
+      <div class="mt-3 grid md:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl text-center" style="background:rgba(212,162,78,0.06);border:1px solid rgba(212,162,78,0.15);"><p style="color:var(--gold);font-weight:700;">If $a > 1$:</p><p class="mt-1">$x_1 < x_2 \implies$</p><div class="my-2" id="thm-inc"></div></div>
+        <div class="p-4 rounded-xl text-center" style="background:rgba(45,212,191,0.06);border:1px solid rgba(45,212,191,0.15);"><p style="color:var(--teal);font-weight:700;">If $0 < a < 1$:</p><p class="mt-1">$x_1 < x_2 \implies$</p><div class="my-2" id="thm-dec"></div></div>
+      </div>
+    </div>
+    <div class="canvas-wrap mb-8" style="max-width:600px;margin-left:auto;margin-right:auto;"><canvas id="fig-proof" data-w="600" data-h="420"></canvas><div class="canvas-label">Visual: $a^r > 1$ when $a > 1$, $r > 0$ (green)</div><div class="graph-tooltip" id="fig-proof-tip"></div></div>
+    <div class="mb-8" style="max-width:500px;margin-left:auto;margin-right:auto;"><div class="slider-group"><label>Base $a$ <span class="val" id="proof-a-val">2.00</span></label><input type="range" id="proof-a" min="0.1" max="8" step="0.01" value="2"></div><div id="proof-a-info" class="text-sm" style="color:var(--muted);"></div></div>
+    
+    <!-- Proof A -->
+    <div class="proof-box mb-4">
+      <div class="proof-header" onclick="toggleProof('pa')"><div class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold" style="background:var(--gold);color:var(--bg);">A</span><div><h3 class="font-bold" style="color:var(--gold);">Proof: $a^x$ increasing when $a > 1$</h3><p class="text-sm" style="color:var(--muted);">5 steps</p></div></div><div class="step-toggle" id="pa-icon"><i class="fas fa-chevron-down"></i></div></div>
+      <div class="proof-body" id="pa-body">
+        <div class="proof-step" style="border-left-color:var(--gold);"><div class="proof-step-label" style="color:var(--gold);">STEP 1 — SETUP</div><p>Let $x_1 < x_2$, set $r = x_2 - x_1 > 0$.</p><div class="my-3 text-center" id="pa-s1"></div><p class="text-sm" style="color:var(--muted);">It suffices to prove $a^r > 1$ for all $r > 0$.</p></div>
+        <div class="proof-step" style="border-left-color:var(--gold);"><div class="proof-step-label" style="color:var(--gold);">STEP 2 — POSITIVE INTEGERS</div><p><strong>Induction on $n$:</strong> $a^1 = a > 1$. If $a^n > 1$ then:</p><div class="my-2 text-center" id="pa-s2"></div></div>
+        <div class="proof-step" style="border-left-color:var(--gold);"><div class="proof-step-label" style="color:var(--gold);">STEP 3 — POSITIVE RATIONALS</div><p>For $r = p/q$: $a^r = \sqrt[q]{a^p}$. Since $a^p > 1$ and $\sqrt[q]{\cdot}$ is increasing:</p><div class="my-2 text-center" id="pa-s3"></div></div>
+        <div class="proof-step" style="border-left-color:var(--gold);"><div class="proof-step-label" style="color:var(--gold);">STEP 4 — POSITIVE REALS</div><p>Take rationals $r_n \to r$. By continuity:</p><div class="my-2 text-center" id="pa-s4"></div><p>Strict $>$ follows from contradiction: if $a^r = 1$ then $r \ln a = 0$, impossible since $r > 0$ and $\ln a > 0$.</p></div>
+        <div class="proof-step" style="border-left-color:var(--gold);"><div class="proof-step-label" style="color:var(--gold);">STEP 5 — CONCLUSION</div><div class="my-3 text-center" id="pa-s5"></div><span class="qed">QED &square;</span></div>
+      </div>
+    </div>
+    
+    <!-- Proof B -->
+    <div class="proof-box">
+      <div class="proof-header" onclick="toggleProof('pb')"><div class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold" style="background:var(--teal);color:var(--bg);">B</span><div><h3 class="font-bold" style="color:var(--teal);">Proof: $a^x$ decreasing when $0 < a < 1$</h3><p class="text-sm" style="color:var(--muted);">3 steps</p></div></div><div class="step-toggle" id="pb-icon"><i class="fas fa-chevron-down"></i></div></div>
+      <div class="proof-body" id="pb-body">
+        <div class="proof-step" style="border-left-color:var(--teal);"><div class="proof-step-label" style="color:var(--teal);">STEP 1 — REDUCTION</div><p>Let $b = 1/a > 1$. Then $a^x = b^{-x}$.</p><div class="my-3 text-center" id="pb-s1"></div></div>
+        <div class="proof-step" style="border-left-color:var(--teal);"><div class="proof-step-label" style="color:var(--teal);">STEP 2 — APPLY PART A</div><p>$b^x$ is increasing, $-x$ is decreasing, so $b^{-x}$ is decreasing:</p><div class="my-2 text-center" id="pb-s2"></div></div>
+        <div class="proof-step" style="border-left-color:var(--teal);"><div class="proof-step-label" style="color:var(--teal);">STEP 3 — CONCLUSION</div><p>Since $b^r > 1$, we have $a^r = 1/b^r < 1$:</p><div class="my-3 text-center" id="pb-s3"></div><span class="qed">QED &square;</span></div>
+      </div>
+    </div>
+
+    <div class="card mt-6" style="border-top:3px solid var(--gold);"><h4 class="font-bold mb-3" style="color:var(--gold);"><i class="fas fa-lightbulb mr-2"></i>Key Insight</h4><p>Everything hinges on:</p><div class="def-block my-3"><div class="text-center text-lg" id="key-fact"></div></div></div>
+  </section>
+
+  <!-- ========== LOGARITHM SECTION ========== -->
+  <section id="logarithm" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">The Logarithm: Inverse of $a^x$</h2>
+    <p class="section-subtitle">Since $a^x$ is strictly monotone with range $(0, \infty)$, its inverse exists.</p>
+
+    <div class="def-block-purple">
+      <p class="font-semibold mb-2" style="color:var(--purple);">From Exponential to Logarithm</p>
+      <p>We have proven that $f(x) = a^x$ (where $a > 0$, $a \neq 1$) is <strong>strictly monotone</strong> — either strictly increasing (if $a > 1$) or strictly decreasing (if $0 < a < 1$). Furthermore, its range is $(0, \infty)$ since $a^x > 0$ for all $x$.</p>
+      <p class="mt-3">By the <strong>Inverse Function Theorem</strong>, a strictly monotone function on an interval has an inverse function. We name this inverse:</p>
+    </div>
+
+    <div class="theorem-box mt-6 mb-8" style="border-color:var(--purple);">
+      <p class="mt-6 text-lg font-semibold" style="color:var(--purple);">Definition</p>
+      <p class="mt-2">For $a > 0$, $a \neq 1$, the <strong>logarithm base $a$</strong> is defined as the inverse of $a^x$:</p>
+      <div class="my-4 text-center text-xl" id="log-def"></div>
+      <p>In words: $\log_a(x)$ is <em>the exponent to which $a$ must be raised to produce $x$</em>.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mb-8">
+      <div class="card" style="border-top:3px solid var(--gold);">
+        <h4 class="font-bold mb-2" style="color:var(--gold);">Domain and Range</h4>
+        <p class="text-sm" style="color:var(--muted);">The domain of $\log_a$ is the range of $a^x$: $(0, \infty)$. The range of $\log_a$ is the domain of $a^x$: $(-\infty, \infty)$.</p>
+        <div class="mt-3 text-center" id="log-dom"></div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--teal);">
+        <h4 class="font-bold mb-2" style="color:var(--teal);">Inverse Relationships</h4>
+        <div class="space-y-2 mt-3" id="log-inv-rules"></div>
+      </div>
+    </div>
+
+    <!-- Inverse Properties & Conversion to Base e -->
+    <div class="card mt-6 mb-8" style="border-top:3px solid var(--gold);">
+      <p class="text-sm mb-4" style="color:var(--muted);">Because $a^x$ and $\log_a x$ are inverses, composing them in either order gives the identity function.</p>
+
+      <div class="theorem-box mb-6" style="border-color:var(--gold); background:var(--surface2);">
+        <h4 class="font-bold text-lg mb-3" style="color:var(--gold);">Inverse Properties for $a^x$ and $\log_a x$</h4>
+        <div class="space-y-3 text-sm md:text-base">
+          <div class="flex flex-wrap items-center justify-between gap-2 p-3 rounded" style="background:rgba(212,162,78,0.05);">
+            <span><strong>1. Base $a$:</strong> $a^{\log_a x} = x, \quad \log_a a^x = x$</span>
+            <span class="text-xs" style="color:var(--muted);">$a > 0, a \neq 1, x > 0$</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 p-3 rounded" style="background:rgba(212,162,78,0.05);">
+            <span><strong>2. Base $e$:</strong> $e^{\ln x} = x, \quad \ln e^x = x$</span>
+            <span class="text-xs" style="color:var(--muted);">$x > 0$</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="mb-3">Substituting $a^x$ for $x$ in the equation $x = e^{\ln x}$ enables us to rewrite $a^x$ as a power of $e$:</p>
+
+      <div class="p-4 rounded-xl mb-4 space-y-3" style="background:var(--surface2); border:1px solid var(--border);">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+          <span>$$a^x = e^{\ln(a^x)}$$</span>
+          <span class="text-xs font-semibold" style="color:var(--blue);">Substitute $a^x$ for $x$ in $x = e^{\ln x}$</span>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+          <span>$$= e^{x \ln a}$$</span>
+          <span class="text-xs font-semibold" style="color:var(--teal);">Power Rule for logs</span>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+          <span>$$= e^{(\ln a)x}$$</span>
+          <span class="text-xs font-semibold" style="color:var(--purple);">Exponent rearranged</span>
+        </div>
+      </div>
+
+      <p class="mb-4">Thus, the exponential function $a^x$ is the same as $e^{kx}$ for $k = \ln a$.</p>
+
+      <div class="def-block" style="border-left-color:var(--gold); background:rgba(212,162,78,0.08);">
+        <p class="font-bold text-center text-lg mb-2" style="color:var(--gold);">Every exponential function is a power of the natural exponential function.</p>
+        <div class="text-center text-xl my-2">$$a^x = e^{x \ln a}$$</div>
+        <p class="text-center text-sm" style="color:var(--muted);">That is, $a^x$ is the same as $e^x$ raised to the power $\ln a$: $a^x = e^{kx}$ for $k = \ln a$.</p>
+      </div>
+    </div>
+
+    <div class="canvas-wrap mb-6" style="max-width:580px;margin-left:auto;margin-right:auto;">
+      <canvas id="fig-log-reflect" data-w="580" data-h="500"></canvas>
+      <div class="canvas-label">$y = a^x$ and $y = \log_a(x)$ — reflection across $y = x$</div>
+    </div>
+
+    <div class="mb-8" style="max-width:500px;margin-left:auto;margin-right:auto;">
+      <div class="slider-group">
+        <label>Base $a$ <span class="val" id="log-a-val">2.00</span></label>
+        <input type="range" id="log-a-slider" min="1.1" max="5" step="0.05" value="2">
+      </div>
+    </div>
+
+    <div class="card mt-6">
+      <h4 class="font-bold mb-3" style="color:var(--purple);">The Natural Logarithm $\ln(x)$</h4>
+      <p>When the base is $e$, we write $\ln(x)$ instead of $\log_e(x)$:</p>
+      <div class="my-3 text-center text-lg" id="ln-def"></div>
+      <p class="text-sm" style="color:var(--muted);">Since $e^0 = 1$ and $e^1 = e$, we immediately have $\ln(1) = 0$ and $\ln(e) = 1$.</p>
+    </div>
+  </section>
+
+  <!-- ========== DERIVATIVE SECTION ========== -->
+  <section id="derivative" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Calculus of Exponents & Logarithms</h2>
+    <p class="section-subtitle">Derivatives, limits, and the natural base $e$.</p>
+
+    <div class="grid md:grid-cols-2 gap-4 mb-8">
+      <div class="card" style="border-top:3px solid var(--gold);">
+        <h4 class="font-bold mb-3" style="color:var(--gold);">Derivative of $e^x$</h4>
+        <p class="text-sm mb-2" style="color:var(--muted);">By limit definition of derivative:</p>
+        <div id="deriv-ex-proof" class="text-center my-3"></div>
+        <p class="text-sm" style="color:var(--muted);">Since $\lim_{h \to 0} \frac{e^h - 1}{h} = 1$, we get the remarkable result:</p>
+        <div id="deriv-ex-res" class="text-center text-lg my-2 font-bold" style="color:var(--gold);"></div>
+      </div>
+
+      <div class="card" style="border-top:3px solid var(--teal);">
+        <h4 class="font-bold mb-3" style="color:var(--teal);">Derivative of $a^x$</h4>
+        <p class="text-sm mb-2" style="color:var(--muted);">Using $a^x = e^{x \ln a}$ and the chain rule:</p>
+        <div id="deriv-ax-proof" class="text-center my-3"></div>
+        <div id="deriv-ax-res" class="text-center text-lg my-2 font-bold" style="color:var(--teal);"></div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mb-8">
+      <div class="card" style="border-top:3px solid var(--purple);">
+        <h4 class="font-bold mb-3" style="color:var(--purple);">Derivative of $\ln(x)$</h4>
+        <p class="text-sm mb-2" style="color:var(--muted);">Using implicit differentiation on $y = \ln x \implies e^y = x$:</p>
+        <div id="deriv-ln-proof" class="text-center my-3"></div>
+        <div id="deriv-ln-res" class="text-center text-lg my-2 font-bold" style="color:var(--purple);"></div>
+      </div>
+
+      <div class="card" style="border-top:3px solid var(--coral);">
+        <h4 class="font-bold mb-3" style="color:var(--coral);">Derivative of $\log_a(x)$</h4>
+        <p class="text-sm mb-2" style="color:var(--muted);">Using change of base $\log_a(x) = \frac{\ln x}{\ln a}$:</p>
+        <div id="deriv-loga-res" class="text-center text-lg my-4 font-bold" style="color:var(--coral);"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== INTERACTIVE PLAYGROUND ========== -->
+  <section id="playground" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Interactive Function Playground</h2>
+    <p class="section-subtitle">Manipulate parameters in real time to explore $y = k \cdot a^{c(x - d)} + e$.</p>
+
+    <div class="card">
+      <div class="grid md:grid-cols-2 gap-6 items-center">
+        <div class="canvas-wrap">
+          <canvas id="fig-play" data-w="480" data-h="420"></canvas>
+          <div class="canvas-label" id="play-formula-label">$y = 1 \cdot 2^{x}$</div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="slider-group">
+            <label>Base $a$ <span class="val" id="play-a-val">2.00</span></label>
+            <input type="range" id="play-a" min="0.1" max="5" step="0.05" value="2">
+          </div>
+          <div class="slider-group">
+            <label>Vertical Stretch $k$ <span class="val" id="play-k-val">1.00</span></label>
+            <input type="range" id="play-k" min="-3" max="3" step="0.1" value="1">
+          </div>
+          <div class="slider-group">
+            <label>Horizontal Stretch $c$ <span class="val" id="play-c-val">1.00</span></label>
+            <input type="range" id="play-c" min="-3" max="3" step="0.1" value="1">
+          </div>
+          <div class="slider-group">
+            <label>Horizontal Shift $d$ <span class="val" id="play-d-val">0.00</span></label>
+            <input type="range" id="play-d" min="-4" max="4" step="0.2" value="0">
+          </div>
+          <div class="slider-group">
+            <label>Vertical Shift $e$ <span class="val" id="play-e-val">0.00</span></label>
+            <input type="range" id="play-e" min="-4" max="4" step="0.2" value="0">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== KNOWLEDGE CHECK / QUIZ ========== -->
+  <section id="quiz" class="section-reveal">
+    <div class="gold-line"></div>
+    <h2 class="section-title">Knowledge Check</h2>
+    <p class="section-subtitle">Test your understanding of exponential concepts.</p>
+
+    <div class="card space-y-6">
+      <div id="q1-container">
+        <p class="font-bold mb-3">1. What is the derivative of $f(x) = 3^x$ at $x = 0$?</p>
+        <div class="grid md:grid-cols-2 gap-3">
+          <button class="quiz-option" onclick="checkQuiz(1, 0, this)">A) $1$</button>
+          <button class="quiz-option" onclick="checkQuiz(1, 1, this)">B) $\ln 3$</button>
+          <button class="quiz-option" onclick="checkQuiz(1, 2, this)">C) $3$</button>
+          <button class="quiz-option" onclick="checkQuiz(1, 3, this)">D) $0$</button>
+        </div>
+      </div>
+
+      <hr style="border-color:var(--border);">
+
+      <div id="q2-container">
+        <p class="font-bold mb-3">2. Which of the following best describes $y = (0.5)^x$?</p>
+        <div class="grid md:grid-cols-2 gap-3">
+          <button class="quiz-option" onclick="checkQuiz(2, 0, this)">A) Strictly increasing with horizontal asymptote $y=0$</button>
+          <button class="quiz-option" onclick="checkQuiz(2, 1, this)">B) Strictly decreasing with horizontal asymptote $y=0$</button>
+          <button class="quiz-option" onclick="checkQuiz(2, 2, this)">C) Strictly increasing with vertical asymptote $x=0$</button>
+          <button class="quiz-option" onclick="checkQuiz(2, 3, this)">D) Constant function $y=0.5$</button>
+        </div>
+      </div>
+
+      <hr style="border-color:var(--border);">
+
+      <div id="q3-container">
+        <p class="font-bold mb-3">3. Using the inverse property $\log_a a^x = x$, what is $\log_7 7^{12}$?</p>
+        <div class="grid md:grid-cols-2 gap-3">
+          <button class="quiz-option" onclick="checkQuiz(3, 0, this)">A) $12$</button>
+          <button class="quiz-option" onclick="checkQuiz(3, 1, this)">B) $7$</button>
+          <button class="quiz-option" onclick="checkQuiz(3, 2, this)">C) $84$</button>
+          <button class="quiz-option" onclick="checkQuiz(3, 3, this)">D) $\log 12$</button>
+        </div>
+      </div>
+
+      <hr style="border-color:var(--border);">
+
+      <div id="q4-container">
+        <p class="font-bold mb-3">4. Using $a^x = e^{x \ln a}$, how should $5^x$ be rewritten as a power of $e$?</p>
+        <div class="grid md:grid-cols-2 gap-3">
+          <button class="quiz-option" onclick="checkQuiz(4, 0, this)">A) $e^{5x}$</button>
+          <button class="quiz-option" onclick="checkQuiz(4, 1, this)">B) $e^{x \ln 5}$</button>
+          <button class="quiz-option" onclick="checkQuiz(4, 2, this)">C) $e^{\ln 5}$</button>
+          <button class="quiz-option" onclick="checkQuiz(4, 3, this)">D) $\ln(5^x)$</button>
+        </div>
+      </div>
+
+      <hr style="border-color:var(--border);">
+
+      <div id="q5-container">
+        <p class="font-bold mb-3">5. Which law of exponents correctly simplifies $a^m \cdot a^n$?</p>
+        <div class="grid md:grid-cols-2 gap-3">
+          <button class="quiz-option" onclick="checkQuiz(5, 0, this)">A) $a^{m+n}$</button>
+          <button class="quiz-option" onclick="checkQuiz(5, 1, this)">B) $a^{mn}$</button>
+          <button class="quiz-option" onclick="checkQuiz(5, 2, this)">C) $a^{m-n}$</button>
+          <button class="quiz-option" onclick="checkQuiz(5, 3, this)">D) $(a^m)^n$</button>
+        </div>
+      </div>
+
+      <hr style="border-color:var(--border);">
+
+      <div id="q6-container">
+        <p class="font-bold mb-3">6. What is $\dfrac{d}{dx}\, a^x$?</p>
+        <div class="grid md:grid-cols-2 gap-3">
+          <button class="quiz-option" onclick="checkQuiz(6, 0, this)">A) $a^x$</button>
+          <button class="quiz-option" onclick="checkQuiz(6, 1, this)">B) $x\,a^{x-1}$</button>
+          <button class="quiz-option" onclick="checkQuiz(6, 2, this)">C) $a^x \ln a$</button>
+          <button class="quiz-option" onclick="checkQuiz(6, 3, this)">D) $\ln a$</button>
+        </div>
+      </div>
+
+      <hr style="border-color:var(--border);">
+
+      <div id="q7-container">
+        <p class="font-bold mb-3">7. What is $\ln(e^{7})$?</p>
+        <div class="grid md:grid-cols-2 gap-3">
+          <button class="quiz-option" onclick="checkQuiz(7, 0, this)">A) $7$</button>
+          <button class="quiz-option" onclick="checkQuiz(7, 1, this)">B) $e^7$</button>
+          <button class="quiz-option" onclick="checkQuiz(7, 2, this)">C) $1$</button>
+          <button class="quiz-option" onclick="checkQuiz(7, 3, this)">D) $7e$</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Formula Injection via KaTeX
+document.addEventListener("DOMContentLoaded", () => {
+  const katexItems = [
+    ["hero-formula", "f(x) = a^x \\quad (a > 0, a \\neq 1)"],
+    ["def-formula", "f(x) = a^x"],
+    ["def-pos", "a^n = \\underbrace{a \\cdot a \\cdots a}_{n \\text{ factors}}"],
+    ["def-zero", "a^0 = 1"],
+    ["def-neg", "a^{-n} = \\frac{1}{a^n}"],
+    ["def-rat", "a^{p/q} = \\sqrt[q]{a^p} = (\\sqrt[q]{a})^p"],
+    ["slope-2", "\\ln 2 \\approx 0.693"],
+    ["slope-e", "\\ln e = 1.000"],
+    ["slope-3", "\\ln 3 \\approx 1.099"],
+    ["e-value", "e \\approx 2.718281828459..."],
+    ["law1", "a^{x+y} = a^x \\cdot a^y"],
+    ["law2", "a^{x-y} = \\frac{a^x}{a^y}"],
+    ["law3", "(a^x)^y = a^{xy}"],
+    ["law4", "(ab)^x = a^x b^x"],
+    ["thm-inc", "a^{x_1} < a^{x_2}"],
+    ["thm-dec", "a^{x_1} > a^{x_2}"],
+    ["pa-s1", "a^{x_2} - a^{x_1} = a^{x_1}(a^r - 1)"],
+    ["pa-s2", "a^{n+1} = a^n \\cdot a > 1 \\cdot 1 = 1"],
+    ["pa-s3", "a^p > 1 \\implies \\sqrt[q]{a^p} > \\sqrt[q]{1} = 1"],
+    ["pa-s4", "a^r = \\lim_{n \\to \\infty} a^{r_n} \\ge 1"],
+    ["pa-s5", "x_1 < x_2 \\implies a^{x_1} < a^{x_2}"],
+    ["pb-s1", "a^{x_2} - a^{x_1} = b^{-x_2} - b^{-x_1}"],
+    ["pb-s2", "x_1 < x_2 \\implies -x_1 > -x_2 \\implies b^{-x_1} > b^{-x_2}"],
+    ["pb-s3", "a^{x_1} > a^{x_2}"],
+    ["key-fact", "a^r > 1 \\iff (a > 1 \\text{ and } r > 0) \\text{ or } (0 < a < 1 \\text{ and } r < 0)"],
+    ["log-def", "y = \\log_a(x) \\iff a^y = x"],
+    ["log-dom", "\\text{Domain: } (0, \\infty) \\quad \\text{Range: } (-\\infty, \\infty)"],
+    ["ln-def", "y = \\ln(x) \\iff e^y = x"],
+    ["deriv-ex-proof", "\\frac{d}{dx} e^x = \\lim_{h \\to 0} \\frac{e^{x+h} - e^x}{h} = e^x \\lim_{h \\to 0} \\frac{e^h - 1}{h}"],
+    ["deriv-ex-res", "\\frac{d}{dx} e^x = e^x"],
+    ["deriv-ax-proof", "\\frac{d}{dx} a^x = \\frac{d}{dx} e^{x \\ln a} = e^{x \\ln a} \\cdot \\ln a"],
+    ["deriv-ax-res", "\\frac{d}{dx} a^x = a^x \\ln a"],
+    ["deriv-ln-proof", "e^y = x \\implies e^y \\frac{dy}{dx} = 1 \\implies \\frac{dy}{dx} = \\frac{1}{e^y} = \\frac{1}{x}"],
+    ["deriv-ln-res", "\\frac{d}{dx} \\ln(x) = \\frac{1}{x}"],
+    ["deriv-loga-res", "\\frac{d}{dx} \\log_a(x) = \\frac{1}{x \\ln a}"]
+  ];
+
+  katexItems.forEach(([id, tex]) => {
+    const el = document.getElementById(id);
+    if (el) katex.render(tex, el, { throwOnError: false });
+  });
+
+  const logInv = document.getElementById("log-inv-rules");
+  if (logInv) {
+    logInv.innerHTML = `
+      <div>$\\log_a(a^x) = x \\quad \\text{for all } x \\in \\mathbb{R}$</div>
+      <div>$a^{\\log_a(x)} = x \\quad \\text{for all } x > 0$</div>
+    `;
+    renderMathInElement(logInv, { throwOnError: false });
+  }
+
+  // Render any remaining LaTeX throughout body
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+
+// Canvas Setup & Utilities
+function setupCanvas(id) {
+  const c = document.getElementById(id);
+  if (!c) return null;
+  const ctx = c.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = parseInt(c.getAttribute('data-w')) || 600;
+  const h = parseInt(c.getAttribute('data-h')) || 400;
+  c.width = w * dpr;
+  c.height = h * dpr;
+  c.style.width = w + 'px';
+  c.style.height = h + 'px';
+  ctx.scale(dpr, dpr);
+  return { c, ctx, w, h };
+}
+
+function drawGrid(ctx, w, h, xMin, xMax, yMin, yMax) {
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = '#1e1e2e';
+  ctx.lineWidth = 1;
+
+  const toScreenX = x => (x - xMin) / (xMax - xMin) * w;
+  const toScreenY = y => h - (y - yMin) / (yMax - yMin) * h;
+
+  for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+    const sx = toScreenX(x);
+    ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, h); ctx.stroke();
+  }
+  for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+    const sy = toScreenY(y);
+    ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(w, sy); ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#3a3a52';
+  ctx.lineWidth = 1.5;
+  const zeroX = toScreenX(0);
+  const zeroY = toScreenY(0);
+
+  ctx.beginPath(); ctx.moveTo(zeroX, 0); ctx.lineTo(zeroX, h); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, zeroY); ctx.lineTo(w, zeroY); ctx.stroke();
+
+  return { toScreenX, toScreenY };
+}
+
+// Hero Canvas Background Animation
+(function initHero() {
+  const sys = setupCanvas('hero-canvas');
+  if (!sys) return;
+  const { ctx, w, h } = sys;
+  let t = 0;
+  function animate() {
+    t += 0.01;
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(212,162,78,0.15)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let x = 0; x < w; x += 5) {
+      const nx = (x / w) * 6 - 3;
+      const ny = Math.pow(2, nx + Math.sin(t) * 0.5);
+      const sy = h - (ny / 8) * h;
+      if (x === 0) ctx.moveTo(x, sy); else ctx.lineTo(x, sy);
+    }
+    ctx.stroke();
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// Figure 1: Rational Points
+(function initFig1() {
+  const sys = setupCanvas('fig1');
+  if (!sys) return;
+  const { ctx, w, h } = sys;
+  const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -3, 3, -1, 7);
+
+  const rationals = [-3, -2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5];
+  rationals.forEach(x => {
+    const y = Math.pow(2, x);
+    ctx.fillStyle = '#d4a24e';
+    ctx.beginPath();
+    ctx.arc(toScreenX(x), toScreenY(y), 4, 0, Math.PI * 2);
+    ctx.fill();
+  });
+})();
+
+// Figure 2: Continuous Curve
+(function initFig2() {
+  const sys = setupCanvas('fig2');
+  if (!sys) return;
+  const { ctx, w, h } = sys;
+  const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -3, 3, -1, 7);
+
+  ctx.strokeStyle = '#4ade80';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let x = -3; x <= 3; x += 0.05) {
+    const y = Math.pow(2, x);
+    if (x === -3) ctx.moveTo(toScreenX(x), toScreenY(y));
+    else ctx.lineTo(toScreenX(x), toScreenY(y));
+  }
+  ctx.stroke();
+})();
+
+// Figure 3 & Slider
+(function initFig3() {
+  const sys = setupCanvas('fig3');
+  if (!sys) return;
+  const { ctx, w, h } = sys;
+  const slider = document.getElementById('fig3-slider');
+  const valDisp = document.getElementById('fig3-val');
+
+  function render() {
+    const a = parseFloat(slider.value);
+    if (valDisp) valDisp.innerText = a.toFixed(2);
+    const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -3, 3, -1, 9);
+
+    ctx.strokeStyle = a > 1 ? '#d4a24e' : (a === 1 ? '#7a7a8c' : '#2dd4bf');
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (let x = -3; x <= 3; x += 0.05) {
+      const y = Math.pow(a, x);
+      if (x === -3) ctx.moveTo(toScreenX(x), toScreenY(y));
+      else ctx.lineTo(toScreenX(x), toScreenY(y));
+    }
+    ctx.stroke();
+  }
+
+  if (slider) {
+    slider.addEventListener('input', render);
+    render();
+  }
+})();
+
+// Figure 4: Three Types
+(function initFig4() {
+  const sys = setupCanvas('fig4');
+  if (!sys) return;
+  const { ctx, w, h } = sys;
+  const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -3, 3, -1, 7);
+
+  const curves = [
+    { a: 0.5, color: '#2dd4bf' },
+    { a: 1.0, color: '#7a7a8c' },
+    { a: 2.0, color: '#d4a24e' }
+  ];
+
+  curves.forEach(({ a, color }) => {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let x = -3; x <= 3; x += 0.05) {
+      const y = Math.pow(a, x);
+      if (x === -3) ctx.moveTo(toScreenX(x), toScreenY(y));
+      else ctx.lineTo(toScreenX(x), toScreenY(y));
+    }
+    ctx.stroke();
+  });
+})();
+
+// Figure 10 & 11: Tangents
+(function initTangents() {
+  const sys10 = setupCanvas('fig10');
+  if (sys10) {
+    const { ctx, w, h } = sys10;
+    const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -2, 2, -1, 4);
+    ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let x = -2; x <= 2; x += 0.05) {
+      const sy = toScreenY(Math.pow(2, x));
+      if (x === -2) ctx.moveTo(toScreenX(x), sy); else ctx.lineTo(toScreenX(x), sy);
+    }
+    ctx.stroke();
+    // Tangent y = ln(2)x + 1
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.setLineDash([4,4]);
+    ctx.beginPath();
+    ctx.moveTo(toScreenX(-2), toScreenY(Math.log(2)*(-2) + 1));
+    ctx.lineTo(toScreenX(2), toScreenY(Math.log(2)*(2) + 1));
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  const sys11 = setupCanvas('fig11');
+  if (sys11) {
+    const { ctx, w, h } = sys11;
+    const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -2, 2, -1, 4);
+    ctx.strokeStyle = '#fb923c'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let x = -2; x <= 2; x += 0.05) {
+      const sy = toScreenY(Math.pow(3, x));
+      if (x === -2) ctx.moveTo(toScreenX(x), sy); else ctx.lineTo(toScreenX(x), sy);
+    }
+    ctx.stroke();
+    // Tangent y = ln(3)x + 1
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.setLineDash([4,4]);
+    ctx.beginPath();
+    ctx.moveTo(toScreenX(-2), toScreenY(Math.log(3)*(-2) + 1));
+    ctx.lineTo(toScreenX(2), toScreenY(Math.log(3)*(2) + 1));
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+})();
+
+// Figure e
+(function initFigE() {
+  const sys = setupCanvas('fig-e');
+  if (!sys) return;
+  const { ctx, w, h } = sys;
+  const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -2, 2, -1, 5);
+
+  ctx.strokeStyle = '#d4a24e'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let x = -2; x <= 2; x += 0.05) {
+    const sy = toScreenY(Math.exp(x));
+    if (x === -2) ctx.moveTo(toScreenX(x), sy); else ctx.lineTo(toScreenX(x), sy);
+  }
+  ctx.stroke();
+
+  // Tangent y = x + 1
+  ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 1.5; ctx.setLineDash([5,5]);
+  ctx.beginPath();
+  ctx.moveTo(toScreenX(-2), toScreenY(-2 + 1));
+  ctx.lineTo(toScreenX(2), toScreenY(2 + 1));
+  ctx.stroke(); ctx.setLineDash([]);
+})();
+
+// Combined Curves & Toggles
+let combinedToggles = [true, true, true, true];
+function toggleCombined(idx) {
+  combinedToggles[idx] = !combinedToggles[idx];
+  const btnIds = ['tog-2x', 'tog-ex', 'tog-3x', 'tog-tan'];
+  const btn = document.getElementById(btnIds[idx]);
+  if (btn) btn.classList.toggle('active', combinedToggles[idx]);
+  renderCombined();
+}
+
+function renderCombined() {
+  const sys = setupCanvas('fig-combined');
+  if (!sys) return;
+  const { ctx, w, h } = sys;
+  const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -2, 2, -1, 6);
+
+  const items = [
+    { a: 2, color: '#60a5fa' },
+    { a: Math.E, color: '#d4a24e' },
+    { a: 3, color: '#fb923c' }
+  ];
+
+  items.forEach(({ a, color }, i) => {
+    if (!combinedToggles[i]) return;
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let x = -2; x <= 2; x += 0.05) {
+      const sy = toScreenY(Math.pow(a, x));
+      if (x === -2) ctx.moveTo(toScreenX(x), sy); else ctx.lineTo(toScreenX(x), sy);
+    }
+    ctx.stroke();
+
+    if (combinedToggles[3]) {
+      ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+      const m = Math.log(a);
+      ctx.beginPath();
+      ctx.moveTo(toScreenX(-1), toScreenY(m * (-1) + 1));
+      ctx.lineTo(toScreenX(1), toScreenY(m * (1) + 1));
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+  });
+}
+renderCombined();
+
+// Proof Canvas
+(function initProofCanvas() {
+  const sys = setupCanvas('fig-proof');
+  const slider = document.getElementById('proof-a');
+  const valDisp = document.getElementById('proof-a-val');
+
+  function render() {
+    if (!sys) return;
+    const { ctx, w, h } = sys;
+    const a = parseFloat(slider.value);
+    if (valDisp) valDisp.innerText = a.toFixed(2);
+
+    const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -1, 3, -1, 5);
+
+    ctx.strokeStyle = a > 1 ? '#d4a24e' : '#2dd4bf'; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let x = -1; x <= 3; x += 0.05) {
+      const sy = toScreenY(Math.pow(a, x));
+      if (x === -1) ctx.moveTo(toScreenX(x), sy); else ctx.lineTo(toScreenX(x), sy);
+    }
+    ctx.stroke();
+  }
+
+  if (slider) {
+    slider.addEventListener('input', render);
+    render();
+  }
+})();
+
+// Toggle Proof Sections
+function toggleProof(id) {
+  const body = document.getElementById(`${id}-body`);
+  const icon = document.getElementById(`${id}-icon`);
+  if (body) body.classList.toggle('open');
+  if (icon) icon.classList.toggle('open');
+}
+
+// Logarithm Reflection Graph
+(function initLogReflect() {
+  const sys = setupCanvas('fig-log-reflect');
+  const slider = document.getElementById('log-a-slider');
+  const valDisp = document.getElementById('log-a-val');
+
+  function render() {
+    if (!sys) return;
+    const { ctx, w, h } = sys;
+    const a = parseFloat(slider ? slider.value : 2);
+    if (valDisp) valDisp.innerText = a.toFixed(2);
+
+    const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -3, 6, -3, 6);
+
+    // Line y = x
+    ctx.strokeStyle = '#3a3a52'; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(toScreenX(-3), toScreenY(-3)); ctx.lineTo(toScreenX(6), toScreenY(6)); ctx.stroke(); ctx.setLineDash([]);
+
+    // Exponential y = a^x
+    ctx.strokeStyle = '#d4a24e'; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let x = -3; x <= 3; x += 0.05) {
+      const sy = toScreenY(Math.pow(a, x));
+      if (x === -3) ctx.moveTo(toScreenX(x), sy); else ctx.lineTo(toScreenX(x), sy);
+    }
+    ctx.stroke();
+
+    // Logarithm y = log_a(x)
+    ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let x = 0.01; x <= 6; x += 0.05) {
+      const sy = toScreenY(Math.log(x) / Math.log(a));
+      if (x === 0.01) ctx.moveTo(toScreenX(x), sy); else ctx.lineTo(toScreenX(x), sy);
+    }
+    ctx.stroke();
+  }
+
+  if (slider) {
+    slider.addEventListener('input', render);
+  }
+  render();
+})();
+
+// Playground Interactive Canvas
+(function initPlayground() {
+  const sys = setupCanvas('fig-play');
+  const sliders = ['play-a', 'play-k', 'play-c', 'play-d', 'play-e'].map(id => document.getElementById(id));
+
+  function update() {
+    if (!sys) return;
+    const { ctx, w, h } = sys;
+    const [a, k, c, d, e] = sliders.map(s => parseFloat(s.value));
+
+    document.getElementById('play-a-val').innerText = a.toFixed(2);
+    document.getElementById('play-k-val').innerText = k.toFixed(2);
+    document.getElementById('play-c-val').innerText = c.toFixed(2);
+    document.getElementById('play-d-val').innerText = d.toFixed(2);
+    document.getElementById('play-e-val').innerText = e.toFixed(2);
+
+    const label = document.getElementById('play-formula-label');
+    if (label) {
+      label.innerText = `y = ${k.toFixed(1)} · ${a.toFixed(1)}^(${c.toFixed(1)}(x - ${d.toFixed(1)})) + ${e.toFixed(1)}`;
+    }
+
+    const { toScreenX, toScreenY } = drawGrid(ctx, w, h, -5, 5, -5, 5);
+
+    ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (let x = -5; x <= 5; x += 0.05) {
+      const y = k * Math.pow(a, c * (x - d)) + e;
+      const sy = toScreenY(y);
+      if (x === -5) ctx.moveTo(toScreenX(x), sy); else ctx.lineTo(toScreenX(x), sy);
+    }
+    ctx.stroke();
+  }
+
+  sliders.forEach(s => s && s.addEventListener('input', update));
+  update();
+})();
+
+// Quiz Handler
+function checkQuiz(qNum, selectedIdx, btn) {
+  const correct = [1, 1, 0, 1, 0, 2, 0]; // Correct indices for Q1–Q7
+  const isCorrect = selectedIdx === correct[qNum - 1];
+
+  const parent = btn.parentElement;
+  const options = parent.querySelectorAll('.quiz-option');
+  options.forEach(opt => opt.disabled = true);
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    showToast("Correct! Excellent job.", "success");
+  } else {
+    btn.classList.add('wrong');
+    options[correct[qNum - 1]].classList.add('correct');
+    showToast("Incorrect. Try reviewing the concepts above!", "error");
+  }
+}
+
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.innerText = msg;
+  toast.className = `toast show ${type}`;
+  setTimeout(() => {
+    toast.className = 'toast';
+  }, 3000);
+}
+
+// Scroll Reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.section-reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

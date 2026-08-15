@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expository Article: Graph of a Function</title>
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']],
+                displayMath: [['\\[', '\\]'], ['$$', '$$']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --card-bg: #1e293b;
+            --cyan-neon: #00f3ff;
+            --green-neon: #39ff14;
+            --orange-neon: #ff8c00;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --border-dim: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        article {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: var(--cyan-neon);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-dim);
+            padding-bottom: 12px;
+        }
+
+        h2 {
+            color: var(--cyan-neon);
+            font-size: 1.4rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p, li {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .definition-box {
+            background: rgba(0, 243, 255, 0.05);
+            border-left: 4px solid var(--cyan-neon);
+            border-radius: 0 8px 8px 0;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+
+        .theorem-box {
+            background: rgba(255, 140, 0, 0.05);
+            border-left: 4px solid var(--orange-neon);
+            border-radius: 0 8px 8px 0;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+
+        .example-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .diagram-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        svg {
+            background-color: #0f172a;
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border-dim);
+            margin: 30px 0;
+        }
+
+        strong {
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <article>
+        <h1>An Expository Guide to the Graph of a Function</h1>
+
+        <p>
+            In mathematics, the concept of a <strong>function</strong> establishes a rule of association between elements of two sets. However, to truly visualize and analyze the behavior of a function, we rely on its geometric representation: the <strong>graph</strong>.
+        </p>
+
+        <hr>
+
+        <h2>1. Formal Definition</h2>
+
+        <div class="definition-box">
+            <strong style="color: var(--cyan-neon);">Definition: Graph of a Function (General Case)</strong><br>
+            Let \( f : X \to Y \) be a function. The <strong>graph \( G(f) \)</strong> of \( f \) is defined as the subset of the Cartesian product \( X \times Y \):
+            \[ G(f) := \{(x, y) \in X \times Y : y = f(x)\} \]
+        </div>
+
+        <p>
+            When \( f \) is a real-valued function of a real variable, defined on a subset \( A \subseteq \mathbb{R} \), the definition specializes naturally to plane geometry:
+        </p>
+
+        <div class="definition-box">
+            <strong style="color: var(--cyan-neon);">Definition: Real Function Graph</strong><br>
+            Let \( f : A \subseteq \mathbb{R} \to \mathbb{R} \) be a function. The graph \( G(f) \) is given by:
+            \[ G(f) = \{(a, f(a)) \in \mathbb{R}^2 : a \in A\} \]
+            Thus, the graph of such a function is a geometric subset of the 2D Cartesian plane \(\mathbb{R}^2\).
+        </div>
+
+        <hr>
+
+        <h2>2. Recognizing Graphs: The Vertical Line Test</h2>
+
+        <p>
+            Suppose we are given an arbitrary subset \( S \subseteq \mathbb{R}^2 \). Can we always find a subset \( X \subseteq \mathbb{R} \) and a function \( f : X \to \mathbb{R} \) such that \( S = G(f) \)?
+        </p>
+        <p>
+            <strong>The answer is no in general.</strong> A subset \( S \subseteq \mathbb{R}^2 \) represents the graph of a valid function if and only if every input \( x \) is mapped to <em>at most one</em> output \( y \).
+        </p>
+
+        <div class="theorem-box">
+            <strong style="color: var(--orange-neon);">The Vertical Line Test</strong><br>
+            A subset \( S \subseteq \mathbb{R}^2 \) is the graph of a function \( f : X \to \mathbb{R} \) (where \( X \) is the projection of \( S \) onto the x-axis) if and only if <strong>every vertical line</strong> in \(\mathbb{R}^2\) intersects \( S \) at <strong>at most one point</strong>.
+        </div>
+
+        <h3>Contrasting Examples: Circle vs. Upper Semi-Circle</h3>
+
+        <ol>
+            <li>
+                <strong>The Full Circle:</strong> The set \( S_1 = \{(x, y) \in \mathbb{R}^2 : x^2 + y^2 = 1\} \) is <strong>not</strong> the graph of any function. For any \( x \in (-1, 1) \), the vertical line passing through \( x \) intersects \( S_1 \) at <em>two distinct points</em>: \( y = \sqrt{1 - x^2} \) and \( y = -\sqrt{1 - x^2} \).
+            </li>
+            <li style="margin-top: 10px;">
+                <strong>The Upper Semi-Circle:</strong> The subset \( S_2 = \{(x, y) \in \mathbb{R}^2 : y \ge 0 \text{ and } x^2 + y^2 = 1\} \) <strong>is</strong> the graph of the function \( f : [-1, 1] \to \mathbb{R} \) defined by:
+                \[ f(x) = \sqrt{1 - x^2} \]
+                Every vertical line intersects this upper boundary at most once.
+            </li>
+            <li style="margin-top: 10px;">
+                <strong>The Sideways Absolute Value Curve:</strong> The equation \( x = |y| \) defines the set \( S_3 = \{(x, y) \in \mathbb{R}^2 : x = |y|\} \). This is <strong>not</strong> a graph of a function of \( x \) because for \( x > 0 \), both \( y = x \) and \( y = -x \) satisfy the relation (violating the vertical line test).
+            </li>
+        </ol>
+
+        <div class="diagram-container">
+            <svg width="600" height="220" viewBox="0 0 600 220">
+                <!-- Subplot 1: Circle (Fails) -->
+                <g transform="translate(0,0)">
+                    <line x1="20" y1="110" x2="160" y2="110" stroke="#475569" stroke-width="1.5"/>
+                    <line x1="90" y1="20" x2="90" y2="200" stroke="#475569" stroke-width="1.5"/>
+                    <circle cx="90" cy="110" r="60" fill="none" stroke="#00f3ff" stroke-width="2"/>
+                    <!-- Vertical Line -->
+                    <line x1="120" y1="20" x2="120" y2="200" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <circle cx="120" cy="58" r="4" fill="#ff8c00"/>
+                    <circle cx="120" cy="162" r="4" fill="#ff8c00"/>
+                    <text x="90" y="215" font-size="11" fill="#cbd5e1" text-anchor="middle">Circle: Not a Function (2 points)</text>
+                </g>
+
+                <!-- Subplot 2: Semi-circle (Passes) -->
+                <g transform="translate(200,0)">
+                    <line x1="20" y1="110" x2="160" y2="110" stroke="#475569" stroke-width="1.5"/>
+                    <line x1="90" y1="20" x2="90" y2="200" stroke="#475569" stroke-width="1.5"/>
+                    <path d="M 30,110 A 60,60 0 0,1 150,110" fill="none" stroke="#39ff14" stroke-width="2.5"/>
+                    <!-- Vertical Line -->
+                    <line x1="120" y1="20" x2="120" y2="200" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <circle cx="120" cy="58" r="4" fill="#39ff14"/>
+                    <text x="90" y="215" font-size="11" fill="#cbd5e1" text-anchor="middle">Semi-Circle: Valid Graph (1 point)</text>
+                </g>
+
+                <!-- Subplot 3: x = |y| (Fails) -->
+                <g transform="translate(400,0)">
+                    <line x1="20" y1="110" x2="160" y2="110" stroke="#475569" stroke-width="1.5"/>
+                    <line x1="90" y1="20" x2="90" y2="200" stroke="#475569" stroke-width="1.5"/>
+                    <polyline points="150,50 90,110 150,170" fill="none" stroke="#00f3ff" stroke-width="2"/>
+                    <!-- Vertical Line -->
+                    <line x1="130" y1="20" x2="130" y2="200" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <circle cx="130" cy="70" r="4" fill="#ff8c00"/>
+                    <circle cx="130" cy="150" r="4" fill="#ff8c00"/>
+                    <text x="90" y="215" font-size="11" fill="#cbd5e1" text-anchor="middle">x = |y|: Not a Function (2 points)</text>
+                </g>
+            </svg>
+        </div>
+
+        <hr>
+
+        <h2>3. Key Examples of Function Graphs</h2>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Example 1: Linear Function</strong><br>
+            Let \( f : \mathbb{R} \to \mathbb{R} \) be defined by \( f(x) = 2x - 1 \).
+            \[ G(f) = \{(x, 2x - 1) \in \mathbb{R}^2 : x \in \mathbb{R}\} \]
+            <em>Geometry:</em> A straight line in \(\mathbb{R}^2\) with a slope of 2 and y-intercept at \((0, -1)\).
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Example 2: Quadratic Function (Parabola)</strong><br>
+            Let \( f : \mathbb{R} \to \mathbb{R} \) be defined by \( f(x) = x^2 \).
+            \[ G(f) = \{(x, x^2) \in \mathbb{R}^2 : x \in \mathbb{R}\} \]
+            <em>Geometry:</em> A upward-opening parabola with its vertex at the origin \((0,0)\).
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Example 3: Reciprocal Function (Hyperbola)</strong><br>
+            Let \( f : \mathbb{R} \setminus \{0\} \to \mathbb{R} \) be defined by \( f(x) = \frac{1}{x} \).
+            \[ G(f) = \left\{\left(x, \frac{1}{x}\right) \in \mathbb{R}^2 : x \neq 0\right\} \]
+            <em>Geometry:</em> A rectangular hyperbola with vertical asymptote at \( x = 0 \) and horizontal asymptote at \( y = 0 \).
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Example 4: Discrete Domain Function</strong><br>
+            Let \( f : \{1, 2, 3\} \to \mathbb{R} \) be defined by \( f(x) = x^2 + 1 \).
+            \[ G(f) = \{(1, 2), (2, 5), (3, 10)\} \]
+            <em>Geometry:</em> A finite set of three discrete points in the Cartesian plane rather than a continuous curve.
+        </div>
+    </article>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus 1.1: Essential Functions & Graphs Slide Deck</title>
+    
+    <!-- Load MathJax for displaying textbook definitions -->
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Load D3.js and Function Plot library -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/function-plot@1.23.0/dist/function-plot.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #2E86C1;
+            --secondary-red: #E74C3C;
+            --accent-green: #2ECC71;
+            --accent-purple: #9B59B6;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --bg-color: #0b0f19;
+            --card-bg: #151c2e;
+            --card-border: #232d45;
+            --block-bg: rgba(56, 189, 248, 0.08);
+            --block-border: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .deck-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Slide Top Controls Header */
+        .deck-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide-counter {
+            font-weight: 700;
+            color: #38bdf8;
+            font-size: 1.1rem;
+        }
+
+        .nav-btn {
+            background-color: var(--block-bg);
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background-color: #38bdf8;
+            color: #000;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #475569;
+            color: #475569;
+        }
+
+        /* Slide Box */
+        .slide {
+            display: none;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            min-height: 520px;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #38bdf8;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #fbbf24;
+            font-size: 1.3rem;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .definition-box {
+            background: var(--block-bg);
+            border-left: 4px solid var(--block-border);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+            color: #e2e8f0;
+        }
+
+        /* Figure Side-by-Side Row */
+        .figure-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .figure-text {
+            flex: 1;
+            min-width: 280px;
+            font-size: 1.05rem;
+            color: var(--text-muted);
+        }
+
+        .figure-text strong {
+            color: var(--text-color);
+        }
+
+        .figure-graph-container {
+            flex: 1.3;
+            min-width: 320px;
+            background: #0f172a;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .figure-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-anchor: middle;
+            color: #38bdf8;
+            font-size: 1.05rem;
+        }
+
+        .plot-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .plot-wrapper svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
+        }
+
+        /* Function plot customization */
+        .function-plot .origin {
+            stroke: #64748b !important;
+        }
+        .function-plot .grid {
+            stroke: #1e293b !important;
+        }
+        .function-plot text {
+            fill: #94a3b8 !important;
+        }
+
+        /* Sub-slide Pagination Footer */
+        .deck-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 0 10px;
+        }
+
+        @media (max-width: 768px) {
+            .figure-row { flex-direction: column; }
+            .figure-graph-container { width: 100%; min-width: unset; }
+            .slide { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="deck-container">
+        <!-- Top Controls -->
+        <div class="deck-header">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">❮ Previous</button>
+            <div class="slide-counter" id="slideNum">Slide 1 / 18</div>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next ❯</button>
+        </div>
+
+        <!-- SLIDE 1: Title & Linear Functions -->
+        <div class="slide active">
+            <h2>1. Linear Functions & Proportionality</h2>
+            <div class="definition-box">
+                A function of the form $f(x) = mx + b$, for constants $m$ and $b$, is called a <strong>linear function</strong>. 
+                The function $f(x) = x$ (where $m = 1$ and $b = 0$) is called the <strong>identity function</strong>. 
+                Constant functions result when the slope $m = 0$.
+                <br><br>
+                <strong>Definition:</strong> Two variables $y$ and $x$ are <strong>proportional</strong> (to one another) if one is always a constant multiple of the other; that is, if $y = kx$ for some nonzero constant $k$.
+            </div>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.14(a): Lines through the origin</h3>
+                    <p>Visualizing how the slope $m$ dictates the steepness and direction (positive/negative) of the line $f(x) = mx$.</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">\(f(x) = mx\)</div>
+                    <div class="plot-wrapper" id="linear-a"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: Constant Linear Function -->
+        <div class="slide">
+            <h2>1. Linear Functions: Constant Function</h2>
+            <div class="definition-box">
+                When $m = 0$, $f(x) = b$ is a <strong>constant function</strong>, representing a horizontal line with zero slope.
+            </div>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.14(b): Constant Function</h3>
+                    <p>When the slope $m = 0$, the function stays fixed at $y = b$ regardless of $x$.</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">\(f(x) = 1.5\)</div>
+                    <div class="plot-wrapper" id="linear-b"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Power Functions - Integers -->
+        <div class="slide">
+            <h2>2. Power Functions: Positive Integer Powers</h2>
+            <div class="definition-box">
+                A function $f(x) = x^a$, where $a$ is a constant, is called a <strong>power function</strong>.
+                When $a = n$ is a positive integer, domain is $(-\infty, \infty)$. Even powers are symmetric about the y-axis; odd powers are symmetric about the origin.
+            </div>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.15: Positive Integer Powers</h3>
+                    <p>Notice how the functions flatten on the interval $(-1, 1)$ and rise more steeply for $|x| > 1$ as $n$ grows.</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">\(f(x) = x^n\) (\(n = 1, 2, 3, 4, 5\))</div>
+                    <div class="plot-wrapper" id="power-integers"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Power Functions - Reciprocals -->
+        <div class="slide">
+            <h2>2. Power Functions: Negative Powers</h2>
+            <div class="definition-box">
+                For negative integers $a = -1, -2$, $f(x) = x^{-n} = \frac{1}{x^n}$. The domain excludes $x = 0$. These curves approach the coordinate axes as asymptotes.
+            </div>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.16: Negative Powers (Reciprocals)</h3>
+                    <p>\(y = 1/x\) is a hyperbola symmetric about the origin. \(y = 1/x^2\) is symmetric about the y-axis.</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">\(f(x) = 1/x\) and \(f(x) = 1/x^2\)</div>
+                    <div class="plot-wrapper" id="power-negatives"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Radical Power 1/2 -->
+        <div class="slide">
+            <h2>2. Power Functions: Square Root</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.17(a): $y = \sqrt{x}$</h3>
+                    <p>Square root function $f(x) = x^{1/2}$.</p>
+                    <p><strong>Domain:</strong> $[0, \infty)$</p>
+                    <p><strong>Range:</strong> $[0, \infty)$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">\(f(x) = \sqrt{x}\)</div>
+                    <div class="plot-wrapper" id="power-frac-a"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Radical Power 1/3 -->
+        <div class="slide">
+            <h2>2. Power Functions: Cube Root</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.17(b): $y = \sqrt[3]{x}$</h3>
+                    <p>Cube root function $f(x) = x^{1/3}$.</p>
+                    <p><strong>Domain:</strong> $(-\infty, \infty)$</p>
+                    <p><strong>Range:</strong> $(-\infty, \infty)$</p>
+                    <p>Symmetric about the origin, smoothly defined over all real numbers.</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">\(f(x) = \sqrt[3]{x}\)</div>
+                    <div class="plot-wrapper" id="power-frac-b"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Radical Power 3/2 -->
+        <div class="slide">
+            <h2>2. Power Functions: Fractional Power $3/2$</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.17(c): $y = x^{3/2}$</h3>
+                    <p>Fractional exponent $f(x) = (\sqrt{x})^3$.</p>
+                    <p><strong>Domain:</strong> $[0, \infty)$</p>
+                    <p>Grows faster than the linear function for $x > 1$.</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">\(f(x) = x^{3/2}\)</div>
+                    <div class="plot-wrapper" id="power-frac-c"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Radical Power 2/3 -->
+        <div class="slide">
+            <h2>2. Power Functions: Fractional Power $2/3$</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.17(d): $y = x^{2/3}$</h3>
+                    <p>Fractional exponent $f(x) = (\sqrt[3]{x})^2$.</p>
+                    <p><strong>Domain:</strong> $(-\infty, \infty)$</p>
+                    <p>Symmetric about the y-axis, forming a cusp at the origin $(0,0)$.</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">\(f(x) = x^{2/3}\)</div>
+                    <div class="plot-wrapper" id="power-frac-d"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Polynomials - Cubic -->
+        <div class="slide">
+            <h2>3. Polynomial Functions: Cubic</h2>
+            <div class="definition-box">
+                A function $p$ is a <strong>polynomial</strong> if $p(x) = a_nx^n + a_{n-1}x^{n-1} + \dots + a_1x + a_0$. Domain is $(-\infty, \infty)$.
+            </div>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.18(a): Cubic Polynomial</h3>
+                    <p>Degree 3 polynomial with local extrema and turning points.</p>
+                    <p>$$y = \frac{x^3}{3} - \frac{x^2}{2} - 2x + \frac{1}{3}$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Degree 3 Polynomial</div>
+                    <div class="plot-wrapper" id="poly-a"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: Polynomials - Quartic -->
+        <div class="slide">
+            <h2>3. Polynomial Functions: Quartic</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.18(b): Quartic Polynomial</h3>
+                    <p>Degree 4 polynomial exhibit up to three local extrema.</p>
+                    <p>$$y = 8x^4 - 14x^3 - 9x^2 + 11x - 1$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Degree 4 Polynomial</div>
+                    <div class="plot-wrapper" id="poly-b"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Polynomials - Factored -->
+        <div class="slide">
+            <h2>3. Polynomial Functions: Factored Form</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.18(c): Factored Polynomial</h3>
+                    <p>High degree polynomial showing root multiplicities at $x = -1, 1, 2$.</p>
+                    <p>$$y = (x-2)^2(x+1)^3(x-1)$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Factored Degree 6 Polynomial</div>
+                    <div class="plot-wrapper" id="poly-c"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Rational Functions 1.19(a) -->
+        <div class="slide">
+            <h2>4. Rational Functions: Oblique Asymptote</h2>
+            <div class="definition-box">
+                A <strong>rational function</strong> is a ratio $f(x) = p(x)/q(x)$, where $p$ and $q$ are polynomials. Domain excludes roots of $q(x)$.
+            </div>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.19(a)</h3>
+                    <p>Linear over linear structure with a vertical asymptote at $x = -4/7$.</p>
+                    <p>$$y = \frac{2x^2 - 3}{7x + 4}$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Rational Function (a)</div>
+                    <div class="plot-wrapper" id="rat-a"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: Rational Functions 1.19(b) -->
+        <div class="slide">
+            <h2>4. Rational Functions: Horizontal Asymptote</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.19(b)</h3>
+                    <p>Equal degree numerator and denominator. Horizontal asymptote shown in red at $y = 5/3$.</p>
+                    <p>$$y = \frac{5x^2 + 8x - 3}{3x^2 + 2}$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Rational Function with $y = 5/3$</div>
+                    <div class="plot-wrapper" id="rat-b"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: Rational Functions 1.19(c) -->
+        <div class="slide">
+            <h2>4. Rational Functions: Two Vertical Asymptotes</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.19(c)</h3>
+                    <p>Denominator $2x^2 - 1 = 0$ leads to two vertical asymptotes at $x = \pm 1/\sqrt{2}$.</p>
+                    <p>$$y = \frac{11x + 2}{2x^2 - 1}$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Rational Function with 2 Asymptotes</div>
+                    <div class="plot-wrapper" id="rat-c"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: Algebraic Functions 1.20(a) -->
+        <div class="slide">
+            <h2>5. Algebraic Functions: Roots & Polynomials</h2>
+            <div class="definition-box">
+                Constructed from polynomials using algebraic operations (addition, subtraction, multiplication, division, and taking roots).
+            </div>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.20(a)</h3>
+                    <p>Combines cube root with a linear factor.</p>
+                    <p>$$y = x^{1/3}(x - 4)$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Algebraic Function (a)</div>
+                    <div class="plot-wrapper" id="alg-a"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: Algebraic Functions 1.20(b) -->
+        <div class="slide">
+            <h2>5. Algebraic Functions: Fractional Powers of Quadratic</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.20(b)</h3>
+                    <p>Exhibits cusps/smooth minima at roots $x = \pm 1$.</p>
+                    <p>$$y = \frac{3}{4}(x^2 - 1)^{2/3}$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Algebraic Function (b)</div>
+                    <div class="plot-wrapper" id="alg-b"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 17: Algebraic Functions 1.20(c) -->
+        <div class="slide">
+            <h2>5. Algebraic Functions: 5th Root Combination</h2>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Figure 1.20(c)</h3>
+                    <p>Product involving fifth-root expression.</p>
+                    <p>$$y = x(1 - x)^{3/5}$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Algebraic Function (c)</div>
+                    <div class="plot-wrapper" id="alg-c"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 18: Transcendental Functions -->
+        <div class="slide">
+            <h2>6. Transcendental Functions</h2>
+            <div class="definition-box">
+                Functions that are not algebraic are called <strong>transcendental</strong>. Includes trigonometric, exponential, and logarithmic functions.
+            </div>
+            <div class="figure-row">
+                <div class="figure-text">
+                    <h3>Sine, Cosine, Exponential & Logarithm</h3>
+                    <p>Periodic trigonometric curves and continuous growth/decay functions.</p>
+                    <p>$$\sin(x), \quad \cos(x), \quad e^x, \quad \ln(x)$$</p>
+                </div>
+                <div class="figure-graph-container">
+                    <div class="figure-title">Trigonometric & Exponential Functions</div>
+                    <div class="plot-wrapper" id="trig-basics"></div>
+                    <div class="plot-wrapper" id="transcendentals" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        
+
+        <!-- Bottom Controls -->
+        <div class="deck-footer">
+            <button class="nav-btn" onclick="changeSlide(-1)">❮ Previous</button>
+            <button class="nav-btn" onclick="changeSlide(1)">Next ❯</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const renderedPlots = new Set();
+
+        const plotConfigs = {
+            'linear-a': { fns: ['-3*x', '-x', 'x', '2*x', '0.5*x'], colors: ['#e67e22', '#f1c40f', '#3498db', '#2980b9', '#1abc9c'], domain: [-6, 6, -6, 6] },
+            'linear-b': { fns: ['1.5'], colors: ['#38bdf8'], domain: [-1, 4, 0, 3] },
+            'power-integers': { fns: ['x', 'x^2', 'x^3', 'x^4', 'x^5'], colors: ['#e74c3c', '#38bdf8', '#2ecc71', '#f1c40f', '#9b59b6'], domain: [-3, 3, -3, 7] },
+            'power-negatives': { fns: ['1/x', '1/x^2'], colors: ['#e74c3c', '#38bdf8'], domain: [-5, 5, -5, 10] },
+            'power-frac-a': { fns: ['sqrt(x)'], colors: ['#38bdf8'], domain: [-1, 10, -1, 4] },
+            'power-frac-b': { fns: ['cbrt(x)'], colors: ['#38bdf8'], domain: [-10, 10, -3, 3] },
+            'power-frac-c': { fns: ['x^1.5'], colors: ['#38bdf8'], domain: [-1, 10, -1, 6] },
+            'power-frac-d': { fns: ['abs(x)^(2/3)'], colors: ['#38bdf8'], domain: [-10, 10, -1, 6] },
+            'poly-a': { fns: ['x^3/3 - x^2/2 - 2*x + 1/3'], colors: ['#38bdf8'], domain: [-5, 5, -5, 5] },
+            'poly-b': { fns: ['8*x^4 - 14*x^3 - 9*x^2 + 11*x - 1'], colors: ['#38bdf8'], domain: [-2, 3, -20, 8] },
+            'poly-c': { fns: ['(x-2)^2 * (x+1)^3 * (x-1)'], colors: ['#38bdf8'], domain: [-2, 3, -8, 16] },
+            'rat-a': { fns: ['(2*x^2 - 3)/(7*x + 4)'], colors: ['#38bdf8'], domain: [-6, 6, -5, 5] },
+            'rat-b': { fns: ['(5*x^2 + 8*x - 3)/(3*x^2 + 2)', '5/3'], colors: ['#38bdf8', '#e74c3c'], domain: [-10, 10, -2, 6] },
+            'rat-c': { fns: ['(11*x + 2)/(2*x^2 - 1)'], colors: ['#38bdf8'], domain: [-6, 6, -10, 10] },
+            'alg-a': { fns: ['cbrt(x) * (x - 4)'], colors: ['#38bdf8'], domain: [-2, 6, -5, 5] },
+            'alg-b': { fns: ['0.75 * (abs(x^2 - 1))^(2/3)'], colors: ['#38bdf8'], domain: [-1.5, 1.5, -0.5, 2] },
+            'alg-c': { fns: ['x * nthRoot(1-x, 5)'], colors: ['#38bdf8'], domain: [-1, 2, -1.5, 1.5] },
+            'trig-basics': { fns: ['sin(x)', 'cos(x)'], colors: ['#38bdf8', '#e74c3c'], domain: [-3.5*Math.PI, 3.5*Math.PI, -1.5, 1.5] },
+            'transcendentals': { fns: ['exp(x)', 'log(x)'], colors: ['#38bdf8', '#e74c3c'], domain: [-3, 6, -4, 6] }
+        };
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+
+            document.getElementById('slideNum').textContent = `Slide ${index + 1} / ${totalSlides}`;
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                if (i === 0 || i === 2) btn.disabled = (index === 0);
+                if (i === 1 || i === 3) btn.disabled = (index === totalSlides - 1);
+            });
+
+            // Lazy render plots on current active slide to ensure correct layout dimensions
+            const currentSlideEl = slides[index];
+            const wrappers = currentSlideEl.querySelectorAll('.plot-wrapper');
+            wrappers.forEach(wrapper => {
+                const id = wrapper.id;
+                if (id && plotConfigs[id] && !renderedPlots.has(id)) {
+                    renderPlot(id, plotConfigs[id]);
+                    renderedPlots.add(id);
+                }
+            });
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function renderPlot(id, cfg) {
+            const data = cfg.fns.map((fn, index) => {
+                return { fn: fn, color: cfg.colors[index] };
+            });
+
+            functionPlot({
+                target: '#' + id,
+                width: 420,
+                height: 280,
+                xAxis: { domain: [cfg.domain[0], cfg.domain[1]] },
+                yAxis: { domain: [cfg.domain[2], cfg.domain[3]] },
+                grid: true,
+                data: data
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            showSlide(currentSlide);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            showSlide(0);
+            
+            // Keyboard arrow navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "ArrowRight") changeSlide(1);
+                if (e.key === "ArrowLeft") changeSlide(-1);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Natural Logarithm – MAT101 Calculus I (Expanded Proofs)</title>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [
+                    ['$', '$'],
+                    ['\\(', '\\)']
+                ],
+                displayMath: [
+                    ['$$', '$$'],
+                    ['\\[', '\\]']
+                ]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async>
+    </script>
+
+    <style>
+        /* ---------- Reset & base ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #f0f4f8;
+            color: #1e293b;
+            line-height: 1.7;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ---------- Header ---------- */
+        .header {
+            background: linear-gradient(135deg, #0b2b44 0%, #1a4b6d 100%);
+            color: #fff;
+            border-radius: 24px;
+            padding: 2.5rem 3rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 12px 30px rgba(11, 43, 68, 0.30);
+        }
+
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .header .sub {
+            font-size: 1.2rem;
+            opacity: 0.85;
+            font-weight: 300;
+        }
+
+        .header .meta {
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            opacity: 0.7;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+        }
+
+        .header .meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* ---------- Cards ---------- */
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transition: box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #0b2b44;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #e8edf3;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card h2 .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #1a4b6d;
+            color: #fff;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a4b6d;
+            margin: 1.4rem 0 0.6rem 0;
+        }
+
+        .card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c5282;
+            margin: 1.2rem 0 0.4rem 0;
+        }
+
+        .card p,
+        .card li {
+            color: #2d3748;
+        }
+
+        .card ul,
+        .card ol {
+            padding-left: 1.6rem;
+            margin: 0.6rem 0 0.8rem 0;
+        }
+
+        .card li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* ---------- Math blocks ---------- */
+        .math-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 1.2rem 1.8rem;
+            margin: 1rem 0;
+            border-left: 5px solid #1a4b6d;
+            overflow-x: auto;
+            font-size: 1.05rem;
+        }
+
+        .math-block.green {
+            border-left-color: #2b8c5e;
+        }
+
+        .math-block.amber {
+            border-left-color: #d69e2e;
+        }
+
+        .math-block.purple {
+            border-left-color: #6b46c1;
+        }
+
+        .math-block.red {
+            border-left-color: #c53030;
+        }
+
+        .math-block.teal {
+            border-left-color: #2c7a7b;
+        }
+
+        /* ---------- Property grid ---------- */
+        .prop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        .prop-item {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+
+        .prop-item:hover {
+            transform: translateY(-3px);
+            border-color: #1a4b6d;
+        }
+
+        .prop-item .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-bottom: 0.3rem;
+        }
+
+        .prop-item .formula {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #0b2b44;
+        }
+
+        /* ---------- Graph container ---------- */
+        .graph-wrapper {
+            background: #fafcff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            margin: 1.2rem 0 0.5rem 0;
+            text-align: center;
+        }
+
+        .graph-wrapper canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+
+        .graph-caption {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        /* ---------- Proof steps ---------- */
+        .proof-step {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin: 0.8rem 0;
+            border: 1px solid #e9edf2;
+        }
+
+        .proof-step .step-label {
+            font-weight: 600;
+            color: #1a4b6d;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .proof-step .step-content {
+            color: #2d3748;
+        }
+
+        .highlight {
+            background: #ebf4ff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+            font-weight: 500;
+            color: #1a4b6d;
+        }
+
+        .highlight-red {
+            background: #fff5f5;
+            color: #c53030;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* ---------- Table ---------- */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        .styled-table th {
+            background: #1a4b6d;
+            color: #fff;
+            padding: 0.7rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .styled-table td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .styled-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .styled-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 700px) {
+            .header {
+                padding: 1.8rem 1.5rem;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .card {
+                padding: 1.5rem 1.2rem;
+            }
+            .card h2 {
+                font-size: 1.4rem;
+            }
+            .math-block {
+                padding: 0.8rem 1rem;
+                font-size: 0.95rem;
+            }
+            .prop-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ---------- Utility ---------- */
+        .mt-1 {
+            margin-top: 0.8rem;
+        }
+        .mb-1 {
+            margin-bottom: 0.8rem;
+        }
+        .text-muted {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .tag {
+            background: #e9edf3;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+        .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 1.8rem 0 1.2rem 0;
+        }
+        .icon-pin {
+            display: inline-block;
+            margin-right: 0.3rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- ======= HEADER ======= -->
+        <header class="header">
+            <h1>📐 Natural Logarithm</h1>
+            <div class="sub">MAT101 Calculus I &nbsp;·&nbsp; Expanded Proofs &amp; Review</div>
+            <div class="meta">
+                <span>📅 September 29</span>
+                <span>👨‍🏫 Amber Habib</span>
+                <span>📘 <span class="tag" style="background:rgba(255,255,255,0.15);color:#fff;">Core Concept</span></span>
+            </div>
+        </header>
+
+        <!-- ======= 1. DEFINITION ======= -->
+        <section class="card">
+            <h2>1. Definition <span class="badge">Integral form</span></h2>
+
+            <p>
+                The <strong>natural logarithm</strong> is defined as the integral of
+                \( \frac{1}{t} \) from \( 1 \) to \( x \):
+            </p>
+
+            <div class="math-block">
+                \[
+                \log(x) \;=\; \int_{1}^{x} \frac{1}{t} \, dt
+                \qquad (x > 0)
+                \]
+            </div>
+
+            <p>
+                This definition gives \(\log : (0, \infty) \to \mathbb{R}\).  
+                The choice of lower limit \(1\) ensures \(\log(1)=0\), which is
+                the natural starting point.
+            </p>
+
+            <div style="background:#edf2f7;border-radius:12px;padding:0.8rem 1.2rem;margin-top:0.8rem;">
+                <strong>💡 Intuition:</strong>
+                The logarithm of \(x\) is the <em>signed area</em> under the hyperbola
+                \(y = \frac{1}{t}\) from \(t=1\) to \(t=x\).
+                If \(x > 1\), the area is positive. If \(0 &lt; x &lt; 1\), the integral runs
+                from \(1\) <em>down</em> to \(x\), so the area is negative.
+            </div>
+
+            <div class="proof-step" style="margin-top:1.2rem;background:#eef2f6;">
+                <div class="step-label">🔎 Why is \(\log(x) &lt; 0\) when \(0 &lt; x &lt; 1\)?</div>
+                <div class="step-content">
+                    <p><strong>Direct proof from the integral:</strong></p>
+                    \[
+                    \log(x) = \int_{1}^{x} \frac{dt}{t} = -\int_{x}^{1} \frac{dt}{t}
+                    \]
+                    <p>
+                        For \(0 &lt; x &lt; 1\), the integrand \(\frac{1}{t}\) is positive on \([x, 1]\).
+                        Hence \(\int_{x}^{1} \frac{dt}{t} > 0\), so \(\log(x) = -(\text{positive}) &lt; 0\).
+                    </p>
+                    <p style="margin-top:0.5rem;">
+                        <strong>Alternatively</strong>, using the quotient property (proved below):
+                        since \(\log(1) = \log(x \cdot \frac{1}{x}) = \log(x) + \log(\frac{1}{x})\),
+                        we have \(\log(x) = -\log(\frac{1}{x})\). If \(0 &lt; x &lt; 1\), then
+                        \(\frac{1}{x} > 1\). Because \(\log\) is strictly increasing
+                        (proved in Section 4) and \(\log(1)=0\), we get \(\log(\frac{1}{x}) > 0\),
+                        so \(\log(x) = -(\text{positive}) &lt; 0\).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======= 2. PROPERTIES WITH PROOFS ======= -->
+        <section class="card">
+            <h2>2. Fundamental Properties <span class="badge">Proved</span></h2>
+
+            <p>
+                For any \(a, b > 0\) and any integer \(m \in \mathbb{Z}\),
+                the logarithm satisfies:
+            </p>
+
+            <div class="prop-grid">
+                <div class="prop-item">
+                    <div class="label">Product</div>
+                    <div class="formula">\(\log(ab) = \log a + \log b\)</div>
+                </div>
+                <div class="prop-item">
+                    <div class="label">Quotient</div>
+                    <div class="formula">\(\log(a/b) = \log a - \log b\)</div>
+                </div>
+                <div class="prop-item">
+                    <div class="label">Power</div>
+                    <div class="formula">\(\log(a^m) = m \log a\)</div>
+                </div>
+            </div>
+
+            <!-- Proof of Product -->
+            <h3>📌 Proof of the Product Property</h3>
+            <p>
+                Starting from the integral definition:
+            </p>
+            <div class="math-block">
+                \[
+                \log(ab) = \int_{1}^{ab} \frac{dt}{t}
+                \]
+            </div>
+            <p>
+                Split the integral at \(a\):
+            </p>
+            <div class="math-block">
+                \[
+                \log(ab) = \int_{1}^{a} \frac{dt}{t} + \int_{a}^{ab} \frac{dt}{t}
+                \]
+            </div>
+            <p>
+                In the second integral, use the substitution \( t = a u \). Then \( dt = a\,du \).
+                When \(t = a\), \(u = 1\). When \(t = ab\), \(u = b\).
+            </p>
+            <div class="math-block green">
+                \[
+                \int_{a}^{ab} \frac{dt}{t}
+                = \int_{1}^{b} \frac{a\,du}{a u}
+                = \int_{1}^{b} \frac{du}{u}
+                = \log(b)
+                \]
+            </div>
+            <p>
+                Therefore:
+            </p>
+            <div class="math-block" style="border-left-color:#2b6cb0;">
+                \[
+                \log(ab) = \int_{1}^{a} \frac{dt}{t} + \log(b) = \log(a) + \log(b)
+                \]
+            </div>
+
+            <!-- Proof of Quotient -->
+            <h3>📌 Proof of the Quotient Property</h3>
+            <p>
+                Using the product property just proved:
+                \[
+                \log(a) = \log\left( \frac{a}{b} \cdot b \right) = \log\left(\frac{a}{b}\right) + \log(b)
+                \]
+                Subtracting \(\log(b)\) from both sides gives:
+            </p>
+            <div class="math-block amber">
+                \[
+                \log\left(\frac{a}{b}\right) = \log(a) - \log(b)
+                \]
+            </div>
+
+            <!-- Proof of Power -->
+            <h3>📌 Proof of the Power Property</h3>
+            <p>
+                For \(m \in \mathbb{N}\), repeated application of the product property yields:
+                \[
+                \log(a^m) = \log(a \cdot a \cdots a) = m \log(a)
+                \]
+                For \(m = 0\), \(\log(1) = 0 = 0 \cdot \log(a)\).
+                For negative integers, \(m = -n\) with \(n > 0\):
+                \[
+                \log(a^{-n}) = \log\left(\frac{1}{a^n}\right) = \log(1) - \log(a^n) = -n \log(a) = m \log(a)
+                \]
+                using the quotient property.
+            </p>
+            <div class="math-block purple">
+                \[
+                \log(a^m) = m \log(a) \quad \text{for all } m \in \mathbb{Z}
+                \]
+            </div>
+
+            <p class="text-muted" style="margin-top:0.8rem;">
+                These properties turn multiplication into addition, division into subtraction, and powers into
+                multiplication — the very essence of logarithms.
+            </p>
+        </section>
+
+        <!-- ======= 3. GRAPH ======= -->
+        <section class="card">
+            <h2>3. Graph of \(\log(x)\) <span class="badge">Visual</span></h2>
+
+            <p>
+                The logarithm is <strong>strictly increasing</strong> and concave down.
+                It passes through \((1,0)\), grows slowly for large \(x\), and
+                decreases without bound as \(x \to 0^+\).
+            </p>
+
+            <div class="graph-wrapper">
+                <canvas id="logGraph" width="800" height="400"></canvas>
+                <div class="graph-caption">
+                    \(\log(x)\) for \(x \in (0.05, 10)\). Key point: \((1,0)\), \((2,0.693)\), \((e,1)\).
+                    The shaded area from \(1\) to \(3\) equals \(\log(3) \approx 1.099\).
+                </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:0.8rem 1.5rem;margin-top:0.8rem;font-size:0.9rem;color:#475569;">
+                <span>📈 Domain: \((0,\infty)\)</span>
+                <span>📉 Range: \(\mathbb{R}\)</span>
+                <span>⬆ Strictly increasing</span>
+                <span>🔄 \(\log(1)=0\), \(\log(e)=1\)</span>
+            </div>
+        </section>
+
+        <!-- ======= 4. STRICTLY INCREASING ======= -->
+        <section class="card">
+            <h2>4. Strictly Increasing <span class="badge">Proof</span></h2>
+
+            <p>
+                The logarithm is strictly increasing: if \(b > a > 0\), then
+                \(\log(b) > \log(a)\).
+            </p>
+
+            <div class="math-block">
+                \[
+                \log(b) - \log(a)
+                \;=\; \int_{1}^{b} \frac{dt}{t} - \int_{1}^{a} \frac{dt}{t}
+                \;=\; \int_{a}^{b} \frac{dt}{t}
+                \]
+            </div>
+
+            <div class="proof-step">
+                <div class="step-label">📐 Why is this integral positive?</div>
+                <div class="step-content">
+                    On the interval \([a,b]\), we have \(t \le b\), so \(\frac{1}{t} \ge \frac{1}{b}\).
+                    Therefore:
+                    \[
+                    \int_{a}^{b} \frac{dt}{t} \;\ge\; \int_{a}^{b} \frac{dt}{b}
+                    \;=\; \frac{b-a}{b} \;>\; 0
+                    \]
+                    Hence \(\log(b) - \log(a) > 0\), i.e. \(\log(b) > \log(a)\).
+                </div>
+            </div>
+
+            <p>
+                Since \(\log\) is strictly increasing, it is <strong>one-to-one</strong>
+                (injective). This is a key step toward showing it is a bijection.
+            </p>
+        </section>
+
+        <!-- ======= 5. INTERMEDIATE VALUE PROPERTY ======= -->
+        <section class="card">
+            <h2>5. Intermediate Value Property <span class="badge">IVP</span></h2>
+
+            <p>
+                The logarithm has the <strong>intermediate value property</strong>:
+                if \(0 &lt; x &lt; y\) and \(\log(x) &lt; L &lt; \log(y)\),
+                then there exists \(c \in (x,y)\) such that \(\log(c) = L\).
+            </p>
+
+            <div class="proof-step">
+                <div class="step-label">🔍 Step 1: Define separating sets</div>
+                <div class="step-content">
+                    Define
+                    \[
+                    A = \{ a > 0 \mid \log(a) \le L \}, \qquad
+                    B = \{ b > 0 \mid \log(b) \ge L \}.
+                    \]
+                    By our assumption \(\log(x) < L < \log(y)\), we have \(x \in A\) and \(y \in B\), so both sets are non-empty.
+                    Because \(\log\) is strictly increasing, every \(a \in A\) is \(\le\) every \(b \in B\).
+                </div>
+            </div>
+
+            <div class="proof-step">
+                <div class="step-label">🔍 Step 2: Completeness axiom gives a separator</div>
+                <div class="step-content">
+                    By the <strong>completeness axiom</strong> of the real numbers, there exists a real number \(c\)
+                    that separates \(A\) and \(B\). That is, \(a \le c \le b\) for all \(a \in A, b \in B\).
+                    Since \(x \le c \le y\), we have \(c \in (0,\infty)\).
+                </div>
+            </div>
+
+            <div class="proof-step">
+                <div class="step-label">🔍 Step 3: Trichotomy rules out inequalities</div>
+                <div class="step-content">
+                    <p><strong>Suppose \(\log(c) < L\).</strong> Choose \(\delta = c\,(L - \log(c)) > 0\).
+                        Then using the integral definition:
+                        \[
+                        \log(c+\delta) = \log(c) + \int_{c}^{c+\delta} \frac{dt}{t}
+                        \le \log(c) + \frac{\delta}{c} = L
+                        \]
+                        Hence \(c+\delta \in A\), but \(c+\delta > c\), contradicting that \(c\) is an upper bound for \(A\).</p>
+
+                    <p style="margin-top:0.8rem;"><strong>Suppose \(\log(c) > L\).</strong>
+                        Then \(\log(1/c) = -\log(c) < -L\). Applying the same argument as above to
+                        the sets \(A' = \{a > 0 \mid \log(a) \le -L\}\) and \(B' = \{b > 0 \mid \log(b) \ge -L\}\),
+                        we find that \(1/c\) separates \(A'\) and \(B'\). But then \(\log(1/c) < -L\)
+                        leads to a similar contradiction (by adding a small \(\delta\) to \(1/c\)).
+                    </p>
+                    <p>Therefore, the only possibility left is \(\log(c) = L\).</p>
+                </div>
+            </div>
+
+            <div class="math-block purple">
+                <strong>📌 Key insight:</strong> The IVP ensures that \(\log\) takes
+                <em>every</em> intermediate value between any two of its values.
+                This is a consequence of continuity (which follows from the
+                fundamental theorem of calculus).
+            </div>
+        </section>
+
+        <!-- ======= 6. BIJECTION ======= -->
+        <section class="card">
+            <h2>6. Bijection: \(\log : (0,\infty) \to \mathbb{R}\) <span class="badge">One-to-one &amp; onto</span></h2>
+
+            <p>
+                We now show that \(\log\) is both <strong>one-to-one</strong> and
+                <strong>onto</strong>, hence a bijection.
+            </p>
+
+            <h3>✓ Injective (one-to-one)</h3>
+            <p>
+                Since \(\log\) is strictly increasing (Section 4), it is injective:
+                if \(\log(a) = \log(b)\), then \(a = b\).
+            </p>
+
+            <h3>✓ Surjective (onto)</h3>
+            <p>
+                Take any \(y \in \mathbb{R}\). We need to find \(x &gt; 0\) such that
+                \(\log(x) = y\).
+            </p>
+
+            <div class="proof-step">
+                <div class="step-label">📌 Case \(y > 0\)</div>
+                <div class="step-content">
+                    By the Archimedean property of \(\mathbb{R}\), there exists \(n \in \mathbb{N}\)
+                    such that \(n \log(2) > y\). (Recall \(\log(2) \approx 0.693 > 0\)).
+                    Since \(\log(2^n) = n \log(2)\), we have:
+                    \[
+                    \log(1) = 0 \quad < \quad y \quad < \quad n \log(2) = \log(2^n)
+                    \]
+                    By the Intermediate Value Property (Section 5), there exists a
+                    \(c \in (1, 2^n)\) such that \(\log(c) = y\).
+                </div>
+            </div>
+
+            <div class="proof-step">
+                <div class="step-label">📌 Case \(y < 0\)</div>
+                <div class="step-content">
+                    Since \(-y > 0\), by the previous case there is \(c > 0\) such that
+                    \(\log(c) = -y\). Using the quotient property:
+                    \[
+                    \log\left(\frac{1}{c}\right) = \log(1) - \log(c) = 0 - (-y) = y
+                    \]
+                    Hence \(\frac{1}{c} > 0\) is the desired preimage.
+                </div>
+            </div>
+
+            <div class="proof-step">
+                <div class="step-label">📌 Case \(y = 0\)</div>
+                <div class="step-content">
+                    \(\log(1) = 0\), so \(x = 1\) works.
+                </div>
+            </div>
+
+            <div class="math-block" style="border-left-color:#2b6cb0;">
+                \[
+                \boxed{\log : (0,\infty) \;\longrightarrow\; \mathbb{R} \quad \text{is a bijection}}
+                \]
+            </div>
+
+            <p>
+                Because \(\log\) is a bijection, it has an inverse function,
+                which we call the <strong>exponential function</strong>
+                \(\exp : \mathbb{R} \to (0,\infty)\).
+            </p>
+        </section>
+
+        <!-- ======= 7. SUMMARY TABLE ======= -->
+        <section class="card">
+            <h2>7. Summary <span class="badge">Reference</span></h2>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Statement</th>
+                        <th>How it’s proved / role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Definition</strong></td>
+                        <td>\(\log(x) = \int_{1}^{x} \frac{dt}{t}\)</td>
+                        <td>Foundation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Product rule</strong></td>
+                        <td>\(\log(ab) = \log a + \log b\)</td>
+                        <td>Substitution \(t = au\) in the integral</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quotient rule</strong></td>
+                        <td>\(\log(a/b) = \log a - \log b\)</td>
+                        <td>Derived from product rule</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Power rule</strong></td>
+                        <td>\(\log(a^m) = m \log a\)</td>
+                        <td>Repeated product / quotient for integers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Strictly increasing</strong></td>
+                        <td>\(b &gt; a \Rightarrow \log b &gt; \log a\)</td>
+                        <td>Integral of positive function over \([a,b]\)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Negativity for \(x&lt;1\)</strong></td>
+                        <td>\(0 &lt; x &lt; 1 \Rightarrow \log x &lt; 0\)</td>
+                        <td>Integral from \(x\) to \(1\) is positive, or via quotient</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IVP</strong></td>
+                        <td>\(\log(x) &lt; L &lt; \log(y) \Rightarrow \exists c\)</td>
+                        <td>Completeness axiom + trichotomy</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bijection</strong></td>
+                        <td>\((0,\infty) \leftrightarrow \mathbb{R}\)</td>
+                        <td>Injective (strict inc.) + surjective (IVP + Archimedean)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="background:#edf2f7;border-radius:12px;padding:0.8rem 1.2rem;margin-top:0.8rem;">
+                <strong>🔗 Key takeaway:</strong> The natural logarithm is the
+                <em>unique</em> continuous function satisfying \(\log(1)=0\),
+                \(\log(ab)=\log a+\log b\), and whose derivative is \(1/x\).
+                Its inverse is the exponential function \(e^x\).
+            </div>
+        </section>
+
+        <!-- ======= FOOTER ======= -->
+        <div style="text-align:center;padding:2rem 0 0.5rem 0;color:#94a3b8;font-size:0.85rem;border-top:1px solid #e2e8f0;margin-top:1rem;">
+            MAT101 Calculus I · Amber Habib · September 29 · Expanded Proofs &amp; Review
+        </div>
+
+    </div>
+
+    <!-- ======= GRAPH SCRIPT ======= -->
+    <script>
+        (function() {
+
+            const canvas = document.getElementById('logGraph');
+            const ctx = canvas.getContext('2d');
+
+            const W = canvas.width;
+            const H = canvas.height;
+
+            // margins
+            const pad = { top: 30, bottom: 40, left: 50, right: 30 };
+            const plotW = W - pad.left - pad.right;
+            const plotH = H - pad.top - pad.bottom;
+
+            // domain: x from 0.05 to 10, range: y from -2.5 to 3.5
+            const xMin = 0.05,
+                xMax = 10;
+            const yMin = -2.5,
+                yMax = 3.5;
+
+            function toPixelX(x) {
+                return pad.left + ((x - xMin) / (xMax - xMin)) * plotW;
+            }
+
+            function toPixelY(y) {
+                return pad.top + plotH - ((y - yMin) / (yMax - yMin)) * plotH;
+            }
+
+            // ---------- clear ----------
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, W, H);
+
+            // ---------- grid & axes ----------
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 0.8;
+
+            // vertical grid lines
+            const xTicks = [0.1, 0.2, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            xTicks.forEach(x => {
+                const px = toPixelX(x);
+                ctx.beginPath();
+                ctx.moveTo(px, pad.top);
+                ctx.lineTo(px, pad.top + plotH);
+                ctx.stroke();
+            });
+
+            // horizontal grid lines
+            const yTicks = [-2, -1, 0, 1, 2, 3];
+            yTicks.forEach(y => {
+                const py = toPixelY(y);
+                ctx.beginPath();
+                ctx.moveTo(pad.left, py);
+                ctx.lineTo(pad.left + plotW, py);
+                ctx.stroke();
+            });
+
+            // ---------- axes ----------
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1.8;
+
+            // x-axis (y=0)
+            const y0 = toPixelY(0);
+            ctx.beginPath();
+            ctx.moveTo(pad.left, y0);
+            ctx.lineTo(pad.left + plotW, y0);
+            ctx.stroke();
+
+            // y-axis (x=0)
+            const x0 = toPixelX(0);
+            ctx.beginPath();
+            ctx.moveTo(x0, pad.top);
+            ctx.lineTo(x0, pad.top + plotH);
+            ctx.stroke();
+
+            // ---------- tick labels ----------
+            ctx.fillStyle = '#1e293b';
+            ctx.font = '11px "Segoe UI", system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+
+            xTicks.forEach(x => {
+                if (x >= 0.1) {
+                    const px = toPixelX(x);
+                    ctx.fillText(x, px, y0 + 6);
+                }
+            });
+
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            yTicks.forEach(y => {
+                const py = toPixelY(y);
+                ctx.fillText(y, pad.left - 8, py);
+            });
+
+            // axis labels
+            ctx.font = '13px "Segoe UI", system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillStyle = '#1e293b';
+            ctx.fillText('x', pad.left + plotW - 10, pad.top + plotH + 14);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('y', pad.left + 12, pad.top + 6);
+
+            // ---------- draw log(x) ----------
+            ctx.strokeStyle = '#1a4b6d';
+            ctx.lineWidth = 3.0;
+            ctx.beginPath();
+
+            const steps = 600;
+            let first = true;
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const x = xMin + t * (xMax - xMin);
+                const y = Math.log(x);
+                if (!isFinite(y)) continue;
+                const px = toPixelX(x);
+                const py = toPixelY(y);
+                if (py < pad.top - 20 || py > pad.top + plotH + 20) {
+                    first = true;
+                    continue;
+                }
+                if (first) {
+                    ctx.moveTo(px, py);
+                    first = false;
+                } else {
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.stroke();
+
+            // ---------- highlight key points ----------
+            const points = [
+                { x: 1, y: 0, label: '(1,0)' },
+                { x: 2, y: Math.log(2), label: `(2, ${Math.log(2).toFixed(3)})` },
+                { x: Math.E, y: 1, label: `(e,1)` },
+                { x: 0.5, y: Math.log(0.5), label: `(0.5, ${Math.log(0.5).toFixed(3)})` },
+            ];
+
+            points.forEach(p => {
+                const px = toPixelX(p.x);
+                const py = toPixelY(p.y);
+                // dot
+                ctx.beginPath();
+                ctx.arc(px, py, 6, 0, 2 * Math.PI);
+                ctx.fillStyle = '#c53030';
+                ctx.fill();
+                ctx.strokeStyle = '#c53030';
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+
+                // label
+                ctx.fillStyle = '#1e293b';
+                ctx.font = '12px "Segoe UI", system-ui, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(p.label, px + 8, py - 6);
+            });
+
+            // ---------- shade the integral area (1 to 3) ----------
+            const xShade = 3;
+            const yShade = Math.log(xShade);
+            const pxShade = toPixelX(xShade);
+            const p1 = toPixelX(1);
+            const y0pix = toPixelY(0);
+
+            ctx.globalAlpha = 0.15;
+            ctx.fillStyle = '#1a4b6d';
+            ctx.beginPath();
+            ctx.moveTo(p1, y0pix);
+            for (let i = 0; i <= 200; i++) {
+                const t = i / 200;
+                const x = 1 + t * (xShade - 1);
+                const y = Math.log(x);
+                const px = toPixelX(x);
+                const py = toPixelY(y);
+                ctx.lineTo(px, py);
+            }
+            ctx.lineTo(pxShade, y0pix);
+            ctx.closePath();
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+
+            // annotation for shaded area
+            ctx.fillStyle = '#1a4b6d';
+            ctx.font = '12px "Segoe UI", system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('area = log(3) ≈ 1.099', (p1 + pxShade) / 2, y0pix - 10);
+
+        })();
+    </script>
+
+</body>
+</html>

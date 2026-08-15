@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathematical Nugget — Curve Tracing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --indigo: #3B3E8F; --indigo-deep: #262a63; --indigo-soft: #eceafb;
+    --amber: #D9992C; --amber-soft: #fbedd2;
+    --sage: #7C9473; --sage-soft: #e8efe3;
+    --paper: #FAF8F3; --ink: #22242E; --ink-soft: #565A6E; --line: #DEDAD0; --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.65; font-size:17px; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; color:var(--indigo-deep); letter-spacing:-0.01em; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); font-weight:500; }
+
+  header.hero{
+    padding:56px 8vw 40px;
+    background: radial-gradient(circle at 85% 15%, rgba(59,62,143,0.10), transparent 55%), var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  header.hero h1{ font-size:clamp(28px, 3.8vw, 44px); margin:10px 0 10px; line-height:1.15; }
+  header.hero p.sub{ max-width:660px; color:var(--ink-soft); font-size:17px; }
+
+  main{ max-width:880px; margin:0 auto; padding:48px 8vw 100px; }
+
+  .kicker{ display:flex; align-items:center; gap:12px; margin-bottom:14px; margin-top:52px;}
+  .kicker:first-child{ margin-top:0; }
+  .kicker .num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:#fff; background:var(--indigo); border-radius:6px; padding:3px 9px; }
+  h2.title{ font-size:clamp(22px,2.8vw,28px); margin:4px 0 18px; }
+
+  p.lede{ color:var(--ink-soft); font-size:17px; }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin:18px 0; }
+  .card.amber{ background:var(--amber-soft); border-color:#eddcae; }
+  .card.sage{ background:var(--sage-soft); border-color:#d3e0cb; }
+  .card.indigo{ background:var(--indigo-soft); border-color:#d4d1f5; }
+
+  .checklist{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:680px){ .checklist{ grid-template-columns:1fr; } }
+  .check-item{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+  }
+  .check-item .step-num{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--amber); font-weight:600;
+    text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; display:block;
+  }
+  .check-item strong{ display:block; margin-bottom:4px; font-size:15.5px; }
+  .check-item p{ margin:0; font-size:14px; color:var(--ink-soft); }
+
+  .demo{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px 26px; margin:22px 0; }
+  .demo .demo-label{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--indigo); margin-bottom:10px; }
+  .demo svg{ width:100%; height:auto; display:block; background:#fdfcf9; border-radius:10px; }
+  .toggle-group{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .toggle-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; background:#fff; border:1.5px solid var(--indigo);
+    color:var(--indigo); padding:7px 13px; border-radius:8px; cursor:pointer;
+  }
+  .toggle-btn.active{ background:var(--indigo); color:#fff; }
+  .toggle-btn:hover{ background:var(--indigo-soft); }
+  .toggle-btn.active:hover{ background:var(--indigo-deep); }
+
+  .problem{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin:16px 0; }
+  .problem .ptitle{ font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--amber); font-weight:600; margin-bottom:8px; }
+  .reveal-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; background:transparent; border:1.5px solid var(--indigo);
+    color:var(--indigo); padding:9px 15px; border-radius:8px; cursor:pointer; margin-top:4px;
+  }
+  .reveal-btn:hover{ background:var(--indigo-soft); }
+  .answer{ display:none; margin-top:12px; padding:16px 18px; background:var(--sage-soft); border-left:3px solid var(--sage); border-radius:6px; }
+  .answer.shown{ display:block; }
+
+  .caption{ font-size:13.5px; color:var(--ink-soft); margin-top:8px; }
+
+  table.datatable{ border-collapse:collapse; width:100%; font-size:14.5px; margin:16px 0; background:#fff; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  table.datatable th, table.datatable td{ border-bottom:1px solid var(--line); padding:10px 14px; text-align:left; vertical-align:top; }
+  table.datatable th{ background:var(--indigo-soft); color:var(--indigo-deep); font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+  table.datatable tr:last-child td{ border-bottom:none; }
+  table.datatable td.mono{ font-family:'IBM Plex Mono',monospace; font-size:13.5px; }
+  footer{ max-width:880px; margin:0 auto; padding:32px 8vw 70px; color:var(--ink-soft); font-size:13.5px; border-top:1px solid var(--line); }
+  footer a{ color:var(--indigo); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Mathematical Nugget</div>
+  <h1>Curve Tracing</h1>
+  <p class="sub">A short, practical checklist for sketching the graph of a function by hand — domain, intercepts, symmetry, asymptotes, critical points, and concavity — followed by two worked examples and four practice problems.</p>
+</header>
+
+<main>
+
+  <div class="kicker"><span class="num">01</span><span class="eyebrow">Why bother sketching by hand</span></div>
+  <h2 class="title">What curve tracing gives you</h2>
+  <p class="lede">Curve tracing (or curve sketching) is the skill of building an accurate picture of a function's graph without plotting hundreds of points — by reading off a handful of structural facts about the function instead. Done well, it tells you where the graph rises and falls, where it bends, where it heads off to infinity, and where it's undefined, all before you ever touch a plotting tool.</p>
+
+  <div class="card indigo">
+    Every curve-tracing problem is really the same six-step routine, applied to a different function. Learn the routine once, and every "sketch this graph" problem becomes an exercise in bookkeeping rather than a fresh puzzle.
+  </div>
+
+  <div class="kicker"><span class="num">02</span><span class="eyebrow">The routine</span></div>
+  <h2 class="title">A six-step checklist</h2>
+  <div class="checklist">
+    <div class="check-item">
+      <span class="step-num">Step 1</span>
+      <strong>Domain</strong>
+      <p>Where is the function undefined or discontinuous? Division by zero and logarithms of non-positive numbers are the usual culprits.</p>
+    </div>
+    <div class="check-item">
+      <span class="step-num">Step 2</span>
+      <strong>Intercepts</strong>
+      <p>Set \(y=0\) and solve for \(x\) to get the \(x\)-intercept(s); set \(x=0\) to get the \(y\)-intercept.</p>
+    </div>
+    <div class="check-item">
+      <span class="step-num">Step 3</span>
+      <strong>Symmetry</strong>
+      <p>Check \(f(-x)\): if it equals \(f(x)\), the graph is symmetric about the \(y\)-axis (even); if it equals \(-f(x)\), symmetric about the origin (odd).</p>
+    </div>
+    <div class="check-item">
+      <span class="step-num">Step 4</span>
+      <strong>Asymptotes</strong>
+      <p>Vertical asymptotes occur where the denominator vanishes; horizontal asymptotes come from the limit as \(x\to\pm\infty\).</p>
+    </div>
+    <div class="check-item">
+      <span class="step-num">Step 5</span>
+      <strong>Critical points &amp; monotonicity</strong>
+      <p>Solve \(f'(x)=0\) (or find where \(f'\) is undefined). The sign of \(f'\) on either side tells you increasing vs. decreasing, and classifies each critical point.</p>
+    </div>
+    <div class="check-item">
+      <span class="step-num">Step 6</span>
+      <strong>Concavity &amp; inflection points</strong>
+      <p>Solve \(f''(x)=0\). Where \(f''>0\) the graph is concave up; where \(f''<0\), concave down. A sign change marks an inflection point.</p>
+    </div>
+  </div>
+  <p class="caption">Steps 5 and 6 lean on exactly the derivative tests you've already seen — a critical point is a local minimum when \(f''>0\) there, a local maximum when \(f''<0\), and inconclusive (possibly an inflection point) when \(f''=0\).</p>
+
+  <div class="kicker"><span class="num">03</span><span class="eyebrow">Step 3, in detail</span></div>
+  <h2 class="title">The symmetry test</h2>
+  <p class="lede">Checking symmetry costs almost nothing and can cut your work in half — sketch one side, then reflect.</p>
+  <table class="datatable">
+    <tr><th>Test</th><th>Conclusion</th><th>Example</th></tr>
+    <tr>
+      <td>\(f(-x)=f(x)\)</td>
+      <td>Even function — graph symmetric about the \(y\)-axis</td>
+      <td class="mono">\(f(x)=x^2+4\): \(f(-x)=(-x)^2+4=x^2+4=f(x)\)</td>
+    </tr>
+    <tr>
+      <td>\(f(-x)=-f(x)\)</td>
+      <td>Odd function — graph symmetric about the origin</td>
+      <td class="mono">\(f(x)=x^3-3x\): \(f(-x)=-x^3+3x=-(x^3-3x)=-f(x)\)</td>
+    </tr>
+    <tr>
+      <td>Neither identity holds</td>
+      <td>No symmetry — must sketch the full domain directly</td>
+      <td class="mono">\(f(x)=x^2-6x+8\): \(f(-x)=x^2+6x+8\ne\pm f(x)\)</td>
+    </tr>
+    <tr>
+      <td>Replacing \(y\) by \(-y\) leaves the equation unchanged</td>
+      <td>Symmetric about the \(x\)-axis (typically a relation, not a function)</td>
+      <td class="mono">\(y^2=x\): \((-y)^2=x\) is the same equation</td>
+    </tr>
+  </table>
+
+  <div class="kicker"><span class="num">04</span><span class="eyebrow">Step 4, in detail</span></div>
+  <h2 class="title">Types of asymptotes</h2>
+  <p class="lede">An asymptote is a line the graph gets arbitrarily close to but never actually reaches. There are three flavors:</p>
+  <table class="datatable">
+    <tr><th>Type</th><th>How to find it</th><th>Example</th></tr>
+    <tr>
+      <td>Vertical</td>
+      <td>Values of \(x\) where the function is undefined because the denominator vanishes (and the numerator doesn't vanish there too)</td>
+      <td class="mono">\(f(x)=\dfrac{2x+1}{x-3}\) → vertical asymptote at \(x=3\)</td>
+    </tr>
+    <tr>
+      <td>Horizontal</td>
+      <td>\(\displaystyle\lim_{x\to\infty}f(x)\) and \(\displaystyle\lim_{x\to-\infty}f(x)\) — divide top and bottom by the highest power of \(x\)</td>
+      <td class="mono">Same \(f(x)\) above → horizontal asymptote \(y=2\)</td>
+    </tr>
+    <tr>
+      <td>Slant (oblique)</td>
+      <td>Occurs when the numerator's degree is exactly one more than the denominator's. Do polynomial long division; the quotient (ignoring the remainder) is the slant asymptote</td>
+      <td class="mono">\(f(x)=\dfrac{x^2+1}{x}=x+\dfrac1x\) → slant asymptote \(y=x\)</td>
+    </tr>
+  </table>
+  <p class="caption">A function can have a horizontal asymptote or a slant asymptote, but never both at the same "end" of the graph — a slant asymptote only shows up precisely when there's no horizontal one to have.</p>
+
+  <div class="kicker"><span class="num">05</span><span class="eyebrow">Worked example — a rational function</span></div>
+  <h2 class="title">Intercepts and asymptotes of \(f(x)=\dfrac{2x+1}{x-3}\)</h2>
+  <div class="card">
+    <p><strong>\(x\)-intercept:</strong> set \(f(x)=0\), i.e. \(2x+1=0\) (with \(x\ne3\)), giving \(x=-\tfrac12\). Intercept at \(\left(-\tfrac12,0\right)\).</p>
+    <p><strong>\(y\)-intercept:</strong> \(f(0)=\dfrac{1}{-3}=-\tfrac13\). Intercept at \(\left(0,-\tfrac13\right)\).</p>
+    <p><strong>Vertical asymptote:</strong> the denominator vanishes at \(x=3\), so there's a vertical asymptote there.</p>
+    <p><strong>Horizontal asymptote:</strong> divide numerator and denominator by \(x\): \(f(x)=\dfrac{2+1/x}{1-3/x}\). As \(x\to\pm\infty\), the \(1/x\) terms vanish, leaving \(f(x)\to2\). So \(y=2\) is a horizontal asymptote.</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Graph of f(x) = (2x + 1) / (x − 3)</div>
+    <svg viewBox="0 0 560 340" xmlns="http://www.w3.org/2000/svg">
+      <line x1="40" y1="195" x2="520" y2="195" stroke="#565A6E" stroke-width="1"/>
+      <line x1="200" y1="20" x2="200" y2="310" stroke="#565A6E" stroke-width="1"/>
+      <text x="524" y="199" font-size="12" font-family="IBM Plex Sans">x</text>
+      <text x="206" y="26" font-size="12" font-family="IBM Plex Sans">y</text>
+      <line x1="280" y1="20" x2="280" y2="310" stroke="#D9992C" stroke-width="1.4" stroke-dasharray="5,4"/>
+      <text x="286" y="30" font-size="12" font-family="IBM Plex Sans" fill="#D9992C">x = 3</text>
+      <line x1="40" y1="160" x2="520" y2="160" stroke="#D9992C" stroke-width="1.4" stroke-dasharray="5,4"/>
+      <text x="44" y="154" font-size="12" font-family="IBM Plex Sans" fill="#D9992C">y = 2</text>
+      <path d="M40,173.6 L93.3,177.5 L146.7,184.5 L200,200.8 L226.7,221.25 L253.3,282.5 L256.7,300" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+      <path d="M303.3,20 L306.7,37.5 L333.3,98.75 L360,119.2 L413.3,135.5 L466.7,142.5 L520,146.4" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+      <circle cx="186.7" cy="195" r="5" fill="#565A6E"/>
+      <text x="186.7" y="215" font-size="12" text-anchor="middle" font-family="IBM Plex Sans">(−½, 0)</text>
+      <circle cx="200" cy="200.8" r="5" fill="#7C9473"/>
+      <text x="208" y="212" font-size="12" font-family="IBM Plex Sans">(0, −⅓)</text>
+    </svg>
+    <p class="caption">Dashed lines mark the asymptotes \(x=3\) and \(y=2\); the two branches approach both but never touch them. The marked points are the intercepts computed above.</p>
+  </div>
+
+  <div class="kicker"><span class="num">06</span><span class="eyebrow">Worked example — a cubic polynomial</span></div>
+  <h2 class="title">Slope and concavity of \(f(x)=x^3-3x^2+2x\)</h2>
+  <div class="card">
+    <p>\(f'(x)=3x^2-6x+2\), so the slope at \(x=-1\) is \(f'(-1)=3+6+2=11\) — steeply increasing there.</p>
+    <p>\(f''(x)=6x-6\), which vanishes at \(x=1\). For \(x<1\), \(f''(x)<0\) (concave down); for \(x>1\), \(f''(x)>0\) (concave up). So the concavity flips at \(x=1\), and \((1,f(1))=(1,0)\) is an inflection point.</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — the graph of f(x) = x³ − 3x² + 2x</div>
+    <svg id="curveSvg" viewBox="0 0 560 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="toggle-group" id="curveToggle">
+      <button class="toggle-btn active" data-layer="curve">Curve</button>
+      <button class="toggle-btn active" data-layer="roots">x-intercepts</button>
+      <button class="toggle-btn active" data-layer="critical">Critical points</button>
+      <button class="toggle-btn active" data-layer="inflection">Inflection point</button>
+    </div>
+    <p class="caption">Toggle each layer on or off. Notice the two critical points (where the tangent is momentarily flat) sit on either side of the single inflection point — exactly where the checklist above predicts them.</p>
+  </div>
+
+  <div class="kicker"><span class="num">07</span><span class="eyebrow">Four families you'll meet constantly</span></div>
+  <h2 class="title">Tracing common function families</h2>
+  <p class="lede">Most functions you'll be asked to sketch belong to one of four families, each with its own shortcut.</p>
+
+  <div class="checklist">
+    <div class="check-item">
+      <strong>Linear — f(x) = 2x + 3</strong>
+      <svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:8px;border:1px solid #DEDAD0;margin:8px 0;">
+        <line x1="20" y1="190" x2="320" y2="190" stroke="#565A6E" stroke-width="1"/>
+        <line x1="170" y1="15" x2="170" y2="200" stroke="#565A6E" stroke-width="1"/>
+        <line x1="30" y1="178.6" x2="310" y2="41.4" stroke="#3B3E8F" stroke-width="2.2"/>
+        <circle cx="100" cy="144.3" r="4" fill="#565A6E"/>
+        <circle cx="170" cy="110" r="4" fill="#7C9473"/>
+      </svg>
+      <p>A straight line needs just two points — no derivatives required. Here, \(x\)-intercept \(-\tfrac32\), \(y\)-intercept \(3\).</p>
+    </div>
+
+    <div class="check-item">
+      <strong>Quadratic — f(x) = x² + 4</strong>
+      <svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:8px;border:1px solid #DEDAD0;margin:8px 0;">
+        <line x1="20" y1="190" x2="320" y2="190" stroke="#565A6E" stroke-width="1"/>
+        <line x1="170" y1="15" x2="170" y2="200" stroke="#565A6E" stroke-width="1"/>
+        <path d="M30,41.4 L76.7,98.6 L123.3,132.9 L170,144.3 L216.7,132.9 L263.3,98.6 L310,41.4" fill="none" stroke="#3B3E8F" stroke-width="2.2"/>
+        <circle cx="170" cy="144.3" r="5" fill="#D9992C" stroke="#fff" stroke-width="1.2"/>
+      </svg>
+      <p>Even: \(f(-x)=(-x)^2+4=f(x)\), so symmetric about the \(y\)-axis. \(f'(x)=2x=0\) at \(x=0\); \(f''(x)=2>0\), a minimum, value \(f(0)=4\).</p>
+    </div>
+
+    <div class="check-item">
+      <strong>Exponential — f(x) = 2ˣ − 1</strong>
+      <svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:8px;border:1px solid #DEDAD0;margin:8px 0;">
+        <line x1="20" y1="190" x2="320" y2="190" stroke="#565A6E" stroke-width="1"/>
+        <line x1="170" y1="15" x2="170" y2="200" stroke="#565A6E" stroke-width="1"/>
+        <line x1="30" y1="190" x2="310" y2="190" stroke="#D9992C" stroke-width="1.3" stroke-dasharray="4,4"/>
+        <path d="M30,187.8 L76.7,185.6 L123.3,181.1 L170,172.2 L216.7,154.4 L263.3,118.9 L310,47.8" fill="none" stroke="#3B3E8F" stroke-width="2.2"/>
+        <circle cx="170" cy="172.2" r="4" fill="#7C9473"/>
+      </svg>
+      <p>Base \(2>1\), so strictly increasing. \(f'(x)=2^x\ln2\) is never zero — no critical points. \(f''(x)=2^x\ln^22>0\) always — convex everywhere, with horizontal asymptote \(y=-1\) as \(x\to-\infty\).</p>
+    </div>
+
+    <div class="check-item">
+      <strong>Logarithmic — f(x) = log₁₀x + 5</strong>
+      <svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:8px;border:1px solid #DEDAD0;margin:8px 0;">
+        <line x1="20" y1="190" x2="320" y2="190" stroke="#565A6E" stroke-width="1"/>
+        <line x1="30" y1="15" x2="30" y2="200" stroke="#D9992C" stroke-width="1.3" stroke-dasharray="4,4"/>
+        <path d="M32.8,163.4 L44,126.1 L58,110 L86,94.0 L142,78.0 L198,68.6 L254,61.9 L310,56.7" fill="none" stroke="#3B3E8F" stroke-width="2.2"/>
+      </svg>
+      <p>Domain is \(x>0\), with a vertical asymptote at \(x=0\). \(\log_{10}x+5\) is the ordinary log curve shifted up \(5\) units — logarithmic functions are, in fact, the mirror image of exponential functions across the line \(y=x\), since one is the inverse of the other.</p>
+    </div>
+  </div>
+
+  <div class="kicker"><span class="num">08</span><span class="eyebrow">Cheat sheet</span></div>
+  <h2 class="title">Quick reference: family behavior at a glance</h2>
+  <table class="datatable">
+    <tr><th>Family</th><th>Domain</th><th>Typical shape</th><th>Asymptotes</th></tr>
+    <tr>
+      <td>Linear</td>
+      <td>\(\mathbb{R}\)</td>
+      <td>Straight line — no bends, no critical points</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Even-degree polynomial</td>
+      <td>\(\mathbb{R}\)</td>
+      <td>Both ends point the same way (up if leading coeff. \(>0\))</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Odd-degree polynomial</td>
+      <td>\(\mathbb{R}\)</td>
+      <td>Ends point opposite ways; at least one inflection point</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Rational</td>
+      <td>\(\mathbb{R}\) minus the denominator's zeros</td>
+      <td>Broken into separate branches by vertical asymptotes</td>
+      <td>Vertical always; horizontal <em>or</em> slant, depending on degree</td>
+    </tr>
+    <tr>
+      <td>Exponential \(a^x\), \(a>1\)</td>
+      <td>\(\mathbb{R}\)</td>
+      <td>Always increasing, always convex, never has a critical point</td>
+      <td>Horizontal, as \(x\to-\infty\)</td>
+    </tr>
+    <tr>
+      <td>Logarithmic</td>
+      <td>\(x>0\) (or shifted)</td>
+      <td>Always increasing, always concave down, mirror image of \(a^x\)</td>
+      <td>Vertical, at the domain's left edge</td>
+    </tr>
+  </table>
+
+  <div class="kicker"><span class="num">09</span><span class="eyebrow">Practice</span></div>
+  <h2 class="title">Eight problems to try yourself</h2>
+
+  <div class="problem">
+    <div class="ptitle">Problem 1</div>
+    <p>Sketch \(f(x)=x+8\).</p>
+    <button class="reveal-btn" data-ans="p1">Show solution</button>
+    <div class="answer" id="p1">
+      <p>Domain is all of \(\mathbb{R}\); as \(x\to\pm\infty\), \(f(x)\to\pm\infty\). \(f'(x)=1\) everywhere, so there are no critical points — the function is increasing at a constant rate throughout, with no bends to trace. The \(x\)-intercept is at \(x=-8\) (setting \(x+8=0\)), the \(y\)-intercept is at \(f(0)=8\), and the graph is simply a straight line through those two points.</p>
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:10px;border:1px solid #DEDAD0;">
+        <line x1="20" y1="130" x2="380" y2="130" stroke="#565A6E" stroke-width="1.2"/>
+        <line x1="330" y1="20" x2="330" y2="240" stroke="#565A6E" stroke-width="1.2"/>
+        <text x="374" y="124" font-size="12" font-family="IBM Plex Sans">x</text>
+        <text x="336" y="28" font-size="12" font-family="IBM Plex Sans">y</text>
+        <line x1="20" y1="240" x2="380" y2="20" stroke="#3B3E8F" stroke-width="2.4"/>
+        <circle cx="90" cy="130" r="4.5" fill="#565A6E"/>
+        <text x="90" y="148" font-size="12" text-anchor="middle" font-family="IBM Plex Sans">−8</text>
+        <circle cx="330" cy="50" r="4.5" fill="#7C9473"/>
+        <text x="340" y="46" font-size="12" font-family="IBM Plex Sans">(0, 8)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 2</div>
+    <p>Sketch \(f(x)=x^2-6x+8\).</p>
+    <button class="reveal-btn" data-ans="p2">Show solution</button>
+    <div class="answer" id="p2">
+      <p>Domain is \(\mathbb{R}\); \(f(x)\to\infty\) as \(x\to\pm\infty\). Critical points: \(f'(x)=2x-6=0\implies x=3\). Checking the sign of \(f'\): negative for \(x<3\) (decreasing), positive for \(x>3\) (increasing) — so \(x=3\) is a minimum.</p>
+      <p>Factoring for \(x\)-intercepts: \(x^2-6x+8=(x-2)(x-4)=0\), giving \(x=2\) and \(x=4\). The parabola dips to a minimum at \(x=3\) between these two roots.</p>
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:10px;border:1px solid #DEDAD0;">
+        <line x1="20" y1="195" x2="380" y2="195" stroke="#565A6E" stroke-width="1.2"/>
+        <line x1="30" y1="20" x2="30" y2="240" stroke="#565A6E" stroke-width="1.2"/>
+        <text x="374" y="189" font-size="12" font-family="IBM Plex Sans">x</text>
+        <text x="36" y="28" font-size="12" font-family="IBM Plex Sans">y</text>
+        <path d="M30,55 L86.7,142.5 L143.4,195 L200.1,212.5 L256.8,195 L313.5,142.5 L370.2,55" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <circle cx="143.4" cy="195" r="4.5" fill="#565A6E"/>
+        <text x="143.4" y="213" font-size="12" text-anchor="middle" font-family="IBM Plex Sans">2</text>
+        <circle cx="256.8" cy="195" r="4.5" fill="#565A6E"/>
+        <text x="256.8" y="213" font-size="12" text-anchor="middle" font-family="IBM Plex Sans">4</text>
+        <circle cx="200.1" cy="212.5" r="5.5" fill="#D9992C" stroke="#fff" stroke-width="1.5"/>
+        <text x="200.1" y="232" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#8a5f13">min (3, −1)</text>
+        <circle cx="30" cy="55" r="4.5" fill="#7C9473"/>
+        <text x="40" y="52" font-size="12" font-family="IBM Plex Sans">(0, 8)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 3</div>
+    <p>Sketch \(f(x)=x^3-3x+4\).</p>
+    <button class="reveal-btn" data-ans="p3">Show solution</button>
+    <div class="answer" id="p3">
+      <p>Domain is \(\mathbb{R}\); \(f(x)\to\pm\infty\) as \(x\to\pm\infty\) respectively. Critical points: \(f'(x)=3x^2-3=0\implies x^2=1\implies x=\pm1\).</p>
+      <p>Sign of \(f'\): positive on \((-\infty,-1)\) (increasing), negative on \((-1,1)\) (decreasing), positive on \((1,\infty)\) (increasing) — so \(x=-1\) is a local maximum and \(x=1\) is a local minimum. A convenient extra point: \(f(0)=4\), the \(y\)-intercept.</p>
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:10px;border:1px solid #DEDAD0;">
+        <line x1="20" y1="230" x2="380" y2="230" stroke="#565A6E" stroke-width="1.2"/>
+        <line x1="200" y1="20" x2="200" y2="240" stroke="#565A6E" stroke-width="1.2"/>
+        <text x="374" y="224" font-size="12" font-family="IBM Plex Sans">x</text>
+        <text x="206" y="28" font-size="12" font-family="IBM Plex Sans">y</text>
+        <path d="M30,209.3 L64,141.6 L98,107.1 L132,97.4 L166,104.3 L200,119.5 L234,134.7 L268,141.6 L302,131.9 L336,97.4 L370,29.7" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <circle cx="132" cy="97.4" r="5.5" fill="#D9992C" stroke="#fff" stroke-width="1.5"/>
+        <text x="132" y="84" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#8a5f13">max (−1, 6)</text>
+        <circle cx="268" cy="141.6" r="5.5" fill="#D9992C" stroke="#fff" stroke-width="1.5"/>
+        <text x="268" y="160" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#8a5f13">min (1, 2)</text>
+        <circle cx="200" cy="119.5" r="4.5" fill="#7C9473"/>
+        <text x="208" y="116" font-size="12" font-family="IBM Plex Sans">(0, 4)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 4</div>
+    <p>Sketch \(f(x)=e^x+2\).</p>
+    <button class="reveal-btn" data-ans="p4">Show solution</button>
+    <div class="answer" id="p4">
+      <p>\(f'(x)=e^x\), which is never zero — so there are no critical points, and the function increases everywhere. \(f''(x)=e^x>0\) always, so the graph is concave up throughout, with no inflection points. This is just the ordinary exponential curve \(e^x\), shifted up by \(2\) units — it approaches the horizontal asymptote \(y=2\) as \(x\to-\infty\), and rises without bound as \(x\to\infty\).</p>
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:10px;border:1px solid #DEDAD0;">
+        <line x1="20" y1="230" x2="380" y2="230" stroke="#565A6E" stroke-width="1.2"/>
+        <line x1="257" y1="20" x2="257" y2="240" stroke="#565A6E" stroke-width="1.2"/>
+        <text x="374" y="224" font-size="12" font-family="IBM Plex Sans">x</text>
+        <text x="263" y="28" font-size="12" font-family="IBM Plex Sans">y</text>
+        <line x1="20" y1="217.7" x2="380" y2="217.7" stroke="#D9992C" stroke-width="1.4" stroke-dasharray="5,4"/>
+        <text x="24" y="212" font-size="12" font-family="IBM Plex Sans" fill="#D9992C">y = 2</text>
+        <path d="M30,217.2 L86.7,216.4 L143.3,214.3 L200,208.6 L256.7,193.0 L313.4,150.5 L341.7,106.9 L370,35.1" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <circle cx="256.7" cy="193.0" r="4.5" fill="#7C9473"/>
+        <text x="264" y="190" font-size="12" font-family="IBM Plex Sans">(0, 3)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 5</div>
+    <p>Sketch \(f(x)=x^3-3x\), using symmetry to simplify your work.</p>
+    <button class="reveal-btn" data-ans="p5">Show solution</button>
+    <div class="answer" id="p5">
+      <p><strong>Symmetry:</strong> \(f(-x)=-x^3+3x=-(x^3-3x)=-f(x)\), so \(f\) is odd — symmetric about the origin. Sketch the right half and reflect.</p>
+      <p><strong>Critical points:</strong> \(f'(x)=3x^2-3=0\implies x=\pm1\). \(f''(x)=6x\): at \(x=1\), \(f''=6>0\) (local min, value \(f(1)=-2\)); at \(x=-1\), \(f''=-6<0\) (local max, value \(f(-1)=2\)) — consistent with the odd symmetry.</p>
+      <p><strong>Inflection point:</strong> \(f''(x)=6x=0\implies x=0\), and \(f(0)=0\) — the origin itself, exactly where an odd function's graph must pass.</p>
+      <p><strong>\(x\)-intercepts:</strong> \(x^3-3x=x(x^2-3)=0\implies x=0,\pm\sqrt3\).</p>
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:10px;border:1px solid #DEDAD0;">
+        <line x1="20" y1="130" x2="380" y2="130" stroke="#565A6E" stroke-width="1.2"/>
+        <line x1="200" y1="20" x2="200" y2="240" stroke="#565A6E" stroke-width="1.2"/>
+        <text x="374" y="124" font-size="12" font-family="IBM Plex Sans">x</text>
+        <text x="206" y="28" font-size="12" font-family="IBM Plex Sans">y</text>
+        <path d="M30,229.3 L64,154.4 L82.2,130 L132,105.6 L166,113.2 L200,130 L234,146.8 L268,154.4 L317.8,130 L336,105.6 L370,30.7" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <circle cx="132" cy="105.6" r="5.5" fill="#D9992C" stroke="#fff" stroke-width="1.5"/>
+        <text x="132" y="92" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#8a5f13">max (−1, 2)</text>
+        <circle cx="268" cy="154.4" r="5.5" fill="#D9992C" stroke="#fff" stroke-width="1.5"/>
+        <text x="268" y="174" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#8a5f13">min (1, −2)</text>
+        <circle cx="200" cy="130" r="4.5" fill="#7C9473"/>
+        <text x="200" y="146" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#3a5233">inflection (0, 0)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 6</div>
+    <p>Sketch \(f(x)=\dfrac{1}{x-2}+1\).</p>
+    <button class="reveal-btn" data-ans="p6">Show solution</button>
+    <div class="answer" id="p6">
+      <p><strong>Domain:</strong> all reals except \(x=2\), where the denominator vanishes — vertical asymptote at \(x=2\).</p>
+      <p><strong>Horizontal asymptote:</strong> as \(x\to\pm\infty\), \(\dfrac{1}{x-2}\to0\), so \(f(x)\to1\) — horizontal asymptote \(y=1\).</p>
+      <p><strong>Intercepts:</strong> \(x\)-intercept from \(\dfrac{1}{x-2}=-1\implies x=1\); \(y\)-intercept \(f(0)=\dfrac{1}{-2}+1=\tfrac12\).</p>
+      <p><strong>Monotonicity:</strong> \(f'(x)=-\dfrac{1}{(x-2)^2}<0\) everywhere it's defined — the function is decreasing on each branch, with no critical points. This is just \(y=\tfrac1x\) shifted \(2\) right and \(1\) up.</p>
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:10px;border:1px solid #DEDAD0;">
+        <line x1="20" y1="146" x2="380" y2="146" stroke="#565A6E" stroke-width="1.2"/>
+        <line x1="132" y1="20" x2="132" y2="240" stroke="#565A6E" stroke-width="1.2"/>
+        <text x="374" y="140" font-size="12" font-family="IBM Plex Sans">x</text>
+        <text x="138" y="28" font-size="12" font-family="IBM Plex Sans">y</text>
+        <line x1="200" y1="20" x2="200" y2="240" stroke="#D9992C" stroke-width="1.4" stroke-dasharray="5,4"/>
+        <text x="206" y="34" font-size="12" font-family="IBM Plex Sans" fill="#D9992C">x = 2</text>
+        <line x1="20" y1="125" x2="380" y2="125" stroke="#D9992C" stroke-width="1.4" stroke-dasharray="5,4"/>
+        <text x="24" y="118" font-size="12" font-family="IBM Plex Sans" fill="#D9992C">y = 1</text>
+        <path d="M30,129.2 L98,132 L132,135.5 L166,146 L183,167 L193.2,230" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <path d="M206.8,20 L217,83 L234,104 L268,114.5 L302,118 L370,120.8" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <circle cx="166" cy="146" r="4.5" fill="#565A6E"/>
+        <text x="166" y="163" font-size="12" text-anchor="middle" font-family="IBM Plex Sans">(1, 0)</text>
+        <circle cx="132" cy="135.5" r="4.5" fill="#7C9473"/>
+        <text x="140" y="132" font-size="12" font-family="IBM Plex Sans">(0, ½)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 7</div>
+    <p>Sketch \(f(x)=\ln(x)-2\).</p>
+    <button class="reveal-btn" data-ans="p7">Show solution</button>
+    <div class="answer" id="p7">
+      <p><strong>Domain:</strong> \(x>0\) — logarithms are only defined for positive inputs. Vertical asymptote at \(x=0\), and no \(y\)-intercept, since \(x=0\) is excluded.</p>
+      <p><strong>\(x\)-intercept:</strong> \(\ln x=2\implies x=e^2\approx7.39\).</p>
+      <p><strong>Monotonicity and concavity:</strong> \(f'(x)=\dfrac1x>0\) for every \(x\) in the domain — always increasing, no critical points. \(f''(x)=-\dfrac{1}{x^2}<0\) always — concave down throughout.</p>
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:10px;border:1px solid #DEDAD0;">
+        <line x1="20" y1="125" x2="380" y2="125" stroke="#565A6E" stroke-width="1.2"/>
+        <line x1="30" y1="20" x2="30" y2="230" stroke="#D9992C" stroke-width="1.4" stroke-dasharray="5,4"/>
+        <text x="36" y="30" font-size="12" font-family="IBM Plex Sans" fill="#D9992C">x = 0</text>
+        <text x="374" y="119" font-size="12" font-family="IBM Plex Sans">x</text>
+        <path d="M33.4,205.6 L47,149.3 L64,125 L98,100.7 L166,76.5 L281.2,55 L370,44.4" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <circle cx="281.2" cy="55" r="4.5" fill="#565A6E"/>
+        <text x="281.2" y="42" font-size="12" text-anchor="middle" font-family="IBM Plex Sans">(e², 0)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 8</div>
+    <p>Sketch \(f(x)=\dfrac{x^2+1}{x}\). (Hint: rewrite it first.)</p>
+    <button class="reveal-btn" data-ans="p8">Show solution</button>
+    <div class="answer" id="p8">
+      <p>Rewrite: \(f(x)=\dfrac{x^2+1}{x}=x+\dfrac1x\). Domain is \(x\ne0\), giving a vertical asymptote at \(x=0\). Since the numerator's degree \((2)\) is exactly one more than the denominator's \((1)\), there's a slant asymptote — reading it straight off the rewritten form, \(y=x\), as \(\tfrac1x\to0\) at both ends.</p>
+      <p><strong>Symmetry:</strong> \(f(-x)=-x-\tfrac1x=-f(x)\) — odd, symmetric about the origin.</p>
+      <p><strong>Critical points:</strong> \(f'(x)=1-\dfrac{1}{x^2}=0\implies x=\pm1\). \(f''(x)=\dfrac{2}{x^3}\): at \(x=1\), \(f''=2>0\) (local min, \(f(1)=2\)); at \(x=-1\), \(f''=-2<0\) (local max, \(f(-1)=-2\)).</p>
+      <p><strong>Intercepts:</strong> none — \(x^2+1=0\) has no real solution, and \(x=0\) isn't in the domain.</p>
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fdfcf9;border-radius:10px;border:1px solid #DEDAD0;">
+        <line x1="20" y1="130" x2="380" y2="130" stroke="#565A6E" stroke-width="1.2"/>
+        <line x1="200" y1="20" x2="200" y2="240" stroke="#D9992C" stroke-width="1.4" stroke-dasharray="5,4"/>
+        <text x="206" y="30" font-size="12" font-family="IBM Plex Sans" fill="#D9992C">x = 0</text>
+        <line x1="30" y1="203.3" x2="370" y2="56.7" stroke="#D9992C" stroke-width="1.4" stroke-dasharray="5,4"/>
+        <text x="330" y="66" font-size="12" font-family="IBM Plex Sans" fill="#D9992C">y = x</text>
+        <text x="374" y="124" font-size="12" font-family="IBM Plex Sans">x</text>
+        <path d="M208.5,34.7 L221.25,84.2 L242.5,93.3 L285,84.2 L327.5,68.9 L370,52.1" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <path d="M30,207.9 L42.5,191.1 L85,175.8 L127.5,166.6 L148.75,175.8 L161.5,225.3" fill="none" stroke="#3B3E8F" stroke-width="2.4"/>
+        <circle cx="242.5" cy="93.3" r="5.5" fill="#D9992C" stroke="#fff" stroke-width="1.5"/>
+        <text x="242.5" y="80" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#8a5f13">min (1, 2)</text>
+        <circle cx="127.5" cy="166.6" r="5.5" fill="#D9992C" stroke="#fff" stroke-width="1.5"/>
+        <text x="127.5" y="185" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#8a5f13">max (−1, −2)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card sage" style="margin-top:30px;">
+    <strong>The takeaway.</strong> Almost every curve-tracing problem reduces to the same short script: pin down the domain, find the intercepts, differentiate once for critical points and monotonicity, differentiate again for concavity and inflection points, and check the behavior at the edges of the domain (asymptotes, or \(x\to\pm\infty\)). Run that script and the sketch draws itself.
+  </div>
+
+</main>
+
+<footer>
+  <p>Adapted and paraphrased from GeeksforGeeks, <a href="https://www.geeksforgeeks.org/maths/curve-sketching/" target="_blank" rel="noopener">"Curve Sketching: Fundamentals, Techniques, and Examples Explained."</a></p>
+</footer>
+
+<script>
+  document.querySelectorAll('.reveal-btn[data-ans]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const ans = document.getElementById(btn.dataset.ans);
+      ans.classList.toggle('shown');
+      if (window.MathJax) MathJax.typesetPromise([ans]);
+    });
+  });
+
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs){ const e = document.createElementNS(NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function txt(x,y,s,opts){ const t = el('text', Object.assign({x:x,y:y,'font-size':12.5,'font-family':"IBM Plex Sans, sans-serif",fill:'#22242E'}, opts||{})); t.textContent = s; return t; }
+
+  const curveSvg = document.getElementById('curveSvg');
+  const layers = { curve:true, roots:true, critical:true, inflection:true };
+
+  const plotX=60, plotW=460, plotY0=290, plotScaleX=90, plotScaleY=34; // x in roughly [-1.3, 3.3], y scaled
+
+  function fx(x){ return x*x*x - 3*x*x + 2*x; }
+  function toPx(x,y){ return { x: plotX + (x+1.3)*plotScaleX, y: plotY0 - y*plotScaleY }; }
+
+  function drawCurve(){
+    curveSvg.innerHTML = '';
+    // axes
+    const originPx = toPx(0,0);
+    curveSvg.appendChild(el('line',{x1:plotX-10,y1:originPx.y,x2:plotX+plotW,y2:originPx.y, stroke:'#565A6E','stroke-width':1.2}));
+    curveSvg.appendChild(el('line',{x1:originPx.x,y1:20,x2:originPx.x,y2:plotY0+20, stroke:'#565A6E','stroke-width':1.2}));
+    curveSvg.appendChild(txt(plotX+plotW-4,originPx.y-6,'x',{'text-anchor':'end'}));
+    curveSvg.appendChild(txt(originPx.x+8,26,'y'));
+
+    if(layers.curve){
+      let d = '';
+      for(let i=0;i<=100;i++){
+        const x = -1.3 + 4.6*i/100;
+        const p = toPx(x, fx(x));
+        d += (i===0?'M':' L') + ` ${p.x} ${p.y}`;
+      }
+      curveSvg.appendChild(el('path',{d:d, fill:'none', stroke:'#3B3E8F', 'stroke-width':2.4}));
+    }
+
+    if(layers.roots){
+      // roots of x^3-3x^2+2x = x(x-1)(x-2) => x=0,1,2
+      [0,1,2].forEach(r=>{
+        const p = toPx(r,0);
+        curveSvg.appendChild(el('circle',{cx:p.x,cy:p.y,r:4.5,fill:'#565A6E'}));
+      });
+    }
+
+    if(layers.critical){
+      // f'(x)=3x^2-6x+2=0 => x=1±1/sqrt(3)
+      const xs = [1-1/Math.sqrt(3), 1+1/Math.sqrt(3)];
+      xs.forEach(x=>{
+        const p = toPx(x, fx(x));
+        curveSvg.appendChild(el('circle',{cx:p.x,cy:p.y,r:6,fill:'#D9992C', stroke:'#fff','stroke-width':1.5}));
+      });
+      curveSvg.appendChild(txt(toPx(xs[0],fx(xs[0])).x-8, toPx(xs[0],fx(xs[0])).y-12, 'local max', {'text-anchor':'end', fill:'#8a5f13'}));
+      curveSvg.appendChild(txt(toPx(xs[1],fx(xs[1])).x+8, toPx(xs[1],fx(xs[1])).y+22, 'local min', {fill:'#8a5f13'}));
+    }
+
+    if(layers.inflection){
+      const p = toPx(1, fx(1));
+      curveSvg.appendChild(el('circle',{cx:p.x,cy:p.y,r:6,fill:'#7C9473', stroke:'#fff','stroke-width':1.5}));
+      curveSvg.appendChild(txt(p.x+10,p.y+18,'inflection (1, 0)',{fill:'#3a5233'}));
+    }
+  }
+
+  document.querySelectorAll('#curveToggle .toggle-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      btn.classList.toggle('active');
+      layers[btn.dataset.layer] = btn.classList.contains('active');
+      drawCurve();
+    });
+  });
+  drawCurve();
+</script>
+</body>
+</html>

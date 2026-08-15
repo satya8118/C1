@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interval Notation Reference Chart</title>
+  
+  <!-- MathJax for rendering math formulas -->
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'Cambria Math', 'Times New Roman', serif;
+      background-color: #fcfcfc;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 25px 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    table {
+      border-collapse: collapse;
+      font-size: 1.15rem;
+    }
+
+    td {
+      padding: 10px 25px;
+      vertical-align: middle;
+    }
+
+    .math-cell {
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .diagram-cell {
+      text-align: center;
+      width: 260px;
+    }
+
+    svg {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <table>
+    <!-- SVG Defs for Arrowheads -->
+    <svg width="0" height="0" style="position:absolute;">
+      <defs>
+        <marker id="arrow-left-gray" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 10 0 L 0 5 L 10 10 z" fill="#888" />
+        </marker>
+        <marker id="arrow-right-gray" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#888" />
+        </marker>
+        <marker id="arrow-left-black" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 10 0 L 0 5 L 10 10 z" fill="#000" />
+        </marker>
+        <marker id="arrow-right-black" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#000" />
+        </marker>
+      </defs>
+    </svg>
+
+    <!-- Row 1: (a, b) -->
+    <tr>
+      <td class="math-cell">\( (a, b) = \{ x \in \mathbb{R} \mid a < x < b \} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="15" y1="25" x2="235" y2="25" stroke="#888" stroke-width="1.5" marker-start="url(#arrow-left-gray)" marker-end="url(#arrow-right-gray)" />
+          <line x1="80" y1="25" x2="170" y2="25" stroke="#000" stroke-width="3" />
+          <circle cx="80" cy="25" r="4" fill="#fff" stroke="#000" stroke-width="2" />
+          <circle cx="170" cy="25" r="4" fill="#fff" stroke="#000" stroke-width="2" />
+          <text x="80" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">a</text>
+          <text x="170" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">b</text>
+        </svg>
+      </td>
+    </tr>
+
+    <!-- Row 2: [a, b] -->
+    <tr>
+      <td class="math-cell">\( [a, b] = \{ x \in \mathbb{R} \mid a \le x \le b \} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="15" y1="25" x2="235" y2="25" stroke="#888" stroke-width="1.5" marker-start="url(#arrow-left-gray)" marker-end="url(#arrow-right-gray)" />
+          <line x1="80" y1="25" x2="170" y2="25" stroke="#000" stroke-width="3" />
+          <circle cx="80" cy="25" r="4" fill="#000" />
+          <circle cx="170" cy="25" r="4" fill="#000" />
+          <text x="80" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">a</text>
+          <text x="170" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">b</text>
+        </svg>
+      </td>
+    </tr>
+
+    <!-- Row 3: [a, b) -->
+    <tr>
+      <td class="math-cell">\( [a, b) = \{ x \in \mathbb{R} \mid a \le x < b \} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="15" y1="25" x2="235" y2="25" stroke="#888" stroke-width="1.5" marker-start="url(#arrow-left-gray)" marker-end="url(#arrow-right-gray)" />
+          <line x1="80" y1="25" x2="170" y2="25" stroke="#000" stroke-width="3" />
+          <circle cx="80" cy="25" r="4" fill="#000" />
+          <circle cx="170" cy="25" r="4" fill="#fff" stroke="#000" stroke-width="2" />
+          <text x="80" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">a</text>
+          <text x="170" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">b</text>
+        </svg>
+      </td>
+    </tr>
+
+    <!-- Row 4: (a, b] -->
+    <tr>
+      <td class="math-cell">\( (a, b] = \{ x \in \mathbb{R} \mid a < x \le b \} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="15" y1="25" x2="235" y2="25" stroke="#888" stroke-width="1.5" marker-start="url(#arrow-left-gray)" marker-end="url(#arrow-right-gray)" />
+          <line x1="80" y1="25" x2="170" y2="25" stroke="#000" stroke-width="3" />
+          <circle cx="80" cy="25" r="4" fill="#fff" stroke="#000" stroke-width="2" />
+          <circle cx="170" cy="25" r="4" fill="#000" />
+          <text x="80" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">a</text>
+          <text x="170" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">b</text>
+        </svg>
+      </td>
+    </tr>
+
+    <!-- Row 5: (a, inf) -->
+    <tr>
+      <td class="math-cell">\( (a, \infty) = \{ x \in \mathbb{R} \mid a < x \} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="15" y1="25" x2="80" y2="25" stroke="#888" stroke-width="1.5" marker-start="url(#arrow-left-gray)" />
+          <line x1="80" y1="25" x2="235" y2="25" stroke="#000" stroke-width="3" marker-end="url(#arrow-right-black)" />
+          <circle cx="80" cy="25" r="4" fill="#fff" stroke="#000" stroke-width="2" />
+          <text x="80" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">a</text>
+        </svg>
+      </td>
+    </tr>
+
+    <!-- Row 6: [a, inf) -->
+    <tr>
+      <td class="math-cell">\( [a, \infty) = \{ x \in \mathbb{R} \mid a \le x \} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="15" y1="25" x2="80" y2="25" stroke="#888" stroke-width="1.5" marker-start="url(#arrow-left-gray)" />
+          <line x1="80" y1="25" x2="235" y2="25" stroke="#000" stroke-width="3" marker-end="url(#arrow-right-black)" />
+          <circle cx="80" cy="25" r="4" fill="#000" />
+          <text x="80" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">a</text>
+        </svg>
+      </td>
+    </tr>
+
+    <!-- Row 7: (-inf, b) -->
+    <tr>
+      <td class="math-cell">\( (-\infty, b) = \{ x \in \mathbb{R} \mid x < b \} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="170" y1="25" x2="235" y2="25" stroke="#888" stroke-width="1.5" marker-end="url(#arrow-right-gray)" />
+          <line x1="15" y1="25" x2="170" y2="25" stroke="#000" stroke-width="3" marker-start="url(#arrow-left-black)" />
+          <circle cx="170" cy="25" r="4" fill="#fff" stroke="#000" stroke-width="2" />
+          <text x="170" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">b</text>
+        </svg>
+      </td>
+    </tr>
+
+    <!-- Row 8: (-inf, b] -->
+    <tr>
+      <td class="math-cell">\( (-\infty, b] = \{ x \in \mathbb{R} \mid x \le b \} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="170" y1="25" x2="235" y2="25" stroke="#888" stroke-width="1.5" marker-end="url(#arrow-right-gray)" />
+          <line x1="15" y1="25" x2="170" y2="25" stroke="#000" stroke-width="3" marker-start="url(#arrow-left-black)" />
+          <circle cx="170" cy="25" r="4" fill="#000" />
+          <text x="170" y="12" font-family="Times New Roman" font-style="italic" font-size="16" text-anchor="middle">b</text>
+        </svg>
+      </td>
+    </tr>
+
+    <!-- Row 9: (-inf, inf) -->
+    <tr>
+      <td class="math-cell">\( (-\infty, \infty) = \mathbb{R} \)</td>
+      <td class="diagram-cell">
+        <svg width="250" height="40">
+          <line x1="15" y1="25" x2="235" y2="25" stroke="#000" stroke-width="3" marker-start="url(#arrow-left-black)" marker-end="url(#arrow-right-black)" />
+        </svg>
+      </td>
+    </tr>
+
+  </table>
+</div>
+
+</body>
+</html>

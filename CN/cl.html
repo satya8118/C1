@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Preservation & Local Boundedness — Modern Real Analysis Guide</title>
+    
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax for rendering math expressions -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --card-bg: #151c2e;
+            --card-border: #232d45;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            
+            --accent-blue: #38bdf8;
+            --accent-blue-bg: rgba(56, 189, 248, 0.08);
+            --accent-green: #34d399;
+            --accent-green-bg: rgba(52, 211, 153, 0.08);
+            --accent-red: #f87171;
+            --accent-red-bg: rgba(248, 113, 113, 0.08);
+            --accent-amber: #fbbf24;
+            --accent-amber-bg: rgba(251, 191, 36, 0.08);
+            --accent-purple: #c084fc;
+            --accent-purple-bg: rgba(192, 132, 252, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.7;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Hero Banner */
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2.5rem 1.5rem;
+            background: radial-gradient(circle at top, #1e293b 0%, var(--card-bg) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Section Cards */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #334155;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .card-blue { border-left: 4px solid var(--accent-blue); }
+        .card-blue .card-header { color: var(--accent-blue); }
+        
+        .card-amber { border-left: 4px solid var(--accent-amber); }
+        .card-amber .card-header { color: var(--accent-amber); }
+        
+        .card-green { border-left: 4px solid var(--accent-green); }
+        .card-green .card-header { color: var(--accent-green); }
+        
+        .card-purple { border-left: 4px solid var(--accent-purple); }
+        .card-purple .card-header { color: var(--accent-purple); }
+
+        /* Two Column Grid for Sign Cases */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .sign-case-pos {
+            background: var(--accent-green-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-green);
+            color: #6ee7b7;
+        }
+
+        .sign-case-neg {
+            background: var(--accent-red-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-red);
+            color: #fca5a5;
+        }
+
+        /* Intuition & Discovery Box */
+        .insight-box {
+            background: var(--accent-amber-bg);
+            border: 1px dashed var(--accent-amber);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+            color: #fef08a;
+            font-size: 0.98rem;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            color: var(--accent-amber);
+            display: block;
+            margin-bottom: 0.4rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Proof Blocks */
+        .proof-block {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .proof-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .qed {
+            float: right;
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        /* Diagrams */
+        .diagram-container {
+            background-color: #0d1322;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .diagram-caption {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.8rem;
+            line-height: 1.5;
+        }
+
+        /* Styled Table */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #1e293b;
+            color: var(--text-primary);
+            padding: 0.85rem 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Modern Lists */
+        ol, ul {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.6rem;
+            color: var(--text-secondary);
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 1rem 0.5rem; }
+            .hero h1 { font-size: 1.8rem; }
+            .card { padding: 1.2rem; }
+            .two-col { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <h1>Local Properties of Continuous Functions</h1>
+        <p>Direct $\varepsilon$-$\delta$ proofs for Sign Preservation and Local Boundedness—exploring local function behavior near a point of continuity[cite: 4].</p>
+    </header>
+
+    <!-- OVERVIEW CARD -->
+    <section class="card card-blue">
+        <div class="card-header">
+            <span>📌</span> Overview
+        </div>
+        <p>We provide direct $\varepsilon$-$\delta$ proofs of two essential local properties of continuous functions[cite: 4]:</p>
+        <ul style="margin-top: 0.5rem;">
+            <li><strong>Sign Preservation:</strong> Continuous functions non-zero at $c$ retain their sign in a neighborhood around $c$[cite: 4].</li>
+            <li><strong>Local Boundedness:</strong> Continuous functions at $c$ remain bounded in a neighborhood around $c$[cite: 4].</li>
+        </ul>
+        <p style="margin-top: 0.8rem;">Seeing these alongside sequential proofs demonstrates how the two continuity frameworks operate in practice[cite: 4].</p>
+    </section>
+
+    <!-- THEOREM 1: SIGN PRESERVATION -->
+    <section class="card card-green">
+        <div class="card-header">
+            <span>⚡</span> Theorem 1 — Sign Preservation
+        </div>
+
+        <p>Let $f$ be continuous at $c$ with $f(c) \neq 0$[cite: 4]. Then there exists $\delta > 0$ such that $f(x)$ has the same sign as $f(c)$ for all $x \in (c-\delta, c+\delta)$[cite: 4]:</p>
+
+        <div class="two-col">
+            <div class="sign-case-pos">
+                <strong>Positive Case:</strong><br>
+                If $f(c) > 0$, then $f(x) > 0$ for all $x \in (c-\delta, c+\delta)$[cite: 4].
+            </div>
+            <div class="sign-case-neg">
+                <strong>Negative Case:</strong><br>
+                If $f(c) < 0$, then $f(x) < 0$ for all $x \in (c-\delta, c+\delta)$[cite: 4].
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <span class="insight-title">💡 Intuition for Choosing $\varepsilon$:</span>
+            We want $f(x)$ to remain on the same side of $0$ as $f(c)$[cite: 4]. The distance from $f(c)$ to $0$ is $|f(c)|$[cite: 4]. By forcing $|f(x) - f(c)| < |f(c)|$, $f(x)$ cannot cross $0$ or switch signs[cite: 4]. Thus, setting <strong>$\varepsilon = |f(c)|$</strong> is the natural geometric choice[cite: 4].
+        </div>
+
+        <!-- DIAGRAM 1 -->
+        <div class="diagram-container">
+            <svg viewBox="0 0 680 150" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-height:150px;">
+                <defs>
+                    <marker id="spa" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                        <path d="M0,0 L7,2.5 L0,5 Z" fill="#94a3b8"/>
+                    </marker>
+                </defs>
+                <!-- y-axis -->
+                <line x1="80" y1="130" x2="80" y2="15" stroke="#475569" stroke-width="1.5" marker-end="url(#spa)"/>
+                <!-- x-axis -->
+                <line x1="40" y1="100" x2="640" y2="100" stroke="#475569" stroke-width="1.5" marker-end="url(#spa)"/>
+                <text x="642" y="108" font-size="10" fill="#94a3b8">$x$</text>
+                <text x="84" y="14" font-size="10" fill="#94a3b8">$y$</text>
+                <text x="67" y="103" font-size="9" fill="#94a3b8">$0$</text>
+
+                <!-- f(c) level -->
+                <line x1="80" y1="48" x2="640" y2="48" stroke="#34d399" stroke-width="1" stroke-dasharray="5,4" opacity=".5"/>
+                <text x="84" y="44" font-size="9" fill="#34d399">$f(c)$</text>
+
+                <!-- epsilon band -->
+                <rect x="76" y="48" width="8" height="52" fill="#34d399" opacity=".25" rx="2"/>
+                <line x1="73" y1="48" x2="88" y2="48" stroke="#34d399" stroke-width="1.5"/>
+                <line x1="73" y1="100" x2="88" y2="100" stroke="#34d399" stroke-width="1.5"/>
+                <text x="56" y="46" font-size="8" fill="#34d399" text-anchor="end">$f(c)+\varepsilon$</text>
+                <text x="56" y="103" font-size="8" fill="#34d399" text-anchor="end">$f(c)-\varepsilon=0$</text>
+                <text x="54" y="75" font-size="9" fill="#34d399" text-anchor="end">$\varepsilon=|f(c)|$</text>
+
+                <!-- Curve -->
+                <path d="M200,70 Q300,35 360,42 Q420,50 480,38 Q530,28 580,45" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+
+                <!-- c and delta band -->
+                <line x1="360" y1="95" x2="360" y2="105" stroke="#fbbf24" stroke-width="1.5"/>
+                <text x="358" y="120" font-size="9" fill="#fbbf24" text-anchor="middle">$c$</text>
+                <rect x="280" y="96" width="160" height="8" fill="#fbbf24" opacity=".3" rx="2"/>
+                <text x="280" y="135" font-size="8" fill="#fbbf24" text-anchor="middle">$c-\delta$</text>
+                <text x="440" y="135" font-size="8" fill="#fbbf24" text-anchor="middle">$c+\delta$</text>
+                <line x1="280" y1="93" x2="280" y2="108" stroke="#fbbf24" stroke-width="1.2"/>
+                <line x1="440" y1="93" x2="440" y2="108" stroke="#fbbf24" stroke-width="1.2"/>
+
+                <!-- Annotations -->
+                <text x="500" y="70" font-size="9" fill="#38bdf8">curve stays above $0$</text>
+                <text x="500" y="82" font-size="9" fill="#38bdf8">inside $\delta$-band</text>
+            </svg>
+            <div class="diagram-caption">
+                Choosing $\varepsilon = |f(c)|$ creates an $\varepsilon$-band $(f(c)-\varepsilon, f(c)+\varepsilon)$ whose lower endpoint touches $0$ when $f(c) > 0$[cite: 4]. Consequently, any $f(x)$ lying inside this band remains strictly positive[cite: 4].
+            </div>
+        </div>
+
+        <div class="proof-block">
+            <span class="proof-label">Formal Proof</span>
+            We treat the case $f(c) > 0$; the case $f(c) < 0$ follows analogously[cite: 4].<br><br>
+
+            <strong>Step 1: Choose $\varepsilon$.</strong><br>
+            Since $f(c) \neq 0$, we have $|f(c)| > 0$[cite: 4]. Set $\varepsilon := |f(c)| = f(c) > 0$[cite: 4].<br><br>
+
+            <strong>Step 2: Apply Continuity.</strong><br>
+            Since $f$ is continuous at $c$, for this $\varepsilon > 0$, there exists $\delta > 0$ such that[cite: 4]:
+            $$|x-c| < \delta \implies |f(x)-f(c)| < \varepsilon = |f(c)|$$[cite: 4]
+
+            <strong>Step 3: Expand Absolute Value Inequality.</strong><br>
+            The inequality $|f(x)-f(c)| < |f(c)|$ is equivalent to[cite: 4]:
+            $$-|f(c)| < f(x)-f(c) < |f(c)|$$[cite: 4]
+            Adding $f(c)$ throughout[cite: 4]:
+            $$f(c)-|f(c)| < f(x) < f(c)+|f(c)|$$[cite: 4]
+
+            <strong>Step 4: Case $f(c) > 0$.</strong><br>
+            Here $|f(c)| = f(c)$, so the left-hand inequality simplifies to[cite: 4]:
+            $$f(c)-f(c) = 0 < f(x)$$[cite: 4]
+            Therefore, $f(x) > 0$ for all $x$ satisfying $|x-c| < \delta$[cite: 4].<br><br>
+
+            <strong>Step 4': Case $f(c) < 0$.</strong><br>
+            Here $|f(c)| = -f(c)$, so the right-hand inequality simplifies to[cite: 4]:
+            $$f(x) < f(c) + (-f(c)) = 0$$[cite: 4]
+            Therefore, $f(x) < 0$ for all $x$ satisfying $|x-c| < \delta$[cite: 4].<br><br>
+
+            In both cases, the $\delta$-neighborhood $(c-\delta, c+\delta)$ preserves the sign of $f(c)$[cite: 4].
+            <span class="qed">$\blacksquare$</span>
+        </div>
+    </section>
+
+    <!-- THEOREM 2: LOCAL BOUNDEDNESS -->
+    <section class="card card-purple">
+        <div class="card-header">
+            <span>🔒</span> Theorem 2 — Local Boundedness
+        </div>
+
+        <p>Let $f$ be continuous at $c$[cite: 4]. Then there exist $\delta > 0$ and $M > 0$ such that[cite: 4]:</p>
+        $$|x-c| < \delta \implies |f(x)| \le M$$[cite: 4]
+        <p>That is, $f$ is bounded on the neighborhood $(c-\delta, c+\delta)$[cite: 4].</p>
+
+        <div class="insight-box" style="background: var(--accent-purple-bg); border-color: var(--accent-purple); color: #e9d5ff;">
+            <span class="insight-title" style="color: var(--accent-purple);">💡 Triangle Inequality Strategy:</span>
+            We decompose $|f(x)|$ as $|(f(x)-f(c)) + f(c)| \le |f(x)-f(c)| + |f(c)|$[cite: 4]. By choosing a convenient fixed value $\varepsilon = 1$, continuity bounds $|f(x)-f(c)| < 1$[cite: 4]. Substituting yields $|f(x)| < 1 + |f(c)|$[cite: 4]. Setting <strong>$M = 1 + |f(c)|$</strong> provides an explicit upper bound[cite: 4].
+        </div>
+
+        <!-- DIAGRAM 2 -->
+        <div class="diagram-container">
+            <svg viewBox="0 0 680 160" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-height:160px;">
+                <defs>
+                    <marker id="lba" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                        <path d="M0,0 L7,2.5 L0,5 Z" fill="#94a3b8"/>
+                    </marker>
+                    <marker id="lbb" markerWidth="7" markerHeight="5" refX="0" refY="2.5" orient="auto">
+                        <path d="M7,0 L0,2.5 L7,5 Z" fill="#c084fc"/>
+                    </marker>
+                    <marker id="lbc" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                        <path d="M0,0 L7,2.5 L0,5 Z" fill="#c084fc"/>
+                    </marker>
+                </defs>
+                <!-- axes -->
+                <line x1="40" y1="120" x2="640" y2="120" stroke="#475569" stroke-width="1.5" marker-end="url(#lba)"/>
+                <line x1="80" y1="148" x2="80" y2="15" stroke="#475569" stroke-width="1.5" marker-end="url(#lba)"/>
+                <text x="642" y="128" font-size="10" fill="#94a3b8">$x$</text>
+                <text x="84" y="14" font-size="10" fill="#94a3b8">$y$</text>
+                <text x="67" y="123" font-size="9" fill="#94a3b8">$0$</text>
+
+                <!-- M and -M lines -->
+                <line x1="80" y1="30" x2="630" y2="30" stroke="#c084fc" stroke-width="1.2" stroke-dasharray="6,4"/>
+                <line x1="80" y1="112" x2="630" y2="112" stroke="#c084fc" stroke-width="1.2" stroke-dasharray="6,4"/>
+                <text x="84" y="27" font-size="9" fill="#c084fc">$M=1+|f(c)|$</text>
+                <text x="84" y="110" font-size="9" fill="#c084fc">$-M$</text>
+
+                <!-- Band between M and -M -->
+                <rect x="80" y="30" width="550" height="82" fill="#c084fc" opacity="0.1"/>
+
+                <!-- Vertical double arrow for M -->
+                <line x1="640" y1="30" x2="640" y2="120" stroke="#c084fc" stroke-width="1.5" marker-start="url(#lbb)" marker-end="url(#lbc)"/>
+                <text x="648" y="78" font-size="9" fill="#c084fc">$M$</text>
+
+                <!-- f(c) level -->
+                <line x1="80" y1="60" x2="630" y2="60" stroke="#f87171" stroke-width="1" stroke-dasharray="4,3" opacity=".6"/>
+                <text x="84" y="57" font-size="8" fill="#f87171">$f(c)$</text>
+
+                <!-- epsilon=1 band around f(c) -->
+                <rect x="76" y="47" width="8" height="26" fill="#f87171" opacity=".3" rx="2"/>
+                <line x1="73" y1="47" x2="88" y2="47" stroke="#f87171" stroke-width="1.2"/>
+                <line x1="73" y1="73" x2="88" y2="73" stroke="#f87171" stroke-width="1.2"/>
+                <text x="56" y="50" font-size="8" fill="#f87171" text-anchor="end">$f(c)+1$</text>
+                <text x="56" y="76" font-size="8" fill="#f87171" text-anchor="end">$f(c)-1$</text>
+
+                <!-- Curve -->
+                <path d="M170,80 Q270,50 360,55 Q430,60 490,45 Q540,33 580,50" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+
+                <!-- delta band -->
+                <line x1="260" y1="115" x2="260" y2="125" stroke="#fbbf24" stroke-width="1.5"/>
+                <line x1="460" y1="115" x2="460" y2="125" stroke="#fbbf24" stroke-width="1.5"/>
+                <line x1="360" y1="115" x2="360" y2="125" stroke="#fbbf24" stroke-width="1.2"/>
+                <text x="258" y="140" font-size="8" fill="#fbbf24" text-anchor="middle">$c-\delta$</text>
+                <text x="360" y="140" font-size="8" fill="#fbbf24" text-anchor="middle">$c$</text>
+                <text x="460" y="140" font-size="8" fill="#fbbf24" text-anchor="middle">$c+\delta$</text>
+                <rect x="260" y="116" width="200" height="6" fill="#fbbf24" opacity=".3" rx="2"/>
+
+                <!-- Annotation -->
+                <text x="510" y="58" font-size="9" fill="#38bdf8">$|f(x)| \le M$</text>
+                <text x="510" y="70" font-size="9" fill="#38bdf8">inside $\delta$-band</text>
+            </svg>
+            <div class="diagram-caption">
+                Choosing $\varepsilon = 1$ bounds $f(x)$ within distance $1$ of $f(c)$[cite: 4]. Applying the triangle inequality yields $|f(x)| \le |f(x)-f(c)| + |f(c)| < 1 + |f(c)| = M$[cite: 4].
+            </div>
+        </div>
+
+        <div class="proof-block">
+            <span class="proof-label">Formal Proof</span>
+
+            <strong>Step 1: Choose $\varepsilon = 1$.</strong><br>
+            The definition of continuity applies for any positive $\varepsilon$[cite: 4]. We choose $\varepsilon := 1$[cite: 4].<br><br>
+
+            <strong>Step 2: Find $\delta$.</strong><br>
+            Since $f$ is continuous at $c$, for $\varepsilon = 1$, there exists $\delta > 0$ such that[cite: 4]:
+            $$|x-c| < \delta \implies |f(x)-f(c)| < 1$$[cite: 4]
+
+            <strong>Step 3: Apply the Triangle Inequality.</strong><br>
+            For any $x \in (c-\delta, c+\delta)$, write $f(x) = (f(x)-f(c)) + f(c)$[cite: 4]. By the triangle inequality[cite: 4]:
+            $$|f(x)| = |(f(x)-f(c)) + f(c)| \le |f(x)-f(c)| + |f(c)|$$[cite: 4]
+
+            <strong>Step 4: Substitute Bound.</strong><br>
+            Since $|x-c| < \delta$, we substitute $|f(x)-f(c)| < 1$[cite: 4]:
+            $$|f(x)| \le |f(x)-f(c)| + |f(c)| < 1 + |f(c)|$$[cite: 4]
+
+            <strong>Step 5: Define $M$.</strong><br>
+            Set $M := 1 + |f(c)|$[cite: 4]. This constant depends only on $f(c)$, independent of $x$[cite: 4]. Thus, for all $x \in (c-\delta, c+\delta)$[cite: 4]:
+            $$|f(x)| < M$$[cite: 4]
+
+            Hence, $f$ is bounded by $M$ on $(c-\delta, c+\delta)$[cite: 4].
+            <span class="qed">$\blacksquare$</span>
+        </div>
+    </section>
+
+    <!-- COMPARISON TABLE CARD -->
+    <section class="card card-amber">
+        <div class="card-header">
+            <span>📋</span> Comparative Analysis of Proofs
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Sign Preservation</th>
+                        <th>Local Boundedness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Choice of $\varepsilon$</strong></td>
+                        <td>$\varepsilon = |f(c)|$ — Tailored directly to the target distance[cite: 4]</td>
+                        <td>$\varepsilon = 1$ — Any fixed positive constant suffices[cite: 4]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Core Algebraic Tool</strong></td>
+                        <td>Expanding $|f(x)-f(c)| < \varepsilon$ into bounds[cite: 4]</td>
+                        <td>Splitting $|f(x)|$ via the Triangle Inequality[cite: 4]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Result</strong></td>
+                        <td>A neighborhood $(c-\delta, c+\delta)$ retaining sign[cite: 4]</td>
+                        <td>An explicit bound $M = 1 + |f(c)|$ on $|f(x)|$[cite: 4]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Case $f(c) = 0$</strong></td>
+                        <td>Vacuous ($0$ carries no sign)[cite: 4]</td>
+                        <td>Valid ($M = 1 + 0 = 1$)[cite: 4]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- REMARKS CARD -->
+    <section class="card card-blue">
+        <div class="card-header">
+            <span>🎓</span> Technical Remarks on $\varepsilon$ Flexibility
+        </div>
+        <ul>
+            <li>
+                <strong>Sign Preservation Rigidity:</strong> Setting $\varepsilon = |f(c)|$ is dictated by geometry—it marks the exact distance from $f(c)$ to $0$[cite: 4]. Choosing a larger $\varepsilon$ risks overshooting $0$, while any smaller $\varepsilon$ remains valid[cite: 4].
+            </li>
+            <li>
+                <strong>Local Boundedness Flexibility:</strong> Setting $\varepsilon = 1$ is arbitrary[cite: 4]. Selecting any constant $k > 0$ yields a valid bound $M = k + |f(c)|$[cite: 4]. Choosing $1$ offers an intuitive, clean representation[cite: 4].
+            </li>
+        </ul>
+    </section>
+
+</div>
+
+</body>
+</html>

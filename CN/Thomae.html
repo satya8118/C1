@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thomae's Function — Modern Real Analysis Guide</title>
+    
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax for rendering math expressions -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --card-bg: #151c2e;
+            --card-border: #232d45;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            
+            --accent-blue: #38bdf8;
+            --accent-blue-bg: rgba(56, 189, 248, 0.08);
+            --accent-green: #34d399;
+            --accent-green-bg: rgba(52, 211, 153, 0.08);
+            --accent-red: #f87171;
+            --accent-red-bg: rgba(248, 113, 113, 0.08);
+            --accent-amber: #fbbf24;
+            --accent-amber-bg: rgba(251, 191, 36, 0.08);
+            --accent-purple: #c084fc;
+            --accent-purple-bg: rgba(192, 132, 252, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.7;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Hero Banner */
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2.5rem 1.5rem;
+            background: radial-gradient(circle at top, #1e293b 0%, var(--card-bg) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* Section Cards */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #334155;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .card-blue { border-left: 4px solid var(--accent-blue); }
+        .card-blue .card-header { color: var(--accent-blue); }
+        
+        .card-amber { border-left: 4px solid var(--accent-amber); }
+        .card-amber .card-header { color: var(--accent-amber); }
+        
+        .card-red { border-left: 4px solid var(--accent-red); }
+        .card-red .card-header { color: var(--accent-red); }
+        
+        .card-green { border-left: 4px solid var(--accent-green); }
+        .card-green .card-header { color: var(--accent-green); }
+        
+        .card-purple { border-left: 4px solid var(--accent-purple); }
+        .card-purple .card-header { color: var(--accent-purple); }
+
+        /* Intuition & Discovery Box */
+        .insight-box {
+            background: var(--accent-amber-bg);
+            border: 1px dashed var(--accent-amber);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+            color: #fef08a;
+            font-size: 0.98rem;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            color: var(--accent-amber);
+            display: block;
+            margin-bottom: 0.4rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Proof Blocks */
+        .proof-block {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .proof-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .qed {
+            float: right;
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        /* Diagrams */
+        .diagram-container {
+            background-color: #0d1322;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .diagram-caption {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.8rem;
+            line-height: 1.5;
+        }
+
+        /* Styled Table */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #1e293b;
+            color: var(--text-primary);
+            padding: 0.85rem 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Modern Lists */
+        ol, ul {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.6rem;
+            color: var(--text-secondary);
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 1rem 0.5rem; }
+            .hero h1 { font-size: 1.8rem; }
+            .card { padding: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <h1>Thomae's Function</h1>
+        <p>An extraordinary real analysis function that is continuous at every irrational number, yet discontinuous at every rational number.</p>
+    </header>
+
+    <!-- DEFINITION CARD -->
+    <section class="card card-blue">
+        <div class="card-header">
+            <span>📌</span> Formal Definition
+        </div>
+        <p>Define the function $f : \mathbb{R} \to \mathbb{R}$ by:</p>
+        $$f(x) := \begin{cases}
+            \dfrac{1}{q} & \text{if } x = \dfrac{p}{q} \in \mathbb{Q} \text{ in lowest terms } (\gcd(|p|, q) = 1, \, q > 0), \\[10pt]
+            0 & \text{if } x \notin \mathbb{Q} \text{ (irrational)}.
+        \end{cases}$$
+        
+        <div class="insight-box">
+            <span class="insight-title">💡 Quick Examples to Build Intuition:</span>
+            <ul>
+                <li><strong>At $x = 0$:</strong> Write $0 = \frac{0}{1}$, so $q = 1 \implies f(0) = \frac{1}{1} = 1$.</li>
+                <li><strong>At $x = \frac{1}{2}$:</strong> Denominator is $2 \implies f(\frac{1}{2}) = \frac{1}{2}$.</li>
+                <li><strong>At $x = \frac{2}{3}$:</strong> Denominator is $3 \implies f(\frac{2}{3}) = \frac{1}{3}$.</li>
+                <li><strong>At $x = \sqrt{2}$:</strong> Irrational number $\implies f(\sqrt{2}) = 0$.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- MAIN THEOREM CARD -->
+    <section class="card card-amber">
+        <div class="card-header">
+            <span>🏆</span> The Fundamental Theorem
+        </div>
+        <p>Thomae's function $f$ exhibits a striking asymmetry:</p>
+        <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0.8rem 0;">
+            $$\text{Set of Continuity Points of } f = \mathbb{R} \setminus \mathbb{Q} \quad \text{(All Irrationals)}$$
+        </p>
+        <p>It is <strong>discontinuous at every rational point</strong> and <strong>continuous at every irrational point</strong>.</p>
+    </section>
+
+    <!-- VISUAL GRAPH -->
+    <section class="card card-blue">
+        <div class="card-header">
+            <span>📊</span> Visualizing the Function
+        </div>
+        <div class="diagram-container">
+            <svg viewBox="0 0 680 230" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-height:230px;">
+                <defs>
+                    <marker id="tha" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                        <path d="M0,0 L7,2.5 L0,5 Z" fill="#94a3b8"/>
+                    </marker>
+                </defs>
+                <!-- Axes -->
+                <line x1="40" y1="190" x2="650" y2="190" stroke="#475569" stroke-width="1.5" marker-end="url(#tha)"/>
+                <line x1="100" y1="210" x2="100" y2="15" stroke="#475569" stroke-width="1.5" marker-end="url(#tha)"/>
+                <text x="652" y="194" font-size="11" fill="#94a3b8">$x$</text>
+                <text x="104" y="14" font-size="11" fill="#94a3b8">$y$</text>
+                
+                <!-- X-Axis Ticks -->
+                <line x1="100" y1="185" x2="100" y2="195" stroke="#94a3b8" stroke-width="1"/>
+                <text x="100" y="208" font-size="10" fill="#94a3b8" text-anchor="middle">$0$</text>
+                <line x1="320" y1="185" x2="320" y2="195" stroke="#94a3b8" stroke-width="1"/>
+                <text x="320" y="208" font-size="10" fill="#94a3b8" text-anchor="middle">$\frac{1}{2}$</text>
+                <line x1="540" y1="185" x2="540" y2="195" stroke="#94a3b8" stroke-width="1"/>
+                <text x="540" y="208" font-size="10" fill="#94a3b8" text-anchor="middle">$1$</text>
+
+                <!-- Y-Axis Ticks -->
+                <line x1="95" y1="50" x2="105" y2="50" stroke="#94a3b8" stroke-width="1"/>
+                <text x="88" y="53" font-size="10" fill="#94a3b8" text-anchor="end">$1$</text>
+                <line x1="95" y1="120" x2="105" y2="120" stroke="#94a3b8" stroke-width="1"/>
+                <text x="88" y="123" font-size="10" fill="#94a3b8" text-anchor="end">$\frac{1}{2}$</text>
+                <line x1="95" y1="143" x2="105" y2="143" stroke="#94a3b8" stroke-width="1"/>
+                <text x="88" y="146" font-size="10" fill="#94a3b8" text-anchor="end">$\frac{1}{3}$</text>
+                <line x1="95" y1="155" x2="105" y2="155" stroke="#94a3b8" stroke-width="1"/>
+                <text x="88" y="158" font-size="10" fill="#94a3b8" text-anchor="end">$\frac{1}{4}$</text>
+
+                <!-- Spikes / Dots for Function Values -->
+                <!-- f(0)=1 -->
+                <circle cx="100" cy="50" r="5" fill="#f87171"/>
+                <text x="108" y="45" font-size="9" fill="#f87171">$f(0)=1$</text>
+
+                <!-- f(1)=1 -->
+                <circle cx="540" cy="50" r="5" fill="#f87171"/>
+                <text x="548" y="45" font-size="9" fill="#f87171">$f(1)=1$</text>
+
+                <!-- f(1/2)=1/2 -->
+                <line x1="320" y1="190" x2="320" y2="120" stroke="#38bdf8" stroke-width="1" stroke-dasharray="2,2"/>
+                <circle cx="320" cy="120" r="5" fill="#38bdf8"/>
+                <text x="328" y="115" font-size="9" fill="#38bdf8">$f(\frac{1}{2})=\frac{1}{2}$</text>
+
+                <!-- f(1/3)=1/3 & f(2/3)=1/3 -->
+                <line x1="213" y1="190" x2="213" y2="143" stroke="#38bdf8" stroke-width="1" stroke-dasharray="2,2"/>
+                <circle cx="213" cy="143" r="4" fill="#38bdf8"/>
+                <line x1="427" y1="190" x2="427" y2="143" stroke="#38bdf8" stroke-width="1" stroke-dasharray="2,2"/>
+                <circle cx="427" cy="143" r="4" fill="#38bdf8"/>
+
+                <!-- f(1/4)=1/4 & f(3/4)=1/4 -->
+                <circle cx="157" cy="155" r="3.5" fill="#34d399"/>
+                <circle cx="483" cy="155" r="3.5" fill="#34d399"/>
+
+                <!-- Higher Denominators (Tiny Dots) -->
+                <circle cx="180" cy="165" r="2.5" fill="#c084fc"/>
+                <circle cx="276" cy="165" r="2.5" fill="#c084fc"/>
+                <circle cx="364" cy="165" r="2.5" fill="#c084fc"/>
+                <circle cx="452" cy="165" r="2.5" fill="#c084fc"/>
+
+                <!-- Irrationals Baseline -->
+                <line x1="100" y1="190" x2="540" y2="190" stroke="#34d399" stroke-width="2" opacity="0.4"/>
+                <text x="320" y="182" font-size="9" fill="#34d399" text-anchor="middle">Dense baseline of irrationals where $f(x) = 0$</text>
+            </svg>
+            <div class="diagram-caption">
+                <strong>Graph Concept:</strong> Rationals form isolated "spikes" of height $\frac{1}{q}$. As the denominator $q$ increases, these spikes become infinitely short and drop down toward $0$. Irrationals lie completely flat along the x-axis at $y = 0$.
+            </div>
+        </div>
+    </section>
+
+    <!-- PART 1: DISCONTINUITY AT RATIONALS -->
+    <section class="card card-red">
+        <div class="card-header">
+            <span>⚡</span> Part 1 — Discontinuity at Every Rational Point
+        </div>
+
+        <div class="insight-box" style="background: var(--accent-red-bg); border-color: var(--accent-red); color: #fca5a5;">
+            <span class="insight-title" style="color: var(--accent-red);">Intuitive Discovery (Rough Work):</span>
+            Take any rational number $a = \frac{p}{q}$. Here, the function value is $f(a) = \frac{1}{q} > 0$. 
+            However, no matter how close you zoom into $a$, you will always find <strong>irrational numbers</strong> arbitrarily close to it (since irrationals are dense in $\mathbb{R}$). 
+            At these nearby irrationals, $f(x) = 0$. Thus, the function continuously "jumps" between $0$ and $\frac{1}{q}$, preventing a limit from matching $f(a)$.
+        </div>
+
+        <div class="proof-block">
+            <span class="proof-label">Formal Proof (Sequential Criterion)</span>
+            Let $a = \dfrac{p}{q} \in \mathbb{Q}$ in lowest terms, so $f(a) = \dfrac{1}{q} > 0$.<br><br>
+            By the density of irrational numbers in $\mathbb{R}$, there exists a sequence of irrationals $(x_n)_{n=1}^\infty$ such that $x_n \to a$ as $n \to \infty$.<br><br>
+            Since each $x_n \notin \mathbb{Q}$, we have $f(x_n) = 0$ for all $n \in \mathbb{N}$. Taking the limit:
+            $$\lim_{n \to \infty} f(x_n) = \lim_{n \to \infty} 0 = 0$$
+            Since $\lim_{n \to \infty} f(x_n) = 0 \neq \dfrac{1}{q} = f(a)$, $f$ fails the sequential criterion for continuity.<br>
+            Therefore, $f$ is <strong>discontinuous at every rational point $a$</strong>.
+            <span class="qed">$\blacksquare$</span>
+        </div>
+    </section>
+
+    <!-- PART 2: CONTINUITY AT IRRATIONALS -->
+    <section class="card card-green">
+        <div class="card-header">
+            <span>✨</span> Part 2 — Continuity at Every Irrational Point
+        </div>
+
+        <div class="insight-box" style="background: var(--accent-green-bg); border-color: var(--accent-green); color: #6ee7b7;">
+            <span class="insight-title" style="color: var(--accent-green);">The Key Finite-Set Argument:</span>
+            At an irrational $a$, we have $f(a) = 0$. To prove continuity, we need $f(x)$ to stay less than a small target $\varepsilon > 0$ when $x$ is near $a$.
+            <br><br>
+            • If $x$ is irrational, $f(x) = 0 < \varepsilon$ automatically.<br>
+            • If $x = \frac{p}{q}$ is rational, $f(x) = \frac{1}{q}$. For $\frac{1}{q} \ge \varepsilon$, the denominator $q$ must be <em>small</em> ($q \le \frac{1}{\varepsilon}$).
+            <br><br>
+            <strong>Crucial Insight:</strong> In any bounded neighborhood around $a$, there are <strong>only finitely many</strong> rational fractions with small denominators $q \le \frac{1}{\varepsilon}$! Since $a$ is irrational, it is distinct from all of them. We can simply pick a small neighborhood $\delta$ that avoids these few "tall spikes"!
+        </div>
+
+        <!-- Finite Set Diagram -->
+        <div class="diagram-container">
+            <svg viewBox="0 0 680 140" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-height:140px;">
+                <defs>
+                    <marker id="thb" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                        <path d="M0,0 L7,2.5 L0,5 Z" fill="#94a3b8"/>
+                    </marker>
+                </defs>
+                <!-- Number Line -->
+                <line x1="30" y1="70" x2="650" y2="70" stroke="#475569" stroke-width="1.5" marker-end="url(#thb)"/>
+
+                <!-- Finite Rationals (Spikes > epsilon) -->
+                <line x1="130" y1="70" x2="130" y2="30" stroke="#f87171" stroke-width="2"/>
+                <circle cx="130" cy="30" r="4" fill="#f87171"/>
+                <text x="130" y="90" font-size="9" fill="#f87171" text-anchor="middle">$\frac{p_1}{q_1}$</text>
+
+                <line x1="220" y1="70" x2="220" y2="35" stroke="#f87171" stroke-width="2"/>
+                <circle cx="220" cy="35" r="4" fill="#f87171"/>
+                <text x="220" y="90" font-size="9" fill="#f87171" text-anchor="middle">$\frac{p_2}{q_2}$</text>
+
+                <line x1="440" y1="70" x2="440" y2="32" stroke="#f87171" stroke-width="2"/>
+                <circle cx="440" cy="32" r="4" fill="#f87171"/>
+                <text x="440" y="90" font-size="9" fill="#f87171" text-anchor="middle">$\frac{p_3}{q_3}$</text>
+
+                <!-- Irrational Point a -->
+                <circle cx="330" cy="70" r="6" fill="#34d399" stroke="#0b0f19" stroke-width="2"/>
+                <text x="330" y="92" font-size="10" fill="#34d399" font-weight="bold" text-anchor="middle">$a \notin \mathbb{Q}$</text>
+
+                <!-- Delta Window -->
+                <rect x="225" y="62" width="210" height="16" fill="#fbbf24" opacity="0.15" rx="4"/>
+                <line x1="230" y1="55" x2="230" y2="85" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="430" y1="55" x2="430" y2="85" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <text x="230" y="108" font-size="9" fill="#fbbf24" text-anchor="middle">$a - \delta$</text>
+                <text x="430" y="108" font-size="9" fill="#fbbf24" text-anchor="middle">$a + \delta$</text>
+
+                <!-- Caption inside diagram -->
+                <text x="330" y="20" font-size="10" fill="#fbbf24" text-anchor="middle">Safe $\delta$-neighborhood around $a$ excludes all tall spikes ($q \le \frac{1}{\varepsilon}$)</text>
+            </svg>
+            <div class="diagram-caption">
+                By choosing $\delta$ smaller than the distance to the nearest "tall spike", every rational inside $(a-\delta, a+\delta)$ will have a large denominator ($q > \frac{1}{\varepsilon}$), making $f(x) = \frac{1}{q} < \varepsilon$.
+            </div>
+        </div>
+
+        <div class="proof-block">
+            <span class="proof-label">Formal Proof ($\varepsilon$-$\delta$ Definition)</span>
+            Let $a \in \mathbb{R} \setminus \mathbb{Q}$ be an irrational point, so $f(a) = 0$. Let $\varepsilon > 0$ be given.<br><br>
+
+            <strong>Step 1: Isolate problematic rationals.</strong><br>
+            Define the set of rationals in $[a-1, a+1]$ whose function values are at least $\varepsilon$:
+            $$S_\varepsilon := \left\{ \frac{p}{q} \in \mathbb{Q} \cap [a-1, a+1] : \gcd(|p|, q) = 1, \, q > 0, \, q \le \frac{1}{\varepsilon} \right\}$$
+
+            <strong>Step 2: Show $S_\varepsilon$ is a finite set.</strong><br>
+            For each integer denominator $q \in \{1, 2, \ldots, \lfloor 1/\varepsilon \rfloor\}$, there are only finitely many numerators $p$ such that $\frac{p}{q} \in [a-1, a+1]$. Thus, $S_\varepsilon$ is a finite set.<br><br>
+
+            <strong>Step 3: Construct $\delta > 0$.</strong><br>
+            Since $a$ is irrational, $a \notin S_\varepsilon$. Because $S_\varepsilon$ is finite, the minimum distance from $a$ to any point in $S_\varepsilon$ is strictly positive:
+            $$\delta := \min \left\{ |a - r| : r \in S_\varepsilon \right\} > 0$$
+            <em>(If $S_\varepsilon = \emptyset$, simply set $\delta = 1$.)</em><br><br>
+
+            <strong>Step 4: Verify the condition.</strong><br>
+            Take any $x \in \mathbb{R}$ with $|x - a| < \delta$:
+            <ul>
+                <li><strong>If $x$ is irrational:</strong> $f(x) = 0$, so $|f(x) - f(a)| = |0 - 0| = 0 < \varepsilon$.</li>
+                <li><strong>If $x = \frac{p}{q}$ is rational:</strong> Since $|x - a| < \delta$, $x$ cannot belong to $S_\varepsilon$. Furthermore, $x \in [a-1, a+1]$. Therefore, its denominator must satisfy $q > \frac{1}{\varepsilon}$, which implies:
+                $$|f(x) - f(a)| = \frac{1}{q} < \varepsilon$$</li>
+            </ul>
+            In all cases, $|f(x) - f(a)| < \varepsilon$, proving that $f$ is <strong>continuous at $a$</strong>.
+            <span class="qed">$\blacksquare$</span>
+        </div>
+    </section>
+
+    <!-- SUMMARY TABLE CARD -->
+    <section class="card card-purple">
+        <div class="card-header">
+            <span>📋</span> Quick Summary Comparison
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Point Type ($a$)</th>
+                        <th>Function Value $f(a)$</th>
+                        <th>Continuity Status</th>
+                        <th>Core Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Rational:</strong> $a = \frac{p}{q}$</td>
+                        <td>$\frac{1}{q} > 0$</td>
+                        <td><span style="color: var(--accent-red); font-weight: 700;">Discontinuous</span></td>
+                        <td>Approached by irrationals where $f(x_n) = 0 \not\to \frac{1}{q}$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Irrational:</strong> $a \notin \mathbb{Q}$</td>
+                        <td>$0$</td>
+                        <td><span style="color: var(--accent-green); font-weight: 700;">Continuous</span></td>
+                        <td>Finitely many rationals have $q \le \frac{1}{\varepsilon}$; a small $\delta$ avoids them.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- HIGHER LEVEL REMARKS CARD -->
+    <section class="card card-blue">
+        <div class="card-header">
+            <span>🎓</span> Advanced Mathematical Insights
+        </div>
+        <ol>
+            <li>
+                <strong>Density & Continuity Asymmetry:</strong> Thomae's function serves as a classic counterexample showing that a function can be continuous on an <em>uncountable dense set</em> ($\mathbb{R} \setminus \mathbb{Q}$) while being discontinuous on a <em>countable dense set</em> ($\mathbb{Q}$).
+            </li>
+            <li>
+                <strong>Riemann Integrability:</strong> Even though it is discontinuous at infinitely many points (all rationals), Thomae's function is <strong>Riemann integrable</strong> on any interval $[a, b]$, and its integral is equal to $0$. This is because the set of discontinuities ($\mathbb{Q}$) has measure zero.
+            </li>
+            <li>
+                <strong>Baire Category Theorem Connection:</strong> Is there a function that is continuous <em>only</em> on $\mathbb{Q}$ and discontinuous on $\mathbb{R} \setminus \mathbb{Q}$? <strong>No!</strong> By Baire's Theorem, the set of continuity points of any real-valued function must be a $G_\delta$ set (an intersection of countably many open sets). The set $\mathbb{R} \setminus \mathbb{Q}$ is a $G_\delta$ set, but $\mathbb{Q}$ is not.
+            </li>
+        </ol>
+    </section>
+
+</div>
+
+</body>
+</html>

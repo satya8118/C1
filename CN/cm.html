@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monotonicity Theorem: Continuous & Injective Functions on Intervals</title>
+    
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax for rendering math expressions -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --card-bg: #151c2e;
+            --card-border: #232d45;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            
+            --accent-blue: #38bdf8;
+            --accent-blue-bg: rgba(56, 189, 248, 0.08);
+            --accent-green: #34d399;
+            --accent-green-bg: rgba(52, 211, 153, 0.08);
+            --accent-red: #f87171;
+            --accent-red-bg: rgba(248, 113, 113, 0.08);
+            --accent-amber: #fbbf24;
+            --accent-amber-bg: rgba(251, 191, 36, 0.08);
+            --accent-purple: #c084fc;
+            --accent-purple-bg: rgba(192, 132, 252, 0.08);
+            --accent-indigo: #818cf8;
+            --accent-indigo-bg: rgba(129, 140, 248, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.7;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Hero Banner */
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2.5rem 1.5rem;
+            background: radial-gradient(circle at top, #1e293b 0%, var(--card-bg) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Section Cards */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #334155;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .card-blue { border-left: 4px solid var(--accent-blue); }
+        .card-blue .card-header { color: var(--accent-blue); }
+        
+        .card-amber { border-left: 4px solid var(--accent-amber); }
+        .card-amber .card-header { color: var(--accent-amber); }
+        
+        .card-green { border-left: 4px solid var(--accent-green); }
+        .card-green .card-header { color: var(--accent-green); }
+
+        .card-indigo { border-left: 4px solid var(--accent-indigo); }
+        .card-indigo .card-header { color: var(--accent-indigo); }
+
+        /* Intuition & Discovery Box */
+        .insight-box {
+            background: var(--accent-amber-bg);
+            border: 1px dashed var(--accent-amber);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+            color: #fef08a;
+            font-size: 0.98rem;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            color: var(--accent-amber);
+            display: block;
+            margin-bottom: 0.4rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Proof Blocks */
+        .proof-block {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .proof-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .qed {
+            float: right;
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        /* Diagrams */
+        .diagram-container {
+            background-color: #0d1322;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .diagram-caption {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.8rem;
+            line-height: 1.5;
+        }
+
+        /* Modern Lists */
+        ol, ul {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.6rem;
+            color: var(--text-secondary);
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 1rem 0.5rem; }
+            .hero h1 { font-size: 1.8rem; }
+            .card { padding: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <h1>Monotonicity of Continuous & Injective Functions</h1>
+        <p>A fundamental theorem in real analysis: Any continuous and one-to-one function defined on an interval must be strictly monotone.</p>
+    </header>
+
+    <!-- THEOREM CARD -->
+    <section class="card card-blue">
+        <div class="card-header">
+            <span>📌</span> Theorem Statement
+        </div>
+        <p>Let $J \subseteq \mathbb{R}$ be an interval and $f : J \to \mathbb{R}$ be continuous and one-to-one (injective). Then $f$ is <strong>strictly monotone</strong>: either $f$ is strictly increasing on $J$, or $f$ is strictly decreasing on $J$.</p>
+    </section>
+
+    <!-- ROUGH WORK & STRATEGY CARD -->
+    <section class="card card-amber">
+        <div class="card-header">
+            <span>💡</span> Strategy & Proof Intuition
+        </div>
+
+        <div class="insight-box">
+            <span class="insight-title">Proof Strategy (Contradiction via Intermediate Value Theorem):</span>
+            Suppose $f$ is <em>not</em> monotone. Then it is neither strictly increasing nor strictly decreasing:
+            <ul>
+                <li><strong>Not strictly increasing:</strong> There exist $a_1 < a_2$ in $J$ with $f(a_1) > f(a_2)$ (strict inequality due to injectivity). Call this the <em>decreasing pair</em>.</li>
+                <li><strong>Not strictly decreasing:</strong> There exist $b_1 < b_2$ in $J$ with $f(b_1) < f(b_2)$ (strict inequality due to injectivity). Call this the <em>increasing pair</em>.</li>
+            </ul>
+            By analyzing the possible geometric relative positions of $\{a_1, a_2\}$ and $\{b_1, b_2\}$ on the interval $J$, applying the <strong>Intermediate Value Theorem (IVT)</strong> forces $f$ to produce the same value $k$ at two distinct points—directly contradicting injectivity.
+        </div>
+    </section>
+
+    <!-- FOUR CASES DIAGRAM CARD -->
+    <section class="card card-blue">
+        <div class="card-header">
+            <span>📊</span> The Geometric Configurations
+        </div>
+        
+        <div class="diagram-container">
+            <svg viewBox="0 0 680 280" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-height:280px;">
+                <!-- Case labels -->
+                <text x="10" y="18" font-size="11" font-weight="bold" fill="#38bdf8">Relative positions of the decreasing pair {a₁, a₂} and increasing pair {b₁, b₂}</text>
+
+                <!-- Case A -->
+                <text x="10" y="42" font-size="10" fill="#94a3b8" font-weight="bold">Case A: $b_1 < a_1 < a_2 < b_2$</text>
+                <line x1="10" y1="58" x2="340" y2="58" stroke="#334155" stroke-width="1"/>
+                <circle cx="30" cy="58" r="4" fill="#f87171"/> <text x="28" y="74" font-size="9" fill="#f87171" text-anchor="middle">$b_1$</text>
+                <circle cx="110" cy="58" r="4" fill="#38bdf8"/> <text x="108" y="74" font-size="9" fill="#38bdf8" text-anchor="middle">$a_1$</text>
+                <circle cx="220" cy="58" r="4" fill="#38bdf8"/> <text x="218" y="74" font-size="9" fill="#38bdf8" text-anchor="middle">$a_2$</text>
+                <circle cx="320" cy="58" r="4" fill="#f87171"/> <text x="318" y="74" font-size="9" fill="#f87171" text-anchor="middle">$b_2$</text>
+                <line x1="110" y1="55" x2="220" y2="55" stroke="#38bdf8" stroke-width="3" opacity=".7"/>
+                <line x1="30" y1="61" x2="320" y2="61" stroke="#f87171" stroke-width="3" opacity=".5"/>
+                <text x="175" y="88" font-size="9" fill="#94a3b8" text-anchor="middle">$[a_1,a_2]\subset[b_1,b_2]$: use target value between $f(a_2)$ and $f(a_1)$</text>
+
+                <!-- Case B -->
+                <text x="360" y="42" font-size="10" fill="#94a3b8" font-weight="bold">Case B: $a_1 < b_1 < b_2 < a_2$</text>
+                <line x1="360" y1="58" x2="670" y2="58" stroke="#334155" stroke-width="1"/>
+                <circle cx="375" cy="58" r="4" fill="#38bdf8"/> <text x="373" y="74" font-size="9" fill="#38bdf8" text-anchor="middle">$a_1$</text>
+                <circle cx="455" cy="58" r="4" fill="#f87171"/> <text x="453" y="74" font-size="9" fill="#f87171" text-anchor="middle">$b_1$</text>
+                <circle cx="555" cy="58" r="4" fill="#f87171"/> <text x="553" y="74" font-size="9" fill="#f87171" text-anchor="middle">$b_2$</text>
+                <circle cx="655" cy="58" r="4" fill="#38bdf8"/> <text x="653" y="74" font-size="9" fill="#38bdf8" text-anchor="middle">$a_2$</text>
+                <line x1="375" y1="55" x2="655" y2="55" stroke="#38bdf8" stroke-width="3" opacity=".7"/>
+                <line x1="455" y1="61" x2="555" y2="61" stroke="#f87171" stroke-width="3" opacity=".5"/>
+                <text x="515" y="88" font-size="9" fill="#94a3b8" text-anchor="middle">$[b_1,b_2]\subset[a_1,a_2]$: use target value between $f(b_1)$ and $f(b_2)$</text>
+
+                <!-- Case C -->
+                <text x="10" y="120" font-size="10" fill="#94a3b8" font-weight="bold">Case C: $b_1 < b_2 \le a_1 < a_2$</text>
+                <line x1="10" y1="136" x2="340" y2="136" stroke="#334155" stroke-width="1"/>
+                <circle cx="30" cy="136" r="4" fill="#f87171"/> <text x="28" y="152" font-size="9" fill="#f87171" text-anchor="middle">$b_1$</text>
+                <circle cx="120" cy="136" r="4" fill="#f87171"/> <text x="118" y="152" font-size="9" fill="#f87171" text-anchor="middle">$b_2$</text>
+                <circle cx="210" cy="136" r="4" fill="#38bdf8"/> <text x="208" y="152" font-size="9" fill="#38bdf8" text-anchor="middle">$a_1$</text>
+                <circle cx="320" cy="136" r="4" fill="#38bdf8"/> <text x="318" y="152" font-size="9" fill="#38bdf8" text-anchor="middle">$a_2$</text>
+                <line x1="30" y1="133" x2="120" y2="133" stroke="#f87171" stroke-width="3" opacity=".5"/>
+                <line x1="210" y1="139" x2="320" y2="139" stroke="#38bdf8" stroke-width="3" opacity=".7"/>
+                <text x="175" y="166" font-size="9" fill="#94a3b8" text-anchor="middle">Disjoint intervals: apply IVT on $[b_1, b_2]$ and $[a_1, a_2]$</text>
+
+                <!-- Case D -->
+                <text x="360" y="120" font-size="10" fill="#94a3b8" font-weight="bold">Case D: $a_1 < a_2 \le b_1 < b_2$</text>
+                <line x1="360" y1="136" x2="670" y2="136" stroke="#334155" stroke-width="1"/>
+                <circle cx="375" cy="136" r="4" fill="#38bdf8"/> <text x="373" y="152" font-size="9" fill="#38bdf8" text-anchor="middle">$a_1$</text>
+                <circle cx="465" cy="136" r="4" fill="#38bdf8"/> <text x="463" y="152" font-size="9" fill="#38bdf8" text-anchor="middle">$a_2$</text>
+                <circle cx="555" cy="136" r="4" fill="#f87171"/> <text x="553" y="152" font-size="9" fill="#f87171" text-anchor="middle">$b_1$</text>
+                <circle cx="655" cy="136" r="4" fill="#f87171"/> <text x="653" y="152" font-size="9" fill="#f87171" text-anchor="middle">$b_2$</text>
+                <line x1="375" y1="133" x2="465" y2="133" stroke="#38bdf8" stroke-width="3" opacity=".7"/>
+                <line x1="555" y1="139" x2="655" y2="139" stroke="#f87171" stroke-width="3" opacity=".5"/>
+                <text x="515" y="166" font-size="9" fill="#94a3b8" text-anchor="middle">Symmetric to Case C</text>
+
+                <!-- Overlapping cases -->
+                <text x="10" y="200" font-size="10" fill="#94a3b8" font-weight="bold">Case E: $b_1 < a_1 < b_2 < a_2$ &nbsp;&nbsp;&nbsp; Case F: $a_1 < b_1 < a_2 < b_2$</text>
+                <line x1="10" y1="216" x2="330" y2="216" stroke="#334155" stroke-width="1"/>
+                <circle cx="30" cy="216" r="4" fill="#f87171"/> <text x="28" y="232" font-size="9" fill="#f87171" text-anchor="middle">$b_1$</text>
+                <circle cx="120" cy="216" r="4" fill="#38bdf8"/> <text x="118" y="232" font-size="9" fill="#38bdf8" text-anchor="middle">$a_1$</text>
+                <circle cx="210" cy="216" r="4" fill="#f87171"/> <text x="208" y="232" font-size="9" fill="#f87171" text-anchor="middle">$b_2$</text>
+                <circle cx="310" cy="216" r="4" fill="#38bdf8"/> <text x="308" y="232" font-size="9" fill="#38bdf8" text-anchor="middle">$a_2$</text>
+                <line x1="120" y1="213" x2="310" y2="213" stroke="#38bdf8" stroke-width="3" opacity=".7"/>
+                <line x1="30" y1="219" x2="210" y2="219" stroke="#f87171" stroke-width="3" opacity=".5"/>
+                <text x="170" y="248" font-size="9" fill="#94a3b8" text-anchor="middle">Overlap $[a_1,b_2]$: IVT on sub-intervals gives $u < a_2 < v$</text>
+
+                <line x1="360" y1="216" x2="670" y2="216" stroke="#334155" stroke-width="1"/>
+                <circle cx="375" cy="216" r="4" fill="#38bdf8"/> <text x="373" y="232" font-size="9" fill="#38bdf8" text-anchor="middle">$a_1$</text>
+                <circle cx="455" cy="216" r="4" fill="#f87171"/> <text x="453" y="232" font-size="9" fill="#f87171" text-anchor="middle">$b_1$</text>
+                <circle cx="555" cy="216" r="4" fill="#38bdf8"/> <text x="553" y="232" font-size="9" fill="#38bdf8" text-anchor="middle">$a_2$</text>
+                <circle cx="650" cy="216" r="4" fill="#f87171"/> <text x="648" y="232" font-size="9" fill="#f87171" text-anchor="middle">$b_2$</text>
+                <line x1="375" y1="213" x2="555" y2="213" stroke="#38bdf8" stroke-width="3" opacity=".7"/>
+                <line x1="455" y1="219" x2="650" y2="219" stroke="#f87171" stroke-width="3" opacity=".5"/>
+                <text x="512" y="248" font-size="9" fill="#94a3b8" text-anchor="middle">Overlap $[b_1,a_2]$: symmetric</text>
+
+                <text x="340" y="278" font-size="9" fill="#64748b" text-anchor="middle" font-style="italic">Blue = Decreasing pair $[a_1, a_2]$. Red = Increasing pair $[b_1, b_2]$. Every configuration leads to a violation of injectivity.</text>
+            </svg>
+            <div class="diagram-caption">
+                <strong>Overview of Configurations:</strong> Regardless of how the four points are ordered on $J$, the Intermediate Value Theorem guarantees the existence of two distinct points $u \neq v$ where $f(u) = f(v)$, contradicting one-to-one behavior.
+            </div>
+        </div>
+    </section>
+
+    <!-- KEY LEMMA CARD -->
+    <section class="card card-indigo">
+        <div class="card-header">
+            <span>🔑</span> Key Lemma
+        </div>
+        <p>Let $f: J \to \mathbb{R}$ be continuous and one-to-one on an interval $J$. If $p < q$ in $J$ and $f(p) < f(q)$, then:</p>
+        $$f(x) < f(q) \quad \text{for all } x \in [p, q]$$
+        <p><em>Geometric Interpretation:</em> A continuous injective function cannot "go up and then come back down" (or vice versa) between any two points.</p>
+    </section>
+
+    <!-- FORMAL PROOF CARD -->
+    <section class="card card-green">
+        <div class="card-header">
+            <span>📜</span> Streamlined Complete Proof
+        </div>
+
+        <div class="proof-block">
+            <span class="proof-label">Proof (By Contradiction)</span>
+            Suppose $f$ is <em>not</em> monotone on $J$. Then $f$ is neither strictly increasing nor strictly decreasing.<br><br>
+
+            <strong>1. Extracting the Two Pairs:</strong>
+            <ul>
+                <li>Since $f$ is not strictly increasing, there exist $a_1 < a_2$ in $J$ with $f(a_1) > f(a_2)$ (strict inequality because $f$ is one-to-one). Call this the <em>decreasing pair</em>.</li>
+                <li>Since $f$ is not strictly decreasing, there exist $b_1 < b_2$ in $J$ with $f(b_1) < f(b_2)$ (strict inequality because $f$ is one-to-one). Call this the <em>increasing pair</em>.</li>
+            </ul>
+
+            <strong>2. Choosing the Target Value $k$:</strong><br>
+            Since $f(a_2) < f(a_1)$ and $f(b_1) < f(b_2)$, the open interval
+            $$\left(\max\{f(a_2), f(b_1)\}, \, \min\{f(a_1), f(b_2)\}\right)$$
+            is non-empty. Select a value $k$ from this interval so that:
+            $$f(a_2) < k < f(a_1) \quad \text{and} \quad f(b_1) < k < f(b_2)$$
+
+            <strong>3. Applying the Intermediate Value Theorem (IVT):</strong><br>
+            By IVT applied to continuous $f$ on $[a_1, a_2]$, there exists $u \in (a_1, a_2)$ such that $f(u) = k$.<br>
+            By IVT applied to continuous $f$ on $[b_1, b_2]$, there exists $v \in (b_1, b_2)$ such that $f(v) = k$.<br><br>
+
+            <strong>4. Verifying $u \neq v$:</strong>
+            <ul>
+                <li><strong>Disjoint Intervals:</strong> If $[a_1, a_2] \cap [b_1, b_2] = \emptyset$, then $u \in (a_1, a_2)$ and $v \in (b_1, b_2)$ immediately implies $u \neq v$.</li>
+                <li><strong>Overlapping Intervals:</strong> Suppose $[a_1, a_2]$ and $[b_1, b_2]$ overlap (e.g., $a_1 < b_1 < a_2 < b_2$). Note that $a_2 \in [b_1, b_2]$ and $f(a_2) < k < f(b_2)$. Applying the IVT separately on $[a_1, a_2]$ yields $u \in (a_1, a_2)$ with $f(u) = k$, and on $[a_2, b_2]$ yields $v \in (a_2, b_2)$ with $f(v) = k$. Thus $u < a_2 < v$, which guarantees $u \neq v$.</li>
+            </ul>
+
+            <strong>5. Conclusion:</strong><br>
+            In all cases, we obtain two distinct points $u \neq v$ in $J$ such that $f(u) = f(v) = k$, contradicting the assumption that $f$ is one-to-one. Therefore, $f$ must be strictly monotone on $J$.
+            <span class="qed">$\blacksquare$</span>
+        </div>
+    </section>
+
+    <!-- COROLLARY & REMARKS CARD -->
+    <section class="card card-purple">
+        <div class="card-header">
+            <span>🎓</span> Corollary & Crucial Counterexample
+        </div>
+
+        <div class="insight-box" style="background: rgba(192, 132, 252, 0.08); border-color: var(--accent-purple); color: #e9d5ff;">
+            <span class="insight-title" style="color: var(--accent-purple);">Corollary: Continuity of the Inverse Function</span>
+            Let $J$ be an interval and $f : J \to \mathbb{R}$ be continuous and one-to-one.
+            <ul>
+                <li>The image $f(J)$ is an interval (by IVT).</li>
+                <li>The inverse function $f^{-1} : f(J) \to J$ exists and is strictly monotone.</li>
+                <li>$f^{-1}$ is continuous on the interval $f(J)$.</li>
+            </ul>
+        </div>
+
+        <p style="margin-top: 1rem;"><strong>Why the "Interval" Domain Assumption is Essential:</strong></p>
+        <p>The theorem fails if $J$ is not an interval. For instance, consider the discrete domain $J = \{1, 2, 3, 4\}$ and define:</p>
+        $$f(1) = 1, \quad f(2) = 3, \quad f(3) = 2, \quad f(4) = 4$$
+        <p>This function is strictly one-to-one and trivially continuous (since every function defined on a discrete domain is continuous), yet it is <strong>not monotone</strong> ($1 < 3 > 2 < 4$). The interval structure is indispensable because it enables the use of the Intermediate Value Theorem.</p>
+    </section>
+
+</div>
+
+</body>
+</html>

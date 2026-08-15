@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archimedean Property — Animated Proofs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{--bg:#0C0A08;--bg-card:#141110;--fg:#EDE8DF;--muted:#7A7268;--accent:#D4943A;--accent-dim:#A87428;--border:#2A2520;--proof-bg:#181410;--highlight:#2D2418;--contra:#D4503A}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:'Source Sans 3',sans-serif;line-height:1.85;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(212,148,58,.06) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 85% 85%,rgba(212,148,58,.03) 0%,transparent 60%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(212,148,58,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(212,148,58,.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0}
+main{position:relative;z-index:1}
+h1,h2,h3{font-family:'Crimson Pro',serif}
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));z-index:200;width:0%;transition:width .15s linear}
+
+/* ========== REVEAL SYSTEM ========== */
+.ri{opacity:0;transform:translateY(18px);transition:opacity 1.3s ease,transform 1.3s ease;transition-delay:var(--d,0ms)}
+.ri-s{opacity:0;transform:translateX(-18px);transition:opacity 1.3s ease,transform 1.3s ease;transition-delay:var(--d,0ms)}
+.reveal-section.visible .ri{opacity:1;transform:none}
+.reveal-section.visible .ri-s{opacity:1;transform:none}
+
+/* ========== CONTENT STYLES ========== */
+.statement-box{background:linear-gradient(135deg,var(--bg-card),var(--highlight));border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:8px;padding:2rem 2.2rem}
+.proof-container{background:var(--proof-bg);border:1px solid var(--border);border-radius:8px;padding:2rem 2.2rem}
+.corollary-box{background:linear-gradient(135deg,rgba(212,148,58,.07),rgba(212,148,58,.015));border:1px solid rgba(212,148,58,.28);border-radius:8px;padding:2rem 2.2rem}
+.step-badge{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--bg);font-weight:700;font-size:.82rem;margin-right:14px;flex-shrink:0}
+.step-badge.contra{background:var(--contra)}
+.label-badge{display:inline-block;padding:3px 14px;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.label-gold{background:rgba(212,148,58,.15);color:var(--accent);border:1px solid rgba(212,148,58,.3)}
+.label-story{background:rgba(90,170,110,.12);color:#6DBF82;border:1px solid rgba(90,170,110,.25)}
+.section-sep{height:1px;background:linear-gradient(90deg,transparent,var(--border),var(--accent-dim),var(--border),transparent);margin:3.5rem auto;max-width:500px}
+.katex{color:var(--fg)!important;font-size:1.08em}
+.katex .mord,.katex .mbin,.katex .mrel,.katex .mopen,.katex .mclose,.katex .mpunct,.katex .minner{color:var(--fg)!important}
+.qed{display:inline-block;width:9px;height:9px;background:var(--accent);border-radius:2px;margin-left:6px;vertical-align:middle}
+.canvas-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.8rem;overflow-x:auto}
+canvas{display:block;border-radius:6px}
+.geo-anno{opacity:0;max-height:0;overflow:hidden;transition:opacity .9s ease,max-height .9s ease;min-height:0}
+.geo-anno.show{opacity:1;max-height:80px}
+.ac{color:var(--accent)}
+.mu{color:var(--muted)}
+.co{color:var(--contra)}
+.replay-btn{background:transparent;border:1px solid var(--accent-dim);color:var(--accent);padding:6px 18px;border-radius:6px;cursor:pointer;font-size:.85rem;font-family:'Source Sans 3',sans-serif;transition:background .3s,color .3s}
+.replay-btn:hover{background:var(--accent);color:var(--bg)}
+
+/* Ambient */
+.particle{position:fixed;border-radius:50%;background:var(--accent);opacity:0;pointer-events:none;z-index:0;animation:floatP linear infinite}
+@keyframes floatP{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:.35}90%{opacity:.35}100%{opacity:0;transform:translateY(-15vh) scale(1)}}
+.hero-bg-text{position:absolute;font-family:'Crimson Pro',serif;font-size:clamp(4rem,12vw,10rem);font-weight:700;color:rgba(212,148,58,.04);pointer-events:none;user-select:none;line-height:1;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap}
+.scroll-ind{animation:scrollBounce 2.2s ease infinite}
+@keyframes scrollBounce{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(10px);opacity:1}}
+
+@media(prefers-reduced-motion:reduce){
+  .ri,.ri-s{transition:none!important;opacity:1!important;transform:none!important}
+  .particle{display:none}.scroll-ind{animation:none}
+  .geo-anno{transition:none;max-height:80px;opacity:1}
+}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<main>
+
+<!-- ==================== HERO ==================== -->
+<section class="min-h-screen flex flex-col items-center justify-center relative px-6 text-center reveal-section">
+  <div class="hero-bg-text ri" style="--d:0ms" aria-hidden="true">&forall;n&isin;&Nopf;</div>
+  <span class="label-badge label-gold mb-6 inline-block ri" style="--d:400ms">Real Analysis</span>
+  <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6 ri" style="--d:1000ms">The Archimedean<br>Property</h1>
+  <p class="text-lg sm:text-xl max-w-xl mx-auto mb-12 mu ri" style="--d:1800ms">An animated journey through the Least Upper Bound Property,<br>two forms of the Archimedean Property, and their equivalence.</p>
+  <div class="scroll-ind absolute bottom-10 flex flex-col items-center gap-2 mu ri" style="--d:3200ms">
+    <span class="text-sm">Scroll to begin</span>
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+</section>
+
+<!-- ==================== LUB PROPERTY ==================== -->
+<section class="max-w-3xl mx-auto px-6 pb-16 reveal-section">
+  <div class="ri" style="--d:0ms"><span class="label-badge label-gold mb-4 inline-block">Preliminary</span></div>
+  <h2 class="text-3xl sm:text-4xl font-bold mb-8 ri" style="--d:700ms">Least Upper Bound Property</h2>
+  <div class="statement-box ri" style="--d:1600ms">
+    <p class="text-lg leading-relaxed">Every <strong>nonempty</strong> subset $S$ of $\mathbb{R}$ that is <strong>bounded above</strong> has a <span class="ac font-semibold">least upper bound</span> in $\mathbb{R}$. That is, there exists $\mathrm{lub}(S)\in\mathbb{R}$ such that:</p>
+    <ol class="mt-4 ml-6 list-decimal space-y-2 mu">
+      <li>$\mathrm{lub}(S)$ is an upper bound of $S$: for all $s\in S$, $s \leq \mathrm{lub}(S)$.</li>
+      <li>$\mathrm{lub}(S)$ is the <em>least</em> such bound: if $b$ is any upper bound of $S$, then $\mathrm{lub}(S)\leq b$.</li>
+    </ol>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ==================== AP1 STATEMENT ==================== -->
+<section class="max-w-3xl mx-auto px-6 pb-10 reveal-section">
+  <div class="ri" style="--d:0ms"><span class="label-badge label-gold mb-4 inline-block">AP1 — Archimedean Property</span></div>
+  <h2 class="text-3xl sm:text-4xl font-bold mb-8 ri" style="--d:700ms">Natural Numbers Are Unbounded</h2>
+  <div class="statement-box ri" style="--d:1600ms">
+    <p class="text-lg leading-relaxed">The set $\mathbb{N}$ of natural numbers is <strong class="ac">not bounded above</strong> in $\mathbb{R}$.</p>
+  </div>
+</section>
+
+<!-- ==================== AP1 PROOF ==================== -->
+<section class="max-w-3xl mx-auto px-6 pb-16 reveal-section" id="proof-ap1-section">
+  <p class="text-sm font-semibold uppercase tracking-wider mb-5 mu ri" style="--d:0ms">Proof — by contradiction, using the LUB Property</p>
+  <div class="proof-container ri" style="--d:600ms">
+    <div class="ri-s flex items-start mb-5" style="--d:2200ms">
+      <span class="step-badge">1</span>
+      <p>Suppose, for contradiction, that $\mathbb{N}$ <em>is</em> bounded above in $\mathbb{R}$.</p>
+    </div>
+    <div class="ri-s flex items-start mb-5" style="--d:5200ms">
+      <span class="step-badge">2</span>
+      <p>Since $\mathbb{N}$ is nonempty and bounded above, the <strong>LUB Property</strong> guarantees a least upper bound. Let $\alpha = \mathrm{lub}(\mathbb{N})$.</p>
+    </div>
+    <div class="ri-s flex items-start mb-5" style="--d:8200ms">
+      <span class="step-badge">3</span>
+      <p>Because $\alpha$ is an upper bound, $n \leq \alpha$ for every $n \in \mathbb{N}$.</p>
+    </div>
+    <div class="ri-s flex items-start mb-5" style="--d:11200ms">
+      <span class="step-badge">4</span>
+      <p>Since $\alpha$ is the <em>least</em> upper bound, $\alpha - 1$ is <strong>not</strong> an upper bound of $\mathbb{N}$. Hence there exists $n_0 \in \mathbb{N}$ such that $\alpha - 1 < n_0$.</p>
+    </div>
+    <div class="ri-s flex items-start mb-5" style="--d:14200ms">
+      <span class="step-badge contra">!</span>
+      <p><strong class="co">Contradiction.</strong> We have $n_0 + 1 \in \mathbb{N}$ and $n_0 + 1 > \alpha$, which contradicts that $\alpha$ is an upper bound of $\mathbb{N}$.</p>
+    </div>
+    <div class="ri-s flex items-start" style="--d:18200ms">
+      <span class="step-badge" style="background:var(--fg);color:var(--bg)">&#10003;</span>
+      <p>Therefore, $\mathbb{N}$ is not bounded above in $\mathbb{R}$.<span class="qed"></span></p>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ==================== AP2 STATEMENT ==================== -->
+<section class="max-w-3xl mx-auto px-6 pb-10 reveal-section">
+  <div class="ri" style="--d:0ms"><span class="label-badge label-gold mb-4 inline-block">AP2 — Archimedean Property (Multiplicative Form)</span></div>
+  <h2 class="text-3xl sm:text-4xl font-bold mb-8 ri" style="--d:700ms">Multiples Surpass Any Bound</h2>
+  <div class="statement-box ri" style="--d:1600ms">
+    <p class="text-lg leading-relaxed">If $x > 0$ and $y \in \mathbb{R}$, then there exists $n \in \mathbb{N}$ such that $nx > y$.</p>
+  </div>
+</section>
+
+<!-- ==================== GEOMETRIC DIAGRAM ==================== -->
+<section class="max-w-4xl mx-auto px-6 pb-16 reveal-section" id="geo-section">
+  <p class="text-sm font-semibold uppercase tracking-wider mb-5 mu ri" style="--d:0ms">Geometric Interpretation</p>
+  <div class="canvas-wrap ri" style="--d:900ms"><canvas id="geoCanvas" style="min-width:620px;height:220px"></canvas></div>
+  <div class="ri mt-5 space-y-2" style="--d:900ms;min-height:50px" id="geo-annotations">
+    <div class="geo-anno show" id="ga0"><p class="mu text-sm">On the number line, $x > 0$ is a small length near the origin. The point $y$ lies far to the right.</p></div>
+    <div class="geo-anno" id="ga1"><p class="mu text-sm">Mark $x$ on the line.</p></div>
+    <div class="geo-anno" id="ga2"><p class="mu text-sm">Add $x$ to itself: $x + x = 2x$.</p></div>
+    <div class="geo-anno" id="ga3"><p class="mu text-sm">$2x + x = 3x$.</p></div>
+    <div class="geo-anno" id="ga4"><p class="mu text-sm">$3x + x = 4x$.</p></div>
+    <div class="geo-anno" id="ga5"><p class="mu text-sm">$4x + x = 5x$.</p></div>
+    <div class="geo-anno" id="ga6"><p class="mu text-sm">$5x + x = 6x$.</p></div>
+    <div class="geo-anno" id="ga7"><p class="mu text-sm">$6x + x = 7x$ — still short of $y$.</p></div>
+    <div class="geo-anno" id="ga8"><p class="ac text-sm font-semibold">$7x + x = 8x$. Now $8x > y$! We have found $n = 8$ with $nx > y$.</p></div>
+  </div>
+  <div class="ri mt-4" style="--d:900ms"><button class="replay-btn" id="replayBtn">Replay Animation</button></div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ==================== TORTOISE & RABBIT ==================== -->
+<section class="max-w-4xl mx-auto px-6 pb-16 reveal-section" id="tortoise-section">
+  <div class="ri" style="--d:0ms"><span class="label-badge label-story mb-4 inline-block">A Fable</span></div>
+  <h2 class="text-2xl sm:text-3xl font-bold mb-3 ri" style="--d:700ms">The Tortoise and the Rabbit</h2>
+  <p class="mu mb-6 ri" style="--d:1500ms">Rabbit sprints ahead, sleeps just before the target $y$, thinking the tortoise — with its tiny step $x$ — can never cross $y$. But the tortoise knows the Archimedean Property.</p>
+  <div class="canvas-wrap ri" style="--d:2500ms"><canvas id="tortoiseCanvas" style="min-width:620px;height:260px"></canvas></div>
+  <div class="ri mt-5 space-y-2" style="--d:2500ms;min-height:50px" id="tortoise-annotations">
+    <div class="geo-anno show" id="ta0"><p class="mu text-sm">Rabbit dashes to just before $y$ and falls asleep, confident the slow tortoise can never reach here.</p></div>
+    <div class="geo-anno" id="ta1"><p class="mu text-sm">Tortoise takes one step: reaches $x$.</p></div>
+    <div class="geo-anno" id="ta2"><p class="mu text-sm">Another step: $2x$. Rabbit snores on.</p></div>
+    <div class="geo-anno" id="ta3"><p class="mu text-sm">$3x$. Slow, but steady.</p></div>
+    <div class="geo-anno" id="ta4"><p class="mu text-sm">$4x$.</p></div>
+    <div class="geo-anno" id="ta5"><p class="mu text-sm">$5x$. Getting closer.</p></div>
+    <div class="geo-anno" id="ta6"><p class="mu text-sm">$6x$.</p></div>
+    <div class="geo-anno" id="ta7"><p class="mu text-sm">$7x$ — right behind the sleeping rabbit!</p></div>
+    <div class="geo-anno" id="ta8"><p class="ac text-sm font-semibold">$8x > y$! Tortoise crosses the rabbit. Slow and steady wins — the Archimedean Property.</p></div>
+  </div>
+  <div class="ri mt-4" style="--d:2500ms"><button class="replay-btn" id="replayTortoise">Replay Animation</button></div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ==================== MAN TO MOON ==================== -->
+<section class="max-w-4xl mx-auto px-6 pb-16 reveal-section" id="moon-section">
+  <div class="ri" style="--d:0ms"><span class="label-badge label-story mb-4 inline-block">A Thought Experiment</span></div>
+  <h2 class="text-2xl sm:text-3xl font-bold mb-3 ri" style="--d:700ms">Walking to the Moon</h2>
+  <p class="mu mb-6 ri" style="--d:1500ms">If a man does not die, then he may reach the Moon by walking. Each step is small — but the Archimedean Property says it is enough.</p>
+  <div class="canvas-wrap ri" style="--d:2500ms"><canvas id="moonCanvas" style="min-width:620px;height:310px"></canvas></div>
+  <div class="ri mt-5 space-y-2" style="--d:2500ms;min-height:50px" id="moon-annotations">
+    <div class="geo-anno show" id="ma0"><p class="mu text-sm">The Moon is about 384,400 km away. A man's step is roughly 0.7 m — infinitesimally small by comparison.</p></div>
+    <div class="geo-anno" id="ma1"><p class="mu text-sm">One step. Distance covered: $x$.</p></div>
+    <div class="geo-anno" id="ma2"><p class="mu text-sm">Two steps, three steps. $2x$, $3x$.</p></div>
+    <div class="geo-anno" id="ma3"><p class="mu text-sm">$4x$, $5x$, $6x$\ldots the distance grows, but the Moon seems untouched.</p></div>
+    <div class="geo-anno" id="ma4"><p class="mu text-sm">$7x$, $8x$, $9x$\ldots the steps keep adding.</p></div>
+    <div class="geo-anno" id="ma5"><p class="mu text-sm">$10x$, $11x$, $12x$\ldots</p></div>
+    <div class="geo-anno" id="ma6"><p class="mu text-sm">By AP2: for any distance $y$ and step size $x > 0$, there exists $n \in \mathbb{N}$ with $nx > y$.</p></div>
+    <div class="geo-anno" id="ma7"><p class="ac text-sm font-semibold">If the man does not die, the Archimedean Property guarantees he reaches the Moon by walking.</p></div>
+  </div>
+  <div class="ri mt-4" style="--d:2500ms"><button class="replay-btn" id="replayMoon">Replay Animation</button></div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ==================== AP2 PROOF ==================== -->
+<section class="max-w-3xl mx-auto px-6 pb-16 reveal-section" id="proof-ap2-section">
+  <p class="text-sm font-semibold uppercase tracking-wider mb-5 mu ri" style="--d:0ms">Proof of AP2 — using AP1</p>
+  <div class="proof-container ri" style="--d:600ms">
+    <div class="ri-s flex items-start mb-5" style="--d:2200ms">
+      <span class="step-badge">1</span>
+      <p>Let $x > 0$ and $y \in \mathbb{R}$. Since $x \neq 0$, the quotient $\dfrac{y}{x}$ is a well-defined real number.</p>
+    </div>
+    <div class="ri-s flex items-start mb-5" style="--d:5400ms">
+      <span class="step-badge">2</span>
+      <p>By AP1, $\mathbb{N}$ is not bounded above, so $\dfrac{y}{x}$ cannot be an upper bound of $\mathbb{N}$.</p>
+    </div>
+    <div class="ri-s flex items-start" style="--d:8600ms">
+      <span class="step-badge">3</span>
+      <p>Hence there exists $n \in \mathbb{N}$ with $n > \dfrac{y}{x}$. Multiplying by $x > 0$ gives $nx > y$.<span class="qed"></span></p>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ==================== AP1 FROM AP2 — HEADING ==================== -->
+<section class="max-w-3xl mx-auto px-6 pb-10 reveal-section">
+  <div class="ri" style="--d:0ms"><span class="label-badge label-gold mb-4 inline-block">Equivalence</span></div>
+  <h2 class="text-3xl sm:text-4xl font-bold mb-8 ri" style="--d:700ms">Proving AP1 Using AP2</h2>
+</section>
+
+<!-- ==================== AP1 FROM AP2 — PROOF ==================== -->
+<section class="max-w-3xl mx-auto px-6 pb-16 reveal-section" id="proof-equiv-section">
+  <p class="text-sm font-semibold uppercase tracking-wider mb-5 mu ri" style="--d:0ms">Proof — AP1 follows from AP2</p>
+  <div class="proof-container ri" style="--d:600ms">
+    <div class="ri-s flex items-start mb-5" style="--d:2200ms">
+      <span class="step-badge">1</span>
+      <p>Let $M \in \mathbb{R}$ be arbitrary. We show that $M$ is <em>not</em> an upper bound of $\mathbb{N}$.</p>
+    </div>
+    <div class="ri-s flex items-start mb-5" style="--d:5400ms">
+      <span class="step-badge">2</span>
+      <p>Apply AP2 with $x = 1 > 0$ and $y = M$. There exists $n \in \mathbb{N}$ such that $n \cdot 1 > M$, i.e., $n > M$.</p>
+    </div>
+    <div class="ri-s flex items-start mb-5" style="--d:8600ms">
+      <span class="step-badge">3</span>
+      <p>Since $n \in \mathbb{N}$ and $n > M$, the number $M$ fails to be an upper bound of $\mathbb{N}$.</p>
+    </div>
+    <div class="ri-s flex items-start" style="--d:11800ms">
+      <span class="step-badge" style="background:var(--fg);color:var(--bg)">&#10003;</span>
+      <p>As $M$ was arbitrary, <strong>no</strong> real number can be an upper bound of $\mathbb{N}$. Therefore $\mathbb{N}$ is not bounded above.<span class="qed"></span></p>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ==================== COROLLARY ==================== -->
+<section class="max-w-3xl mx-auto px-6 pb-24 reveal-section" id="corollary-section">
+  <div class="ri" style="--d:0ms"><span class="label-badge label-gold mb-4 inline-block">Corollary</span></div>
+  <h2 class="text-3xl sm:text-4xl font-bold mb-8 ri" style="--d:700ms">Reciprocals Become Arbitrarily Small</h2>
+  <div class="corollary-box mb-8 ri" style="--d:1600ms">
+    <p class="text-lg leading-relaxed">For every $x > 0$, there exists $n \in \mathbb{N}$ such that $\dfrac{1}{n} < x$.</p>
+  </div>
+  <p class="text-sm font-semibold uppercase tracking-wider mb-5 mu ri" style="--d:2800ms">Proof</p>
+  <div class="proof-container ri" style="--d:3400ms">
+    <div class="ri-s flex items-start mb-5" style="--d:5000ms">
+      <span class="step-badge">1</span>
+      <p>Let $x > 0$ be given. Apply AP2 with $y = 1$ and this $x > 0$.</p>
+    </div>
+    <div class="ri-s flex items-start mb-5" style="--d:8200ms">
+      <span class="step-badge">2</span>
+      <p>There exists $n \in \mathbb{N}$ such that $nx > 1$.</p>
+    </div>
+    <div class="ri-s flex items-start" style="--d:11400ms">
+      <span class="step-badge" style="background:var(--fg);color:var(--bg)">&#10003;</span>
+      <p>Since $n > 0$, dividing both sides by $n$ yields $x > \dfrac{1}{n}$, i.e., $\dfrac{1}{n} < x$.<span class="qed"></span></p>
+    </div>
+  </div>
+  <p class="mt-8 text-base mu ri" style="--d:14800ms" style="max-width:520px">
+    In words: no matter how small a positive number $x$ you choose, some reciprocal $\frac{1}{n}$ is even smaller. The sequence $\frac{1}{1},\frac{1}{2},\frac{1}{3},\ldots$ squeezes toward zero.
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer class="text-center pb-12 px-6">
+  <div class="section-sep mb-8"></div>
+  <p class="text-sm mu">Animated proofs in real analysis — built with care.</p>
+</footer>
+
+</main>
+
+<script>
+/* ============================
+   KaTeX
+   ============================ */
+function initKaTeX(){
+  if(typeof renderMathInElement!=='undefined'){
+    renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
+  }else{setTimeout(initKaTeX,120)}
+}
+document.addEventListener('DOMContentLoaded',initKaTeX);
+
+/* ============================
+   Progress Bar
+   ============================ */
+window.addEventListener('scroll',function(){
+  var s=window.scrollY,d=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progress-bar').style.width=(d>0?(s/d)*100:0)+'%';
+},{passive:true});
+
+/* ============================
+   REVEAL OBSERVER
+   Each section: add .visible once,
+   then CSS --d handles all timing.
+   ============================ */
+var revealObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+},{threshold:0.06,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal-section').forEach(function(el){revealObs.observe(el)});
+
+/* ============================
+   Particles
+   ============================ */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  for(var i=0;i<9;i++){
+    var p=document.createElement('div');p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=(18+Math.random()*22)+'s';
+    p.style.animationDelay=(Math.random()*18)+'s';
+    var sz=(1.2+Math.random()*1.8)+'px';p.style.width=sz;p.style.height=sz;
+    document.body.appendChild(p);
+  }
+})();
+
+/* ============================
+   HELPERS
+   ============================ */
+function setupCanvas(cv,minW,h){
+  var r=cv.parentElement.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+  var dw=Math.max(minW,r.width-56),dh=h;
+  cv.style.width=dw+'px';cv.style.height=dh+'px';
+  cv.width=Math.round(dw*dpr);cv.height=Math.round(dh*dpr);
+  var c=cv.getContext('2d');c.scale(dpr,dpr);
+  return{ctx:c,W:dw,H:dh};
+}
+function showAnno(pfx,step){
+  for(var i=0;i<=20;i++){
+    var el=document.getElementById(pfx+i);
+    if(el){if(i===step)el.classList.add('show');else el.classList.remove('show')}
+  }
+}
+
+/* ============================
+   GEOMETRIC CANVAS (nx > y)
+   ============================ */
+(function(){
+  var cv=document.getElementById('geoCanvas'),ctx,W,H;
+  var started=false,step=-1;
+
+  function setup(){var o=setupCanvas(cv,620,220);ctx=o.ctx;W=o.W;H=o.H}
+  function L(){var ox=55,rp=40,t=8.8,xs=(W-ox-rp)/t,yp=ox+7.3*xs,ly=H*.44;return{ox:ox,xs:xs,yp:yp,ly:ly}}
+
+  function drawStatic(){
+    var l=L();ctx.clearRect(0,0,W,H);
+    /* Number line */
+    ctx.strokeStyle='#5A554E';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(28,l.ly);ctx.lineTo(W-18,l.ly);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(W-18,l.ly);ctx.lineTo(W-30,l.ly-5);ctx.moveTo(W-18,l.ly);ctx.lineTo(W-30,l.ly+5);ctx.stroke();
+    /* 0 */
+    ctx.strokeStyle='#7A7268';ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.moveTo(l.ox,l.ly-10);ctx.lineTo(l.ox,l.ly+10);ctx.stroke();
+    ctx.fillStyle='#EDE8DF';ctx.font='600 16px "Source Sans 3",sans-serif';ctx.textAlign='center';
+    ctx.fillText('0',l.ox,l.ly+34);
+    /* y dashed */
+    ctx.save();ctx.setLineDash([6,5]);ctx.strokeStyle='rgba(212,148,58,0.6)';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.moveTo(l.yp,l.ly-60);ctx.lineTo(l.yp,l.ly+50);ctx.stroke();ctx.restore();
+    ctx.fillStyle='#D4943A';ctx.font='700 17px "Source Sans 3",sans-serif';
+    ctx.fillText('y',l.yp,l.ly+56);
+    /* x bracket */
+    var xp=l.ox+l.xs,bY=l.ly-22,bH=14;
+    ctx.strokeStyle='rgba(212,148,58,0.7)';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(l.ox,bY);ctx.lineTo(l.ox,bY-bH);ctx.lineTo(xp,bY-bH);ctx.lineTo(xp,bY);ctx.stroke();
+    ctx.fillStyle='#D4943A';ctx.font='600 14px "Source Sans 3",sans-serif';
+    ctx.fillText('x',(l.ox+xp)/2,bY-bH-6);
+  }
+
+  function drawStep(s){
+    var l=L(),px=l.ox+s*l.xs,ex=px>l.yp;
+    var col=ex?'#D4943A':'#EDE8DF',lw=ex?2.6:1.6;
+    ctx.beginPath();ctx.arc(px,l.ly,ex?5:3.5,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+    ctx.strokeStyle=col;ctx.lineWidth=lw;
+    ctx.beginPath();ctx.moveTo(px,l.ly-10);ctx.lineTo(px,l.ly+10);ctx.stroke();
+    ctx.fillStyle=col;ctx.font=ex?'700 16px "Source Sans 3",sans-serif':'400 15px "Source Sans 3",sans-serif';
+    ctx.textAlign='center';ctx.fillText(s===1?'x':s+'x',px,l.ly+34);
+    if(ex){
+      ctx.fillStyle='#D4943A';ctx.font='700 14px "Source Sans 3",sans-serif';
+      ctx.fillText('nx > y',px,l.ly-55);
+      ctx.strokeStyle='rgba(212,148,58,0.5)';ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.moveTo(px,l.ly-42);ctx.lineTo(px,l.ly-14);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(px,l.ly-14);ctx.lineTo(px-4,l.ly-20);ctx.moveTo(px,l.ly-14);ctx.lineTo(px+4,l.ly-20);ctx.stroke();
+    }
+  }
+
+  function run(){
+    if(started)return;started=true;step=-1;setup();drawStatic();showAnno('ga',0);
+    var s=0,it=setInterval(function(){s++;if(s>8){clearInterval(it);started=false;return}
+      step=s;drawStep(s);showAnno('ga',s)},1800);
+  }
+
+  new IntersectionObserver(function(e){
+    e.forEach(function(en){if(en.isIntersecting&&!started)setTimeout(run,1800)})
+  },{threshold:.1}).observe(document.getElementById('geo-section'));
+
+  document.getElementById('replayBtn').addEventListener('click',function(){started=false;step=-1;showAnno('ga',0);setTimeout(run,200)});
+  var rt=null;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(step>=0){setup();drawStatic();for(var i=1;i<=step&&i<=8;i++)drawStep(i)}},250)},{passive:true});
+})();
+
+/* ============================
+   TORTOISE & RABBIT CANVAS
+   ============================ */
+(function(){
+  var cv=document.getElementById('tortoiseCanvas'),ctx,W,H;
+  var started=false,step=-1,OX,STEP,TY,RX,YX;
+
+  function setup(){
+    var o=setupCanvas(cv,620,260);ctx=o.ctx;W=o.W;H=o.H;
+    OX=50;STEP=(W-90)/8.5;TY=195;RX=OX+7.2*STEP;YX=OX+7.5*STEP;
+  }
+
+  function drawTortoise(cx,by){
+    var c=ctx;
+    c.fillStyle='#3B7A4D';c.beginPath();c.ellipse(cx,by-18,20,14,0,Math.PI,0);c.fill();
+    c.strokeStyle='#285A38';c.lineWidth=1.5;c.stroke();
+    c.beginPath();c.moveTo(cx,by-32);c.lineTo(cx,by-18);c.strokeStyle='#285A38';c.lineWidth=1;c.stroke();
+    c.fillStyle='#5AAA6E';c.beginPath();c.ellipse(cx,by-7,16,6,0,0,Math.PI*2);c.fill();
+    c.beginPath();c.arc(cx+20,by-12,5.5,0,Math.PI*2);c.fill();c.strokeStyle='#3B7A4D';c.lineWidth=1;c.stroke();
+    c.fillStyle='#111';c.beginPath();c.arc(cx+22,by-13,1.3,0,Math.PI*2);c.fill();
+    c.strokeStyle='#285A38';c.lineWidth=1;c.beginPath();c.arc(cx+24,by-10,2.5,0.2,Math.PI*0.7);c.stroke();
+    c.strokeStyle='#3B7A4D';c.lineWidth=2.5;c.lineCap='round';
+    [[12,5],[8,3],[-8,-3],[-12,-5]].forEach(function(p){c.beginPath();c.moveTo(cx+p[0],by-4);c.lineTo(cx+p[1],by+2);c.stroke()});
+    c.beginPath();c.moveTo(cx-18,by-11);c.lineTo(cx-23,by-9);c.stroke();
+  }
+
+  function drawRabbit(cx,by,awake){
+    var c=ctx;
+    c.fillStyle='#CCC5BB';c.beginPath();c.ellipse(cx,by-10,16,9,0,0,Math.PI*2);c.fill();c.strokeStyle='#999';c.lineWidth=1.2;c.stroke();
+    c.beginPath();c.arc(cx+14,by-16,7,0,Math.PI*2);c.fill();c.stroke();
+    c.fillStyle='#CCC5BB';
+    c.beginPath();c.ellipse(cx+10,by-34,3,11,-0.15,0,Math.PI*2);c.fill();c.stroke();
+    c.beginPath();c.ellipse(cx+18,by-34,3,11,0.15,0,Math.PI*2);c.fill();c.stroke();
+    c.fillStyle='#D48A8A';
+    c.beginPath();c.ellipse(cx+10,by-34,1.5,7.5,-0.15,0,Math.PI*2);c.fill();
+    c.beginPath();c.ellipse(cx+18,by-34,1.5,7.5,0.15,0,Math.PI*2);c.fill();
+    if(!awake){
+      c.strokeStyle='#666';c.lineWidth=1.5;c.beginPath();c.arc(cx+16,by-16,3,0.3,Math.PI-0.3);c.stroke();
+      c.fillStyle='rgba(212,148,58,0.55)';c.textAlign='left';
+      c.font='700 11px "Source Sans 3"';c.fillText('z',cx+22,by-28);
+      c.font='700 14px "Source Sans 3"';c.fillText('Z',cx+30,by-38);
+      c.font='700 18px "Source Sans 3"';c.fillText('Z',cx+40,by-50);
+    }else{
+      c.fillStyle='#333';c.beginPath();c.arc(cx+16,by-17,2.5,0,Math.PI*2);c.fill();
+      c.fillStyle='#fff';c.beginPath();c.arc(cx+15,by-18,0.9,0,Math.PI*2);c.fill();
+      c.strokeStyle='rgba(212,148,58,0.7)';c.lineWidth=1.5;
+      c.beginPath();c.moveTo(cx+26,by-22);c.lineTo(cx+30,by-26);c.stroke();
+      c.beginPath();c.moveTo(cx+28,by-18);c.lineTo(cx+34,by-18);c.stroke();
+      c.beginPath();c.moveTo(cx+26,by-14);c.lineTo(cx+30,by-10);c.stroke();
+      c.fillStyle='#D4943A';c.font='700 20px "Source Sans 3"';c.textAlign='center';c.fillText('!',cx+34,by-42);
+    }
+    c.fillStyle='#EDE8DF';c.beginPath();c.arc(cx-16,by-12,5,0,Math.PI*2);c.fill();
+  }
+
+  function drawStatic(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='#5A554E';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(28,TY);ctx.lineTo(W-18,TY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(W-18,TY);ctx.lineTo(W-30,TY-5);ctx.moveTo(W-18,TY);ctx.lineTo(W-30,TY+5);ctx.stroke();
+    ctx.strokeStyle='rgba(90,170,110,0.15)';ctx.lineWidth=1;
+    for(var i=0;i<W;i+=18){var gh=3+Math.sin(i*0.3)*2;
+      ctx.beginPath();ctx.moveTo(i,TY+4);ctx.lineTo(i-2,TY+4+gh);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(i,TY-4);ctx.lineTo(i+2,TY-4-gh);ctx.stroke()}
+    ctx.strokeStyle='#7A7268';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(OX,TY-20);ctx.lineTo(OX,TY+20);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#EDE8DF';ctx.font='600 14px "Source Sans 3",sans-serif';ctx.textAlign='center';ctx.fillText('0',OX,TY+40);
+    ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='rgba(212,148,58,0.5)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(YX,TY-50);ctx.lineTo(YX,TY+30);ctx.stroke();ctx.restore();
+    ctx.fillStyle='#D4943A';ctx.font='700 16px "Source Sans 3",sans-serif';ctx.fillText('y',YX,TY+50);
+    drawRabbit(RX,TY,false);
+    ctx.fillStyle='rgba(212,148,58,0.45)';ctx.font='400 12px "Source Sans 3",sans-serif';ctx.textAlign='center';
+    ctx.fillText('Rabbit rests near y',RX,TY+68);
+  }
+
+  function drawTortoiseStep(s){
+    var px=OX+s*STEP,passed=px>RX;
+    if(passed){
+      ctx.save();ctx.beginPath();ctx.rect(RX-40,TY-55,80,80);ctx.clip();
+      ctx.strokeStyle='#5A554E';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(RX-40,TY);ctx.lineTo(RX+40,TY);ctx.stroke();
+      drawRabbit(RX,TY,true);ctx.restore();
+    }
+    drawTortoise(px,TY);
+    var col=passed?'#D4943A':'#EDE8DF';
+    ctx.fillStyle=col;ctx.font=passed?'700 14px "Source Sans 3",sans-serif':'400 13px "Source Sans 3",sans-serif';
+    ctx.textAlign='center';ctx.fillText(s===1?'x':s+'x',px,TY+40);
+    if(passed){
+      ctx.fillStyle='#D4943A';ctx.font='700 13px "Source Sans 3",sans-serif';ctx.fillText('nx > y',px,TY-45);
+      ctx.strokeStyle='rgba(212,148,58,0.4)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px,TY-36);ctx.lineTo(px,TY-22);ctx.stroke();
+    }
+  }
+
+  function run(){
+    if(started)return;started=true;step=-1;setup();drawStatic();showAnno('ta',0);
+    var s=0,it=setInterval(function(){s++;if(s>8){clearInterval(it);started=false;return}
+      step=s;drawTortoiseStep(s);showAnno('ta',s)},1800);
+  }
+
+  new IntersectionObserver(function(e){
+    e.forEach(function(en){if(en.isIntersecting&&!started)setTimeout(run,3500)})
+  },{threshold:.1}).observe(document.getElementById('tortoise-section'));
+
+  document.getElementById('replayTortoise').addEventListener('click',function(){started=false;step=-1;showAnno('ta',0);setTimeout(run,200)});
+  var rt=null;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(step>=0){setup();drawStatic();for(var i=1;i<=step&&i<=8;i++)drawTortoiseStep(i)}},250)},{passive:true});
+})();
+
+/* ============================
+   MAN TO MOON CANVAS
+   ============================ */
+(function(){
+  var cv=document.getElementById('moonCanvas'),ctx,W,H;
+  var started=false,step=-1,GY,OX,SPX,moonCX,moonCY,moonR,stars=[];
+
+  function genStars(){stars=[];for(var i=0;i<45;i++)stars.push({x:Math.random()*W,y:Math.random()*(GY-40),r:0.4+Math.random()*1.1,a:0.2+Math.random()*0.5})}
+
+  function setup(){
+    var o=setupCanvas(cv,620,310);ctx=o.ctx;W=o.W;H=o.H;
+    GY=265;OX=50;SPX=38;moonCX=W-60;moonCY=70;moonR=30;genStars();
+  }
+
+  function drawSky(){
+    var g=ctx.createLinearGradient(0,0,0,GY);
+    g.addColorStop(0,'#0E0C0A');g.addColorStop(0.6,'#12100D');g.addColorStop(1,'#1A1612');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,GY);
+  }
+  function drawStars(){stars.forEach(function(s){ctx.fillStyle='rgba(237,232,223,'+s.a+')';ctx.beginPath();ctx.arc(s.x,s.y,Math.max(0.3,s.r),0,Math.PI*2);ctx.fill()})}
+  function drawMoon(){
+    var c=ctx;
+    c.save();c.globalAlpha=0.08;c.fillStyle='#F5E6B8';c.beginPath();c.arc(moonCX,moonCY,moonR*2.5,0,Math.PI*2);c.fill();c.restore();
+    c.save();c.globalAlpha=0.15;c.fillStyle='#F5E6B8';c.beginPath();c.arc(moonCX,moonCY,moonR*1.6,0,Math.PI*2);c.fill();c.restore();
+    c.fillStyle='#F5E6B8';c.beginPath();c.arc(moonCX,moonCY,Math.max(1,moonR),0,Math.PI*2);c.fill();
+    c.fillStyle='#0E0C0A';c.beginPath();c.arc(moonCX+moonR*0.4,moonCY-moonR*0.1,Math.max(1,moonR*0.82),0,Math.PI*2);c.fill();
+    c.fillStyle='rgba(245,230,184,0.45)';c.font='600 12px "Source Sans 3",sans-serif';c.textAlign='center';c.fillText('Moon',moonCX,moonCY+moonR+18);
+  }
+  function drawGround(){
+    var g=ctx.createLinearGradient(0,GY,0,H);g.addColorStop(0,'#2A2520');g.addColorStop(1,'#1A1612');
+    ctx.fillStyle=g;ctx.fillRect(0,GY,W,H-GY);
+    ctx.strokeStyle='#3D3830';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,GY);ctx.lineTo(W,GY);ctx.stroke();
+    ctx.fillStyle='rgba(212,148,58,0.07)';for(var i=0;i<W;i+=12){ctx.beginPath();ctx.arc(i,GY+8,1,0,Math.PI*2);ctx.fill()}
+  }
+  function drawMan(cx,phase){
+    var c=ctx,s=0.9,hr=4.5*s,bh=14*s,lh=10*s;
+    c.fillStyle='#EDE8DF';c.beginPath();c.arc(cx,GY-bh-lh-hr,Math.max(1,hr),0,Math.PI*2);c.fill();
+    c.strokeStyle='#EDE8DF';c.lineWidth=2.2*s;c.lineCap='round';
+    c.beginPath();c.moveTo(cx,GY-bh-lh+hr*0.5);c.lineTo(cx,GY-lh);c.stroke();
+    var sp=7*s;
+    if(phase===0){c.beginPath();c.moveTo(cx,GY-lh);c.lineTo(cx-sp,GY);c.stroke();c.beginPath();c.moveTo(cx,GY-lh);c.lineTo(cx+sp,GY);c.stroke()}
+    else{c.beginPath();c.moveTo(cx,GY-lh);c.lineTo(cx+sp,GY);c.stroke();c.beginPath();c.moveTo(cx,GY-lh);c.lineTo(cx-sp,GY);c.stroke()}
+    c.lineWidth=1.8*s;var asp=5*s,ah=8*s;
+    c.beginPath();c.moveTo(cx,GY-bh-lh+hr*0.5+3*s);c.lineTo(cx-asp,GY-bh-lh+hr*0.5+ah);c.stroke();
+    c.beginPath();c.moveTo(cx,GY-bh-lh+hr*0.5+3*s);c.lineTo(cx+asp,GY-bh-lh+hr*0.5+ah);c.stroke();
+  }
+  function drawFootsteps(ms){
+    var c=ctx;
+    for(var i=0;i<ms;i++){var fx=OX+i*SPX+SPX*0.5;
+      c.strokeStyle='rgba(212,148,58,0.3)';c.lineWidth=1.3;c.lineCap='round';
+      c.beginPath();c.moveTo(fx-3,GY);c.lineTo(fx,GY-3.5);c.lineTo(fx+3,GY);c.stroke()}
+  }
+  function drawDistArrow(ms){
+    if(ms<1)return;var c=ctx,fx=OX+ms*SPX+SPX*0.5,tx=moonCX,ay=GY-55;
+    if(tx-fx<40)return;
+    c.save();c.setLineDash([6,5]);c.strokeStyle='rgba(212,148,58,0.22)';c.lineWidth=1.2;
+    c.beginPath();c.moveTo(fx,ay);c.quadraticCurveTo((fx+tx)/2,ay-50,tx,moonCY+moonR+5);c.stroke();c.restore();
+    c.fillStyle='rgba(212,148,58,0.35)';c.font='600 11px "Source Sans 3",sans-serif';c.textAlign='center';
+    c.fillText('y = distance to Moon',(fx+tx)/2,ay-38);
+  }
+  function drawStepLabel(s){
+    ctx.fillStyle='rgba(237,232,223,0.45)';ctx.font='400 11px "Source Sans 3",sans-serif';ctx.textAlign='center';
+    ctx.fillText(s===1?'x':s+'x',OX+s*SPX,GY-52);
+  }
+
+  function drawStatic(){ctx.clearRect(0,0,W,H);drawSky();drawStars();drawMoon();drawGround()}
+
+  function drawMoonStep(s){drawFootsteps(s);drawMan(OX+s*SPX,s%2);drawStepLabel(s);drawDistArrow(s)}
+
+  function run(){
+    if(started)return;started=true;step=-1;setup();drawStatic();showAnno('ma',0);
+    var s=0,it=setInterval(function(){s++;if(s>12){clearInterval(it);started=false;return}
+      step=s;drawMoonStep(s);showAnno('ma',Math.min(s,7))},1600);
+  }
+
+  new IntersectionObserver(function(e){
+    e.forEach(function(en){if(en.isIntersecting&&!started)setTimeout(run,3500)})
+  },{threshold:.1}).observe(document.getElementById('moon-section'));
+
+  document.getElementById('replayMoon').addEventListener('click',function(){started=false;step=-1;showAnno('ma',0);setTimeout(run,200)});
+  var rt=null;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(step>=0){setup();drawStatic();for(var i=1;i<=step&&i<=12;i++)drawMoonStep(i)}},250)},{passive:true});
+})();
+</script>
+</body>
+</html>
