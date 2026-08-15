@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Sets Hub</title>
+    <style>
+        :root {
+            --teal: #008080;
+            --teal-light: #e0f2f1;
+            --orange: #E65100;
+            --gray: #555;
+            --dark: #222;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--dark);
+            font-size: 32px;
+            margin-bottom: 10px;
+            border-bottom: 3px solid var(--teal);
+            padding-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: var(--gray);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        /* Grid layout for the cards */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* Individual Card Styling */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 25px;
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--teal);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-left-color: var(--orange);
+        }
+
+        .card-icon {
+            background: var(--teal-light);
+            color: var(--teal);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .card-text h2 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            color: var(--dark);
+        }
+
+        .card-text p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            color: var(--gray);
+            font-style: italic;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Problem Sets</h1>
+    <p class="subtitle">Select a file to view the exercises.</p>
+
+    <!-- This div will be populated by JavaScript -->
+    <div class="grid-container" id="problem-grid"></div>
+
+    <script>
+        // ==========================================================
+        // INSTRUCTIONS: Add your exact file names as strings in this array.
+        // Make sure the HTML files are in the same folder as this file.
+        // ==========================================================
+        const problemFiles = [
+            "PS/P1.html",
+            "PS/P2.html",
+            "PS/P3.html",
+            <!--"PS/P4.html"-->
+            // "goldbach_exercises.html",
+            // "circle_method_ps.html"
+        ];
+
+        // Function to generate the dashboard
+        function renderGrid(files) {
+            const grid = document.getElementById('problem-grid');
+            grid.innerHTML = ''; // Clear existing content
+
+            if (files.length === 0) {
+                grid.innerHTML = '<div class="empty-state">No problem sets found. Please add filenames to the script.</div>';
+                return;
+            }
+
+            files.forEach(file => {
+                // Create the link wrapper
+                const card = document.createElement('a');
+                card.href = file;
+                card.className = 'card';
+                card.target = "_blank"; // Opens in a new tab
+
+                // Create the icon container
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'card-icon';
+                iconDiv.innerHTML = `<svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM9.5 4V1.5L12.5 4H9.5z"/>
+                                     </svg>`;
+
+                // Create the text container
+                const textDiv = document.createElement('div');
+                textDiv.className = 'card-text';
+                
+                // Title is the exact filename
+                const title = document.createElement('h2');
+                title.textContent = file; 
+                
+                // Subtitle text
+                const subtitle = document.createElement('p');
+                subtitle.textContent = "Click to open";
+
+                textDiv.appendChild(title);
+                textDiv.appendChild(subtitle);
+
+                card.appendChild(iconDiv);
+                card.appendChild(textDiv);
+                grid.appendChild(card);
+            });
+        }
+
+        // Run the function when the page loads
+        renderGrid(problemFiles);
+    </script>
+
+</body>
+</html>

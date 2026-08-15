@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAQ 1 — Functions: Domain, Codomain, Image, Preimage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --indigo: #3B3E8F; --indigo-deep: #262a63; --indigo-soft: #eceafb;
+    --amber: #D9992C; --amber-soft: #fbedd2;
+    --sage: #7C9473; --sage-soft: #e8efe3;
+    --paper: #FAF8F3; --ink: #22242E; --ink-soft: #565A6E; --line: #DEDAD0; --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.65; font-size:17px; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; color:var(--indigo-deep); letter-spacing:-0.01em; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); font-weight:500; }
+
+  header.hero{
+    padding:56px 8vw 40px;
+    background: radial-gradient(circle at 85% 15%, rgba(59,62,143,0.10), transparent 55%), var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  header.hero h1{ font-size:clamp(28px, 3.6vw, 42px); margin:10px 0 6px; line-height:1.15; }
+  header.hero p.sub{ max-width:640px; color:var(--ink-soft); font-size:16.5px; }
+
+  main{ max-width:820px; margin:0 auto; padding:44px 8vw 100px; }
+
+  .question-block{ margin-bottom:56px; }
+  .question-block:last-of-type{ margin-bottom:0; }
+
+  .qheader{
+    display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  }
+  .qheader .qnum{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; color:#fff; background:var(--indigo);
+    border-radius:6px; padding:3px 10px; flex-shrink:0;
+  }
+  .qheader h2{ font-size:22px; margin:0; }
+
+  .statement{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px 26px; margin-bottom:26px; font-size:17px;
+  }
+  .statement .setup{ color:var(--ink-soft); font-size:14px; font-family:'IBM Plex Mono',monospace; margin-bottom:6px; }
+
+  .subq{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 24px; margin-bottom:16px;
+  }
+  .subq .subq-label{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft);
+    text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;
+  }
+  .subq .subq-text{ font-size:16.5px; margin-bottom:14px; }
+
+  .btn-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .reveal-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; border-radius:8px; cursor:pointer;
+    padding:8px 15px; border:1.5px solid; background:transparent; transition:background .15s ease;
+  }
+  .reveal-btn.hint-btn{ color:var(--amber); border-color:var(--amber); }
+  .reveal-btn.hint-btn:hover{ background:var(--amber-soft); }
+  .reveal-btn.answer-btn{ color:var(--indigo); border-color:var(--indigo); }
+  .reveal-btn.answer-btn:hover{ background:var(--indigo-soft); }
+
+  .panel{ display:none; margin-top:12px; padding:14px 16px; border-radius:8px; border-left:3px solid; }
+  .panel.shown{ display:block; }
+  .panel.hint{ background:var(--amber-soft); border-color:var(--amber); }
+  .panel.hint::before{
+    content:'Hint'; display:block; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    text-transform:uppercase; letter-spacing:.08em; color:#8a5f13; margin-bottom:6px;
+  }
+  .panel.answer{ background:var(--sage-soft); border-color:var(--sage); }
+  .panel.answer::before{
+    content:'Answer'; display:block; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    text-transform:uppercase; letter-spacing:.08em; color:#3a5233; margin-bottom:6px;
+  }
+
+  footer{
+    max-width:820px; margin:0 auto; padding:32px 8vw 70px;
+    color:var(--ink-soft); font-size:13.5px; border-top:1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Self-Assessment Quiz · SAQ 1</div>
+  <h1>Functions: Domain, Codomain, Image, Preimage</h1>
+  <p class="sub">Work out each part yourself first. "Show hint" gives a nudge without giving away the answer; "Show final answer" reveals the complete solution. Each button toggles independently, so you can peek at a hint and still try the answer on your own.</p>
+</header>
+
+<main id="quizBody">
+
+  <!--
+    ===================================================================
+    TEMPLATE FOR A NEW QUESTION — copy the entire <div class="question-block">
+    ... </div> block below, paste it before the closing </main> tag,
+    and update:
+      - data-qid on the outer block (must be unique, e.g. "q2")
+      - the qnum label ("Question 2") and the statement text
+      - each subq's data-id values (must be unique across the WHOLE page,
+        e.g. "q2-1", "q2-2", ...) and the hint/answer panel contents
+    Sub-questions within a question can be added or removed freely by
+    copying/deleting individual <div class="subq"> ... </div> blocks.
+    ===================================================================
+  -->
+
+  <div class="question-block" data-qid="q1">
+    <div class="qheader">
+      <span class="qnum">Question 1</span>
+      <h2>Squaring function on ℝ</h2>
+    </div>
+
+    <div class="statement">
+      <div class="setup">Setup</div>
+      Consider \(f:\mathbb{R}\to\mathbb{R}\) defined by \(f(x)=x^2\). Identify the following:
+    </div>
+
+    <!-- Sub-question 1 -->
+    <div class="subq">
+      <div class="subq-label">Part 1</div>
+      <div class="subq-text">The domain of \(f\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q1-1-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q1-1-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q1-1-hint">In \(f:X\to Y\), the domain is the set \(X\) the function is declared to act on — read it straight off the notation, no computation needed.</div>
+      <div class="panel answer" id="q1-1-ans">The domain of \(f\) is \(\mathbb{R}\).</div>
+    </div>
+
+    <!-- Sub-question 2 -->
+    <div class="subq">
+      <div class="subq-label">Part 2</div>
+      <div class="subq-text">The codomain of \(f\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q1-2-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q1-2-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q1-2-hint">In \(f:X\to Y\), the codomain is \(Y\) — the declared target set. It's not the same as the range/image, and you don't need to check what's actually reached to answer this part.</div>
+      <div class="panel answer" id="q1-2-ans">The codomain of \(f\) is \(\mathbb{R}\).</div>
+    </div>
+
+    <!-- Sub-question 3 -->
+    <div class="subq">
+      <div class="subq-label">Part 3</div>
+      <div class="subq-text">The image of \(1\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q1-3-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q1-3-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q1-3-hint">"The image of \(1\)" means \(f(1)\) — just substitute \(x=1\) into the formula.</div>
+      <div class="panel answer" id="q1-3-ans">\(f(1)=1^2=1\). The image of \(1\) is \(1\).</div>
+    </div>
+
+    <!-- Sub-question 4 -->
+    <div class="subq">
+      <div class="subq-label">Part 4</div>
+      <div class="subq-text">The image of \(-1\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q1-4-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q1-4-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q1-4-hint">Substitute \(x=-1\) into \(f(x)=x^2\). Remember squaring removes the sign.</div>
+      <div class="panel answer" id="q1-4-ans">\(f(-1)=(-1)^2=1\). The image of \(-1\) is \(1\).</div>
+    </div>
+
+    <!-- Sub-question 5 -->
+    <div class="subq">
+      <div class="subq-label">Part 5</div>
+      <div class="subq-text">The preimage(s) of \(0\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q1-5-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q1-5-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q1-5-hint">The preimage of a value \(y\) is the set of all \(x\) with \(f(x)=y\). Here, solve \(x^2=0\).</div>
+      <div class="panel answer" id="q1-5-ans">\(x^2=0\iff x=0\). The preimage of \(0\) is \(\{0\}\) — a single element.</div>
+    </div>
+
+    <!-- Sub-question 6 -->
+    <div class="subq">
+      <div class="subq-label">Part 6</div>
+      <div class="subq-text">The preimage(s) of \(1\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q1-6-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q1-6-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q1-6-hint">Solve \(x^2=1\). How many real solutions does this equation have?</div>
+      <div class="panel answer" id="q1-6-ans">\(x^2=1\iff x=1 \text{ or } x=-1\). The preimage of \(1\) is \(\{-1,1\}\) — two elements, confirming \(f\) is not one-one.</div>
+    </div>
+
+    <!-- Sub-question 7 -->
+    <div class="subq">
+      <div class="subq-label">Part 7</div>
+      <div class="subq-text">The preimage(s) of \(-1\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q1-7-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q1-7-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q1-7-hint">Solve \(x^2=-1\) over the reals. Can a real number squared ever be negative?</div>
+      <div class="panel answer" id="q1-7-ans">No real \(x\) satisfies \(x^2=-1\), since a real square is always \(\ge0\). The preimage of \(-1\) is \(\emptyset\) — confirming \(-1\) is not in the range of \(f\).</div>
+    </div>
+
+    <!-- Sub-question 8 -->
+    <div class="subq">
+      <div class="subq-label">Part 8</div>
+      <div class="subq-text">The image of \(f\) (i.e. \(f(\mathbb{R})\), the range).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q1-8-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q1-8-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q1-8-hint">This asks for the full set of values \(f\) actually hits as \(x\) ranges over all of \(\mathbb{R}\) — not the codomain, the <em>achieved</em> outputs. Parts 5–7 already gave you three data points; what pattern do they suggest?</div>
+      <div class="panel answer" id="q1-8-ans">\(f(\mathbb{R})=[0,\infty)\). Every square is \(\ge0\) (so nothing negative, like \(-1\), is ever hit — matching Part 7), and every nonnegative real \(y\) is achieved by \(x=\sqrt y\) (or \(x=-\sqrt y\)). Note the image is a proper subset of the codomain \(\mathbb{R}\) from Part 2 — so \(f\) is not onto.</div>
+    </div>
+
+  </div>
+
+  <div class="question-block" data-qid="q2">
+    <div class="qheader">
+      <span class="qnum">Question 2</span>
+      <h2>Square-root function on [0, ∞)</h2>
+    </div>
+
+    <div class="statement">
+      <div class="setup">Setup</div>
+      Consider \(g:[0,\infty)\to\mathbb{R}\) defined by \(g(x)=\sqrt{x}\). Identify the following:
+    </div>
+
+    <!-- Sub-question 1 -->
+    <div class="subq">
+      <div class="subq-label">Part 1</div>
+      <div class="subq-text">The domain of \(g\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q2-1-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q2-1-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q2-1-hint">Read the set \(X\) straight off the notation \(g:X\to Y\) — no computation needed. Note this domain is not all of \(\mathbb{R}\).</div>
+      <div class="panel answer" id="q2-1-ans">The domain of \(g\) is \([0,\infty)\).</div>
+    </div>
+
+    <!-- Sub-question 2 -->
+    <div class="subq">
+      <div class="subq-label">Part 2</div>
+      <div class="subq-text">The codomain of \(g\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q2-2-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q2-2-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q2-2-hint">In \(g:X\to Y\), the codomain is the declared target set \(Y\) — it doesn't need to be fully reached to count as the codomain.</div>
+      <div class="panel answer" id="q2-2-ans">The codomain of \(g\) is \(\mathbb{R}\).</div>
+    </div>
+
+    <!-- Sub-question 3 -->
+    <div class="subq">
+      <div class="subq-label">Part 3</div>
+      <div class="subq-text">The image of \(4\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q2-3-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q2-3-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q2-3-hint">"The image of \(4\)" means \(g(4)\) — substitute \(x=4\) into the formula.</div>
+      <div class="panel answer" id="q2-3-ans">\(g(4)=\sqrt4=2\). The image of \(4\) is \(2\).</div>
+    </div>
+
+    <!-- Sub-question 4 -->
+    <div class="subq">
+      <div class="subq-label">Part 4</div>
+      <div class="subq-text">The image of \(0\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q2-4-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q2-4-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q2-4-hint">Substitute \(x=0\) into \(g(x)=\sqrt x\). Note \(0\) is a legal input here, unlike negative numbers.</div>
+      <div class="panel answer" id="q2-4-ans">\(g(0)=\sqrt0=0\). The image of \(0\) is \(0\).</div>
+    </div>
+
+    <!-- Sub-question 5 -->
+    <div class="subq">
+      <div class="subq-label">Part 5</div>
+      <div class="subq-text">The preimage(s) of \(2\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q2-5-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q2-5-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q2-5-hint">Solve \(\sqrt x=2\) for \(x\ge0\) — square both sides.</div>
+      <div class="panel answer" id="q2-5-ans">\(\sqrt x=2\iff x=4\). The preimage of \(2\) is \(\{4\}\).</div>
+    </div>
+
+    <!-- Sub-question 6 -->
+    <div class="subq">
+      <div class="subq-label">Part 6</div>
+      <div class="subq-text">The preimage(s) of \(-1\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q2-6-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q2-6-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q2-6-hint">The (principal) square root symbol \(\sqrt{\phantom{x}}\) never outputs a negative number. Is there any \(x\ge0\) with \(\sqrt x=-1\)?</div>
+      <div class="panel answer" id="q2-6-ans">No such \(x\) exists, since \(\sqrt x\ge0\) for every \(x\) in the domain. The preimage of \(-1\) is \(\emptyset\).</div>
+    </div>
+
+    <!-- Sub-question 7 -->
+    <div class="subq">
+      <div class="subq-label">Part 7</div>
+      <div class="subq-text">The preimage(s) of \(0\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q2-7-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q2-7-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q2-7-hint">Solve \(\sqrt x=0\) for \(x\ge0\).</div>
+      <div class="panel answer" id="q2-7-ans">\(\sqrt x=0\iff x=0\). The preimage of \(0\) is \(\{0\}\) — a single element.</div>
+    </div>
+
+    <!-- Sub-question 8 -->
+    <div class="subq">
+      <div class="subq-label">Part 8</div>
+      <div class="subq-text">The image of \(g\) (i.e. \(g([0,\infty))\), the range).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q2-8-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q2-8-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q2-8-hint">This asks for every value \(g\) actually hits as \(x\) ranges over \([0,\infty)\) — not the codomain. Parts 5–7 already gave you three data points; what pattern do they suggest?</div>
+      <div class="panel answer" id="q2-8-ans">\(g([0,\infty))=[0,\infty)\). The square root of a nonnegative number is always \(\ge0\) (so \(-1\) is never hit — matching Part 6), and every \(y\ge0\) is achieved by \(x=y^2\). As with Question 1, the image is a proper subset of the codomain \(\mathbb{R}\) — so \(g\) is not onto either, though here it is one-one (each output has exactly one preimage, unlike \(f(x)=x^2\) in Question 1).</div>
+    </div>
+
+  </div>
+
+  <!-- Add further <div class="question-block"> ... </div> blocks here as more questions are added. -->
+
+</main>
+
+<footer>
+  <p>Calculus-I (MAT1001) · Self-Assessment Quiz — A. Satyanarayana Reddy.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.reveal-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const panel = document.getElementById(btn.dataset.target);
+      panel.classList.toggle('shown');
+      const showing = panel.classList.contains('shown');
+      const isHint = panel.classList.contains('hint');
+      btn.textContent = showing
+        ? (isHint ? 'Hide hint' : 'Hide final answer')
+        : (isHint ? 'Show hint' : 'Show final answer');
+      if (window.MathJax) MathJax.typesetPromise([panel]);
+    });
+  });
+</script>
+</body>
+</html>

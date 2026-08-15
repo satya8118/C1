@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources & Links</title>
+    <style>
+        :root {
+            --teal: #008080;
+            --teal-light: #e0f2f1;
+            --orange: #E65100;
+            --gray: #666;
+            --dark: #222;
+            --bg: #f4f6f8;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--dark);
+            font-size: 32px;
+            margin-bottom: 10px;
+            border-bottom: 3px solid var(--teal);
+            padding-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: var(--gray);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Resource List Styling */
+        .resource-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .resource-item {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 20px 25px;
+            display: flex;
+            align-items: flex-start;
+            text-decoration: none;
+            color: inherit;
+            border-left: 5px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .resource-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left-color: var(--orange);
+        }
+
+        .resource-icon {
+            color: var(--teal);
+            margin-right: 20px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .resource-content {
+            flex-grow: 1;
+        }
+
+        .resource-title {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Space between title and external link icon */
+        }
+
+        .resource-desc {
+            margin: 0;
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .external-link-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .resource-item:hover .external-link-icon {
+            opacity: 1;
+            color: var(--orange);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--gray);
+            font-style: italic;
+            margin-top: 50px;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Resources</h1>
+    <p class="subtitle">Useful links, references, and further reading.</p>
+
+    <div class="container">
+        <ul class="resource-list" id="resource-list">
+            <!-- Populated by JavaScript -->
+        </ul>
+    </div>
+
+    <script>
+        // ==========================================================
+        // INSTRUCTIONS: Add your resources here.
+        // - title: The name of the website/paper.
+        // - url: The exact web address (include https://).
+        // - description: A short sentence about what it is.
+        // ==========================================================
+        const resources = [
+            {
+                title: "Paul's Online Notes: Calculus I Problems",
+                url: "https://tutorial.math.lamar.edu/problems/calci/calci.aspx",
+                description: "An excellent collection of Calculus I practice problems with step-by-step solutions, maintained by Lamar University."
+            },
+            {
+                title: "Calculus for Beginners",
+                url: "https://math.mit.edu/~djk/calculus_beginners/",
+                description: "From MIT"
+            },
+            {
+            title: " Desmos",
+            url: "https://www.desmos.com/calculator/umoafdgxpr",
+            description: "Open Graphing Calculator"
+            },
+            {
+            title: "Mathplotlib",
+            url: " https://matplotlib.org/",
+            description: "Matplotlib is a comprehensive library for creating static, animated, and interactive visualizations in Python. "
+            },
+            {
+            title: "Jupyter",
+            url: "https://jupyter.org/",
+            description: "Free software, open standards, and web services for interactive computing across all programming languages"
+            }
+            
+            
+            
+        ];
+
+        // SVG Icon for external links
+        const linkIconSVG = `<svg class="external-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                             </svg>`;
+
+        // Function to render the list
+        function renderResources(resourceArray) {
+            const list = document.getElementById('resource-list');
+            list.innerHTML = ''; // Clear loader/previous items
+
+            if (resourceArray.length === 0) {
+                list.innerHTML = '<div class="empty-state">No resources added yet. Edit the JavaScript to add links.</div>';
+                return;
+            }
+
+            resourceArray.forEach(item => {
+                // FIX: Changed 'li' to 'a' so it acts as a clickable hyperlink
+                const link = document.createElement('a');
+                link.className = 'resource-item';
+                link.href = item.url;
+                link.target = "_blank"; // Opens in new tab
+                link.rel = "noopener noreferrer"; // Security best practice for target="_blank"
+
+                link.innerHTML = `
+                    <div class="resource-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                    </div>
+                    <div class="resource-content">
+                        <h2 class="resource-title">${item.title} ${linkIconSVG}</h2>
+                        <p class="resource-desc">${item.description}</p>
+                    </div>
+                `;
+
+                list.appendChild(link);
+            });
+        }
+
+        // Run on page load
+        renderResources(resources);
+    </script>
+
+</body>
+</html>

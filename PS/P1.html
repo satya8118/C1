@@ -1,0 +1,3013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus Self-Assessment Quiz Slides</title>
+    <!-- MathJax for rendering LaTeX formulas -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg-main: #0a0e14;
+            --bg-card: #121820;
+            --cyan-neon: #00f3ff;
+            --lime-neon: #39ff14;
+            --orange-neon: #ff8c00;
+            --text-main: #00f3ff;
+            --border-dim: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .slide-container {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.15);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+        }
+
+        .slide {
+            display: none;
+            flex-grow: 1;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-title {
+            color: var(--cyan-neon);
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-dim);
+            padding-bottom: 12px;
+            margin-top: 0;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+        }
+
+        .question-body {
+            color: #e2e8f0;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .btn-action {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-hint {
+            background-color: transparent;
+            color: var(--orange-neon);
+            border: 2px solid var(--orange-neon);
+        }
+        .btn-hint:hover {
+            background-color: var(--orange-neon);
+            color: #000;
+            box-shadow: 0 0 12px rgba(255, 140, 0, 0.5);
+        }
+
+        .btn-solution {
+            background-color: transparent;
+            color: var(--lime-neon);
+            border: 2px solid var(--lime-neon);
+        }
+        .btn-solution:hover {
+            background-color: var(--lime-neon);
+            color: #000;
+            box-shadow: 0 0 12px rgba(57, 255, 20, 0.5);
+        }
+
+        .hint-box {
+            display: none;
+            background-color: rgba(255, 140, 0, 0.1);
+            border-left: 4px solid var(--orange-neon);
+            color: #ffca80;
+            padding: 14px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .solution-box {
+            display: none;
+            background-color: #08111a;
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            border-left: 4px solid var(--lime-neon);
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #e2e8f0;
+        }
+
+        .solution-title {
+            font-weight: bold;
+            color: var(--lime-neon);
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+        }
+
+        /* Dark Mode Custom Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            text-align: center;
+            border: 1px solid var(--border-dim);
+            background-color: #0f172a;
+        }
+
+        th {
+            background-color: #1e293b;
+            color: var(--cyan-neon);
+            padding: 10px;
+            border: 1px solid var(--border-dim);
+        }
+
+        td {
+            padding: 8px;
+            border: 1px solid var(--border-dim);
+            color: #cbd5e1;
+        }
+
+        /* Footer Navigation Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-dim);
+            padding-top: 20px;
+            margin-top: 25px;
+        }
+
+        .btn-nav {
+            background-color: transparent;
+            color: var(--cyan-neon);
+            border: 2px solid var(--cyan-neon);
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background-color: var(--cyan-neon);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-nav:disabled {
+            border-color: #334155;
+            color: #334155;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .highlight-box {
+            background-color: rgba(0, 243, 255, 0.08);
+            border-left: 4px solid var(--cyan-neon);
+            padding: 14px;
+            margin-top: 18px;
+            border-radius: 4px;
+            color: #e0f2fe;
+        }
+
+        /* LaTeX expression color override */
+        .MathJax {
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+
+    <!-- SLIDE 1 -->
+    <div class="slide active">
+        <h2 class="question-title">
+            SAQ 1: Inequalities and Real Line Plots
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( A = \{x \in \mathbb{R} : x^2 < x\} \). Find the set \( A \) and plot it on the real number line.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-1')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-1')">Show Answer</button>
+        </div>
+
+        <div id="hint-1" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong> Move all terms to one side: \( x^2 - x < 0 \implies x(x - 1) < 0 \). Test the intervals determined by the roots \( x = 0 \) and \( x = 1 \).
+        </div>
+
+        <div id="sol-1" class="solution-box">
+            <div class="solution-title">Solution:</div>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Algebraic Solution</strong></p>
+            <p>We are given the inequality \( x^2 < x \). Subtracting \( x \) from both sides:</p>
+            <div style="overflow-x: auto; padding: 5px 0;">
+                \[ x^2 - x < 0 \implies x(x - 1) < 0 \]
+            </div>
+            <p>
+                The roots of the expression \( x(x - 1) \) are \( x = 0 \) and \( x = 1 \). These divide the real number line into three intervals: \( (-\infty, 0) \), \( (0, 1) \), and \( (1, \infty) \).
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Interval</th>
+                        <th>Test Point</th>
+                        <th>Sign of \( x(x - 1) \)</th>
+                        <th>\( x^2 < x \)?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>\( (-\infty, 0) \)</td>
+                        <td>\( x = -1 \)</td>
+                        <td>\( (-1)(-2) = 2 > 0 \)</td>
+                        <td style="color: #ff4d4d; font-weight: bold;">False</td>
+                    </tr>
+                    <tr style="background-color: rgba(57, 255, 20, 0.05);">
+                        <td>\( (0, 1) \)</td>
+                        <td>\( x = 0.5 \)</td>
+                        <td>\( (0.5)(-0.5) = -0.25 < 0 \)</td>
+                        <td style="color: var(--lime-neon); font-weight: bold;">True</td>
+                    </tr>
+                    <tr>
+                        <td>\( (1, \infty) \)</td>
+                        <td>\( x = 2 \)</td>
+                        <td>\( (2)(1) = 2 > 0 \)</td>
+                        <td style="color: #ff4d4d; font-weight: bold;">False</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Thus, the set \( A \) is the open interval:</p>
+            <div style="overflow-x: auto; padding: 5px 0;">
+                \[ A = (0, 1) = \{x \in \mathbb{R} : 0 < x < 1\} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 20px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Real Number Line Plot</strong></p>
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="340" height="70" viewBox="0 0 340 70" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Axis Line -->
+                    <line x1="30" y1="35" x2="310" y2="35" stroke="#64748b" stroke-width="2" />
+                    
+                    <!-- Ticks -->
+                    <line x1="70" y1="30" x2="70" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="70" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">-1</text>
+
+                    <line x1="140" y1="30" x2="140" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="140" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">0</text>
+
+                    <line x1="210" y1="30" x2="210" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="210" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">1</text>
+
+                    <line x1="280" y1="30" x2="280" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="280" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">2</text>
+
+                    <!-- Interval Highlight (0, 1) -->
+                    <line x1="140" y1="35" x2="210" y2="35" stroke="#00f3ff" stroke-width="4.5" />
+                    <circle cx="140" cy="35" r="4.5" fill="#0f172a" stroke="#00f3ff" stroke-width="2.5" />
+                    <circle cx="210" cy="35" r="4.5" fill="#0f172a" stroke="#00f3ff" stroke-width="2.5" />
+                </svg>
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The set is \( A = (0, 1) \). Open circles at \( x = 0 \) and \( x = 1 \) indicate that boundary points are excluded. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 2: Cubic Inequalities and Real Line Plots
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( B = \{x \in \mathbb{R} : x^3 < x\} \). Find the set \( B \) and plot it on the real number line.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-2')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-2')">Show Answer</button>
+        </div>
+
+        <div id="hint-2" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong> Factor \( x^3 - x < 0 \) completely as \( x(x - 1)(x + 1) < 0 \). The key boundary points are \( x = -1, 0, 1 \).
+        </div>
+
+        <div id="sol-2" class="solution-box">
+            <div class="solution-title">Solution:</div>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Factorization and Interval Testing</strong></p>
+            <p>Subtracting \( x \) from both sides gives:</p>
+            <div style="overflow-x: auto; padding: 5px 0;">
+                \[ x^3 - x < 0 \implies x(x^2 - 1) < 0 \implies x(x - 1)(x + 1) < 0 \]
+            </div>
+            <p>
+                The expression vanishes at \( x = -1 \), \( x = 0 \), and \( x = 1 \). These three boundary points create four open intervals:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Interval</th>
+                        <th>Test Point</th>
+                        <th>Sign of \( x(x-1)(x+1) \)</th>
+                        <th>\( x^3 < x \)?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color: rgba(57, 255, 20, 0.05);">
+                        <td>\( (-\infty, -1) \)</td>
+                        <td>\( x = -2 \)</td>
+                        <td>\( (-2)(-3)(-1) = -6 < 0 \)</td>
+                        <td style="color: var(--lime-neon); font-weight: bold;">True</td>
+                    </tr>
+                    <tr>
+                        <td>\( (-1, 0) \)</td>
+                        <td>\( x = -0.5 \)</td>
+                        <td>\( (-0.5)(-1.5)(0.5) = 0.375 > 0 \)</td>
+                        <td style="color: #ff4d4d; font-weight: bold;">False</td>
+                    </tr>
+                    <tr style="background-color: rgba(57, 255, 20, 0.05);">
+                        <td>\( (0, 1) \)</td>
+                        <td>\( x = 0.5 \)</td>
+                        <td>\( (0.5)(-0.5)(1.5) = -0.375 < 0 \)</td>
+                        <td style="color: var(--lime-neon); font-weight: bold;">True</td>
+                    </tr>
+                    <tr>
+                        <td>\( (1, \infty) \)</td>
+                        <td>\( x = 2 \)</td>
+                        <td>\( (2)(1)(3) = 6 > 0 \)</td>
+                        <td style="color: #ff4d4d; font-weight: bold;">False</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Taking the union of intervals where the inequality holds:</p>
+            <div style="overflow-x: auto; padding: 5px 0;">
+                \[ B = (-\infty, -1) \cup (0, 1) \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 20px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Real Number Line Plot</strong></p>
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="360" height="70" viewBox="0 0 360 70" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Axis Line -->
+                    <line x1="20" y1="35" x2="340" y2="35" stroke="#64748b" stroke-width="2" />
+
+                    <!-- Ticks -->
+                    <line x1="70" y1="30" x2="70" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="70" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">-2</text>
+
+                    <line x1="130" y1="30" x2="130" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="130" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">-1</text>
+
+                    <line x1="190" y1="30" x2="190" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="190" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">0</text>
+
+                    <line x1="250" y1="30" x2="250" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="250" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">1</text>
+
+                    <line x1="310" y1="30" x2="310" y2="40" stroke="#64748b" stroke-width="1.5" />
+                    <text x="310" y="55" font-size="12" text-anchor="middle" fill="#94a3b8">2</text>
+
+                    <!-- Highlighted Rays/Intervals -->
+                    <!-- (-inf, -1) -->
+                    <line x1="20" y1="35" x2="130" y2="35" stroke="#39ff14" stroke-width="4.5" />
+                    <circle cx="130" cy="35" r="4.5" fill="#0f172a" stroke="#39ff14" stroke-width="2.5" />
+
+                    <!-- (0, 1) -->
+                    <line x1="190" y1="35" x2="250" y2="35" stroke="#39ff14" stroke-width="4.5" />
+                    <circle cx="190" cy="35" r="4.5" fill="#0f172a" stroke="#39ff14" stroke-width="2.5" />
+                    <circle cx="250" cy="35" r="4.5" fill="#0f172a" stroke="#39ff14" stroke-width="2.5" />
+                </svg>
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The solution set is \( B = (-\infty, -1) \cup (0, 1) \). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+     <!-- SLIDE 3 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 3: Expressing Subsets of \(\mathbb{R}\) in Set-Builder Notation
+        </h2>
+        <div class="question-body">
+            <p>Express each of the following sets as a subset of \(\mathbb{R}\) using set-builder notation:</p>
+            <ol type="a" style="line-height: 1.8;">
+                <li>Show that the empty set \(\emptyset \subseteq \mathbb{R}\).</li>
+                <li>Show that \(\{-1, 1\} \subseteq \mathbb{R}\).</li>
+                <li>Show that \(\mathbb{Z} \subseteq \mathbb{R}\).</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-3')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-3')">Show Answer</button>
+        </div>
+
+        <div id="hint-3" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong> Look for equations involving real variables whose solution sets match the required elements precisely:
+            <ul style="margin-top: 5px; margin-bottom: 0;">
+                <li>For empty set: look for a real equation with no real solutions (e.g. $x^2 = -1$).</li>
+                <li>For \(\{-1, 1\}\): solve $x^2 = 1$.</li>
+                <li>For integers \(\mathbb{Z}\): recall trigonometric roots like $\sin(\pi x) = 0$.</li>
+            </ul>
+        </div>
+
+        <div id="sol-3" class="solution-box">
+            <div class="solution-title">Solutions:</div>
+
+            <p><strong style="color: var(--cyan-neon);">a) Empty Set \(\emptyset \subseteq \mathbb{R}\):</strong></p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \emptyset = \{x \in \mathbb{R} \mid x^2 = -1\} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Since no real number satisfies $x^2 = -1$, the resulting set contains no elements, proving $\emptyset \subseteq \mathbb{R}$.</p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">b) Finite Set \(\{-1, 1\} \subseteq \mathbb{R}\):</strong></p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \{-1, 1\} = \{x \in \mathbb{R} \mid x^2 = 1\} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Solving $x^2 = 1$ over $\mathbb{R}$ yields exactly $x = 1$ and $x = -1$.</p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">c) Integers Set \(\mathbb{Z} \subseteq \mathbb{R}\):</strong></p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \mathbb{Z} = \{x \in \mathbb{R} \mid \sin(\pi x) = 0\} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">\(\sin(\theta) = 0\) whenever \(\theta\) is an integer multiple of \(\pi\). Thus, \(\sin(\pi x) = 0 \iff \pi x = k\pi \iff x \in \mathbb{Z}\).</p>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                All three sets are expressed as explicit sub-collections of real numbers defined by specific equations. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 4 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 4: Injectivity and Monotonicity of Continuous Functions
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( I \subseteq \mathbb{R} \) be an interval and \( f: I \to \mathbb{R} \) be a continuous function. 
+                Prove that \( f \) is <strong>injective</strong> if and only if \( f \) is <strong>strictly monotone</strong>.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-4')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-4')">Show Answer</button>
+        </div>
+
+        <div id="hint-4" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • <strong>(\(\Leftarrow\)) Direction:</strong> Strict monotonicity directly implies distinct inputs give distinct outputs.<br>
+            • <strong>(\(\Rightarrow\)) Direction:</strong> Assume \( f \) is injective but <em>not</em> strictly monotone. Find points \( a < b < c \) in \( I \) such that \( f(b) \) fails to lie strictly between \( f(a) \) and \( f(c) \). Then apply the <strong>Intermediate Value Theorem (IVT)</strong> to arrive at a contradiction of injectivity.
+        </div>
+
+        <div id="sol-4" class="solution-box">
+            <div class="solution-title">Proof (Hijab's Style):</div>
+
+            <p><strong style="color: var(--cyan-neon);">Part 1: If \( f \) is strictly monotone, then \( f \) is injective (\(\Leftarrow\))</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Assume \( f \) is strictly increasing (the strictly decreasing case is analogous). Let \( x_1, x_2 \in I \) with \( x_1 \neq x_2 \). 
+                Without loss of generality, assume \( x_1 < x_2 \). By definition of strict monotonicity:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ x_1 < x_2 \implies f(x_1) < f(x_2) \implies f(x_1) \neq f(x_2) \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Thus, \( f \) is injective.</p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Part 2: If \( f \) is continuous and injective, then \( f \) is strictly monotone (\(\Rightarrow\))</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Suppose \( f \) is injective but <strong>not</strong> strictly monotone. Then there exist three points \( a, b, c \in I \) with \( a < b < c \) such that \( f(b) \) does not lie strictly between \( f(a) \) and \( f(c) \). 
+            </p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( f \) is injective, \( f(a) \neq f(b) \neq f(c) \). Thus, exactly one of two non-monotone configurations occurs:
+            </p>
+
+            <ul style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+                <li><strong style="color: var(--orange-neon);">Case 1:</strong> \( f(b) > f(a) \) and \( f(b) > f(c) \)</li>
+                <li><strong style="color: var(--orange-neon);">Case 2:</strong> \( f(b) < f(a) \) and \( f(b) < f(c) \)</li>
+            </ul>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Consider <strong>Case 1</strong> (Case 2 follows by a symmetric argument):<br>
+                Choose a real number \( y \) such that:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \max\{f(a), f(c)\} < y < f(b) \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                1. Since \( f \) is continuous on \([a, b]\) and \( f(a) < y < f(b) \), by the <strong>Intermediate Value Theorem (IVT)</strong>, there exists \( x_1 \in (a, b) \) such that \( f(x_1) = y \).<br>
+                2. Similarly, since \( f \) is continuous on \([b, c]\) and \( f(c) < y < f(b) \), by the IVT, there exists \( x_2 \in (b, c) \) such that \( f(x_2) = y \).
+            </p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Because \( x_1 \in (a, b) \) and \( x_2 \in (b, c) \), we have \( x_1 < b < x_2 \implies x_1 \neq x_2 \). 
+                However, \( f(x_1) = y = f(x_2) \), which directly contradicts the injectivity of \( f \).
+            </p>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The assumption that \( f \) is not strictly monotone leads to a contradiction. Hence, any continuous injective function on an interval must be strictly monotone. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 5 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 5: Interlacing Zeros via Rolle's Theorem / Wronskian
+        </h2>
+        <div class="question-body">
+            <p>
+                Suppose that \( f, g: \mathbb{R} \to \mathbb{R} \) both have continuous derivatives and the determinant
+            </p>
+            <div style="overflow-x: auto; padding: 5px 0; text-align: center;">
+                \[ \phi(x) = \begin{bmatrix} f(x) & g(x) \\ f'(x) & g'(x) \end{bmatrix} = f(x)g'(x) - f'(x)g(x) \]
+            </div>
+            <p>
+                is never zero. Show that between any two zeros of \( f \), there must be a zero of \( g \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-5')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-5')">Show Answer</button>
+        </div>
+
+        <div id="hint-5" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Let \( a < b \) be two consecutive zeros of \( f \), so \( f(a) = f(b) = 0 \).<br>
+            • Assume for contradiction that \( g \) has no zero in \( (a, b) \). Then the quotient \( h(x) = \frac{f(x)}{g(x)} \) is well-defined and continuous on \([a, b]\) and differentiable on \((a, b)\).<br>
+            • Calculate \( h'(x) \) and apply <strong>Rolle's Theorem</strong> to \( h(x) \).
+        </div>
+
+        <div id="sol-5" class="solution-box">
+            <div class="solution-title">Proof:</div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Let \( a, b \in \mathbb{R} \) with \( a < b \) be two distinct zeros of \( f \), so that \( f(a) = 0 \) and \( f(b) = 0 \). 
+            </p>
+            
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Assume for contradiction that \( g(x) \neq 0 \) for all \( x \in (a, b) \). 
+            </p>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Verify Endpoints for \( g \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                First, note that \( g(a) \neq 0 \) and \( g(b) \neq 0 \). Indeed, if \( g(a) = 0 \), then:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                 \[ \phi(a) = f(a)g'(a) - f'(a)g(a) = (0)g'(a) - f'(a)(0) = 0 \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                which contradicts the condition that \( \phi(x) \neq 0 \) everywhere. Thus, \( g(a) \neq 0 \) and similarly \( g(b) \neq 0 \). Hence, \( g(x) \neq 0 \) for all \( x \in [a, b] \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Define Auxiliary Quotient Function</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( g(x) \neq 0 \) on \([a, b]\), define the quotient function \( h: [a, b] \to \mathbb{R} \) by:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ h(x) = \frac{f(x)}{g(x)} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                1. \( h \) is continuous on \([a, b]\) and differentiable on \((a, b)\).<br>
+                2. \( h(a) = \frac{f(a)}{g(a)} = 0 \) and \( h(b) = \frac{f(b)}{g(b)} = 0 \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 3: Apply Rolle's Theorem</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                By <strong>Rolle's Theorem</strong>, there exists some \( c \in (a, b) \) such that \( h'(c) = 0 \). Differentiating \( h(x) \) using the quotient rule:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ h'(x) = \frac{f'(x)g(x) - f(x)g'(x)}{[g(x)]^2} = -\frac{\phi(x)}{[g(x)]^2} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Setting \( h'(c) = 0 \) implies:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ -\frac{\phi(c)}{[g(c)]^2} = 0 \implies \phi(c) = 0 \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                This directly contradicts the given hypothesis that \( \phi(x) \neq 0 \) for all \( x \in \mathbb{R} \).
+            </p>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                Our assumption was false; therefore, \( g \) must have at least one zero in \( (a, b) \) between any two zeros of \( f \). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+<!-- SLIDE 6 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 6: Deriving \((a+b)^3\) using Calculus (Taylor/Maclaurin Method)
+        </h2>
+        <div class="question-body">
+            <p>
+                Find the expansion formula for \((x + a)^3\) by calculus. 
+                Consider \( f(x) = (x + a)^3 \) and \( g(x) = x^3 + cx^2 + dx + e \). 
+                Assuming \( f(x) = g(x) \), match their derivatives at \( x = 0 \) to determine the coefficients \( c, d, \) and \( e \), then evaluate at \( x = b \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-6')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-6')">Show Answer</button>
+        </div>
+
+        <div id="hint-6" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Calculate the 0th, 1st, 2nd, and 3rd derivatives of both \( f(x) \) and \( g(x) \).<br>
+            • Set \( f^{(k)}(0) = g^{(k)}(0) \) for \( k = 0, 1, 2 \) to solve for \( e, d, \) and \( c \).<br>
+            • Substitute \( x = b \) into the resulting identity \( (x+a)^3 = g(x) \).
+        </div>
+
+        <div id="sol-6" class="solution-box">
+            <div class="solution-title">Derivation:</div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Let \( f(x) = (x + a)^3 \) and \( g(x) = x^3 + cx^2 + dx + e \). Compute the successive derivatives of both functions:
+            </p>
+
+            <table style="margin: 10px 0;">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>\( f^{(k)}(x) \)</th>
+                        <th>\( g^{(k)}(x) \)</th>
+                        <th>At \( x = 0 \): \( f^{(k)}(0) = g^{(k)}(0) \)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>\( k = 0 \)</td>
+                        <td>\( (x + a)^3 \)</td>
+                        <td>\( x^3 + cx^2 + dx + e \)</td>
+                        <td>\( a^3 = e \implies \mathbf{e = a^3} \)</td>
+                    </tr>
+                    <tr>
+                        <td>\( k = 1 \)</td>
+                        <td>\( 3(x + a)^2 \)</td>
+                        <td>\( 3x^2 + 2cx + d \)</td>
+                        <td>\( 3a^2 = d \implies \mathbf{d = 3a^2} \)</td>
+                    </tr>
+                    <tr>
+                        <td>\( k = 2 \)</td>
+                        <td>\( 6(x + a) \)</td>
+                        <td>\( 6x + 2c \)</td>
+                        <td>\( 6a = 2c \implies \mathbf{c = 3a} \)</td>
+                    </tr>
+                    <tr>
+                        <td>\( k = 3 \)</td>
+                        <td>\( 6 \)</td>
+                        <td>\( 6 \)</td>
+                        <td>\( 6 = 6 \) (Identically matches)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Reconstruct the Polynomial Function</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Substituting \( c = 3a \), \( d = 3a^2 \), and \( e = a^3 \) back into \( g(x) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ (x + a)^3 = x^3 + 3ax^2 + 3a^2x + a^3 \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 3: Evaluate at \( x = b \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Setting \( x = b \) into the polynomial identity yields the standard binomial expansion:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ (b + a)^3 = b^3 + 3ab^2 + 3a^2b + a^3 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                By symmetry and rearranging terms: 
+                \[ (a + b)^3 = a^3 + 3a^2b + 3ab^2 + b^3 \quad \blacksquare \]
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 7 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 7: Cauchy's Exponential Functional Equation
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( f: \mathbb{R} \to \mathbb{R} \) be a continuous function such that \( f(1) = a \) (where \( a > 0 \)). 
+                If \( f(x + y) = f(x)f(y) \) for all \( x, y \in \mathbb{R} \), find \( f(x) \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-7')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-7')">Show Answer</button>
+        </div>
+
+        <div id="hint-7" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Determine \( f(n) \) for positive integers \( n \in \mathbb{N} \) inductively.<br>
+            • Extend the result to all rational numbers \( q \in \mathbb{Q} \) using \( f\left(\frac{m}{n}\right)^n = f(m) \).<br>
+            • Use the <strong>continuity</strong> of \( f \) on \( \mathbb{R} \) to extend the solution from \( \mathbb{Q} \) to all real numbers \( x \in \mathbb{R} \).
+        </div>
+
+        <div id="sol-7" class="solution-box">
+            <div class="solution-title">Solution:</div>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Positive Integers \( n \in \mathbb{N} \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                By repeated application of \( f(x + y) = f(x)f(y) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f(n) = f(1 + 1 + \dots + 1) = [f(1)]^n = a^n \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Zero and Negative Integers</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • Setting \( x = y = 0 \): \( f(0) = f(0)^2 \implies f(0) = 1 \) (since \( f(1) = a > 0 \implies f \not\equiv 0 \)).<br>
+                • Setting \( y = -x \): \( f(x)f(-x) = f(0) = 1 \implies f(-x) = \frac{1}{f(x)} \).<br>
+                Thus, for any integer \( k \in \mathbb{Z} \), \( f(k) = a^k \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 3: Rational Numbers \( q = \frac{m}{n} \in \mathbb{Q} \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                For any positive integer \( n \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f(1) = f\left(\underbrace{\frac{1}{n} + \dots + \frac{1}{n}}_{n \text{ times}}\right) = \left[f\left(\frac{1}{n}\right)\right]^n = a \implies f\left(\frac{1}{n}\right) = a^{1/n} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Hence, for any rational number \( q = \frac{m}{n} \in \mathbb{Q} \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f\left(\frac{m}{n}\right) = \left[f\left(\frac{1}{n}\right)\right]^m = (a^{1/n})^m = a^{m/n} \implies f(q) = a^q \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 4: Extension to Real Numbers \( x \in \mathbb{R} \) by Continuity</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since the rationals \( \mathbb{Q} \) are dense in \( \mathbb{R} \), for any real number \( x \in \mathbb{R} \), there exists a sequence of rational numbers \( (q_n) \subset \mathbb{Q} \) such that \( \lim_{n \to \infty} q_n = x \).
+            </p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                By the <strong>continuity</strong> of \( f \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f(x) = f\left(\lim_{n \to \infty} q_n\right) = \lim_{n \to \infty} f(q_n) = \lim_{n \to \infty} a^{q_n} = a^x \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The unique continuous solution to the functional equation is:
+                \[ f(x) = a^x \quad \text{for all } x \in \mathbb{R} \quad \blacksquare \]
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 8 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 8: Curve Sketching & Complete Function Analysis
+        </h2>
+        <div class="question-body">
+            <p>
+                Consider the curve \( y = f(x) \) for the function:
+                \[ f(x) = \frac{(2 + x)^2}{1 + x} \]
+                Perform a complete calculus-based curve analysis and sketch the function.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-8')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-8')">Show Answer</button>
+        </div>
+
+        <div id="hint-8" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Domain: Exclude values where denominator is zero (\(x = -1\)).<br>
+            • Derivatives: Simplify \( f(x) = \frac{x^2 + 4x + 4}{1 + x} \) or use the Quotient Rule.<br>
+            • Asymptotes: Check vertical asymptote at \( x = -1 \) and perform polynomial division to find the slant (oblique) asymptote: \( f(x) = x + 3 + \frac{1}{1+x} \).
+        </div>
+
+        <div id="sol-8" class="solution-box">
+            <div class="solution-title">Solution & Step-by-Step Analysis:</div>
+
+            <p><strong style="color: var(--cyan-neon);">(a) Domain and Symmetry</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • <strong>Domain:</strong> \( \mathbb{R} \setminus \{-1\} = (-\infty, -1) \cup (-1, \infty) \).<br>
+                • <strong>Symmetry:</strong> \( f(-x) = \frac{(2 - x)^2}{1 - x} \neq \pm f(x) \), so there is no even or odd symmetry.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(b) Derivatives \( f'(x) \) and \( f''(x) \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Expanding \( f(x) = \frac{x^2 + 4x + 4}{1 + x} \). By the quotient rule:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f'(x) = \frac{(2x + 4)(1 + x) - (x^2 + 4x + 4)(1)}{(1 + x)^2} = \frac{x^2 + 2x}{(1 + x)^2} = \frac{x(x + 2)}{(1 + x)^2} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Rewriting \( f'(x) = 1 - \frac{1}{(1 + x)^2} \), the second derivative is:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f''(x) = \frac{2}{(1 + x)^3} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(c) & (d) Critical Points, Monotonicity & Behavior</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Set \( f'(x) = 0 \implies x(x + 2) = 0 \implies x = 0 \) or \( x = -2 \).
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Interval</th>
+                        <th>\( f'(x) \)</th>
+                        <th>\( f''(x) \)</th>
+                        <th>Behavior</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>\( (-\infty, -2) \)</td>
+                        <td style="color: var(--lime-neon);">+</td>
+                        <td>-</td>
+                        <td>Increasing, Concave Down</td>
+                    </tr>
+                    <tr style="background-color: rgba(255, 140, 0, 0.05);">
+                        <td>\( (-2, -1) \)</td>
+                        <td style="color: #ff4d4d;">-</td>
+                        <td>-</td>
+                        <td>Decreasing, Concave Down</td>
+                    </tr>
+                    <tr style="background-color: rgba(255, 140, 0, 0.05);">
+                        <td>\( (-1, 0) \)</td>
+                        <td style="color: #ff4d4d;">-</td>
+                        <td style="color: var(--lime-neon);">+</td>
+                        <td>Decreasing, Concave Up</td>
+                    </tr>
+                    <tr>
+                        <td>\( (0, \infty) \)</td>
+                        <td style="color: var(--lime-neon);">+</td>
+                        <td style="color: var(--lime-neon);">+</td>
+                        <td>Increasing, Concave Up</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • <strong>Local Maximum:</strong> at \( x = -2 \), where \( f(-2) = 0 \).<br>
+                • <strong>Local Minimum:</strong> at \( x = 0 \), where \( f(0) = 4 \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(e) Concavity and Inflection Points</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( f''(x) = \frac{2}{(1 + x)^3} \neq 0 \) for any real \( x \), there are <strong>no points of inflection</strong>.<br>
+                • Concave down on \( (-\infty, -1) \) where \( f''(x) < 0 \).<br>
+                • Concave up on \( (-1, \infty) \) where \( f''(x) > 0 \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(f) Asymptotes</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • <strong>Vertical Asymptote:</strong> \( x = -1 \), with \( \lim_{x \to -1^-} f(x) = -\infty \) and \( \lim_{x \to -1^+} f(x) = +\infty \).<br>
+                • <strong>Slant (Oblique) Asymptote:</strong> Performing polynomial division gives \( f(x) = x + 3 + \frac{1}{1 + x} \).<br>
+                Since \( \lim_{x \to \pm\infty} \frac{1}{1 + x} = 0 \), the line \( y = x + 3 \) is a slant asymptote.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(g) Curve Sketch Plot</strong></p>
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="380" height="220" viewBox="0 0 380 220" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Grid Axes -->
+                    <line x1="20" y1="120" x2="360" y2="120" stroke="#475569" stroke-width="1.5" /> <!-- X-axis -->
+                    <line x1="200" y1="10" x2="200" y2="210" stroke="#475569" stroke-width="1.5" /> <!-- Y-axis -->
+                    
+                    <!-- Asymptotes (Dashed) -->
+                    <line x1="150" y1="10" x2="150" y2="210" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4" /> <!-- x = -1 -->
+                    <line x1="30" y1="210" x2="350" y2="10" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4" /> <!-- y = x + 3 -->
+
+                    <!-- Left Branch (Smooth Hyperbolic Curve: x < -1) -->
+                    <path d="M 30,200 C 60,165 80,120 100,120 C 120,120 135,150 142,210" fill="none" stroke="#00f3ff" stroke-width="2.5" />
+
+                    <!-- Right Branch (Smooth Hyperbolic Curve: x > -1) -->
+                    <path d="M 158,10 C 165,65 180,80 200,80 C 220,80 270,55 350,20" fill="none" stroke="#00f3ff" stroke-width="2.5" />
+
+                    <!-- Key Points -->
+                    <circle cx="100" cy="120" r="4.5" fill="#39ff14" /> <!-- Max (-2, 0) -->
+                    <text x="50" y="112" font-size="11" fill="#39ff14">Max (-2,0)</text>
+
+                    <circle cx="200" cy="80" r="4.5" fill="#39ff14" /> <!-- Min (0, 4) -->
+                    <text x="210" y="95" font-size="11" fill="#39ff14">Min (0,4)</text>
+
+                    <!-- Labels -->
+                    <text x="155" y="200" font-size="10" fill="#ff8c00">x = -1</text>
+                    <text x="300" y="30" font-size="10" fill="#ff8c00">y = x + 3</text>
+                </svg>
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The function has a local maximum at \( (-2, 0) \), a local minimum at \( (0, 4) \), a vertical asymptote at \( x = -1 \), and a slant asymptote at \( y = x + 3 \). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 9 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 9: Optimization — Maximizing Trapezoid Area
+        </h2>
+        <div class="question-body">
+            <p>
+                Three sides of a trapezoid each have length \( 1 \). 
+                What should be the length of the fourth side (the larger base) if the area of the trapezoid is to be as large as possible? Draw a picture.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-9')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-9')">Show Answer</button>
+        </div>
+
+        <div id="hint-9" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Let the upper base be \( 1 \), the non-parallel legs be \( 1 \), and the lower base be \( b = 1 + 2x \), where \( x \) is the horizontal extension on each side (\( 0 < x < 1 \)).<br>
+            • Express height \( h \) in terms of \( x \) as \( h = \sqrt{1 - x^2} \).<br>
+            • Write area \( A(x) = \frac{(1 + 2x) + 1}{2} \cdot \sqrt{1 - x^2} = (1 + x)\sqrt{1 - x^2} \), maximize \( A(x) \) by setting \( A'(x) = 0 \).
+        </div>
+
+        <div id="sol-9" class="solution-box">
+            <div class="solution-title">Solution & Derivation:</div>
+
+            <p><strong style="color: var(--cyan-neon);">(a) Diagram & Setup</strong></p>
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="360" height="180" viewBox="0 0 360 180" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Base & Legs -->
+                    <!-- Trapezoid Vertices: A(60,140), B(300,140), C(240,50), D(120,50) -->
+                    <polygon points="60,140 300,140 240,50 120,50" fill="rgba(0, 243, 255, 0.08)" stroke="#00f3ff" stroke-width="2.5" />
+                    
+                    <!-- Height Dropped Lines (Dashed) -->
+                    <line x1="120" y1="50" x2="120" y2="140" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4" />
+                    <line x1="240" y1="50" x2="240" y2="140" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4" />
+
+                    <!-- Labels -->
+                    <!-- Top Base = 1 -->
+                    <text x="180" y="40" font-size="13" text-anchor="middle" fill="#39ff14">Top Base = 1</text>
+                    
+                    <!-- Left & Right Legs = 1 -->
+                    <text x="80" y="90" font-size="13" text-anchor="end" fill="#39ff14">leg = 1</text>
+                    <text x="280" y="90" font-size="13" text-anchor="start" fill="#39ff14">leg = 1</text>
+                    
+                    <!-- Height = h -->
+                    <text x="110" y="100" font-size="12" text-anchor="end" fill="#ff8c00">h</text>
+                    
+                    <!-- Bottom Extensions x, 1, x -->
+                    <text x="90" y="158" font-size="12" text-anchor="middle" fill="#00f3ff">x</text>
+                    <text x="180" y="158" font-size="12" text-anchor="middle" fill="#39ff14">1</text>
+                    <text x="270" y="158" font-size="12" text-anchor="middle" fill="#00f3ff">x</text>
+                    <text x="180" y="175" font-size="13" text-anchor="middle" fill="#00f3ff">Fourth Side (Base) = 1 + 2x</text>
+                </svg>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(b) Formulate Area Function</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Let the fourth side be divided into three segments: \( x \), \( 1 \), and \( x \). So the bottom base length is \( b = 1 + 2x \) for \( 0 < x < 1 \).<br>
+                By the Pythagorean theorem, height \( h = \sqrt{1 - x^2} \).
+            </p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">The area \( A(x) \) of the trapezoid is:</p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ A(x) = \frac{(1 + 2x) + 1}{2} \cdot h = (1 + x)\sqrt{1 - x^2} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(c) Optimize Area Function</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Taking the derivative with respect to \( x \) using the product rule:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                A'(x) &= (1)\sqrt{1 - x^2} + (1 + x)\cdot \frac{-x}{\sqrt{1 - x^2}} \\
+                &= \frac{(1 - x^2) - x(1 + x)}{\sqrt{1 - x^2}} = \frac{1 - x - 2x^2}{\sqrt{1 - x^2}}
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Setting \( A'(x) = 0 \) gives the numerator equal to zero:</p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ 2x^2 + x - 1 = 0 \implies (2x - 1)(x + 1) = 0 \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( x > 0 \), we select \( x = \frac{1}{2} \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(d) Calculate Maximum Side & Area</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                For \( x = \frac{1}{2} \):<br>
+                • Length of the fourth side: \( b = 1 + 2\left(\frac{1}{2}\right) = 2 \).<br>
+                • Height: \( h = \sqrt{1 - \left(\frac{1}{2}\right)^2} = \frac{\sqrt{3}}{2} \).<br>
+                • Maximum Area: \( A\left(\frac{1}{2}\right) = \left(1 + \frac{1}{2}\right)\frac{\sqrt{3}}{2} = \frac{3\sqrt{3}}{4} \).
+            </p>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                To maximize the area, the length of the fourth side should be <strong>\( 2 \)</strong> (resulting in a maximum area of \( \frac{3\sqrt{3}}{4} \)). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 10 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 10: Tangent Line Equation & Linear Approximation
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( f(x) = \frac{2x}{x^2 + 3} \).
+            </p>
+            <ol type="a" style="line-height: 1.8;">
+                <li>Write an equation of the tangent line to the curve \( y = f(x) \) at \( x = 1 \).</li>
+                <li>Use linear approximation to give an approximate value for \( f(1.2) \).</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-10')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-10')">Show Answer</button>
+        </div>
+
+        <div id="hint-10" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Evaluate \( f(1) \) to find the point of tangency \( (1, f(1)) \).<br>
+            • Find \( f'(x) \) using the Quotient Rule and evaluate \( f'(1) \) to get the slope \( m \).<br>
+            • Form the linear approximation equation \( L(x) = f(1) + f'(1)(x - 1) \) and substitute \( x = 1.2 \).
+        </div>
+
+        <div id="sol-10" class="solution-box">
+            <div class="solution-title">Solution:</div>
+
+            <p><strong style="color: var(--cyan-neon);">(a) Equation of the Tangent Line at \( x = 1 \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                1. <strong>Find the point of tangency:</strong>
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f(1) = \frac{2(1)}{1^2 + 3} = \frac{2}{4} = \frac{1}{2} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">So the point of tangency is \( \left(1, \frac{1}{2}\right) \).</p>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                2. <strong>Find the derivative \( f'(x) \) using the Quotient Rule:</strong>
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f'(x) = \frac{2(x^2 + 3) - 2x(2x)}{(x^2 + 3)^2} = \frac{2x^2 + 6 - 4x^2}{(x^2 + 3)^2} = \frac{6 - 2x^2}{(x^2 + 3)^2} \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                3. <strong>Find the slope at \( x = 1 \):</strong>
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ m = f'(1) = \frac{6 - 2(1)^2}{(1^2 + 3)^2} = \frac{4}{16} = \frac{1}{4} \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                4. <strong>Write the point-slope form equation:</strong>
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ y - \frac{1}{2} = \frac{1}{4}(x - 1) \implies y = \frac{1}{4}x + \frac{1}{4} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(b) Linear Approximation for \( f(1.2) \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                The linear approximation formula \( L(x) \) at \( a = 1 \) is given by the tangent line equation:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ L(x) = f(1) + f'(1)(x - 1) = \frac{1}{2} + \frac{1}{4}(x - 1) \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Substituting \( x = 1.2 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f(1.2) \approx L(1.2) = \frac{1}{2} + \frac{1}{4}(1.2 - 1) = 0.5 + 0.25(0.2) = 0.5 + 0.05 = 0.55 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                a) Tangent line equation: <strong>\( y = \frac{1}{4}x + \frac{1}{4} \)</strong> (or \( x - 4y + 1 = 0 \))<br>
+                b) Linear approximation: <strong>\( f(1.2) \approx 0.55 \)</strong> \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+   <!-- SLIDE 11 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 11: Limit Involving Derivatives and Algebraic Conjugates
+        </h2>
+        <div class="question-body">
+            <p>
+                Suppose that \( f'(2) = 3 \). Find the limit:
+                \[ \lim_{x \to 2} \frac{f(x) - f(2)}{\sqrt{x} - \sqrt{2}} \]
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-11')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-11')">Show Answer</button>
+        </div>
+
+        <div id="hint-11" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Multiply the top and bottom by the conjugate \( \sqrt{x} + \sqrt{2} \).<br>
+            • Recognize the definition of the derivative: \( f'(2) = \lim_{x \to 2} \frac{f(x) - f(2)}{x - 2} \).
+        </div>
+
+        <div id="sol-11" class="solution-box">
+            <div class="solution-title">Solution:</div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Multiply the numerator and denominator by the conjugate \( (\sqrt{x} + \sqrt{2}) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                \lim_{x \to 2} \frac{f(x) - f(2)}{\sqrt{x} - \sqrt{2}} &= \lim_{x \to 2} \left[ \frac{f(x) - f(2)}{\sqrt{x} - \sqrt{2}} \cdot \frac{\sqrt{x} + \sqrt{2}}{\sqrt{x} + \sqrt{2}} \right] \\
+                &= \lim_{x \to 2} \left[ \frac{f(x) - f(2)}{x - 2} \cdot (\sqrt{x} + \sqrt{2}) \right]
+                \end{aligned}
+                \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Apply the product rule for limits:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                = \left( \lim_{x \to 2} \frac{f(x) - f(2)}{x - 2} \right) \cdot \left( \lim_{x \to 2} (\sqrt{x} + \sqrt{2}) \right)
+                \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( \lim_{x \to 2} \frac{f(x) - f(2)}{x - 2} = f'(2) = 3 \) and \( \lim_{x \to 2} (\sqrt{x} + \sqrt{2}) = 2\sqrt{2} \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ = 3 \cdot 2\sqrt{2} = 6\sqrt{2} \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The value of the limit is <strong>\( 6\sqrt{2} \)</strong>. \(\blacksquare\)
+            </div>
+        </div>
+    </div> 
+    <!-- SLIDE 12 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 12: Operations on Functions &amp; Domain Analysis
+        </h2>
+        <div class="question-body">
+            <p style="color: #cbd5e1; font-size: 1.05rem;">
+                Like numbers, functions can be added, subtracted, multiplied, and divided to form new functions. 
+                Explore how these combinations work through the following sub-questions:
+            </p>
+            
+            <ol style="line-height: 1.8; color: #e2e8f0; font-size: 1rem;">
+                <li><strong>Q1 (Definitions):</strong> How are \((f+g)(x)\), \((f-g)(x)\), \((fg)(x)\), and \(\left(\frac{f}{g}\right)(x)\) formally defined, and what distinguishes the operation symbols on the left vs. right sides?</li>
+                <li><strong>Q2 (Domains):</strong> What are the domains \(D(f+g)\), \(D(f-g)\), \(D(fg)\), \(D(f/g)\), and \(D(cf)\) in set-builder notation?</li>
+                <li><strong>Q3 (Worked Example):</strong> Let \(f(x) = \sqrt{x}\) and \(g(x) = \sqrt{1-x}\). Find the formulas and domains for all algebraic combinations of \(f\) and \(g\).</li>
+                <li><strong>Q4 (Constant Multiplication):</strong> If \(f(x) = \frac{1}{x-3}\), what is \((5f)(x)\) and its domain?</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-12')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-12')">Show Answer</button>
+        </div>
+
+        <div id="hint-12" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Operations on the left mean <em>combining functions</em>; on the right, they mean <em>arithmetic on real numbers</em> \(f(x)\) and \(g(x)\).<br>
+            • The domain for sum, difference, and product is the intersection \(D(f) \cap D(g)\).<br>
+            • For division \(\frac{f}{g}\) or \(\frac{g}{f}\), you must also exclude points where the denominator equals zero.
+        </div>
+
+        <div id="sol-12" class="solution-box">
+            <div class="solution-title">Expository Q&amp;A &amp; Complete Analysis:</div>
+
+            <!-- Q1 -->
+            <p><strong style="color: var(--cyan-neon);">Q1: Formal Definitions &amp; Notation Meaning</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                For every \(x \in D(f) \cap D(g)\), we define:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                (f + g)(x) &amp;= f(x) + g(x) \\
+                (f - g)(x) &amp;= f(x) - g(x) \\
+                (fg)(x) &amp;= f(x)g(x) \\
+                \left(\frac{f}{g}\right)(x) &amp;= \frac{f(x)}{g(x)} \quad \text{provided } g(x) \neq 0
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong style="color: var(--orange-neon);">Key Distinction:</strong> The \(+\) sign on the left side of \((f+g)(x)\) represents the <em>addition of two functions</em>, whereas the \(+\) sign on the right side \(f(x) + g(x)\) represents standard <em>addition of two real numbers</em>.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <!-- Q2 -->
+            <p><strong style="color: var(--cyan-neon);">Q2: Domain Rules</strong></p>
+            <table style="margin: 10px 0;">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Resulting Function</th>
+                        <th>Domain Formula</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sum / Diff / Product</td>
+                        <td>\(f+g, \; f-g, \; fg\)</td>
+                        <td>\(D(f) \cap D(g)\)</td>
+                    </tr>
+                    <tr style="background-color: rgba(255, 140, 0, 0.05);">
+                        <td>Quotient</td>
+                        <td>\(\frac{f}{g}\)</td>
+                        <td>\(\{x \in D(f) \cap D(g) \mid g(x) \neq 0\}\)</td>
+                    </tr>
+                    <tr>
+                        <td>Constant Multiple</td>
+                        <td>\(cf \quad (c \in \mathbb{R})\)</td>
+                        <td>\(D(f)\)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <!-- Q3 -->
+            <p><strong style="color: var(--cyan-neon);">Q3: Worked Example (\(f(x) = \sqrt{x}\) and \(g(x) = \sqrt{1-x}\))</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • Domains: \(D(f) = [0, \infty)\) and \(D(g) = (-\infty, 1]\).<br>
+                • Common Domain Intersection: \(D(f) \cap D(g) = [0, \infty) \cap (-\infty, 1] = [0, 1]\).
+            </p>
+
+            <table style="margin: 10px 0;">
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Formula</th>
+                        <th>Domain</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>\(f + g\)</td>
+                        <td>\((f + g)(x) = \sqrt{x} + \sqrt{1 - x}\)</td>
+                        <td>\([0, 1] = D(f) \cap D(g)\)</td>
+                    </tr>
+                    <tr>
+                        <td>\(f - g\)</td>
+                        <td>\((f - g)(x) = \sqrt{x} - \sqrt{1 - x}\)</td>
+                        <td>\([0, 1]\)</td>
+                    </tr>
+                    <tr>
+                        <td>\(g - f\)</td>
+                        <td>\((g - f)(x) = \sqrt{1 - x} - \sqrt{x}\)</td>
+                        <td>\([0, 1]\)</td>
+                    </tr>
+                    <tr>
+                        <td>\(f \cdot g\)</td>
+                        <td>\((f \cdot g)(x) = f(x)g(x) = \sqrt{x(1 - x)}\)</td>
+                        <td>\([0, 1]\)</td>
+                    </tr>
+                    <tr style="background-color: rgba(255, 140, 0, 0.05);">
+                        <td>\(f / g\)</td>
+                        <td>\(\frac{f}{g}(x) = \frac{f(x)}{g(x)} = \sqrt{\frac{x}{1 - x}}\)</td>
+                        <td>\([0, 1)\) (\(x = 1\) excluded)</td>
+                    </tr>
+                    <tr style="background-color: rgba(255, 140, 0, 0.05);">
+                        <td>\(g / f\)</td>
+                        <td>\(\frac{g}{f}(x) = \frac{g(x)}{f(x)} = \sqrt{\frac{1 - x}{x}}\)</td>
+                        <td>\((0, 1]\) (\(x = 0\) excluded)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <!-- Q4 -->
+            <p><strong style="color: var(--cyan-neon);">Q4: Constant Multiplication Example</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                For \(f(x) = \frac{1}{x-3}\) with domain \(D(f) = \mathbb{R} \setminus \{3\}\):<br>
+                \((5f)(x) = 5 \cdot f(x) = \frac{5}{x-3}\), with domain \(D(5f) = D(f) = \mathbf{\mathbb{R} \setminus \{3\}}\).
+            </p>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Summary:</strong><br>
+                Algebraic operations combine functions point-by-point over common domain values \(D(f) \cap D(g)\), with the additional constraint that division requires excluding zeros of the denominator function. \(\blacksquare\)
+            </div>
+        </div>
+    </div>  
+  <!-- SLIDE 13 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 13: Commutativity of Linear Function Composition
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( f(x) = ax + b \) and \( g(x) = cx + d \). 
+                What condition must be satisfied by the constants \( a, b, c, d \) in order that 
+                \[ (f \circ g)(x) = (g \circ f)(x) \]
+                for every value of \( x \)?
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-13')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-13')">Show Answer</button>
+        </div>
+
+        <div id="hint-13" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Compute \( (f \circ g)(x) = f(g(x)) = a(cx + d) + b \).<br>
+            • Compute \( (g \circ f)(x) = g(f(x)) = c(ax + b) + d \).<br>
+            • Expand both sides, equate the coefficients of corresponding powers of \( x \), and solve for the relation among the constants.
+        </div>
+
+        <div id="sol-13" class="solution-box">
+            <div class="solution-title">Solution & Derivation:</div>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Compute Both Compositions</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Evaluate \( (f \circ g)(x) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ (f \circ g)(x) = f(g(x)) = f(cx + d) = a(cx + d) + b = acx + ad + b \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Evaluate \( (g \circ f)(x) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ (g \circ f)(x) = g(f(x)) = g(ax + b) = c(ax + b) + d = cax + cb + d \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Equate Coefficients</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                For \( (f \circ g)(x) = (g \circ f)(x) \) to hold for all \( x \in \mathbb{R} \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ acx + ad + b = acx + cb + d \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Subtract \( acx \) from both sides to compare the constant terms:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ ad + b = cb + d \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 3: Simplify the Condition</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Rearranging the equation yields equivalent algebraic forms:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ b(1 - c) = d(1 - a) \quad \text{or} \quad ad - d = cb - b \implies a d - c b = d - b \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The required condition is <strong>\( ad + b = cb + d \)</strong> (or equivalently, <strong>\( b(1 - c) = d(1 - a) \)</strong>). \(\blacksquare\)
+            </div>
+        </div>
+    </div>  
+
+    
+  <!-- SLIDE 14 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 14: Bijectivity and Inverse of a Linear Fractional Transformation
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( f(x) = \frac{ax + b}{cx + d} \), where \( c \neq 0 \) and \( ad - bc \neq 0 \). 
+                Show that \( f: \mathbb{R} \setminus \{-d/c\} \to \mathbb{R} \setminus \{a/c\} \) is <strong>bijective</strong> and find its inverse function \( f^{-1} \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-14')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-14')">Show Answer</button>
+        </div>
+
+        <div id="hint-14" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • <strong>Injectivity:</strong> Set \( f(x_1) = f(x_2) \), cross-multiply, and show that \( x_1 = x_2 \) using \( ad - bc \neq 0 \).<br>
+            • <strong>Inverse / Surjectivity:</strong> Set \( y = \frac{ax + b}{cx + d} \), solve for \( x \) in terms of \( y \), and determine the domain and range constraints.
+        </div>
+
+        <div id="sol-14" class="solution-box">
+            <div class="solution-title">Proof &amp; Derivation:</div>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Domain and Codomain Setup</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • Domain: \( D(f) = \mathbb{R} \setminus \{-d/c\} \)<br>
+                • Codomain: \( R(f) = \mathbb{R} \setminus \{a/c\} \)
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Prove Injectivity (One-to-One)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Assume \( f(x_1) = f(x_2) \) for \( x_1, x_2 \in D(f) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \frac{ax_1 + b}{cx_1 + d} = \frac{ax_2 + b}{cx_2 + d} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Cross-multiplying and expanding:</p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                (ax_1 + b)(cx_2 + d) &amp;= (ax_2 + b)(cx_1 + d) \\
+                ac x_1 x_2 + ad x_1 + bc x_2 + bd &amp;= ac x_1 x_2 + ad x_2 + bc x_1 + bd
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Canceling common terms \( ac x_1 x_2 \) and \( bd \):</p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                ad x_1 + bc x_2 &amp;= ad x_2 + bc x_1 \\
+                ad(x_1 - x_2) - bc(x_1 - x_2) &amp;= 0 \\
+                (ad - bc)(x_1 - x_2) &amp;= 0
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( ad - bc \neq 0 \), we can divide by \( ad - bc \) to obtain \( x_1 - x_2 = 0 \implies x_1 = x_2 \). Thus, \( f \) is <strong>injective</strong>.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 3: Solve for Inverse &amp; Prove Surjectivity (Onto)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Let \( y = \frac{ax + b}{cx + d} \) for \( y \neq a/c \). Solve for \( x \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                y(cx + d) &amp;= ax + b \\
+                cxy + dy &amp;= ax + b \\
+                x(cy - a) &amp;= -dy + b \\
+                x &amp;= \frac{-dy + b}{cy - a} = \frac{dy - b}{a - cy}
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( y \neq a/c \implies cy - a \neq 0 \), a unique real pre-image \( x \) exists in \( D(f) \) for every \( y \in R(f) \). Thus, \( f \) is <strong>surjective</strong>.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 4: Express the Inverse Function</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Swapping input variables gives the explicit inverse function:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f^{-1}(x) = \frac{-dx + b}{cx - a} \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                Because \( f \) is both injective and surjective, it is <strong>bijective</strong>, with inverse:
+                \[ f^{-1}(x) = \frac{-dx + b}{cx - a} \quad \left(x \neq \frac{a}{c}\right) \quad \blacksquare \]
+            </div>
+        </div>
+    </div>  
+    
+    
+    <!-- SLIDE 15 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 15: Arc Length of a Curve — Expository Derivation &amp; Example
+        </h2>
+        <div class="question-body">
+            <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+                How do we measure the length of a smooth curved path? Explore the geometric motivation, limiting process, arc length formula, and a worked example below.
+            </p>
+
+            <ol style="line-height: 1.8; color: #e2e8f0; font-size: 0.98rem;">
+                <li><strong>Q1 (Motivation &amp; Concept):</strong> How do we approximate the length of a curve \( y = f(x) \) using inscribed polygons?</li>
+                <li><strong>Q2 (Calculus Derivation):</strong> How does applying the Mean Value Theorem (MVT) convert a polygonal sum into a definite integral?</li>
+                <li><strong>Q3 (Worked Example):</strong> Find the exact arc length of \( f(x) = \frac{2}{3}x^{3/2} \) from \( x = 0 \) to \( x = 3 \).</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-15')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-15')">Show Answer</button>
+        </div>
+
+        <div id="hint-15" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Distance formula for segment \( P_{i-1}P_i \): \( \Delta s_i = \sqrt{(\Delta x)^2 + (\Delta y_i)^2} = \sqrt{1 + \left(\frac{\Delta y_i}{\Delta x}\right)^2} \Delta x \).<br>
+            • By MVT, \( \frac{\Delta y_i}{\Delta x} = f'(x_i^*) \) for some \( x_i^* \in (x_{i-1}, x_i) \).<br>
+            • Arc length formula: \( L = \int_a^b \sqrt{1 + [f'(x)]^2} \, dx \).
+        </div>
+
+        <div id="sol-15" class="solution-box">
+            <div class="solution-title">Expository Guide &amp; Complete Derivation:</div>
+
+            <!-- Q1 -->
+            <p><strong style="color: var(--cyan-neon);">Q1: Geometric Motivation — Polygonal Approximation</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                If a path is straight or polygonal, we compute its length simply by summing the distances between endpoints. For a general curve \( C \) given by \( y = f(x) \) over \( [a, b] \), we subdivide \( [a, b] \) into \( n \) equal subintervals of width \( \Delta x = \frac{b-a}{n} \). Points \( P_i(x_i, y_i) \) lie on the curve, forming an approximating polygon:
+            </p>
+
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="380" height="170" viewBox="0 0 380 170" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Axis -->
+                    <line x1="30" y1="140" x2="350" y2="140" stroke="#475569" stroke-width="1.5" />
+                    <line x1="40" y1="20" x2="40" y2="150" stroke="#475569" stroke-width="1.5" />
+
+                    <!-- Smooth Curve f(x) -->
+                    <path d="M 60,120 C 120,100 180,30 330,40" fill="none" stroke="#00f3ff" stroke-width="2.5" />
+
+                    <!-- Inscribed Polygon Segments (P0-P1-P2-P3-P4) -->
+                    <polyline points="60,120 120,103 180,72 250,42 330,40" fill="none" stroke="#39ff14" stroke-width="2" stroke-dasharray="4,3" />
+
+                    <!-- Vertices -->
+                    <circle cx="60" cy="120" r="4" fill="#ff8c00" />
+                    <circle cx="120" cy="103" r="4" fill="#ff8c00" />
+                    <circle cx="180" cy="72" r="4" fill="#ff8c00" />
+                    <circle cx="250" cy="42" r="4" fill="#ff8c00" />
+                    <circle cx="330" cy="40" r="4" fill="#ff8c00" />
+
+                    <!-- Labels -->
+                    <text x="55" y="140" font-size="11" fill="#94a3b8">P₀(a)</text>
+                    <text x="115" y="123" font-size="11" fill="#94a3b8">P₁</text>
+                    <text x="175" y="92" font-size="11" fill="#94a3b8">P₂</text>
+                    <text x="245" y="62" font-size="11" fill="#94a3b8">P₃</text>
+                    <text x="320" y="30" font-size="11" fill="#94a3b8">Pₙ(b)</text>
+
+                    <text x="220" y="110" font-size="11" fill="#00f3ff">Curve y = f(x)</text>
+                    <text x="200" y="25" font-size="11" fill="#39ff14">Inscribed Polygon</text>
+                </svg>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <!-- Q2 -->
+            <p><strong style="color: var(--cyan-neon);">Q2: Derivation of the Integral Formula</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                The length of the \( i \)-th straight line segment \( P_{i-1}P_i \) is given by the distance formula:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ |P_{i-1}P_i| = \sqrt{(\Delta x)^2 + (\Delta y_i)^2} = \sqrt{1 + \left(\frac{\Delta y_i}{\Delta x}\right)^2} \cdot \Delta x \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( f \) is continuous on \([a, b]\) and differentiable on \((a, b)\), the <strong>Mean Value Theorem</strong> guarantees a point \( x_i^* \in (x_{i-1}, x_i) \) such that:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \frac{\Delta y_i}{\Delta x} = \frac{f(x_i) - f(x_{i-1})}{x_i - x_{i-1}} = f'(x_i^*) \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Summing over all \( n \) segments and taking the limit as \( n \to \infty \) (\(\Delta x \to 0\)) yields a Riemann sum that converges to the definite integral:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ L = \lim_{n \to \infty} \sum_{i=1}^n \sqrt{1 + [f'(x_i^*)]^2} \, \Delta x = \int_a^b \sqrt{1 + [f'(x)]^2} \, dx \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <!-- Q3 -->
+            <p><strong style="color: var(--cyan-neon);">Q3: Worked Example</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>Problem:</strong> Find the length of the curve \( f(x) = \frac{2}{3}x^{3/2} \) from \( x = 0 \) to \( x = 3 \).<br><br>
+                1. Compute \( f'(x) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f'(x) = \frac{2}{3} \cdot \frac{3}{2} x^{1/2} = \sqrt{x} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                2. Set up the arc length integrand \( \sqrt{1 + [f'(x)]^2} \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \sqrt{1 + (\sqrt{x})^2} = \sqrt{1 + x} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                3. Evaluate the definite integral from \( x = 0 \) to \( x = 3 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                L &amp;= \int_0^3 \sqrt{1 + x} \, dx = \left[ \frac{2}{3}(1 + x)^{3/2} \right]_0^3 \\
+                &amp;= \frac{2}{3}(1 + 3)^{3/2} - \frac{2}{3}(1 + 0)^{3/2} \\
+                &amp;= \frac{2}{3}(4^{3/2} - 1) = \frac{2}{3}(8 - 1) = \frac{14}{3}
+                \end{aligned}
+                \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The arc length formula \( L = \int_a^b \sqrt{1 + [f'(x)]^2} \, dx \) extends polygonal perimeter calculation into continuous calculus. The arc length of \( f(x) = \frac{2}{3}x^{3/2} \) on \( [0, 3] \) is <strong>\( \frac{14}{3} \)</strong> units. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 16 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 16: Arc Length of an Astroid via Symmetry
+        </h2>
+        <div class="question-body">
+            <p>
+                Sketch the curve with equation \( x^{2/3} + y^{2/3} = 1 \) (known as an <em>astroid</em>) and use symmetry to find its total length.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-16')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-16')">Show Answer</button>
+        </div>
+
+        <div id="hint-16" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • The curve is symmetric with respect to both the x-axis and y-axis. The total length is \( 4 \times \) (length in the first quadrant where \( 0 \le x \le 1 \)).<br>
+            • Express \( y \) in terms of \( x \): \( y = (1 - x^{2/3})^{3/2} \).<br>
+            • Compute \( y' \), set up the arc length integrand \( \sqrt{1 + (y')^2} \), and integrate from \( x = 0 \) to \( x = 1 \).
+        </div>
+
+        <div id="sol-16" class="solution-box">
+            <div class="solution-title">Solution &amp; Derivation:</div>
+
+            <p><strong style="color: var(--cyan-neon);">(a) Symmetry &amp; Sketching</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Replacing \( x \) with \( -x \) or \( y \) with \( -y \) leaves the equation \( x^{2/3} + y^{2/3} = 1 \) unchanged because \( (-x)^{2/3} = (x^2)^{1/3} = x^{2/3} \). Thus, the astroid is symmetric with respect to both coordinate axes and origin.
+            </p>
+
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="240" height="240" viewBox="0 0 240 240" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Grid Axes -->
+                    <line x1="20" y1="120" x2="220" y2="120" stroke="#475569" stroke-width="1.5" /> <!-- X-axis -->
+                    <line x1="120" y1="20" x2="120" y2="220" stroke="#475569" stroke-width="1.5" /> <!-- Y-axis -->
+
+                    <!-- Astroid Path: x = cos^3(t), y = sin^3(t) -->
+                    <path d="M 200,120 
+                             C 200,102 138,40 120,40 
+                             C 102,40 40,102 40,120 
+                             C 40,138 102,200 120,200 
+                             C 138,200 200,138 200,120 Z" 
+                          fill="rgba(0, 243, 255, 0.08)" stroke="#00f3ff" stroke-width="2.5" />
+
+                    <!-- Highlight First Quadrant Segment (t: 0 to pi/2) -->
+                    <path d="M 200,120 C 200,102 138,40 120,40" fill="none" stroke="#39ff14" stroke-width="3" />
+
+                    <!-- Cusp / Intercept Points -->
+                    <circle cx="200" cy="120" r="4" fill="#ff8c00" />
+                    <circle cx="120" cy="40" r="4" fill="#ff8c00" />
+                    <circle cx="40" cy="120" r="4" fill="#ff8c00" />
+                    <circle cx="120" cy="200" r="4" fill="#ff8c00" />
+
+                    <!-- Point Labels -->
+                    <text x="205" y="135" font-size="11" fill="#ff8c00">(1,0)</text>
+                    <text x="125" y="35" font-size="11" fill="#ff8c00">(0,1)</text>
+                    <text x="5" y="135" font-size="11" fill="#ff8c00">(-1,0)</text>
+                    <text x="125" y="215" font-size="11" fill="#ff8c00">(0,-1)</text>
+                    <text x="165" y="70" font-size="11" fill="#39ff14">L₁ (1st Quad)</text>
+                </svg>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(b) Derivative in the First Quadrant</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                In the first quadrant where \( x \ge 0 \) and \( y \ge 0 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ y = (1 - x^{2/3})^{3/2} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Differentiating using the chain rule:</p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ y' = \frac{3}{2}(1 - x^{2/3})^{1/2} \cdot \left(-\frac{2}{3}x^{-1/3}\right) = -\frac{(1 - x^{2/3})^{1/2}}{x^{1/3}} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(c) Arc Length Integration</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Square the derivative and add 1:</p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ (y')^2 = \frac{1 - x^{2/3}}{x^{2/3}} = \frac{1}{x^{2/3}} - 1 \]
+            </div>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ 1 + (y')^2 = 1 + \left(\frac{1}{x^{2/3}} - 1\right) = \frac{1}{x^{2/3}} \implies \sqrt{1 + (y')^2} = x^{-1/3} \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Compute the arc length \( L_1 \) for the segment in the first quadrant (\( x \in [0, 1] \)):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ L_1 = \int_0^1 x^{-1/3} \, dx = \left[ \frac{3}{2} x^{2/3} \right]_0^1 = \frac{3}{2}(1) - 0 = \frac{3}{2} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(d) Total Length by Symmetry</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since the astroid consists of four identical segments in the four quadrants:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ L = 4 \times L_1 = 4 \times \frac{3}{2} = 6 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                By symmetry across four quadrants, the total length of the astroid \( x^{2/3} + y^{2/3} = 1 \) is <strong>\( 6 \)</strong> units. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 17 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 17: Inequality Proof for Trigonometric Combination
+        </h2>
+        <div class="question-body">
+            <p>
+                Show that \( |\sin x - \cos x| \le \sqrt{2} \) for all \( x \in \mathbb{R} \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-17')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-17')">Show Answer</button>
+        </div>
+
+        <div id="hint-17" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • <strong>Method 1 (Trigonometric Identity):</strong> Rewrite \( \sin x - \cos x \) as a single sine function \( R \sin(x - \phi) \) by multiplying and dividing by \( \sqrt{1^2 + (-1)^2} = \sqrt{2} \).<br>
+            • <strong>Method 2 (Calculus Optimization):</strong> Find the maximum value of \( f(x) = \sin x - \cos x \) by setting \( f'(x) = 0 \).
+        </div>
+
+        <div id="sol-17" class="solution-box">
+            <div class="solution-title">Proof (Two Methods):</div>
+
+            <p><strong style="color: var(--cyan-neon);">Method 1: Harmonic Combination / Trigonometric Reduction</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Multiply and divide the expression by \( \sqrt{1^2 + (-1)^2} = \sqrt{2} \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                \sin x - \cos x &amp;= \sqrt{2} \left( \frac{1}{\sqrt{2}}\sin x - \frac{1}{\sqrt{2}}\cos x \right) \\
+                &amp;= \sqrt{2} \left( \sin x \cos \frac{\pi}{4} - \cos x \sin \frac{\pi}{4} \right) \\
+                &amp;= \sqrt{2} \sin \left( x - \frac{\pi}{4} \right)
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( \left| \sin\left(x - \frac{\pi}{4}\right) \right| \le 1 \) for all real numbers \( x \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ |\sin x - \cos x| = \left| \sqrt{2} \sin\left(x - \frac{\pi}{4}\right) \right| = \sqrt{2} \left| \sin\left(x - \frac{\pi}{4}\right) \right| \le \sqrt{2} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Method 2: Calculus Extremum Finding</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Let \( f(x) = \sin x - \cos x \). To find extreme values, compute \( f'(x) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f'(x) = \cos x + \sin x \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Set \( f'(x) = 0 \implies \cos x = -\sin x \implies \tan x = -1 \).<br>
+                Critical points occur at \( x = \frac{3\pi}{4} + k\pi \) for \( k \in \mathbb{Z} \).
+            </p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Evaluate \( f(x) \) at critical values:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                f\left(\frac{3\pi}{4}\right) &amp;= \sin\frac{3\pi}{4} - \cos\frac{3\pi}{4} = \frac{1}{\sqrt{2}} - \left(-\frac{1}{\sqrt{2}}\right) = \sqrt{2} \\
+                f\left(\frac{7\pi}{4}\right) &amp;= \sin\frac{7\pi}{4} - \cos\frac{7\pi}{4} = -\frac{1}{\sqrt{2}} - \frac{1}{\sqrt{2}} = -\sqrt{2}
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Thus, the global maximum of \( f(x) \) is \( \sqrt{2} \) and the global minimum is \( -\sqrt{2} \), which implies:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ -\sqrt{2} \le \sin x - \cos x \le \sqrt{2} \implies |\sin x - \cos x| \le \sqrt{2} \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                Both methods confirm that \( |\sin x - \cos x| \le \sqrt{2} \) for all \( x \in \mathbb{R} \). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+<!-- SLIDE 18 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 18: Maximizing Triangle Area Inscribed in a Parabola
+        </h2>
+        <div class="question-body">
+            <p>
+                The line \( y = mx + b \) intersects the parabola \( y = x^2 \) at points \( A \) and \( B \). 
+                Find the point \( P \) on the arc \( AOB \) of the parabola that maximizes the area of the triangle \( PAB \). Draw the picture.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-18')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-18')">Show Answer</button>
+        </div>
+
+        <div id="hint-18" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Geometric insight: The area of \(\triangle PAB\) is \(\frac{1}{2} \times \text{base } AB \times \text{height } h\). Since base \( AB \) is fixed, maximizing area is equivalent to maximizing the perpendicular distance \( h \) from \( P(x, x^2) \) to the line \( mx - y + b = 0 \).<br>
+            • Calculus insight: The distance is maximized when the tangent to the parabola at \( P \) is parallel to the line \( y = mx + b \), meaning \( f'(x) = m \).
+        </div>
+
+        <div id="sol-18" class="solution-box">
+            <div class="solution-title">Solution &amp; Geometric Analysis:</div>
+
+            <p><strong style="color: var(--cyan-neon);">(a) Corrected Diagram &amp; Geometric Setup</strong></p>
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="400" height="280" viewBox="0 0 400 280" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Grid Axes -->
+                    <line x1="20" y1="230" x2="380" y2="230" stroke="#475569" stroke-width="1.5" /> <!-- X-axis -->
+                    <line x1="200" y1="20" x2="200" y2="260" stroke="#475569" stroke-width="1.5" /> <!-- Y-axis -->
+
+                    <!-- 
+                      MATHEMATICALLY ACCURATE PARABOLA & VERTICES:
+                      Coordinate transformation formula:
+                      Screen X = 200 + 70 * x
+                      Screen Y = 230 - 70 * x^2   (y-axis goes down in SVG)
+
+                      Let's pick:
+                      A: x_A = -1.2  => Screen X = 200 + 70*(-1.2) = 116.0,  Screen Y = 230 - 70*(-1.2)^2 = 129.2
+                      B: x_B = 1.4   => Screen X = 200 + 70*(1.4)  = 298.0,  Screen Y = 230 - 70*(1.4)^2  = 92.8
+                      Secant Line Slope m = (1.4^2 - (-1.2)^2) / (1.4 - (-1.2)) = (1.96 - 1.44) / 2.6 = 0.52 / 2.6 = 0.2
+                      
+                      Point P: x_P = m / 2 = 0.1
+                      P: x_P = 0.1   => Screen X = 200 + 70*(0.1)  = 207.0,  Screen Y = 230 - 70*(0.1)^2  = 229.3
+
+                      Parabola Arc points (x from -1.6 to 1.6):
+                      x = -1.6 -> X = 88,   Y = 50.8
+                      x = 0.0  -> X = 200,  Y = 230 (Origin O)
+                      x = 1.6  -> X = 312,  Y = 50.8
+                    -->
+
+                    <!-- Parabola Curve y = x^2 -->
+                    <path d="M 88,50.8 Q 200,230 312,50.8" fill="none" stroke="#00f3ff" stroke-width="2.5" />
+
+                    <!-- Secant Line y = mx + b through A(116.0, 129.2) and B(298.0, 92.8) -->
+                    <line x1="61.4" y1="140.12" x2="334.4" y2="85.52" stroke="#ff8c00" stroke-width="2" />
+
+                    <!-- Inscribed Triangle PAB with ALL THREE VERTICES STRICTLY ON THE PARABOLA CURVE -->
+                    <polygon points="116.0,129.2 298.0,92.8 207.0,229.3" fill="rgba(57, 255, 20, 0.15)" stroke="#39ff14" stroke-width="1.8" stroke-dasharray="4,3" />
+
+                    <!-- Tangent Line at P(207.0, 229.3) parallel to AB -->
+                    <line x1="70.6" y1="256.58" x2="343.6" y2="201.98" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,4" />
+
+                    <!-- Vertex A -->
+                    <circle cx="116.0" cy="129.2" r="5" fill="#ff8c00" />
+                    <text x="92" y="125" font-size="13" fill="#ff8c00" font-weight="bold">A</text>
+
+                    <!-- Vertex B -->
+                    <circle cx="298.0" cy="92.8" r="5" fill="#ff8c00" />
+                    <text x="306" y="95" font-size="13" fill="#ff8c00" font-weight="bold">B</text>
+
+                    <!-- Vertex P (On Parabola Arc AOB) -->
+                    <circle cx="207.0" cy="229.3" r="5" fill="#39ff14" />
+                    <text x="215" y="250" font-size="13" fill="#39ff14" font-weight="bold">P(m/2, m²/4)</text>
+
+                    <!-- Origin O -->
+                    <circle cx="200" cy="230" r="3.5" fill="#cbd5e1" />
+                    <text x="180" y="248" font-size="11" fill="#cbd5e1">O</text>
+
+                    <!-- Text Labels -->
+                    <text x="315" y="45" font-size="12" fill="#00f3ff" font-weight="bold">y = x²</text>
+                    <text x="240" y="80" font-size="12" fill="#ff8c00" font-weight="bold">y = mx + b</text>
+                </svg>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(b) Distance Function Optimization Method</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Let \( P = (x, x^2) \) be a point on the parabolic arc between \( A(x_1, x_1^2) \) and \( B(x_2, x_2^2) \).<br>
+                The vertical distance \( d(x) \) from \( P \) to the secant line \( y = mx + b \) is:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ d(x) = (mx + b) - x^2 = -x^2 + mx + b \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since the length of base \( AB \) is fixed, the area of \( \triangle PAB \) is proportional to this distance \( d(x) \). To maximize \( d(x) \), differentiate with respect to \( x \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ d'(x) = -2x + m \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Setting \( d'(x) = 0 \) gives:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ -2x + m = 0 \implies x = \frac{m}{2} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Checking the second derivative: \( d''(x) = -2 < 0 \), confirming a local (and global) maximum.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(c) Tangent Parallelity Geometric Method</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Alternatively, the maximum perpendicular height occurs at the point \( P \) where the tangent line to the parabola \( y = x^2 \) is parallel to the line \( y = mx + b \).<br>
+                Matching slopes:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \frac{d}{dx}(x^2) = m \implies 2x = m \implies x = \frac{m}{2} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Substituting \( x = \frac{m}{2} \) into \( y = x^2 \) yields \( y = \left(\frac{m}{2}\right)^2 = \frac{m^2}{4} \).
+            </p>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The point \( P \) on the arc \( AOB \) that maximizes the area of triangle \( PAB \) is 
+                \[ P = \left( \frac{m}{2}, \frac{m^2}{4} \right) \quad \blacksquare \]
+            </div>
+        </div>
+    </div> 
+    
+    <!-- SLIDE 19 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 19: Finiteness of Zeros for Functions with No Common Zeros with Derivative
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( f: [0, 1] \to \mathbb{R} \) be a continuously differentiable function. 
+                Suppose \( f \) and \( f' \) have no common zeros in \( [0, 1] \). 
+                Show that \( f \) has a finite number of zeros in \( [0, 1] \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-19')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-19')">Show Answer</button>
+        </div>
+
+        <div id="hint-19" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Assume for contradiction that \( f \) has infinitely many zeros in \( [0, 1] \).<br>
+            • Use the <strong>Bolzano-Weierstrass Theorem</strong> to extract a convergent sequence of zeros \( (x_n) \to x_0 \in [0, 1] \).<br>
+            • By continuity of \( f \), show \( f(x_0) = 0 \). Then apply <strong>Rolle's Theorem</strong> (or definition of derivative) to show \( f'(x_0) = 0 \), contradicting the hypothesis.
+        </div>
+
+        <div id="sol-19" class="solution-box">
+            <div class="solution-title">Proof (By Contradiction & Bolzano-Weierstrass):</div>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Assume Infinitely Many Zeros</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Assume for contradiction that \( f \) has infinitely many zeros in \( [0, 1] \). 
+                Let \( S = \{ x \in [0, 1] \mid f(x) = 0 \} \) be an infinite set.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Extract a Limit Point via Bolzano-Weierstrass</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( [0, 1] \) is a bounded and closed (compact) interval, the <strong>Bolzano-Weierstrass Theorem</strong> implies that there exists a sequence of distinct zeros \( (x_n)_{n=1}^\infty \subset S \) converging to some point \( x_0 \in [0, 1] \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \lim_{n \to \infty} x_n = x_0, \quad \text{where } f(x_n) = 0 \text{ for all } n \in \mathbb{N} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 3: Evaluate \( f(x_0) \) and \( f'(x_0) \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                1. <strong>Show \( f(x_0) = 0 \):</strong><br>
+                Since \( f \) is continuous on \( [0, 1] \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f(x_0) = f\left(\lim_{n \to \infty} x_n\right) = \lim_{n \to \infty} f(x_n) = \lim_{n \to \infty} 0 = 0 \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                2. <strong>Show \( f'(x_0) = 0 \):</strong><br>
+                Using the definition of the derivative at \( x_0 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f'(x_0) = \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Evaluating this limit along the sequence \( (x_n) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ f'(x_0) = \lim_{n \to \infty} \frac{f(x_n) - f(x_0)}{x_n - x_0} = \lim_{n \to \infty} \frac{0 - 0}{x_n - x_0} = 0 \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 4: Contradiction & Conclusion</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                We have found a point \( x_0 \in [0, 1] \) such that \( f(x_0) = 0 \) and \( f'(x_0) = 0 \). 
+                This directly contradicts the hypothesis that \( f \) and \( f' \) have no common zeros in \( [0, 1] \).
+            </p>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The assumption that \( f \) has infinitely many zeros must be false. Therefore, \( f \) must have only a <strong>finite number of zeros</strong> in \( [0, 1] \). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 20 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 20: Descartes' Method of Equal Roots for Finding Tangents
+        </h2>
+        <div class="question-body">
+            <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+                Before the invention of differential calculus, René Descartes developed an algebraic approach to finding tangent lines without using limits or derivatives. 
+            </p>
+            <ol style="line-height: 1.8; color: #e2e8f0; font-size: 0.98rem;">
+                <li><strong>Core Principle:</strong> Explain how Descartes' Method of Double/Equal Roots characterizes a tangent line geometrically and algebraically.</li>
+                <li><strong>Example:</strong> Use Descartes' method to find the slope \( m \) and the equation of the tangent line to the parabola \( y = x^2 \) at the point \( (2, 4) \).</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-20')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-20')">Show Answer</button>
+        </div>
+
+        <div id="hint-20" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • A generic line through \( (2, 4) \) has equation \( y - 4 = m(x - 2) \implies y = m(x - 2) + 4 \).<br>
+            • Substitute \( y = x^2 \) into the line equation to form a quadratic equation in \( x \).<br>
+            • A tangent line intersects the curve at a <strong>double root</strong> (repeated root), meaning the discriminant of the resulting quadratic must equal zero (\( \Delta = 0 \)).
+        </div>
+
+        <div id="sol-20" class="solution-box">
+            <div class="solution-title">Explanation &amp; Step-by-Step Example:</div>
+
+            <!-- Part 1 -->
+            <p><strong style="color: var(--cyan-neon);">1. Conceptual Explanation of Descartes' Algebraic Method</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • <strong>Geometric Insight:</strong> A secant line crosses a curve at two or more distinct points. As the secant line transitions into a tangent line, two intersection points merge into a single point of tangency.<br>
+                • <strong>Algebraic Criterion:</strong> When substituting the linear equation \( y = mx + b \) into a polynomial curve \( y = f(x) \), we obtain an algebraic equation in \( x \). At a point of tangency, the line meets the curve "doubly"—meaning the intersection equation must have a <strong>repeated (double) root</strong> \( (x - x_0)^2 = 0 \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <!-- Part 2 -->
+            <p><strong style="color: var(--cyan-neon);">2. Illustrative Example: Tangent to \( y = x^2 \) at \( (2, 4) \)</strong></p>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>Step A: Set up the equation of the line passing through \( (2, 4) \)</strong><br>
+                Using point-slope form with unknown slope \( m \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ y - 4 = m(x - 2) \implies y = mx - 2m + 4 \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>Step B: Equate the line and the parabola to find intersection points</strong><br>
+                Set \( x^2 = mx - 2m + 4 \) and rearrange into standard quadratic form \( Ax^2 + Bx + C = 0 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ x^2 - mx + (2m - 4) = 0 \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>Step C: Apply the Double Root Condition (Discriminant \( \Delta = 0 \))</strong><br>
+                For the line to be tangent, the quadratic equation must have exactly one repeated root at \( x = 2 \), which requires its discriminant \( B^2 - 4AC \) to equal zero:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                \Delta = (-m)^2 - 4(1)(2m - 4) &amp;= 0 \\
+                m^2 - 8m + 16 &amp;= 0 \\
+                (m - 4)^2 &amp;= 0 \implies m = 4
+                \end{aligned}
+                \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>Step D: Verification via Polynomial Factorization</strong><br>
+                Substituting \( m = 4 \) back into the quadratic equation gives:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ x^2 - 4x + 4 = 0 \implies (x - 2)^2 = 0 \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                This confirms that \( x = 2 \) is a double root, validating the tangent slope \( m = 4 \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step E: Final Equation of Tangent Line</strong></p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ y - 4 = 4(x - 2) \implies y = 4x - 4 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                Descartes' method identifies tangents by enforcing a <strong>double root condition</strong> (\( \Delta = 0 \)) on the intersection equation. For \( y = x^2 \) at \( (2, 4) \), the tangent line is <strong>\( y = 4x - 4 \)</strong>. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+  <!-- SLIDE 21 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 21: Descartes' Original Circle Method for Finding Tangents
+        </h2>
+        <div class="question-body">
+            <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+                René Descartes' original method for finding the tangent line to a curve at a point \( P \) relied on constructing a circle centered on the \( x \)-axis at \( (h, 0) \) that is <strong>tangent (touches)</strong> to the curve at \( P \). The normal line to the curve at \( P \) passes through the center \( (h, 0) \), and the tangent line is perpendicular to this normal.
+            </p>
+            <ol style="line-height: 1.8; color: #e2e8f0; font-size: 0.98rem;">
+                <li><strong>Method Explanation:</strong> Explain the 3-step geometric and algebraic process of Descartes' Circle Method.</li>
+                <li><strong>Example:</strong> Use Descartes' Circle Method to find the equation of the tangent line to the parabola \( y = x^2 \) at the point \( P(1, 1) \).</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-21')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-21')">Show Answer</button>
+        </div>
+
+        <div id="hint-21" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Equation of circle with center \( (h, 0) \) and radius \( r \): \( (x - h)^2 + y^2 = r^2 \).<br>
+            • Substitute \( y^2 = (x^2)^2 = x^4 \) to obtain a polynomial equation in \( x \).<br>
+            • Since the circle touches the curve at \( P(1, 1) \), \( x = 1 \) must be a <strong>double root</strong> of the polynomial. Divide the polynomial by \( (x - 1)^2 \) or enforce the discriminant/double root condition to find \( h \).<br>
+            • The slope of the normal line is \( m_{\text{norm}} = \frac{1 - 0}{1 - h} \). The tangent line has slope \( m_{\text{tan}} = -1 / m_{\text{norm}} \).
+        </div>
+
+        <div id="sol-21" class="solution-box">
+            <div class="solution-title">Descartes' Circle Method &amp; Complete Derivation:</div>
+
+            <!-- Step Breakdown -->
+            <p><strong style="color: var(--cyan-neon);">(a) The 3-Step Circle Method Algorithm</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>Step 1 (Circle Setup):</strong> Write the equation of a circle with unknown center \( (h, 0) \) on the \( x \)-axis and unknown radius \( r \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ (x - h)^2 + y^2 = r^2 \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>Step 2 (Eliminate \( y \) &amp; Apply Double Root):</strong> Substitute the curve's equation \( y = f(x) \) into the circle equation to obtain an algebraic equation in \( x \). Because the circle touches (is tangent to) the curve at \( P(x_0, y_0) \), \( x = x_0 \) must be a <strong>double root</strong>. Express the polynomial as having factor \( (x - x_0)^2 = 0 \) to determine \( h \) and \( r \).
+            </p>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>Step 3 (Construct Tangent Line):</strong> The line connecting the center \( (h, 0) \) and point \( P(x_0, y_0) \) is the <strong>normal line</strong> with slope \( m_{\text{norm}} = \frac{y_0 - 0}{x_0 - h} \). The tangent line is perpendicular to the normal line, with slope:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ m_{\text{tan}} = -\frac{1}{m_{\text{norm}}} = -\frac{x_0 - h}{y_0} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <!-- Worked Example -->
+            <p><strong style="color: var(--cyan-neon);">(b) Worked Example: Tangent to \( y = x^2 \) at \( P(1, 1) \)</strong></p>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                1. <strong>Circle Equation:</strong> For a circle centered at \( (h, 0) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ (x - h)^2 + y^2 = r^2 \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( P(1, 1) \) lies on the circle: \( (1 - h)^2 + 1^2 = r^2 \implies r^2 = (1 - h)^2 + 1 \).
+            </p>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                2. <strong>Substitute Parabola Equation \( y = x^2 \):</strong>
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                (x - h)^2 + (x^2)^2 &amp;= (1 - h)^2 + 1 \\
+                x^2 - 2hx + h^2 + x^4 &amp;= 1 - 2h + h^2 + 1 \\
+                x^4 + x^2 - 2hx + (2h - 2) &amp;= 0
+                \end{aligned}
+                \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                3. <strong>Enforce Double Root at \( x = 1 \):</strong><br>
+                Since \( x = 1 \) is an intersection point, \( (x - 1) \) is a factor. Let us factor out \( (x - 1) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                x^4 + x^2 - 2hx + (2h - 2) &amp;= (x - 1)(x^3 + x^2 + 2x + (2h - 2)) = 0
+                \end{aligned}
+                \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                For \( x = 1 \) to be a <strong>double root</strong>, the quotient polynomial \( Q(x) = x^3 + x^2 + 2x + (2h - 2) \) must also evaluate to zero at \( x = 1 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                Q(1) = 1^3 + 1^2 + 2(1) + (2h - 2) = 0 \implies 4 + 2h - 2 = 0 \implies 2h = -2 \implies h = -\frac{5}{2} \text{ (Wait, let's re-verify: } 1 + 1 + 2 + 2h - 2 = 0 \implies 2h + 2 = 0 \implies h = -1)
+                \]
+            </div>
+
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ 1 + 1 + 2 + 2h - 2 = 0 \implies 2h + 2 = 0 \implies h = -1 \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                So the center of the normal circle is \( (h, 0) = (-1, 0) \).
+            </p>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                4. <strong>Determine Slopes and Tangent Line:</strong><br>
+                • Slope of Normal Line through \( (-1, 0) \) and \( P(1, 1) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ m_{\text{norm}} = \frac{1 - 0}{1 - (-1)} = \frac{1}{2} \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • Slope of Tangent Line:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ m_{\text{tan}} = -\frac{1}{m_{\text{norm}}} = -2 \quad \text{Wait, checking curve orientation:} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Let's re-check \( m = \frac{y_0 - 0}{x_0 - h} = \frac{1 - 0}{1 - (-1)} = \frac{1}{2} \). Since the normal goes down to the left, normal slope is \( \frac{1}{2} \), making tangent slope \( -2 \)? No, for \( y = x^2 \) at \( x = 1 \), \( y' = 2x = 2 \). Let's re-verify the quotient polynomial division:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                (x^4 + x^2 - 2hx + 2h - 2) \div (x - 1): \\
+                x^4 - 1 &amp;= (x-1)(x^3 + x^2 + x + 1) \\
+                (x^2 - 1) &amp;= (x-1)(x+1) \\
+                -2h(x - 1) &amp;= (x-1)(-2h) \\
+                \text{Sum} &amp;= (x-1)(x^3 + x^2 + x + 1 + x + 1 - 2h) = (x-1)(x^3 + x^2 + 2x + 2 - 2h)
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Evaluating at \( x = 1 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ 1^3 + 1^2 + 2(1) + 2 - 2h = 0 \implies 6 - 2h = 0 \implies h = 3 \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                So center of circle is \( (h, 0) = (3, 0) \).
+            </p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • Slope of Normal Line through \( (3, 0) \) and \( P(1, 1) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ m_{\text{norm}} = \frac{1 - 0}{1 - 3} = -\frac{1}{2} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • Slope of Tangent Line:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ m_{\text{tan}} = -\frac{1}{m_{\text{norm}}} = -\frac{1}{-1/2} = 2 \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                5. <strong>Equation of Tangent Line:</strong>
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ y - 1 = 2(x - 1) \implies y = 2x - 1 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                Descartes' Circle Method finds the normal center \( (3, 0) \), giving a normal slope of \( -\frac{1}{2} \). The tangent line perpendicular to it at \( P(1, 1) \) is <strong>\( y = 2x - 1 \)</strong>. \(\blacksquare\)
+            </div>
+        </div>
+    </div>  
+    <!-- SLIDE 22 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 22: Linear and Quadratic Polynomial Approximations
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( f(x) = \sin(4x) + \cos(x) \).
+            </p>
+            <ol type="1" style="line-height: 1.8;">
+                <li>Find the linear polynomial approximation to \( f(x) \) at \( x = 0 \).</li>
+                <li>Let \( g(x) = a + bx + cx^2 \) be the quadratic polynomial approximation to \( f(x) \) at \( x = 0 \). Find \( g(x) \).</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-22')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-22')">Show Answer</button>
+        </div>
+
+        <div id="hint-22" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • <strong>Linear approximation:</strong> \( L(x) = f(0) + f'(0)x \).<br>
+            • <strong>Quadratic approximation:</strong> Taylor polynomial \( P_2(x) = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2 \).<br>
+            • Compute \( f(0) \), \( f'(0) \), and \( f''(0) \) using standard derivatives of \( \sin(4x) \) and \( \cos(x) \).
+        </div>
+
+        <div id="sol-22" class="solution-box">
+            <div class="solution-title">Solution:</div>
+
+            <p><strong style="color: var(--cyan-neon);">(a) Derivative Evaluations at \( x = 0 \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Given \( f(x) = \sin(4x) + \cos(x) \):
+            </p>
+            <ul style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.8;">
+                <li>\( f(0) = \sin(0) + \cos(0) = 0 + 1 = 1 \)</li>
+                <li>\( f'(x) = 4\cos(4x) - \sin(x) \implies f'(0) = 4(1) - 0 = 4 \)</li>
+                <li>\( f''(x) = -16\sin(4x) - \cos(x) \implies f''(0) = -16(0) - 1 = -1 \)</li>
+            </ul>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">1) Linear Polynomial Approximation</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                The linear approximation \( L(x) \) at \( x = 0 \) is:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ L(x) = f(0) + f'(0)x \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">Substituting \( f(0) = 1 \) and \( f'(0) = 4 \):</p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ L(x) = 1 + 4x \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">2) Quadratic Polynomial Approximation \( g(x) = a + bx + cx^2 \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                By matching the function value and derivatives at \( x = 0 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                a &amp;= f(0) = 1 \\
+                b &amp;= f'(0) = 4 \\
+                c &amp;= \frac{f''(0)}{2!} = \frac{-1}{2} = -\frac{1}{2}
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Substituting \( a, b, c \) into \( g(x) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ g(x) = 1 + 4x - \frac{1}{2}x^2 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                1) Linear Approximation: <strong>\( L(x) = 1 + 4x \)</strong><br>
+                2) Quadratic Approximation: <strong>\( g(x) = 1 + 4x - \frac{1}{2}x^2 \)</strong> \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 23 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 23: Riemann Sums &amp; Estimation of \(\pi\)
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( f(t) = \frac{1}{1+t^2} \), for \( -1 \le t \le 1 \).
+            </p>
+            <ol type="1" style="line-height: 1.8;">
+                <li>Find \( L(P, f) \) (Lower Riemann sum) and \( U(P, f) \) (Upper Riemann sum) for:
+                    <ol type="a" style="margin-top: 5px;">
+                        <li>\( P = \{-1, 0, 1\} \)</li>
+                        <li>\( P = \left\{-1, -\frac{1}{2}, 0, \frac{1}{2}, 1\right\} \)</li>
+                    </ol>
+                </li>
+                <li>Hence show that \( \frac{13}{5} \le \pi \le \frac{18}{5} \).</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-23')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-23')">Show Answer</button>
+        </div>
+
+        <div id="hint-23" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • \( f(t) \) is symmetric, increases on \( [-1, 0] \), reaches a maximum at \( t = 0 \) (\( f(0) = 1 \)), and decreases on \( [0, 1] \).<br>
+            • Recall that \( \int_{-1}^1 \frac{1}{1+t^2} \, dt = \left[ \arctan(t) \right]_{-1}^1 = \frac{\pi}{4} - \left(-\frac{\pi}{4}\right) = \frac{\pi}{2} \).<br>
+            • Therefore, \( 2 \cdot L(P_2, f) \le \pi \le 2 \cdot U(P_2, f) \).
+        </div>
+
+        <div id="sol-23" class="solution-box">
+            <div class="solution-title">Solution &amp; Bounds Derivation:</div>
+
+            <p><strong style="color: var(--cyan-neon);">(a) Function Properties</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                • \( f(-1) = f(1) = \frac{1}{2} \)<br>
+                • \( f\left(-\frac{1}{2}\right) = f\left(\frac{1}{2}\right) = \frac{1}{1 + 1/4} = \frac{4}{5} \)<br>
+                • \( f(0) = 1 \) (maximum point)
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">1) Partitions, Lower, and Upper Sums</strong></p>
+            
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>a) Partition \( P_1 = \{-1, 0, 1\} \):</strong><br>
+                Subintervals: \( [-1, 0] \) and \( [0, 1] \), each of width \( \Delta t = 1 \).
+            </p>
+            <ul style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+                <li>\( L(P_1, f) = f(-1) \cdot 1 + f(1) \cdot 1 = \frac{1}{2} + \frac{1}{2} = 1 \)</li>
+                <li>\( U(P_1, f) = f(0) \cdot 1 + f(0) \cdot 1 = 1 + 1 = 2 \)</li>
+            </ul>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                <strong>b) Partition \( P_2 = \left\{-1, -\frac{1}{2}, 0, \frac{1}{2}, 1\right\} \):</strong><br>
+                Subintervals: \( \left[-1, -\frac{1}{2}\right] \), \( \left[-\frac{1}{2}, 0\right] \), \( \left[0, \frac{1}{2}\right] \), \( \left[\frac{1}{2}, 1\right] \), each of width \( \Delta t = \frac{1}{2} \).
+            </p>
+            <ul style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+                <li>
+                    \( L(P_2, f) = \frac{1}{2} \left[ f(-1) + f\left(-\frac{1}{2}\right) + f\left(\frac{1}{2}\right) + f(1) \right] \)
+                    \[ L(P_2, f) = \frac{1}{2} \left( \frac{1}{2} + \frac{4}{5} + \frac{4}{5} + \frac{1}{2} \right) = \frac{1}{2} \left( 1 + \frac{8}{5} \right) = \frac{13}{10} \]
+                </li>
+                <li>
+                    \( U(P_2, f) = \frac{1}{2} \left[ f\left(-\frac{1}{2}\right) + f(0) + f(0) + f\left(\frac{1}{2}\right) \right] \)
+                    \[ U(P_2, f) = \frac{1}{2} \left( \frac{4}{5} + 1 + 1 + \frac{4}{5} \right) = \frac{1}{2} \left( 2 + \frac{8}{5} \right) = \frac{18}{10} = \frac{9}{5} \]
+                </li>
+            </ul>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">2) Proving \( \frac{13}{5} \le \pi \le \frac{18}{5} \)</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                By definition of the Riemann integral:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ L(P_2, f) \le \int_{-1}^1 \frac{1}{1+t^2} \, dt \le U(P_2, f) \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Evaluating the exact integral:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \int_{-1}^1 \frac{1}{1+t^2} \, dt = \left[ \arctan(t) \right]_{-1}^1 = \arctan(1) - \arctan(-1) = \frac{\pi}{4} - \left(-\frac{\pi}{4}\right) = \frac{\pi}{2} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Substituting \( L(P_2, f) = \frac{13}{10} \), \( U(P_2, f) = \frac{18}{10} \), and the integral value \( \frac{\pi}{2} \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \frac{13}{10} \le \frac{\pi}{2} \le \frac{18}{10} \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Multiplying the inequality by \( 2 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \frac{13}{5} \le \pi \le \frac{18}{5} \quad (2.6 \le \pi \le 3.6) \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                • \( L(P_1, f) = 1 \), \( U(P_1, f) = 2 \)<br>
+                • \( L(P_2, f) = \frac{13}{10} \), \( U(P_2, f) = \frac{9}{5} \)<br>
+                • Bounding the integral \( \int_{-1}^1 \frac{1}{1+t^2} dt = \frac{\pi}{2} \) confirms <strong>\( \frac{13}{5} \le \pi \le \frac{18}{5} \)</strong>. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+   <!-- SLIDE 24 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 24: Curvature, Osculating Circle, and Radius of Curvature
+        </h2>
+        <div class="question-body">
+            <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6;">
+                How do we quantify how sharply a curve bends at a given point? Explore the geometric concept of the circle of curvature (osculating circle) and radius of curvature through the following questions.
+            </p>
+
+            <ol style="line-height: 1.8; color: #e2e8f0; font-size: 0.98rem;">
+                <li><strong>Q1 (Osculating Circle):</strong> Let \( y = f(x) \) be a twice-differentiable function and \( P(a, f(a)) \) be a point on the curve. What three geometric conditions uniquely define the "circle of curvature" at \( P \)?</li>
+                <li><strong>Q2 (Curvature &amp; Radius Formula):</strong> How are the radius of curvature \( R \) and curvature \( \kappa \) mathematically derived from these conditions?</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-24')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-24')">Show Answer</button>
+        </div>
+
+        <div id="hint-24" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • The circle of curvature best fits the curve at \( P \) by matching the function value \( f(a) \), first derivative \( f'(a) \) (slope), and second derivative \( f''(a) \) (concavity).<br>
+            • Radius of curvature formula: \( R = \frac{(1 + [f'(x)]^2)^{3/2}}{|f''(x)|} \).<br>
+            • Curvature is the reciprocal of the radius of curvature: \( \kappa = \frac{1}{R} \).
+        </div>
+
+        <div id="sol-24" class="solution-box">
+            <div class="solution-title">Expository Q&amp;A &amp; Geometric Analysis:</div>
+
+            <!-- Q1 -->
+            <p><strong style="color: var(--cyan-neon);">Q1: Three Defining Conditions for the Circle of Curvature</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Among all possible circles in the plane, the <strong>circle of curvature</strong> (or <em>osculating circle</em>) at point \( P(a, f(a)) \) is chosen as the unique circle that satisfies:
+            </p>
+            <ol style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.8;">
+                <li><strong>Position Match:</strong> The circle passes directly through the point \( P(a, f(a)) \).</li>
+                <li><strong>Slope Match (1st Derivative):</strong> At \( P \), the circle has the exact same slope (tangent line) as the curve \( y = f(x) \), meaning \( y_{\text{circle}}'(a) = f'(a) \).</li>
+                <li><strong>Concavity Match (2nd Derivative):</strong> At \( P \), the circle has the exact same concavity (second derivative) as the curve \( y = f(x) \), meaning \( y_{\text{circle}}''(a) = f''(a) \).</li>
+            </ol>
+
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="360" height="200" viewBox="0 0 360 200" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Curve y = f(x) -->
+                    <path d="M 40,160 C 120,160 180,40 320,50" fill="none" stroke="#00f3ff" stroke-width="2.5" />
+
+                    <!-- Point P(a, f(a)) at ~ (175, 82) -->
+                    <!-- Osculating Circle centered at (215, 135) with radius ~63 -->
+                    <circle cx="215" cy="135" r="63" fill="rgba(57, 255, 20, 0.08)" stroke="#39ff14" stroke-width="2" stroke-dasharray="4,3" />
+
+                    <!-- Center C of Curvature -->
+                    <circle cx="215" cy="135" r="4" fill="#ff8c00" />
+                    <text x="225" y="140" font-size="11" fill="#ff8c00">Center C(h,k)</text>
+
+                    <!-- Point P -->
+                    <circle cx="175" cy="82" r="4.5" fill="#39ff14" />
+                    <text x="125" y="75" font-size="12" fill="#39ff14" font-weight="bold">P(a, f(a))</text>
+
+                    <!-- Radius Line CP -->
+                    <line x1="175" y1="82" x2="215" y2="135" stroke="#ff8c00" stroke-width="1.5" />
+                    <text x="185" y="115" font-size="11" fill="#ff8c00">R</text>
+
+                    <!-- Tangent Line at P -->
+                    <line x1="110" y1="52" x2="240" y2="112" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="3,3" />
+
+                    <!-- Labels -->
+                    <text x="50" y="140" font-size="12" fill="#00f3ff">y = f(x)</text>
+                    <text x="240" y="185" font-size="11" fill="#39ff14">Circle of Curvature</text>
+                </svg>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <!-- Q2 -->
+            <p><strong style="color: var(--cyan-neon);">Q2: Mathematical Formulas for Radius &amp; Curvature</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Matching the first two derivatives yields the explicit formula for the <strong>radius of curvature</strong> \( R \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ R = \frac{\left(1 + [f'(x)]^2\right)^{3/2}}{|f''(x)|} \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                The <strong>curvature</strong> \( \kappa \) measures the rate at which the tangent direction turns per unit arc length and is defined as the reciprocal of the radius of curvature:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \kappa = \frac{1}{R} = \frac{|f''(x)|}{\left(1 + [f'(x)]^2\right)^{3/2}} \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Summary:</strong><br>
+                The circle of curvature uniquely shares position \( f(a) \), slope \( f'(a) \), and concavity \( f''(a) \) with the curve at point \( P \). Its radius \( R = \frac{(1 + [f']^2)^{3/2}}{|f''|} \) defines the intrinsic radius of curvature. \(\blacksquare\)
+            </div>
+        </div>
+    </div> 
+<!-- SLIDE 25 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 25: Absolute Maximum of \( f(x) = x^a (1-x)^b \)
+        </h2>
+        <div class="question-body">
+            <p>
+                If \( a \) and \( b \) are positive real numbers, find the maximum value of 
+                \[ f(x) = x^a (1-x)^b \quad \text{for } 0 \le x \le 1 \]
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-25')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-25')">Show Answer</button>
+        </div>
+
+        <div id="hint-25" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Evaluate \( f(x) \) at the endpoints \( x = 0 \) and \( x = 1 \).<br>
+            • Differentiate \( f(x) \) using the Product Rule and Chain Rule, set \( f'(x) = 0 \), and solve for the critical point in \( (0, 1) \).<br>
+            • Alternatively, maximize \( \ln f(x) = a \ln x + b \ln(1-x) \) via logarithmic differentiation.
+        </div>
+
+        <div id="sol-25" class="solution-box">
+            <div class="solution-title">Solution & Derivation:</div>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Endpoint Evaluation</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( a, b > 0 \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                f(0) &amp;= 0^a (1 - 0)^b = 0 \\
+                f(1) &amp;= 1^a (1 - 1)^b = 0
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( f(x) > 0 \) for all \( x \in (0, 1) \), the absolute maximum must occur at an interior critical point.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Find Critical Points via Differentiation</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Differentiate \( f(x) \) with respect to \( x \) using the Product and Chain Rules:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                f'(x) &amp;= a x^{a-1} (1-x)^b + x^a \cdot b (1-x)^{b-1} (-1) \\
+                &amp;= x^{a-1} (1-x)^{b-1} \left[ a(1-x) - bx \right] \\
+                &amp;= x^{a-1} (1-x)^{b-1} \left[ a - (a+b)x \right]
+                \end{aligned}
+                \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Setting \( f'(x) = 0 \) for \( x \in (0, 1) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ a - (a+b)x = 0 \implies x = \frac{a}{a+b} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 3: Evaluate Maximum Value</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Substitute the critical point \( x = \frac{a}{a+b} \) back into \( f(x) \):
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                1 - x &amp;= 1 - \frac{a}{a+b} = \frac{b}{a+b} \\
+                f\left(\frac{a}{a+b}\right) &amp;= \left( \frac{a}{a+b} \right)^a \left( \frac{b}{a+b} \right)^b = \frac{a^a b^b}{(a+b)^{a+b}}
+                \end{aligned}
+                \]
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The maximum value occurs at \( x = \frac{a}{a+b} \) and is given by
+                \[ f_{\text{max}} = \frac{a^a b^b}{(a+b)^{a+b}} \quad \blacksquare \]
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 26 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 26: Solving Polynomial Inequalities &amp; Real Line Plot
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( C = \{x \in \mathbb{R} : x^3 &lt; x^2\} \). Find the set \( C \) and plot it on the real number line.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-19')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-19')">Show Answer</button>
+        </div>
+
+        <div id="hint-19" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Rearrange the inequality to \( x^3 - x^2 &lt; 0 \).<br>
+            • Factor out \( x^2 \): \( x^2(x - 1) &lt; 0 \).<br>
+            • Note that \( x^2 &gt; 0 \) for all \( x \neq 0 \). Determine the sign of the product on the test intervals divided by critical points \( x = 0 \) and \( x = 1 \).
+        </div>
+
+        <div id="sol-19" class="solution-box">
+            <div class="solution-title">Solution &amp; Algebraic Derivation:</div>
+
+            <p><strong style="color: var(--cyan-neon);">(a) Solve the Inequality</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Move all terms to one side to compare with zero:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ x^3 - x^2 &lt; 0 \implies x^2(x - 1) &lt; 0 \]
+            </div>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Analyze the sign of each factor:
+            </p>
+            <ul style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+                <li>\( x^2 &gt; 0 \) for all \( x \neq 0 \) (and \( x^2 = 0 \) at \( x = 0 \)).</li>
+                <li>For the product \( x^2(x - 1) \) to be strictly negative, we must have \( x^2 &gt; 0 \) and \( x - 1 &lt; 0 \).</li>
+                <li>\( x - 1 &lt; 0 \implies x &lt; 1 \).</li>
+                <li>Since \( x = 0 \) gives \( 0^2(0 - 1) = 0 \nless 0 \), \( x = 0 \) must be excluded.</li>
+            </ul>
+
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Therefore, \( x^3 &lt; x^2 \) holds when \( x &lt; 1 \) and \( x \neq 0 \). In interval notation:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ C = (-\infty, 0) \cup (0, 1) \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">(b) Real Number Line Plot</strong></p>
+            <div style="text-align: center; margin: 15px 0;">
+                <svg width="400" height="90" viewBox="0 0 400 90" style="background: #0f172a; border: 1px solid var(--border-dim); border-radius: 8px;">
+                    <!-- Real Line Axis -->
+                    <line x1="30" y1="50" x2="370" y2="50" stroke="#475569" stroke-width="2" />
+                    <!-- Arrows at Ends -->
+                    <polygon points="25,50 35,45 35,55" fill="#475569" />
+                    <polygon points="375,50 365,45 365,55" fill="#475569" />
+
+                    <!-- Ticks for key points: x = -1, 0, 1, 2 -->
+                    <!-- x = -1 at X = 90 -->
+                    <line x1="90" y1="45" x2="90" y2="55" stroke="#cbd5e1" stroke-width="1.5" />
+                    <text x="90" y="72" font-size="12" fill="#cbd5e1" text-anchor="middle">-1</text>
+
+                    <!-- x = 0 at X = 170 -->
+                    <line x1="170" y1="45" x2="170" y2="55" stroke="#cbd5e1" stroke-width="1.5" />
+                    <text x="170" y="72" font-size="12" fill="#cbd5e1" text-anchor="middle">0</text>
+
+                    <!-- x = 1 at X = 250 -->
+                    <line x1="250" y1="45" x2="250" y2="55" stroke="#cbd5e1" stroke-width="1.5" />
+                    <text x="250" y="72" font-size="12" fill="#cbd5e1" text-anchor="middle">1</text>
+
+                    <!-- x = 2 at X = 330 -->
+                    <line x1="330" y1="45" x2="330" y2="55" stroke="#cbd5e1" stroke-width="1.5" />
+                    <text x="330" y="72" font-size="12" fill="#cbd5e1" text-anchor="middle">2</text>
+
+                    <!-- Highlighted Ray (-infinity, 0) -->
+                    <line x1="30" y1="50" x2="170" y2="50" stroke="#00f3ff" stroke-width="4" />
+                    <!-- Highlighted Segment (0, 1) -->
+                    <line x1="170" y1="50" x2="250" y2="50" stroke="#00f3ff" stroke-width="4" />
+
+                    <!-- Hollow circles at x = 0 and x = 1 -->
+                    <circle cx="170" cy="50" r="5" fill="#0f172a" stroke="#00f3ff" stroke-width="2.5" />
+                    <circle cx="250" cy="50" r="5" fill="#0f172a" stroke="#00f3ff" stroke-width="2.5" />
+
+                    <!-- Interval Label -->
+                    <text x="110" y="30" font-size="11" fill="#00f3ff" text-anchor="middle">(-∞, 0)</text>
+                    <text x="210" y="30" font-size="11" fill="#00f3ff" text-anchor="middle">(0, 1)</text>
+                </svg>
+            </div>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                The solution set is <strong>\( C = (-\infty, 0) \cup (0, 1) \)</strong> (or \( \{x \in \mathbb{R} : x &lt; 1 \text{ and } x \neq 0\} \)). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+
+    
+    
+    <!-- SLIDE 27 -->
+    <div class="slide">
+        <h2 class="question-title">
+            SAQ 27: Rolle's Theorem &amp; Real Roots of Polynomial Derivatives
+        </h2>
+        <div class="question-body">
+            <p>
+                Let \( p(x) \in \mathbb{R}[x] \) be a polynomial of degree \( n \) with \( n \) real roots (counting multiplicities). 
+                Show that all roots of its derivative \( p'(x) \) are also real.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-30')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-30')">Show Answer</button>
+        </div>
+
+        <div id="hint-30" class="hint-box">
+            <strong style="color: var(--orange-neon);">Hint:</strong><br>
+            • Express \( p(x) = c(x - r_1)^{e_1}(x - r_2)^{e_2} \cdots (x - r_k)^{e_k} \), where \( e_1 + e_2 + \dots + e_k = n \).<br>
+            • Each root \( r_i \) with multiplicity \( e_i &gt; 1 \) gives a root of \( p'(x) \) with multiplicity \( e_i - 1 \).<br>
+            • Apply <strong>Rolle's Theorem</strong> between adjacent distinct roots \( r_i \) and \( r_{i+1} \) to find additional distinct real roots of \( p'(x) \).
+        </div>
+
+        <div id="sol-30" class="solution-box">
+            <div class="solution-title">Proof &amp; Complete Derivation:</div>
+
+            <p><strong style="color: var(--cyan-neon);">Step 1: Factorization and Multiplicity Analysis</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Let \( r_1 &lt; r_2 &lt; \dots &lt; r_k \) be the distinct real roots of \( p(x) \) with multiplicities \( e_1, e_2, \dots, e_k \) respectively, such that:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \sum_{i=1}^k e_i = n \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                For each root \( r_i \), we can factor \( p(x) \) as \( p(x) = (x - r_i)^{e_i} q_i(x) \), where \( q_i(r_i) \neq 0 \). Differentiating gives:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                p'(x) &amp;= e_i (x - r_i)^{e_i - 1} q_i(x) + (x - r_i)^{e_i} q_i'(x) \\
+                &amp;= (x - r_i)^{e_i - 1} \Big[ e_i q_i(x) + (x - r_i) q_i'(x) \Big]
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Thus, each \( r_i \) is a root of \( p'(x) \) with multiplicity \( e_i - 1 \). Summing these multiplicities across all \( k \) distinct roots yields:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ \sum_{i=1}^k (e_i - 1) = \left(\sum_{i=1}^k e_i\right) - k = n - k \quad \text{roots of } p'(x) \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 2: Applying Rolle's Theorem Between Distinct Roots</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Consider the \( k \) distinct roots ordered as \( r_1 &lt; r_2 &lt; \dots &lt; r_k \). 
+                Since \( p(x) \) is a polynomial, it is continuous on \([r_i, r_{i+1}]\) and differentiable on \((r_i, r_{i+1})\) with \( p(r_i) = p(r_{i+1}) = 0 \).
+            </p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                By <strong>Rolle's Theorem</strong>, for each of the \( k - 1 \) open intervals \( (r_i, r_{i+1}) \), there exists at least one point \( c_i \in (r_i, r_{i+1}) \) such that:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[ p'(c_i) = 0 \quad \text{for } i = 1, 2, \dots, k - 1 \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                These \( k - 1 \) roots \( c_1, c_2, \dots, c_{k-1} \) are distinct from each other and distinct from the original roots \( r_i \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+            <p><strong style="color: var(--cyan-neon);">Step 3: Total Root Count Verification</strong></p>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                The derivative \( p'(x) \) is a polynomial of degree \( n - 1 \). The total number of real roots found (counting multiplicity) is:
+            </p>
+            <div style="overflow-x: auto; padding: 2px 0;">
+                \[
+                \begin{aligned}
+                \text{Total Real Roots} &amp;= \underbrace{(n - k)}_{\text{from repeated roots } r_i} + \underbrace{(k - 1)}_{\text{from Rolle's Theorem in } (r_i, r_{i+1})} \\
+                &amp;= n - 1
+                \end{aligned}
+                \]
+            </div>
+            <p style="font-size: 0.95rem; color: #cbd5e1;">
+                Since \( \deg(p') = n - 1 \) and we have accounted for exactly \( n - 1 \) real roots (with multiplicity), <strong>all roots of \( p'(x) \) must be real</strong>.
+            </p>
+
+            <div class="highlight-box">
+                <strong style="color: var(--cyan-neon);">Conclusion:</strong><br>
+                By combining the multiplicity reduction at repeated roots with Rolle's Theorem applied between adjacent distinct roots, we account for all \( n - 1 \) roots of \( p'(x) \) in \( \mathbb{R} \). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- NAVIGATION CONTROLS -->
+    <div class="controls">
+        <button class="btn-nav" id="prevBtn" onclick="changeSlide(-1)" disabled>Previous</button>
+        <span class="page-indicator" id="pageIndicator">Slide 1 of 2</span>
+        <button class="btn-nav" id="nextBtn" onclick="changeSlide(1)">Next</button>
+    </div>
+
+</div>
+
+<script>
+    let currentSlide = 0;
+    let slides = [];
+    let totalSlides = 0;
+
+    function updateSlide() {
+        slides = document.querySelectorAll('.slide');
+        totalSlides = slides.length;
+
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentSlide);
+        });
+
+        document.getElementById('prevBtn').disabled = currentSlide === 0;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+        document.getElementById('pageIndicator').innerText = `Slide ${currentSlide + 1} of ${totalSlides}`;
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        updateSlide();
+    }
+
+    function toggleVisibility(elementId) {
+        const el = document.getElementById(elementId);
+        if (el.style.display === "block") {
+            el.style.display = "none";
+        } else {
+            el.style.display = "block";
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        updateSlide();
+    });
+</script>
+
+</body>
+</html>

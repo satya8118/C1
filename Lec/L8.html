@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecture 8 — Functions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --indigo: #3B3E8F;
+    --indigo-deep: #262a63;
+    --indigo-soft: #eceafb;
+    --amber: #D9992C;
+    --amber-soft: #fbedd2;
+    --sage: #7C9473;
+    --sage-soft: #e8efe3;
+    --red: #C0483B;
+    --red-soft: #f6e2df;
+    --paper: #FAF8F3;
+    --ink: #22242E;
+    --ink-soft: #565A6E;
+    --line: #DEDAD0;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.65; font-size:17px; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; color:var(--indigo-deep); letter-spacing:-0.01em; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); font-weight:500; }
+  header.hero{ padding:72px 8vw 56px; background: radial-gradient(circle at 82% 18%, rgba(59,62,143,0.10), transparent 55%), var(--paper); border-bottom:1px solid var(--line); }
+  header.hero h1{ font-size:clamp(32px, 4.4vw, 54px); margin:10px 0 18px; max-width:820px; line-height:1.08; }
+  header.hero p.sub{ max-width:640px; color:var(--ink-soft); font-size:18px; }
+  main{ max-width:900px; margin:0 auto; padding:0 8vw 120px; }
+  section.block{ display:none; padding-top:64px; }
+  section.block.shown{ display:block; animation:fade .5s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  .kicker{ display:flex; align-items:center; gap:12px; margin-bottom:6px;}
+  .kicker .num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:#fff; background:var(--indigo); border-radius:6px; padding:3px 9px; }
+  h2.title{ font-size:clamp(24px,3vw,32px); margin:4px 0 20px; }
+  p{ color:var(--ink); }
+  p.lede{ color:var(--ink-soft); font-size:17.5px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:26px 28px; margin:22px 0; }
+  .card.amber{ background:var(--amber-soft); border-color:#eddcae;}
+  .card.sage{ background:var(--sage-soft); border-color:#d3e0cb;}
+  .card.indigo{ background:var(--indigo-soft); border-color:#d4d1f5;}
+  .card.red{ background:var(--red-soft); border-color:#e6c3bd; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  @media(max-width:720px){ .grid2{ grid-template-columns:1fr; } }
+  .demo{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px 26px 28px; margin:26px 0; }
+  .demo .demo-label{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--indigo); margin-bottom:10px; }
+  .demo svg{ width:100%; height:auto; display:block; background:#fdfcf9; border-radius:10px; }
+  .controls{ display:flex; align-items:center; gap:14px; margin-top:14px; flex-wrap:wrap;}
+  .toggle-group{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .toggle-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; background:#fff; border:1.5px solid var(--indigo);
+    color:var(--indigo); padding:7px 13px; border-radius:8px; cursor:pointer;
+  }
+  .toggle-btn.active{ background:var(--indigo); color:#fff; }
+  .toggle-btn:hover{ background:var(--indigo-soft); }
+  .toggle-btn.active:hover{ background:var(--indigo-deep); }
+  table.datatable{ border-collapse:collapse; width:100%; font-family:'IBM Plex Mono',monospace; font-size:13.5px; margin-top:14px;}
+  table.datatable th, table.datatable td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:left; }
+  table.datatable th{ color:var(--ink-soft); font-weight:500; }
+  .continue-wrap{ text-align:center; margin:56px 0 0; }
+  button.continue{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:15px; background:var(--indigo); color:#fff;
+    border:none; padding:13px 26px; border-radius:999px; cursor:pointer; transition:transform .15s ease, background .15s ease;
+  }
+  button.continue:hover{ background:var(--indigo-deep); transform:translateY(-1px); }
+  button.continue:focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+  .reveal-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; background:transparent; border:1.5px solid var(--indigo);
+    color:var(--indigo); padding:8px 14px; border-radius:8px; cursor:pointer; margin-top:10px;
+  }
+  .reveal-btn:hover{ background:var(--indigo-soft); }
+  .answer{ display:none; margin-top:12px; padding:14px 16px; background:var(--sage-soft); border-left:3px solid var(--sage); border-radius:6px; }
+  .answer.shown{ display:block; }
+  .tier{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:#fff; padding:3px 10px; border-radius:6px; display:inline-block; margin-bottom:10px; }
+  .tier.A{ background:var(--sage); }
+  .tier.B{ background:var(--amber); }
+  .tier.C{ background:var(--indigo); }
+  .q{ margin-bottom:22px; }
+  .q p.qtext{ font-weight:500; }
+  footer{ max-width:900px; margin:0 auto; padding:40px 8vw 80px; color:var(--ink-soft); font-size:14px; border-top:1px solid var(--line); }
+  footer a{ color:var(--indigo); }
+  .caption{ font-size:13.5px; color:var(--ink-soft); margin-top:8px; }
+  .progress{ position:fixed; top:0; left:0; height:3px; background:var(--amber); width:0%; z-index:50; transition:width .4s ease; }
+  .boxed{ display:inline-block; border:1.5px solid var(--ink); padding:8px 14px; border-radius:8px; background:#fff; margin:8px 0; }
+  .badge{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:2px 8px; border-radius:5px; margin-left:6px; }
+  .badge.yes{ background:var(--sage-soft); color:#3a5233; border:1px solid #c3d6ba; }
+  .badge.no{ background:var(--red-soft); color:#7a2e24; border:1px solid #e0aca4; }
+</style>
+</head>
+<body>
+<nav>
+        <a href="index.html">← Back to Course Home</a>
+        &nbsp;|&nbsp;
+        <a href="L9.html">Next Lecture →</a>
+    </nav>
+
+<div class="progress" id="progressBar"></div>
+
+<header class="hero">
+  <div class="eyebrow">Lecture 8 · Functions</div>
+  <h1>Functions: the object calculus is actually about</h1>
+  <p class="sub">Lecture 1 ended with a promise: everything in this course — limits, derivatives, integrals — is a statement about functions. Today we make "function" precise, and get comfortable with the vocabulary (domain, codomain, range, equality) and the two properties (one-one, onto) that will keep coming back all semester.</p>
+</header>
+
+<main>
+
+<!-- SECTION 1: definition -->
+<section class="block shown" id="f1">
+  <div class="kicker"><span class="num">01</span><span class="eyebrow">Getting precise</span></div>
+  <h2 class="title">The definition of a function</h2>
+  <p class="lede">Let \(X\) and \(Y\) be two nonempty sets. A <strong>function</strong> (also called a <em>map</em> or <em>mapping</em>) from \(X\) to \(Y\) is a rule that assigns to each element of \(X\) a unique element of \(Y\).</p>
+
+  <p>Two separate requirements are hiding inside that one sentence, and it's worth pulling them apart, because most "is this a function?" mistakes come from missing one of them:</p>
+  <div class="grid2">
+    <div class="card sage"><strong>1. Every input is used.</strong> Each element of \(X\) must be associated with <em>some</em> element of \(Y\) — no input is left without an output.</div>
+    <div class="card sage"><strong>2. No input is ambiguous.</strong> No element of \(X\) may be associated with <em>more than one</em> element of \(Y\) — the rule can't hand back two different answers for the same input.</div>
+  </div>
+
+  <p>Compactly:</p>
+  <div class="card indigo" style="text-align:center;">
+    <span class="boxed">\(f:X\to Y\) is a function if \(\forall x\in X,\ \exists\) unique \(y\in Y\ \big(f(x)=y\big).\)</span>
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — is this a rule from \(X\) to \(Y\) actually a function?</div>
+    <svg id="defSvg" viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="toggle-group" id="defToggle">
+      <button class="toggle-btn active" data-pattern="valid">A valid function</button>
+      <button class="toggle-btn" data-pattern="noExist">Fails requirement 1</button>
+      <button class="toggle-btn" data-pattern="noUnique">Fails requirement 2</button>
+    </div>
+    <p class="caption" id="defCaption">Every dot in \(X\) sends out exactly one arrow, and every arrow lands in \(Y\). That's all a function is — no formula required.</p>
+  </div>
+
+  <button class="reveal-btn" data-ans="notFnAns">When would a "rule" fail to be a function at all?</button>
+  <div class="answer" id="notFnAns">Two classic failure modes: (a) the rule simply isn't defined for some inputs — e.g. "the reciprocal of \(x\)" isn't defined at \(x=0\), so as a rule on all of \(\mathbb{R}\) it fails requirement 1; (b) the rule is ambiguous — e.g. "a square root of \(x\)" for \(x>0\) has two answers, \(+\sqrt x\) and \(-\sqrt x\), so it fails requirement 2 unless you specify which root you mean.</div>
+
+  <p style="margin-top:26px;">If \(f:X\to Y\) is a function and \(f(x)=y\), the vocabulary is:</p>
+  <div class="grid2">
+    <div class="card"><strong>Domain.</strong> \(X\) is the domain of \(f\) — the set of legal inputs.</div>
+    <div class="card"><strong>Codomain.</strong> \(Y\) is the codomain of \(f\) — the set the outputs are declared to live in (not necessarily all reached — more on this soon).</div>
+    <div class="card"><strong>Image.</strong> \(y\) is <em>the</em> image of \(x\) under \(f\) — there's only one, by requirement 2.</div>
+    <div class="card"><strong>Preimage.</strong> \(x\) is <em>a</em> preimage of \(y\) — there could be more than one \(x\) mapping to the same \(y\), which is why it's "a" and not "the."</div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f2">Continue — testing the definition on real examples ↓</button></div>
+</section>
+
+<!-- SECTION 2: examples -->
+<section class="block" id="f2">
+  <div class="kicker"><span class="num">02</span><span class="eyebrow">Stress-testing the definition</span></div>
+  <h2 class="title">Is it a function? Three familiar "rules"</h2>
+  <p class="lede">Let \(H\) be the set of all human beings. For each rule below, ask: does every person have exactly one output, or does the rule break requirement 1, requirement 2, or both?</p>
+
+  <div class="grid2">
+    <div class="card">
+      \(x \mapsto\) father of \(x\) <span class="badge yes">function</span>
+      <p style="margin-top:8px;">Every person has exactly one biological father, and that father is himself a person in \(H\). Both requirements hold.</p>
+    </div>
+    <div class="card">
+      \(x \mapsto\) parent of \(x\) <span class="badge no">not a function</span>
+      <p style="margin-top:8px;">A person typically has two parents, not one. "Parent of \(x\)" doesn't pin down a unique output — requirement 2 fails.</p>
+    </div>
+    <div class="card">
+      \(x \mapsto\) child of \(x\) <span class="badge no">not a function</span>
+      <p style="margin-top:8px;">Some people have zero children (requirement 1 fails) and some have several (requirement 2 fails also). This rule fails on both counts.</p>
+    </div>
+  </div>
+
+  <button class="reveal-btn" data-ans="classEx">Try it yourself: propose a map from a class of students \(S\) to \(S\)</button>
+  <div class="answer" id="classEx">A working example: "\(s\mapsto\) the student sitting to \(s\)'s immediate right in the last session" — as long as every seat has a well-defined neighbour and no student is seated at the very end with nobody there (or you fix that edge case, e.g. by seating students in a circle). Notice how quickly the two requirements from Section 1 become the actual thing you have to check by hand. A few more to test on your own: "\(s\mapsto\) \(s\)'s registration number," "\(s\mapsto\) the first student alphabetically in \(s\)'s discussion group," "\(s\mapsto\) \(s\)'s best friend in the class."</div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f3">Continue — three special functions worth naming ↓</button></div>
+</section>
+
+<!-- SECTION 3: special functions -->
+<section class="block" id="f3">
+  <div class="kicker"><span class="num">03</span><span class="eyebrow">Named examples you'll reuse constantly</span></div>
+  <h2 class="title">Constant functions, the identity, and inclusion</h2>
+
+  <p>Let \(X\) and \(Y\) be nonempty sets and fix some \(y_0\in Y\). The function defined by \(f(x)=y_0\) for every \(x\in X\) is a <strong>constant function</strong>:</p>
+  <div class="card indigo" style="text-align:center;"><span class="boxed">\(\forall x\in X\ \big(f(x)=y_0\big).\)</span></div>
+  <p>More precisely, \(f:X\to Y\) <em>is a</em> constant map if \(\exists y_0\in Y\ \big(\forall x\in X\ (f(x)=y_0)\big)\) — note where the quantifiers sit: one fixed \(y_0\) has to work for every \(x\).</p>
+
+  <div class="q">
+    <button class="reveal-btn" data-ans="constQ">Four quick questions about constant functions</button>
+    <div class="answer" id="constQ">
+      <p><strong>If \(|X|=1\):</strong> every function \(f:X\to Y\) is automatically constant — with only one input, there's nothing for the output to vary against.</p>
+      <p><strong>Converse?</strong> No. \(|Y|=1\) also forces every function to be constant (there's only one possible output value), regardless of the size of \(X\). So "every function \(X\to Y\) is constant" can happen for a reason having nothing to do with \(|X|=1\).</p>
+      <p><strong>Iff statement:</strong> "Every function from \(X\) to \(Y\) is constant \(\iff\) \(|X|=1\) or \(|Y|=1\)" — this direction is true. (Try to see why \(|X|,|Y|\ge 2\) always lets you build a non-constant function.)</p>
+      <p><strong>Counting them:</strong> if \(|Y|=n\), there are exactly \(n\) different constant functions \(X\to Y\) — one for each choice of \(y_0\).</p>
+    </div>
+  </div>
+
+  <p>Let \(X\) be a nonempty set. The function \(f:X\to X\) defined by \(f(x)=x\) is <strong>the identity function</strong> on \(X\).</p>
+  <button class="reveal-btn" data-ans="idQ">How many identity functions are there on a given set \(X\)?</button>
+  <div class="answer" id="idQ">Exactly one — the rule \(x\mapsto x\) is completely determined once \(X\) is fixed, unlike a constant function where \(y_0\) could be any of \(|Y|\) choices.</div>
+
+  <p style="margin-top:18px;">Finally, if \(\emptyset\ne A\subseteq B\), the map \(\iota:A\to B\) defined by \(x\mapsto x\) is the <strong>inclusion map</strong>, written \(A\hookrightarrow B\). It looks identical to the identity function as a formula, but it isn't one — the codomain is \(B\), not \(A\), which matters once we get to "onto" in a few sections.</p>
+
+  <div class="continue-wrap"><button class="continue" data-next="f4">Continue — the range of a function ↓</button></div>
+</section>
+
+<!-- SECTION 4: range -->
+<section class="block" id="f4">
+  <div class="kicker"><span class="num">04</span><span class="eyebrow">Codomain vs. what's actually hit</span></div>
+  <h2 class="title">The range of a function</h2>
+  <p class="lede">The codomain of \(f:X\to Y\) is the set of <em>allowed</em> outputs. The <strong>range</strong>, \(R(f)\), is the set of outputs that actually get hit:</p>
+  <div class="card indigo" style="text-align:center;"><span class="boxed">\(R(f)=\{y\in Y \mid \exists x\in X \text{ such that } f(x)=y\}.\)</span></div>
+
+  <div class="q">
+    <span class="tier A">Q1</span>
+    <p class="qtext">\(R(f)\) is a subset of what?</p>
+    <button class="reveal-btn" data-ans="q1a">Show answer</button>
+    <div class="answer" id="q1a">\(R(f)\subseteq Y\), the codomain. It need not equal \(Y\) — when it does, we'll call \(f\) "onto," coming up in Section 6.</div>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Q2</span>
+    <p class="qtext">Let \(W\) be the set of all Indian states and union territories. Is \(f:S\to W\), \(s\mapsto\) the state where \(s\)'s present institute is located, a function? If so, what is its range?</p>
+    <button class="reveal-btn" data-ans="q2a">Show answer</button>
+    <div class="answer" id="q2a">Yes — every student's institute sits in exactly one state or union territory, so both requirements from Section 1 hold. The range is whichever subset of \(W\) actually contains a state where at least one student's institute is located — for a real class this is typically a small handful of states, far from all of \(W\).</div>
+  </div>
+
+  <div class="q">
+    <span class="tier C">Q3</span>
+    <p class="qtext">For \(A\subseteq X\), define \(f(A)=\{y\in Y \mid \exists x\in A \text{ such that } f(x)=y\}\) (the image of the set \(A\)). Let \(S=\{A\subseteq X \mid f(A)=R(f)\}\). Is it true that \(S\ne\emptyset\)?</p>
+    <button class="reveal-btn" data-ans="q3a">Show answer</button>
+    <div class="answer" id="q3a">Yes. \(X\) itself is in \(S\), since \(f(X)=R(f)\) by definition of range. So \(S\) is never empty — though it can contain much smaller sets too; in fact, taking one preimage per element of \(R(f)\) already gives a (possibly much smaller) set in \(S\).</div>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Q4 — for discussion</span>
+    <p class="qtext">Let \(\mathbb{N}=\{1,2,3,\dots\}\). Give an example of a map from \(S\) (your class) to \(\mathbb{N}\). Find its range. Can the range equal the codomain? What are the possible values of \(|R(f)|\)?</p>
+    <button class="reveal-btn" data-ans="q4a">Show one worked answer</button>
+    <div class="answer" id="q4a">One natural choice: \(s\mapsto\) the number of letters in \(s\)'s first name. This is a function (every name has a definite length), and its range is whatever set of positive integers actually occurs as a name-length in your class — typically a handful of small values, so \(R(f)\ne\mathbb{N}\) (the codomain is infinite, but a finite class can only hit finitely many values). In general \(|R(f)|\) can be anything from \(1\) (if the map happens to be constant) up to \(|S|\) (if the map is one-one) — but it can never equal \(|\mathbb{N}|\) here, since \(G_1\) itself is finite. Other natural choices your class might try: mobile number, roll number, age in years.</div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f5">Continue — when are two functions the same function? ↓</button></div>
+</section>
+
+<!-- SECTION 5: equality -->
+<section class="block" id="f5">
+  <div class="kicker"><span class="num">05</span><span class="eyebrow">Same formula isn't the whole story</span></div>
+  <h2 class="title">Equality of functions</h2>
+  <p class="lede">Two functions \(f:A\to B\) and \(g:C\to D\) are <strong>equal</strong>, \(f=g\), exactly when:</p>
+  <div class="grid2">
+    <div class="card sage">1. \(A=C\) and \(B=D\) — same domain and same codomain.</div>
+    <div class="card sage">2. For every \(x\in A=C\), \(f(x)=g(x)\) — they agree at every point.</div>
+  </div>
+  <p>Both conditions matter: domain and codomain must match <em>and</em> the outputs must agree everywhere. A formula alone doesn't determine a function — the domain and codomain are part of its identity.</p>
+
+  <div class="q">
+    <span class="tier B">Try it</span>
+    <p class="qtext">Let \(f,g:[0,\infty)\to\mathbb{R}\) with \(f(x)=x|x|\) and \(g(x)=x^2\). Are \(f\) and \(g\) equal?</p>
+    <button class="reveal-btn" data-ans="eq1">Show answer</button>
+    <div class="answer" id="eq1">Yes. On \([0,\infty)\), \(|x|=x\), so \(f(x)=x\cdot x=x^2=g(x)\) for every \(x\) in the shared domain, and the domains/codomains already match. (Off this domain the two formulas would disagree — for \(x<0\), \(x|x|=-x^2\ne x^2\) — which is exactly why the domain is part of the problem statement, not a footnote.)</div>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Try it</span>
+    <p class="qtext">Let \(A\subseteq\mathbb{R}\) and \(f,g:A\to\mathbb{R}\) with \(f(x)=x\) and \(g(x)=x^3\). Is \(f=g\)?</p>
+    <button class="reveal-btn" data-ans="eq2">Show answer</button>
+    <div class="answer" id="eq2">It depends entirely on \(A\). \(x=x^3\) exactly when \(x^3-x=0\), i.e. \(x(x-1)(x+1)=0\), i.e. \(x\in\{-1,0,1\}\). So \(f=g\) only when \(A\subseteq\{-1,0,1\}\); for any larger \(A\) (in particular \(A=\mathbb{R}\)), \(f\ne g\) even though both are perfectly good functions on \(A\).</div>
+  </div>
+
+  <div class="q">
+    <span class="tier C">Try it</span>
+    <p class="qtext">Let \(f,g:\mathbb{R}\to\mathbb{R}\) with \(f(x)=x^4+4\) and \(g(x)=(x^2-2x+2)(x^2+2x+2)\). Is \(f=g\)?</p>
+    <button class="reveal-btn" data-ans="eq3">Show answer</button>
+    <div class="answer" id="eq3">Yes. Expand the product: \((x^2+2)^2-(2x)^2 = x^4+4x^2+4-4x^2=x^4+4\), matching \(f\) exactly — so they agree at every real \(x\), and the domain/codomain already match. This is a nice example of a factorization identity in disguise: \(x^4+4=(x^2-2x+2)(x^2+2x+2)\), a special case of the Sophie Germain identity.</div>
+  </div>
+
+  <button class="reveal-btn" data-ans="eqTF">True or false: if \(f=g\), then \(R(f)=R(g)\). What about the converse?</button>
+  <div class="answer" id="eqTF"><strong>Forward direction: true.</strong> If \(f\) and \(g\) are literally the same function, their ranges are trivially the same set. <strong>Converse: false.</strong> Two functions can have identical ranges without being equal — e.g. \(f,g:\mathbb{R}\to\mathbb{R}\) with \(f(x)=\sin x\) and \(g(x)=\cos x\) both have range \([-1,1]\), but \(f(0)=0\ne 1=g(0)\), so \(f\ne g\).</div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f6">Continue — one-one functions ↓</button></div>
+</section>
+
+<!-- SECTION 6: one-one -->
+<section class="block" id="f6">
+  <div class="kicker"><span class="num">06</span><span class="eyebrow">No collisions allowed</span></div>
+  <h2 class="title">One-one (injective) functions</h2>
+  <p class="lede">A function \(f:X\to Y\) is <strong>one-one</strong> (injective) if distinct inputs always produce distinct outputs. Two equivalent ways to say it:</p>
+  <div class="grid2">
+    <div class="card indigo"><strong>Def 1 (direct).</strong> \(\forall x_1,x_2\in X,\ x_1\ne x_2 \implies f(x_1)\ne f(x_2).\)</div>
+    <div class="card indigo"><strong>Def 2 (contrapositive).</strong> \(\forall x_1,x_2\in X,\ f(x_1)=f(x_2) \implies x_1=x_2.\)</div>
+  </div>
+  <button class="reveal-btn" data-ans="defEquiv">Why are Def 1 and Def 2 equivalent?</button>
+  <div class="answer" id="defEquiv">They're contrapositives of each other. The statement "\(x_1\ne x_2\implies f(x_1)\ne f(x_2)\)" and the statement "\(f(x_1)=f(x_2)\implies x_1=x_2\)" say the same thing from opposite directions — and a statement is always logically equivalent to its contrapositive. In practice, Def 2 is usually the easier one to actually prove.</div>
+
+  <div class="card">
+    <strong>Worked example.</strong> Is \(f:\mathbb{R}\to\mathbb{R}\), \(f(x)=x^3\), one-one?
+    <p style="margin-top:10px;">Take \(x\ne y\); we want \(f(x)\ne f(y)\), i.e. \(x^3-y^3\ne 0\). Factor: \(x^3-y^3=(x-y)(x^2+xy+y^2)\). Since \(x\ne y\), the first factor is nonzero, so it's enough to show the second factor \(x^2+xy+y^2\ne 0\). Three cases cover everything:</p>
+    <ul>
+      <li>If one of \(x,y\) is \(0\) (say \(y=0\), \(x\ne0\)): the expression is \(x^2>0\).</li>
+      <li>If \(x,y\) have the same sign: every term \(x^2,\,xy,\,y^2\) is \(\ge0\) and \(x^2+y^2>0\), so the sum is positive.</li>
+      <li>If \(x,y\) have opposite signs: complete the square, \(x^2+xy+y^2=\left(x+\tfrac{y}{2}\right)^2+\tfrac{3y^2}{4}\ge \tfrac{3y^2}{4}>0\) since \(y\ne0\).</li>
+    </ul>
+    <p>In every case the second factor is strictly positive, so \(x^3-y^3\ne0\) whenever \(x\ne y\). Hence \(f(x)=x^3\) is one-one on all of \(\mathbb{R}\).</p>
+  </div>
+
+  <p>The negation is worth stating explicitly, since "show it's <em>not</em> one-one" is usually the easier direction in practice:</p>
+  <div class="card indigo" style="text-align:center;"><span class="boxed">\(f:X\to Y\) is not one-one if \(\exists\, x_1,x_2\in X,\ x_1\ne x_2,\ f(x_1)=f(x_2).\)</span></div>
+  <p class="caption">One explicit counterexample pair is all it ever takes to kill injectivity — you never need to check every pair.</p>
+
+  <div class="continue-wrap"><button class="continue" data-next="f7">Continue — onto functions ↓</button></div>
+</section>
+
+<!-- SECTION 7: onto -->
+<section class="block" id="f7">
+  <div class="kicker"><span class="num">07</span><span class="eyebrow">Nothing in the codomain is left out</span></div>
+  <h2 class="title">Onto (surjective) functions</h2>
+  <p class="lede">A function \(f:X\to Y\) is <strong>onto</strong> (surjective) if every element of the codomain actually gets hit:</p>
+  <div class="grid2">
+    <div class="card indigo"><strong>Def 1.</strong> \(\forall y\in Y,\ \exists x\in X\ (f(x)=y).\)</div>
+    <div class="card indigo"><strong>Def 2.</strong> \(R(f)=f(X)=Y.\)</div>
+  </div>
+  <button class="reveal-btn" data-ans="ontoEquiv">Why are these two definitions the same?</button>
+  <div class="answer" id="ontoEquiv">\(R(f)\subseteq Y\) always holds (Section 4, Q1). Def 1 says every \(y\in Y\) has a preimage, i.e. \(Y\subseteq R(f)\). Combine the two containments and you get \(R(f)=Y\), which is exactly Def 2 — and the argument reverses just as easily.</div>
+
+  <div class="q">
+    <span class="tier B">Which of these are onto?</span>
+    <ol>
+      <li>\(f:\mathbb{N}\to\mathbb{N}\), \(f(n)=n+1\).</li>
+      <li>\(f:\mathbb{R}\to\mathbb{R}\), \(f(x)=\sin x\).</li>
+      <li>\(f:\mathbb{N}\to\mathbb{N}\), where \(f(n)\) is the number of positive divisors of \(n\).</li>
+      <li>\(f:\mathbb{R}\to\mathbb{R}\), \(f(x)=x^2+1\).</li>
+    </ol>
+    <button class="reveal-btn" data-ans="ontoAns">Show answers</button>
+    <div class="answer" id="ontoAns">
+      <p><strong>1. Not onto.</strong> \(1\in\mathbb{N}\) is never hit — \(n+1\ge2\) for every \(n\in\mathbb{N}\).</p>
+      <p><strong>2. Not onto.</strong> \(\sin x\in[-1,1]\) always, so nothing outside \([-1,1]\) (e.g. \(2\)) is ever reached.</p>
+      <p><strong>3. Onto.</strong> This one is easy to doubt but true: for any \(k\in\mathbb{N}\), the number \(n=p^{k-1}\) (for any prime \(p\)) has exactly \(k\) divisors, \(1,p,p^2,\dots,p^{k-1}\). So every positive integer \(k\) is hit by <em>some</em> \(n\) — the divisor-count function is onto \(\mathbb{N}\), even though it's very far from one-one.</p>
+      <p><strong>4. Not onto.</strong> \(x^2+1\ge1\) always, so no value below \(1\) is ever reached.</p>
+    </div>
+  </div>
+
+  <div class="card sage">
+    <strong>A concrete picture: the cinema theatre.</strong> Let \(A\) be the set of patrons in a theatre and \(B\) the set of seats, with the natural map \(A\to B\) sending each patron to their assigned seat. This map is onto exactly when every seat has someone in it — which is precisely the moment the manager puts up the "Housefull" board. Onto has nothing to do with whether two patrons share a seat (that's the one-one question, and hopefully never happens); it's purely about whether the codomain — every seat — gets covered.
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f8">Continue — bijections ↓</button></div>
+</section>
+
+<!-- SECTION 8: bijections -->
+<section class="block" id="f8">
+  <div class="kicker"><span class="num">08</span><span class="eyebrow">Both properties at once</span></div>
+  <h2 class="title">Bijections</h2>
+  <p class="lede">A function that is both one-one and onto is a <strong>bijection</strong>. It's the sharpest kind of function: every element of the codomain is hit, and it's hit by exactly one element of the domain — so a bijection pairs up \(X\) and \(Y\) perfectly, element for element.</p>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — one-one, onto, both, or neither?</div>
+    <svg id="bijSvg" viewBox="0 0 520 280" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="toggle-group" id="bijToggle">
+      <button class="toggle-btn active" data-pattern="injOnly">One-one, not onto</button>
+      <button class="toggle-btn" data-pattern="surjOnly">Onto, not one-one</button>
+      <button class="toggle-btn" data-pattern="bij">Bijection</button>
+      <button class="toggle-btn" data-pattern="neither">Neither</button>
+    </div>
+    <p class="caption" id="bijCaption">A bijection is the only pattern where every dot on both sides has exactly one arrow touching it.</p>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Try it</span>
+    <p class="qtext">Give three different bijections from \(\mathbb{N}\) to \(\mathbb{N}\).</p>
+    <button class="reveal-btn" data-ans="bijN">Show a few</button>
+    <div class="answer" id="bijN">
+      <p>1. The identity, \(f(n)=n\).</p>
+      <p>2. Swap consecutive pairs: \(f(n)=n+1\) if \(n\) is odd, \(f(n)=n-1\) if \(n\) is even (so \(1\leftrightarrow2\), \(3\leftrightarrow4\), \(5\leftrightarrow6,\dots\)).</p>
+      <p>3. Swap two specific elements and fix everything else: \(f(1)=2\), \(f(2)=1\), \(f(n)=n\) for all \(n\ge3\).</p>
+      <p>There are, in fact, infinitely many bijections \(\mathbb{N}\to\mathbb{N}\) — far more than there are elements of \(\mathbb{N}\) itself, though making that precise needs cardinality arguments from later in the course.</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Try it</span>
+    <p class="qtext">Give examples of maps \(\mathbb{R}\to\mathbb{R}\) that are: (a) one-one but not onto, (b) onto but not one-one, (c) neither, (d) both.</p>
+    <button class="reveal-btn" data-ans="bijR">Show examples</button>
+    <div class="answer" id="bijR">
+      <p>(a) \(f(x)=e^x\): every output is distinct (one-one), but the range is only \((0,\infty)\), missing everything \(\le0\).</p>
+      <p>(b) \(f(x)=x^3-x\): a cubic, so it's onto \(\mathbb{R}\) (odd-degree polynomials always are), but it's not one-one — e.g. \(f(-1)=f(0)=f(1)=0\).</p>
+      <p>(c) \(f(x)=x^2\): misses negative outputs (not onto) and \(f(-1)=f(1)\) (not one-one).</p>
+      <p>(d) \(f(x)=x\), or any other odd-degree polynomial with positive leading coefficient and no repeated behaviour, e.g. \(f(x)=x^3\) is both one-one (shown in Section 6) and onto (every real number has a real cube root).</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <span class="tier C">Try it</span>
+    <p class="qtext">Let \(\varphi:\mathbb{N}\to\mathbb{N}\) be defined by \(\varphi(n)=|\{m\in\mathbb{N}\mid \gcd(m,n)=1,\ 1\le m\le n\}|\). What questions would you naturally ask about \(\varphi\)?</p>
+    <button class="reveal-btn" data-ans="phiQ">Show discussion</button>
+    <div class="answer" id="phiQ">This \(\varphi\) is Euler's totient function — you'll meet it properly if you take number theory. Natural questions to ask of <em>any</em> new function, and worth asking here: Is it one-one? (No — \(\varphi(3)=\varphi(4)=\varphi(6)=2\).) Is it onto? (No — \(\varphi(n)\) is even for every \(n\ge3\), so odd values \(\ge3\) are never hit.) What is \(R(\varphi)\)? Can you compute \(\varphi(n)\) for small \(n\) by hand and look for a pattern? This is exactly the reflex — domain, range, one-one?, onto? — you now have for interrogating any function you meet for the first time.</div>
+  </div>
+
+  <div class="q">
+    <span class="tier C">Try it</span>
+    <p class="qtext">Can you find a bijection from \(\mathbb{N}\) to \(\mathbb{Z}\)?</p>
+    <button class="reveal-btn" data-ans="bijZ">Show a construction</button>
+    <div class="answer" id="bijZ">
+      Yes — zig-zag through the integers, alternating sides of \(0\):
+      \[ f(n)=\begin{cases}\dfrac{n-1}{2} & n \text{ odd} \\[4pt] -\dfrac{n}{2} & n \text{ even}\end{cases} \]
+      So \(1\mapsto0,\ 2\mapsto-1,\ 3\mapsto1,\ 4\mapsto-2,\ 5\mapsto2,\dots\) — every integer, positive, negative, or zero, appears exactly once. This innocent-looking bijection is the first hint of something surprising later in the course: \(\mathbb{N}\) and \(\mathbb{Z}\) turn out to be "the same size" as infinite sets, even though \(\mathbb{Z}\) looks twice as big.
+    </div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f9">Continue — check your understanding ↓</button></div>
+</section>
+
+<!-- SECTION 9: self-assessment -->
+<section class="block" id="f9">
+  <div class="kicker"><span class="num">09</span><span class="eyebrow">Before next lecture</span></div>
+  <h2 class="title">Self-assessment</h2>
+
+  <div class="q">
+    <span class="tier A">Part A — recall</span>
+    <p class="qtext">State the two requirements a rule must satisfy to be a function \(X\to Y\).</p>
+    <button class="reveal-btn" data-ans="sa1">Show answer</button>
+    <div class="answer" id="sa1">Every \(x\in X\) must be assigned some \(y\in Y\) (existence), and no \(x\) may be assigned more than one \(y\) (uniqueness).</div>
+  </div>
+
+  <div class="q">
+    <span class="tier A">Part A — recall</span>
+    <p class="qtext">What is the difference between the codomain and the range of \(f:X\to Y\)?</p>
+    <button class="reveal-btn" data-ans="sa2">Show answer</button>
+    <div class="answer" id="sa2">The codomain \(Y\) is the declared set of possible outputs; the range \(R(f)\subseteq Y\) is the set of outputs actually achieved. They coincide exactly when \(f\) is onto.</div>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Part B — apply</span>
+    <p class="qtext">Is \(f:\mathbb{N}\to\mathbb{N}\), \(f(n)=n+1\), one-one? Is it onto?</p>
+    <button class="reveal-btn" data-ans="sa3">Show answer</button>
+    <div class="answer" id="sa3">One-one: yes — if \(n_1+1=n_2+1\) then \(n_1=n_2\). Onto: no — \(1\) is never in the range, since \(n+1\ge2\) for all \(n\in\mathbb{N}\). This is a clean example of one-one without onto on an infinite set — something that can't happen on a finite set of the same size on both sides.</div>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Part B — apply</span>
+    
+    <p class="qtext">Are \(f,g:\mathbb{R}\to\mathbb{R}\) with \(f(x)=|x|\) and \(g(x)=\sqrt{x^2}\) equal functions?</p>
+    <button class="reveal-btn" data-ans="sa4">Show answer</button>
+    <div class="answer" id="sa4">Yes. Domains and codomains match (\(\mathbb{R}\to\mathbb{R}\)), and \(\sqrt{x^2}=|x|\) for every real \(x\) — this is in fact the standard definition of \(|x|\) in terms of the square root.</div>
+  </div>
+
+  <div class="q">
+    <span class="tier C">Part C — think</span>
+    <p class="qtext">Explain why Def 2 of "one-one" (the contrapositive form) is usually easier to work with in a direct proof than Def 1.</p>
+    <button class="reveal-btn" data-ans="sa5">Show answer</button>
+    <div class="answer" id="sa5">Def 1 asks you to start from "\(x_1\ne x_2\)," a negative statement that's awkward to compute with. Def 2 asks you to start from "\(f(x_1)=f(x_2)\)," a positive equation you can manipulate algebraically (as in the \(x^3\) proof) until you conclude \(x_1=x_2\). Working forward from an equation is almost always easier than working forward from a "not equal."</div>
+  </div>
+
+  <div class="q">
+    <span class="tier C">Part C — think</span>
+    <p class="qtext">A function \(f:X\to Y\) between two <em>finite</em> sets with \(|X|=|Y|\) is one-one if and only if it is onto. Why does this shortcut fail for infinite sets — and which example from today already proves it fails?</p>
+    <button class="reveal-btn" data-ans="sa6">Show answer</button>
+    <div class="answer" id="sa6">On a finite set, injectivity forces the images to be \(|X|\) distinct elements of \(Y\); if \(|X|=|Y|\), that already uses up every element of \(Y\), so one-one forces onto (and the symmetric argument gives the converse). On an infinite set there's room to "shift without running out" — exactly what \(f(n)=n+1\) on \(\mathbb{N}\) does in Part B above: it's one-one but misses \(1\), something no finite same-size example could ever do.</div>
+  </div>
+
+  <div class="card sage" style="margin-top:34px;">
+    <strong>Coming up in Lecture 9:</strong> we'll use exactly this vocabulary — domain, range, one-one, onto — to define what it means for a function to be <em>continuous</em>, and start building toward the formal \(\varepsilon\)-\(\delta\) definition of a limit.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Content adapted from the lecture slides "Functions-1" by A. Satyanarayana Reddy, Department of Mathematics.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.continue').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const next = document.getElementById(btn.dataset.next);
+      next.classList.add('shown');
+      next.scrollIntoView({behavior:'smooth', block:'start'});
+      updateProgress();
+      if (window.MathJax) MathJax.typesetPromise([next]);
+    });
+  });
+  document.querySelectorAll('.reveal-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const ans = document.getElementById(btn.dataset.ans);
+      ans.classList.toggle('shown');
+      btn.textContent = ans.classList.contains('shown') ? (btn.textContent.startsWith('Show')? btn.textContent.replace('Show','Hide') : btn.textContent) : btn.textContent.replace('Hide','Show');
+      if (window.MathJax) MathJax.typesetPromise([ans]);
+    });
+  });
+  function updateProgress(){
+    const total = document.querySelectorAll('.block').length;
+    const shown = document.querySelectorAll('.block.shown').length;
+    document.getElementById('progressBar').style.width = (shown/total*100)+'%';
+  }
+  updateProgress();
+
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs){
+    const e = document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function txt(x,y,s,opts){
+    const t = el('text', Object.assign({x:x,y:y,'font-size':13,'font-family':"IBM Plex Sans, sans-serif",fill:'#22242E'}, opts||{}));
+    t.textContent = s;
+    return t;
+  }
+  function arrow(svg,x1,y1,x2,y2,color){
+    svg.appendChild(el('line',{x1:x1,y1:y1,x2:x2,y2:y2, stroke:color||'#3B3E8F', 'stroke-width':1.6, 'marker-end':'url(#arrowhead)'}));
+  }
+  function addArrowMarker(svg){
+    const defs = el('defs',{});
+    const marker = el('marker',{id:'arrowhead', markerWidth:8, markerHeight:8, refX:6, refY:3, orient:'auto'});
+    const path = el('path',{d:'M0,0 L0,6 L7,3 z', fill:'#3B3E8F'});
+    marker.appendChild(path); defs.appendChild(marker); svg.appendChild(defs);
+  }
+  function dot(svg,x,y,label,color){
+    svg.appendChild(el('circle',{cx:x,cy:y,r:7,fill:color||'#22242E',stroke:'#fff','stroke-width':1.5}));
+    if(label) svg.appendChild(txt(x-24,y+4,label,{'text-anchor':'end'}));
+  }
+
+  // ---------- Definition-of-function demo ----------
+  const defSvg = document.getElementById('defSvg');
+  const defCaption = document.getElementById('defCaption');
+  const Xpts = [{x:100,y:60},{x:100,y:140},{x:100,y:220}];
+  const Ypts = [{x:400,y:60},{x:400,y:140},{x:400,y:220}];
+
+  function drawDef(pattern){
+    defSvg.innerHTML = '';
+    addArrowMarker(defSvg);
+    defSvg.appendChild(txt(100,30,'X',{'text-anchor':'middle','font-family':"'Fraunces', serif",'font-weight':600,'font-size':16}));
+    defSvg.appendChild(txt(400,30,'Y',{'text-anchor':'middle','font-family':"'Fraunces', serif",'font-weight':600,'font-size':16}));
+    Xpts.forEach((p,i)=>dot(defSvg,p.x,p.y,'x'+(i+1)));
+    Ypts.forEach((p,i)=>dot(defSvg,p.x,p.y,null,'#7C9473'));
+    Ypts.forEach((p,i)=>defSvg.appendChild(txt(p.x+16,p.y+4,'y'+(i+1))));
+
+    if(pattern==='valid'){
+      arrow(defSvg, Xpts[0].x+8,Xpts[0].y, Ypts[0].x-10,Ypts[0].y);
+      arrow(defSvg, Xpts[1].x+8,Xpts[1].y, Ypts[2].x-10,Ypts[2].y);
+      arrow(defSvg, Xpts[2].x+8,Xpts[2].y, Ypts[0].x-10,Ypts[0].y);
+      defCaption.textContent = 'This IS a function: x1 and x3 both point to y1 (allowed — Def 2 only forbids one x pointing to two y\'s), and every x has exactly one outgoing arrow.';
+    } else if(pattern==='noExist'){
+      arrow(defSvg, Xpts[0].x+8,Xpts[0].y, Ypts[0].x-10,Ypts[0].y);
+      arrow(defSvg, Xpts[2].x+8,Xpts[2].y, Ypts[2].x-10,Ypts[2].y);
+      defSvg.appendChild(el('circle',{cx:Xpts[1].x,cy:Xpts[1].y,r:12,fill:'none',stroke:'#C0483B','stroke-width':2,'stroke-dasharray':'3,3'}));
+      defCaption.textContent = 'NOT a function: x2 has no outgoing arrow at all — requirement 1 (every input used) fails.';
+    } else if(pattern==='noUnique'){
+      arrow(defSvg, Xpts[0].x+8,Xpts[0].y, Ypts[0].x-10,Ypts[0].y);
+      arrow(defSvg, Xpts[0].x+8,Xpts[0].y, Ypts[1].x-10,Ypts[1].y, '#C0483B');
+      arrow(defSvg, Xpts[2].x+8,Xpts[2].y, Ypts[2].x-10,Ypts[2].y);
+      defCaption.textContent = 'NOT a function: x1 sends out two arrows, to y1 and y2 — requirement 2 (no ambiguity) fails.';
+    }
+  }
+  document.querySelectorAll('#defToggle .toggle-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#defToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      drawDef(btn.dataset.pattern);
+      if (window.MathJax) MathJax.typesetPromise([defSvg.parentElement]);
+    });
+  });
+  drawDef('valid');
+
+  // ---------- One-one / onto / bijection gallery ----------
+  const bijSvg = document.getElementById('bijSvg');
+  const bijCaption = document.getElementById('bijCaption');
+
+  function drawBij(pattern){
+    bijSvg.innerHTML = '';
+    addArrowMarker(bijSvg);
+    let Xp, Yp, arrows, caption;
+    if(pattern==='injOnly'){
+      Xp=[{x:100,y:70},{x:100,y:140},{x:100,y:210}];
+      Yp=[{x:400,y:50},{x:400,y:120},{x:400,y:190},{x:400,y:250}];
+      arrows=[[0,0],[1,1],[2,2]];
+      caption='One-one, not onto: every x has a distinct target, but y4 (bottom-right) is never hit.';
+    } else if(pattern==='surjOnly'){
+      Xp=[{x:100,y:40},{x:100,y:100},{x:100,y:160},{x:100,y:220}];
+      Yp=[{x:400,y:80},{x:400,y:150},{x:400,y:220}];
+      arrows=[[0,0],[1,0],[2,1],[3,2]];
+      caption='Onto, not one-one: every y is hit by someone, but x1 and x2 collide on y1.';
+    } else if(pattern==='bij'){
+      Xp=[{x:100,y:70},{x:100,y:140},{x:100,y:210}];
+      Yp=[{x:400,y:70},{x:400,y:140},{x:400,y:210}];
+      arrows=[[0,0],[1,1],[2,2]];
+      caption='Bijection: a perfect pairing — every x has its own y, and every y is claimed by exactly one x.';
+    } else {
+      Xp=[{x:100,y:70},{x:100,y:140},{x:100,y:210}];
+      Yp=[{x:400,y:70},{x:400,y:140},{x:400,y:210}];
+      arrows=[[0,0],[1,0],[2,1]];
+      caption='Neither: x1 and x2 collide on y1 (not one-one), and y3 is never hit (not onto).';
+    }
+    bijSvg.appendChild(txt(100,20,'X',{'text-anchor':'middle','font-family':"'Fraunces', serif",'font-weight':600,'font-size':16}));
+    bijSvg.appendChild(txt(400,20,'Y',{'text-anchor':'middle','font-family':"'Fraunces', serif",'font-weight':600,'font-size':16}));
+    Xp.forEach((p,i)=>dot(bijSvg,p.x,p.y,'x'+(i+1)));
+    Yp.forEach((p,i)=>{ dot(bijSvg,p.x,p.y,null,'#7C9473'); bijSvg.appendChild(txt(p.x+16,p.y+4,'y'+(i+1))); });
+    arrows.forEach(([xi,yi])=>arrow(bijSvg, Xp[xi].x+8,Xp[xi].y, Yp[yi].x-10,Yp[yi].y));
+    bijCaption.textContent = caption;
+  }
+  document.querySelectorAll('#bijToggle .toggle-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#bijToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      drawBij(btn.dataset.pattern);
+    });
+  });
+  drawBij('injOnly');
+</script>
+</body>
+</html>

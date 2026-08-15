@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculus I &middot; Tutorial 1 &mdash; Diagnostic Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" id="MathJax-script" async></script>
+<style>
+:root{
+  --indigo: #372f6e;
+  --indigo-deep: #241f4d;
+  --indigo-soft: #6c62b8;
+  --amber: #c8790f;
+  --amber-soft: #f3d9a8;
+  --sage: #5f8768;
+  --sage-soft: #d9e8dc;
+  --paper: #f7f6fb;
+  --card: #ffffff;
+  --ink: #211f36;
+  --ink-soft: #5c5875;
+  --line: #e3e1ef;
+  --danger: #b3432b;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(36,31,77,0.06), 0 8px 24px -12px rgba(36,31,77,0.18);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #efeaf9 0%, transparent 60%),
+    radial-gradient(1000px 500px at 100% 0%, #fbf3e6 0%, transparent 55%),
+    var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', system-ui, sans-serif;
+  line-height:1.5;
+  padding-bottom:80px;
+}
+.wrap{max-width:760px; margin:0 auto; padding:0 20px;}
+
+/* ---------- Header ---------- */
+header.top{
+  padding:44px 20px 30px;
+  text-align:center;
+}
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--amber);
+  font-weight:600;
+  margin-bottom:10px;
+}
+h1{
+  font-family:'Fraunces', serif;
+  font-optical-sizing:auto;
+  font-weight:600;
+  font-size:clamp(28px,4.6vw,42px);
+  margin:0 0 10px;
+  color:var(--indigo-deep);
+  letter-spacing:-0.01em;
+}
+.sub{
+  color:var(--ink-soft);
+  font-size:15.5px;
+  max-width:520px;
+  margin:0 auto;
+}
+
+/* ---------- Sticky status bar ---------- */
+#statusbar{
+  position:sticky; top:0; z-index:50;
+  background:rgba(247,246,251,0.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+  padding:10px 20px;
+}
+.statusbar-inner{
+  max-width:760px; margin:0 auto;
+  display:flex; align-items:center; gap:16px; justify-content:space-between;
+}
+#progress-wrap{flex:1; display:flex; align-items:center; gap:10px;}
+#progress-track{
+  flex:1; height:7px; border-radius:99px; background:var(--line); overflow:hidden;
+}
+#progress-fill{
+  height:100%; width:0%; background:linear-gradient(90deg, var(--sage), var(--indigo-soft));
+  border-radius:99px; transition:width .3s ease;
+}
+#progress-label{
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap;
+}
+#timer{
+  font-family:'IBM Plex Mono', monospace;
+  font-weight:600; font-size:16px;
+  padding:6px 12px; border-radius:9px;
+  background:var(--sage-soft); color:var(--sage);
+  min-width:78px; text-align:center;
+  border:1px solid transparent;
+}
+#timer.warn{background:var(--amber-soft); color:#8a5309;}
+#timer.danger{background:#f6dbd2; color:var(--danger); animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+
+/* ---------- Intake card ---------- */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:26px 26px 24px;
+  margin:0 0 22px;
+}
+#intake h2{margin-top:0; font-family:'Fraunces',serif; font-weight:600; font-size:20px; color:var(--indigo-deep);}
+#intake p.hint{color:var(--ink-soft); font-size:14px; margin-top:-4px;}
+.field-row{display:flex; gap:14px; flex-wrap:wrap; margin-top:16px;}
+.field{flex:1; min-width:160px;}
+.field label{display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em;}
+.field input, .field select{
+  width:100%; padding:10px 12px; border-radius:9px; border:1.5px solid var(--line);
+  font-family:'IBM Plex Sans',sans-serif; font-size:15px; background:#fdfcff; color:var(--ink);
+}
+.field input:focus, .field select:focus{outline:none; border-color:var(--indigo-soft); box-shadow:0 0 0 3px rgba(108,98,184,0.15);}
+
+.btn{
+  appearance:none; border:none; cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:15px;
+  padding:12px 22px; border-radius:10px;
+  transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.btn:focus-visible{outline:3px solid var(--indigo-soft); outline-offset:2px;}
+.btn-primary{background:var(--indigo); color:#fff; box-shadow:0 4px 14px -4px rgba(55,47,110,0.5);}
+.btn-primary:hover{transform:translateY(-1px); background:var(--indigo-deep);}
+.btn-primary:disabled{background:#c9c6da; cursor:not-allowed; transform:none; box-shadow:none;}
+.btn-ghost{background:transparent; color:var(--indigo); border:1.5px solid var(--indigo-soft);}
+.btn-ghost:hover{background:#efecfb;}
+
+/* ---------- Quiz body ---------- */
+#quiz{display:none;}
+#quiz.active{display:block;}
+#intake.hidden{display:none;}
+
+.qcard{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px 24px 20px;
+  margin-bottom:16px;
+  scroll-margin-top:80px;
+}
+.qcard.answered{border-color:var(--sage);}
+.qmeta{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:10px; flex-wrap:wrap;}
+.qnum{
+  font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:600;
+  color:#fff; background:var(--indigo-soft); padding:3px 9px; border-radius:99px;
+}
+.qtopic{
+  font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--amber); font-weight:600;
+}
+.qtext{font-size:16.5px; margin:6px 0 4px; color:var(--ink);}
+.qhint{font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-bottom:12px;}
+.opt{
+  display:flex; align-items:flex-start; gap:10px;
+  padding:10px 12px; border-radius:9px; border:1.5px solid var(--line);
+  margin-bottom:8px; cursor:pointer; background:#fdfcff;
+  transition:border-color .12s ease, background .12s ease;
+}
+.opt:hover{border-color:var(--indigo-soft); background:#f4f2fc;}
+.opt input{margin-top:3px; accent-color:var(--indigo); width:16px; height:16px; flex-shrink:0;}
+.opt label{cursor:pointer; font-size:15px;}
+.opt.checked{border-color:var(--sage); background:var(--sage-soft);}
+
+/* ---------- Submit area ---------- */
+#submit-area{
+  text-align:center; padding:26px 0 10px;
+}
+#submit-area p{color:var(--ink-soft); font-size:14px; margin-bottom:14px;}
+
+/* ---------- Results ---------- */
+#results{display:none;}
+#results.active{display:block;}
+.score-hero{
+  text-align:center; padding:36px 26px;
+  background:linear-gradient(160deg, var(--indigo) 0%, var(--indigo-deep) 100%);
+  color:#fff; border-radius:18px; box-shadow:var(--shadow); margin-bottom:22px;
+}
+.score-hero .label{font-family:'IBM Plex Mono',monospace; letter-spacing:.12em; text-transform:uppercase; font-size:12px; opacity:.75;}
+.score-num{font-family:'Fraunces',serif; font-weight:700; font-size:64px; margin:6px 0 2px;}
+.score-num span{font-size:28px; opacity:.7; font-weight:500;}
+.score-msg{font-size:15px; opacity:.92; max-width:420px; margin:8px auto 0;}
+.topic-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;}
+@media (max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-row{
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 14px;
+  font-size:13.5px;
+}
+.topic-row b{font-family:'IBM Plex Mono',monospace; color:var(--indigo);}
+#copy-summary{margin-top:18px;}
+#copy-feedback{font-size:13px; color:var(--sage); margin-top:8px; height:16px;}
+
+footer{text-align:center; color:var(--ink-soft); font-size:12.5px; padding:30px 20px 10px;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+</style>
+</head>
+<body>
+
+<div id="statusbar">
+  <div class="statusbar-inner">
+    <div id="progress-wrap">
+      <div id="progress-track"><div id="progress-fill"></div></div>
+      <div id="progress-label">0 / 30 answered</div>
+    </div>
+    <div id="timer">30:00</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Calculus I &middot; First Tutorial</div>
+    <h1>A Warm-Up Before We Begin</h1>
+    <p class="sub">30 short questions &mdash; one per student in the room. Nothing here is meant to trip you up: work through it at a relaxed pace, trust your instincts, and flag anything confusing for your TA afterwards. Some questions have more than one correct option &mdash; select all that apply.</p>
+  </header>
+
+  <section id="intake" class="card">
+    <h2>Before you start</h2>
+    <p class="hint">This information just helps your TA match your score to your name &mdash; nothing is uploaded anywhere.</p>
+    <div class="field-row">
+      <div class="field">
+        <label for="f-name">Name</label>
+        <input id="f-name" type="text" placeholder="Your full name" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-roll">Roll number</label>
+        <input id="f-roll" type="text" placeholder="e.g. 24CH1042" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-section">Section / TA</label>
+        <select id="f-section">
+          <option value="">Select&hellip;</option>
+          <option>Section A</option>
+          <option>Section B</option>
+          <option>Section C</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row" style="margin-top:20px; align-items:center;">
+      <button class="btn btn-primary" id="start-btn">Begin quiz &middot; 30 minutes</button>
+      <span style="font-size:13px; color:var(--ink-soft);">The timer starts the moment you click this.</span>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <div id="questions"></div>
+    <div id="submit-area">
+      <p id="unanswered-note"></p>
+      <button class="btn btn-primary" id="submit-btn">Submit &amp; see my score</button>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="score-hero">
+      <div class="label">Your score</div>
+      <div class="score-num"><span id="score-val">0</span><span> / 30</span></div>
+      <div class="score-msg" id="score-msg"></div>
+    </div>
+    <div class="card">
+      <h2 style="font-family:'Fraunces',serif; margin-top:0; font-size:19px; color:var(--indigo-deep);">Breakdown by topic</h2>
+      <div class="topic-grid" id="topic-grid"></div>
+      <div style="text-align:center;">
+        <button class="btn btn-ghost" id="copy-summary">Copy summary for my TA</button>
+        <div id="copy-feedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Solutions are not shown here &mdash; ask your TA to go over anything you'd like to revisit.</footer>
+</div>
+
+<script>
+const QUESTIONS = [{"topic": "Natural numbers", "q": "We take $\\mathbb{N} = \\{1, 2, 3, 4, \\dots\\}$. Which of these is the additive identity of $\\mathbb{N}$, i.e. an element $e \\in \\mathbb{N}$ such that $a + e = a$ for every $a \\in \\mathbb{N}$?", "options": ["$e = 0$", "$e = 1$", "No such element exists in $\\mathbb{N}$", "$e$ depends on $a$"], "correct": [2], "explain": "Since $0 \\notin \\mathbb{N}$ (with this convention), there is no element of $\\mathbb{N}$ that leaves every natural number unchanged under addition. $\\mathbb{N}$ has no additive identity.", "multi": false}, {"topic": "Natural numbers", "q": "Which of the following statements about $(\\mathbb{N}, +)$ are TRUE?", "options": ["Addition is closed on $\\mathbb{N}$ (sum of two naturals is a natural)", "Addition is associative on $\\mathbb{N}$", "$(\\mathbb{N}, +)$ has an additive identity", "Every element of $\\mathbb{N}$ has an additive inverse in $\\mathbb{N}$"], "correct": [0, 1], "explain": "Closure and associativity hold. There is no additive identity (see previous question), and hence no additive inverses either \u2014 you can't have an inverse without an identity to return to.", "multi": true}, {"topic": "Integers", "q": "What is the additive inverse of $-7$ in $\\mathbb{Z}$?", "options": ["$-7$", "$7$", "$0$", "$\\frac{1}{7}$"], "correct": [1], "explain": "The additive inverse of $a$ is the element $-a$ with $a + (-a) = 0$. Here $-7 + 7 = 0$.", "multi": false}, {"topic": "Integers", "q": "Which of the following pairs are additive inverses of each other in $\\mathbb{Z}$?", "options": ["$(5, -5)$", "$(0, 0)$", "$(3, 3)$", "$(-8, 8)$"], "correct": [0, 1, 3], "explain": "A pair $(a,b)$ are additive inverses iff $a+b=0$. $5+(-5)=0$ \u2713, $0+0=0$ \u2713, $3+3=6$ \u2717, $-8+8=0$ \u2713. Note $0$ is its own additive inverse.", "multi": true}, {"topic": "Integers", "q": "Which elements of $\\mathbb{Z}$ have a multiplicative inverse that also lies in $\\mathbb{Z}$?", "options": ["$1$", "$-1$", "$2$", "$5$"], "correct": [0, 1], "explain": "We need $a \\cdot b = 1$ with $b \\in \\mathbb{Z}$. Only $1\\cdot 1=1$ and $(-1)\\cdot(-1)=1$ work. $2$'s inverse would be $\\tfrac12 \\notin \\mathbb{Z}$; $5$'s inverse would be $\\tfrac15 \\notin \\mathbb{Z}$. So $1$ and $-1$ are the only invertible elements of $\\mathbb{Z}$.", "multi": true}, {"topic": "Integers", "q": "In which of the following number systems does the equation $3x = 1$ have a solution?", "options": ["$\\mathbb{N}$", "$\\mathbb{Z}$", "$\\mathbb{Q}$", "$\\mathbb{R}$"], "correct": [2, 3], "explain": "$x = \\tfrac13$ solves $3x=1$. Since $3$ is not invertible in $\\mathbb{Z}$ (previous question), there is no solution in $\\mathbb{N}$ or $\\mathbb{Z}$, but $\\tfrac13 \\in \\mathbb{Q} \\subset \\mathbb{R}$.", "multi": true}, {"topic": "Rational numbers", "q": "Which of the following statements about $\\mathbb{Q}$ are TRUE?", "options": ["$(\\mathbb{Q}, +)$ has additive identity $0$", "Every nonzero element of $\\mathbb{Q}$ has a multiplicative inverse in $\\mathbb{Q}$", "$\\mathbb{Q}$ satisfies all the field axioms \u2014 it is a field", "Every element of $\\mathbb{Q}$, including $0$, has a multiplicative inverse in $\\mathbb{Q}$"], "correct": [0, 1, 2], "explain": "$\\mathbb{Q}$ is a field: it has additive/multiplicative identities, additive inverses for all elements, and multiplicative inverses for all NONZERO elements. $0$ itself is never invertible (there's no number $x$ with $0 \\cdot x = 1$), so the last statement is false.", "multi": true}, {"topic": "Rational numbers", "q": "Which of these numbers is $\\textbf{NOT}$ rational?", "options": ["$0.5$", "$\\sqrt{2}$", "$\\frac{22}{7}$", "$-3$"], "correct": [1], "explain": "$0.5=\\tfrac12$, $\\tfrac{22}{7}$, and $-3=\\tfrac{-3}{1}$ are all ratios of integers. $\\sqrt{2}$ cannot be written as $\\tfrac{p}{q}$ \u2014 this is the classic proof by contradiction you'll see soon.", "multi": false}, {"topic": "Irrational numbers", "q": "Select ALL statements that are TRUE.", "options": ["The sum of two irrational numbers is always irrational", "$\\sqrt{2} + (-\\sqrt{2}) = 0$, and $0$ is rational", "The product of two irrational numbers is always irrational", "$\\sqrt{2}\\times\\sqrt{2} = 2$, and $2$ is rational"], "correct": [1, 3], "explain": "Statements 1 and 3 are FALSE \u2014 they are the common misconceptions. Statements 2 and 4 are concrete counterexamples showing irrational $+$ irrational, and irrational $\\times$ irrational, can both land back in $\\mathbb{Q}$.", "multi": true}, {"topic": "Irrational numbers", "q": "Which of these is a counterexample showing that irrational numbers are $\\textbf{not closed}$ under addition?", "options": ["$\\sqrt{2} + \\sqrt{3}$", "$\\sqrt{2} + (5 - \\sqrt{2})$", "$\\pi + 1$", "$\\sqrt{2} + \\sqrt{2}$"], "correct": [1], "explain": "$\\sqrt2$ and $5-\\sqrt2$ are both irrational, but their sum is $5$, a rational number. The other options all give irrational sums, so they don't disprove closure.", "multi": false}, {"topic": "Irrational numbers", "q": "Which of these is a counterexample showing that irrational numbers are $\\textbf{not closed}$ under multiplication?", "options": ["$\\sqrt{2} \\times \\sqrt{2} = 2$", "$\\sqrt{2} \\times \\sqrt{3}$", "$\\pi \\times 2$", "$\\sqrt{2} \\times \\pi$"], "correct": [0], "explain": "$\\sqrt2$ is irrational, and $\\sqrt2 \\times \\sqrt2 = 2$ is rational \u2014 a single irrational number multiplied by itself can escape the irrationals.", "multi": false}, {"topic": "Real numbers", "q": "$\\mathbb{R}$ satisfies the field axioms. Which of the following is $\\textbf{FALSE}$?", "options": ["Addition and multiplication are commutative on $\\mathbb{R}$", "The distributive law $a(b+c) = ab+ac$ holds on $\\mathbb{R}$", "Every element of $\\mathbb{R}$ has a multiplicative inverse in $\\mathbb{R}$", "Every element of $\\mathbb{R}$ has an additive inverse in $\\mathbb{R}$"], "correct": [2], "explain": "This is the one FALSE statement (that's what the question asks for). $0$ has no multiplicative inverse \u2014 $\\mathbb{R}\\setminus\\{0\\}$ is what forms a group under multiplication, not all of $\\mathbb{R}$.", "multi": false}, {"topic": "Real numbers", "q": "(Law of Trichotomy) For any $a, b \\in \\mathbb{R}$, exactly one of the following holds. Select all three possibilities covered by trichotomy.", "options": ["$a < b$", "$a = b$", "$a > b$", "$a \\parallel b$ (a is 'incomparable' to b)"], "correct": [0, 1, 2], "explain": "Trichotomy says exactly one of $a<b,\\ a=b,\\ a>b$ holds for real numbers \u2014 there's no notion of two reals being 'incomparable'. That's what makes $\\mathbb{R}$ an ordered field.", "multi": true}, {"topic": "Real numbers", "q": "Which of the following order properties are TRUE for all real numbers $a,b,c$?", "options": ["If $a<b$\u00a0then $a+c<b+c$", "If $a<b$\u00a0then $ac<bc$ (for every $c$)", "If $a<b$ and $c>0$\u00a0then $ac<bc$", "If $a<b$ and $c<0$\u00a0then $ac>bc$"], "correct": [0, 2, 3], "explain": "Adding the same $c$ preserves order (statement 1). Multiplying by a POSITIVE $c$ preserves order (statement 3); multiplying by a NEGATIVE $c$ reverses it (statement 4). Statement 2 is false without a sign condition on $c$ \u2014 e.g. $1<2$ but with $c=0$, $0<0$ is false, and with $c=-1$, $-1<-2$ is false.", "multi": true}, {"topic": "Real numbers", "q": "Which of the following statements are TRUE?", "options": ["Between any two distinct real numbers, there is a rational number", "Between any two distinct real numbers, there is an irrational number", "There is a smallest positive real number", "$\\mathbb{R}$ is unbounded above and unbounded below"], "correct": [0, 1, 3], "explain": "Both $\\mathbb{Q}$ and $\\mathbb{R}\\setminus\\mathbb{Q}$ are 'dense' in $\\mathbb{R}$ (statements 1, 2) \u2014 you'll see why soon. There is NO smallest positive real number: for any candidate $x>0$, $x/2$ is smaller and still positive. And $\\mathbb{R}$ has no largest or smallest element at all.", "multi": true}, {"topic": "Number systems", "q": "Which of the following inclusions are TRUE?", "options": ["$\\mathbb{N} \\subset \\mathbb{Z}$", "$\\mathbb{Z} \\subset \\mathbb{Q}$", "$\\mathbb{Q} \\subset \\mathbb{R}$", "$\\mathbb{R} \\subset \\mathbb{Q}$"], "correct": [0, 1, 2], "explain": "The standard chain is $\\mathbb{N} \\subset \\mathbb{Z} \\subset \\mathbb{Q} \\subset \\mathbb{R}$. The reverse inclusion $\\mathbb{R}\\subset\\mathbb{Q}$ is false \u2014 $\\sqrt2 \\in \\mathbb{R}$ but $\\sqrt2 \\notin \\mathbb{Q}$.", "multi": true}, {"topic": "Number systems", "q": "Which of these numbers belong to $\\mathbb{Q} \\setminus \\mathbb{Z}$ (i.e. rational, but NOT an integer)?", "options": ["$\\frac{1}{2}$", "$3$", "$-\\frac{4}{5}$", "$0.333\\ldots = \\frac{1}{3}$"], "correct": [0, 2, 3], "explain": "$3$ is an integer, so it's excluded. $\\tfrac12, -\\tfrac45, \\tfrac13$ are all rational numbers that are not whole numbers.", "multi": true}, {"topic": "Number systems", "q": "Which of the following is $\\textbf{NOT}$ a subset of $\\mathbb{R}$?", "options": ["The complex numbers $\\mathbb{C}$", "$\\mathbb{N}$", "The irrational numbers", "$\\mathbb{Z}$"], "correct": [0], "explain": "It's the other way round: $\\mathbb{R} \\subset \\mathbb{C}$. A genuinely complex number like $i=\\sqrt{-1}$ is not a real number, so $\\mathbb{C} \\not\\subset \\mathbb{R}$.", "multi": false}, {"topic": "Bounds", "q": "Let $A = (0, 1) = \\{x \\in \\mathbb{R} : 0 < x < 1\\}$. Which of the following are upper bounds of $A$?", "options": ["$1$", "$2$", "$0.9$", "$5$"], "correct": [0, 1, 3], "explain": "An upper bound $u$ must satisfy $x \\le u$ for every $x \\in A$. $0.9$ fails since $0.95 \\in A$ but $0.95 > 0.9$. But $1, 2, 5$ all work (note $1$ itself is not IN $A$, but it's still a valid upper bound).", "multi": true}, {"topic": "Bounds", "q": "Does $A = (0,1)$ have a maximum element?", "options": ["Yes, $\\max A = 1$", "Yes, $\\max A = 0.999\\ldots$", "No, $A$ has no maximum", "The maximum equals the number of elements in $A$"], "correct": [2], "explain": "A maximum must itself belong to the set. $1 \\notin A$, so it can't be the max. And for ANY $x \\in A$, the number $\\tfrac{x+1}{2}$ is also in $A$ and is bigger than $x$ \u2014 so no element of $A$ can be the largest. $A$ is bounded above but has no maximum.", "multi": false}, {"topic": "Bounds", "q": "Let $B = \\{1, 2, 3, 4, 5\\}$. Which of the following are TRUE?", "options": ["$\\max B = 5$", "$5$ is an upper bound of $B$", "$10$ is an upper bound of $B$", "$\\min B = 0$"], "correct": [0, 1, 2], "explain": "$5 \\in B$ and is largest, so it's the maximum (and trivially an upper bound). Any number $\\ge 5$, like $10$, is also an upper bound. But $\\min B = 1$, not $0$ \u2014 $0 \\notin B$.", "multi": true}, {"topic": "Functions", "q": "For $f : \\mathbb{R} \\to \\mathbb{R}$ defined by $f(x) = x^2$, which of the following are TRUE?", "options": ["Domain of $f$ is $\\mathbb{R}$", "Range of $f$ is $[0, \\infty)$", "Codomain of $f$ is $\\mathbb{R}$", "Range of $f$ equals its codomain"], "correct": [0, 1, 2], "explain": "Domain and codomain are stated as part of the definition of $f$ ($\\mathbb{R}\\to\\mathbb{R}$). The range \u2014 the set of actual outputs \u2014 is only $[0,\\infty)$, since $x^2$ is never negative. So range $\\subsetneq$ codomain here; they are NOT equal.", "multi": true}, {"topic": "Functions", "q": "For $f(x) = \\dfrac{1}{x}$ regarded as a function $f : \\mathbb{R} \\to \\mathbb{R}$, what is the largest possible domain?", "options": ["$\\mathbb{R}$", "$\\mathbb{R} \\setminus \\{0\\}$", "$(0, \\infty)$", "$[0, \\infty)$"], "correct": [1], "explain": "$\\tfrac1x$ is undefined only at $x=0$ (division by zero), so the natural domain is every real number except $0$.", "multi": false}, {"topic": "Functions", "q": "For $f(x) = \\sqrt{x}$ (real square root), what is the largest possible domain as a subset of $\\mathbb{R}$?", "options": ["$\\mathbb{R}$", "$[0, \\infty)$", "$(0, \\infty)$", "$(-\\infty, 0]$"], "correct": [1], "explain": "The square root of a negative real number is not real, so we need $x \\ge 0$. Note $0$ IS included since $\\sqrt0=0$ is defined.", "multi": false}, {"topic": "Functions", "q": "For a function $f : A \\to B$, which of the following are TRUE by definition?", "options": ["Every element of $A$ must be assigned exactly one image in $B$", "Every element of $B$ must be the image of some element of $A$", "The range of $f$ is always a subset of the codomain $B$", "An element of $A$ can have two different images in $B$"], "correct": [0, 2], "explain": "A function assigns EACH element of $A$ to EXACTLY ONE element of $B$ (so statement 4 is false \u2014 that would violate the definition of a function). Statement 2 describes a SURJECTIVE function specifically, not every function. Statement 3 is always true by definition: range $\\subseteq$ codomain.", "multi": true}, {"topic": "Limits", "q": "$\\displaystyle\\lim_{x \\to 0} \\frac{\\sin x}{x} = \\ ?$", "options": ["$0$", "$1$", "Does not exist", "$\\infty$"], "correct": [1], "explain": "This is a famous standard limit (you'll prove it soon, e.g. using the squeeze theorem): $\\lim_{x\\to0}\\tfrac{\\sin x}{x}=1$, even though the expression is $\\tfrac{0}{0}$ if you just plug in $x=0$.", "multi": false}, {"topic": "Limits", "q": "$\\displaystyle\\lim_{x \\to \\infty} \\frac{1}{x} = \\ ?$", "options": ["$0$", "$1$", "$\\infty$", "Does not exist"], "correct": [0], "explain": "As $x$ grows without bound, $\\tfrac1x$ gets arbitrarily close to (but never equal to) $0$.", "multi": false}, {"topic": "Limits", "q": "Let $f(x) = x^2$. Which of the following are TRUE about $x=2$?", "options": ["$\\lim_{x\\to2} f(x)$ exists and equals $4$", "$\\lim_{x\\to2}f(x) = f(2)$", "$f$ is continuous at $x=2$", "$\\lim_{x\\to2}f(x)$ does not exist"], "correct": [0, 1, 2], "explain": "For a nice (polynomial) function like $x^2$, the limit as $x\\to2$ simply equals $f(2)=4$. When the limit at a point equals the function's value there, that is exactly the definition of continuity at that point.", "multi": true}, {"topic": "Derivatives", "q": "Which of the following functions satisfy $f'(x) = f(x)$ for all $x$?", "options": ["$f(x) = e^x$", "$f(x) = x$", "$f(x) = 2e^x$", "$f(x) = e^{2x}$"], "correct": [0, 2], "explain": "$\\tfrac{d}{dx}e^x = e^x$ \u2713. Any constant multiple works too: $\\tfrac{d}{dx}(2e^x)=2e^x$ \u2713. But $\\tfrac{d}{dx}(x)=1 \\ne x$, and $\\tfrac{d}{dx}(e^{2x}) = 2e^{2x} \\ne e^{2x}$.", "multi": true}, {"topic": "Derivatives", "q": "$\\displaystyle\\lim_{h \\to 0} \\frac{e^h - 1}{h} = \\ ?$", "options": ["$0$", "$1$", "$e$", "Does not exist"], "correct": [1], "explain": "This limit IS (by definition) the derivative of $e^x$ at $x=0$. Since $\\tfrac{d}{dx}e^x=e^x$, its value at $0$ is $e^0=1$ \u2014 the same special limit that makes $e^x$ its own derivative.", "multi": false}];
+const TOTAL = QUESTIONS.length;
+const DURATION = 30 * 60; // seconds
+
+let selected = QUESTIONS.map(() => new Set());
+let timeLeft = DURATION;
+let timerHandle = null;
+let submitted = false;
+
+const questionsEl = document.getElementById('questions');
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const timerEl = document.getElementById('timer');
+
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function buildQuestions(){
+  const frag = document.createDocumentFragment();
+  QUESTIONS.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.id = 'q-' + qi;
+
+    const meta = document.createElement('div');
+    meta.className = 'qmeta';
+    meta.innerHTML = `<span class="qnum">Question ${qi+1} of ${TOTAL}</span><span class="qtopic">${escapeHtml(q.topic)}</span>`;
+    card.appendChild(meta);
+
+    const qt = document.createElement('div');
+    qt.className = 'qtext';
+    qt.innerHTML = escapeHtml(q.q);
+    card.appendChild(qt);
+
+    const hint = document.createElement('div');
+    hint.className = 'qhint';
+    hint.textContent = q.multi ? 'Select ALL that apply.' : 'Select the one correct option.';
+    card.appendChild(hint);
+
+    q.options.forEach((optText, oi) => {
+      const row = document.createElement('div');
+      row.className = 'opt';
+      row.id = `opt-${qi}-${oi}`;
+      const inputType = q.multi ? 'checkbox' : 'radio';
+      const inputName = q.multi ? `q${qi}_${oi}` : `q${qi}`;
+      row.innerHTML = `<input type="${inputType}" id="in-${qi}-${oi}" name="${inputName}"><label for="in-${qi}-${oi}">${escapeHtml(optText)}</label>`;
+      row.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'INPUT') {
+          const input = row.querySelector('input');
+          input.checked = q.multi ? !input.checked : true;
+          input.dispatchEvent(new Event('change'));
+        }
+      });
+      const inputEl = row.querySelector('input');
+      inputEl.addEventListener('change', () => onOptionChange(qi, oi, q.multi, inputEl.checked));
+      card.appendChild(row);
+    });
+
+    frag.appendChild(card);
+  });
+  questionsEl.appendChild(frag);
+}
+
+function onOptionChange(qi, oi, multi, checked){
+  if (!multi){
+    selected[qi] = new Set(checked ? [oi] : []);
+    QUESTIONS[qi].options.forEach((_, k) => {
+      document.getElementById(`opt-${qi}-${k}`).classList.toggle('checked', k === oi && checked);
+    });
+  } else {
+    if (checked) selected[qi].add(oi); else selected[qi].delete(oi);
+    document.getElementById(`opt-${qi}-${oi}`).classList.toggle('checked', checked);
+  }
+  document.getElementById('q-' + qi).classList.toggle('answered', selected[qi].size > 0);
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = selected.filter(s => s.size > 0).length;
+  progressFill.style.width = (answered / TOTAL * 100) + '%';
+  progressLabel.textContent = `${answered} / ${TOTAL} answered`;
+}
+
+function formatTime(s){
+  const m = Math.floor(s/60), sec = s%60;
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+function startTimer(){
+  timerHandle = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = formatTime(Math.max(timeLeft,0));
+    if (timeLeft <= 300 && timeLeft > 60) timerEl.classList.add('warn');
+    if (timeLeft <= 60){ timerEl.classList.remove('warn'); timerEl.classList.add('danger'); }
+    if (timeLeft <= 0){
+      clearInterval(timerHandle);
+      if (!submitted) gradeAndShow(true);
+    }
+  }, 1000);
+}
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  document.getElementById('intake').classList.add('hidden');
+  document.getElementById('quiz').classList.add('active');
+  buildQuestions();
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+  startTimer();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+function setsEqual(a, b){
+  if (a.size !== b.size) return false;
+  for (const x of a) if (!b.has(x)) return false;
+  return true;
+}
+
+function gradeAndShow(autoSubmitted){
+  submitted = true;
+  clearInterval(timerHandle);
+
+  let score = 0;
+  const topicTally = {};
+  QUESTIONS.forEach((q, qi) => {
+    const correctSet = new Set(q.correct);
+    const isCorrect = setsEqual(selected[qi], correctSet);
+    if (isCorrect) score++;
+    if (!topicTally[q.topic]) topicTally[q.topic] = {correct:0, total:0};
+    topicTally[q.topic].total++;
+    if (isCorrect) topicTally[q.topic].correct++;
+  });
+
+  document.getElementById('quiz').classList.remove('active');
+  document.getElementById('results').classList.add('active');
+  document.getElementById('score-val').textContent = score;
+
+  const pct = score / TOTAL;
+  let msg;
+  if (pct >= 0.85) msg = "Excellent! You've clearly got a solid handle on these foundations.";
+  else if (pct >= 0.6) msg = "Good work. A quick look at the flagged topics below will round things off nicely.";
+  else if (pct >= 0.35) msg = "A fair start &mdash; these ideas take a little getting used to. Go through the topics below with your TA.";
+  else msg = "No problem at all &mdash; this is exactly why we're doing this on day one. Your TA will walk through these ideas with you.";
+  if (autoSubmitted) msg = "Time's up! " + msg;
+  document.getElementById('score-msg').innerHTML = msg;
+
+  const grid = document.getElementById('topic-grid');
+  grid.innerHTML = '';
+  Object.entries(topicTally).forEach(([topic, t]) => {
+    const row = document.createElement('div');
+    row.className = 'topic-row';
+    row.innerHTML = `<span>${topic}</span><b>${t.correct}/${t.total}</b>`;
+    grid.appendChild(row);
+  });
+
+  window.__quizName = document.getElementById('f-name').value || '(name not entered)';
+  window.__quizRoll = document.getElementById('f-roll').value || '(roll not entered)';
+  window.__quizSection = document.getElementById('f-section').value || '(section not selected)';
+  window.__quizScore = score;
+  window.__quizTopicTally = topicTally;
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('submit-btn').addEventListener('click', () => {
+  const unanswered = selected.filter(s => s.size === 0).length;
+  if (unanswered > 0){
+    document.getElementById('unanswered-note').textContent =
+      `You still have ${unanswered} unanswered question${unanswered>1?'s':''}. You can submit anyway, or scroll up to finish them.`;
+  }
+  gradeAndShow(false);
+});
+
+document.getElementById('copy-summary').addEventListener('click', () => {
+  let lines = [
+    `Calculus I -- Tutorial 1 diagnostic quiz`,
+    `Name: ${window.__quizName}`,
+    `Roll no: ${window.__quizRoll}`,
+    `Section: ${window.__quizSection}`,
+    `Score: ${window.__quizScore} / ${TOTAL}`,
+    ``,
+    `By topic:`
+  ];
+  Object.entries(window.__quizTopicTally || {}).forEach(([topic, t]) => {
+    lines.push(`  ${topic}: ${t.correct}/${t.total}`);
+  });
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copy-feedback').textContent = 'Copied! Paste it into an email or message to your TA.';
+  }).catch(() => {
+    document.getElementById('copy-feedback').textContent = text;
+  });
+});
+</script>
+</body>
+</html>

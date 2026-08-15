@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Calculus Journey: From Axioms to Applications</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 40px 30px 20px;
+            position: relative;
+        }
+
+        /* Header Styling */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #1a56a6;
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #222222;
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+
+        /* Main Flow Grid */
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        /* Arrow SVG Overlay */
+        .arrow-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Stage Cards */
+        .card {
+            border: 2px solid #000;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #fff;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 15px 10px;
+            text-align: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .card-header h2 {
+            font-size: 1.15rem;
+            line-height: 1.25;
+            font-weight: 700;
+            color: #000;
+        }
+
+        /* Card Variations */
+        .card:nth-child(1) { background-color: #eaf3fa; }
+        .card:nth-child(2) { background-color: #e2f4f6; }
+        .card:nth-child(3) { background-color: #eaf4e0; }
+        .card:nth-child(4) { background-color: #fde8db; }
+        .card:nth-child(5) { background-color: #ede7f6; }
+
+        .card:nth-child(1) .card-header { background-color: #d2e4f5; }
+        .card:nth-child(2) .card-header { background-color: #c9ebef; }
+        .card:nth-child(3) .card-header { background-color: #d6ebc4; }
+        .card:nth-child(4) .card-header { background-color: #f9d2be; }
+        .card:nth-child(5) .card-header { background-color: #dcd0f0; }
+
+        /* Card Content Area */
+        .card-body {
+            padding: 15px 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 280px;
+        }
+
+        /* Card Footer */
+        .card-footer {
+            padding: 12px 10px;
+            border-top: 2px solid #000;
+            background-color: #fff;
+            font-size: 0.82rem;
+            line-height: 1.3;
+            text-align: center;
+            color: #111;
+        }
+
+        .card-footer strong {
+            font-weight: 700;
+        }
+
+        /* Callout Box inside Card 5 */
+        .dark-callout {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            padding: 12px;
+            margin: -15px -10px -12px -10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .dark-callout::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 10px 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent #0d0d0d transparent;
+        }
+
+        .dark-callout p {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        /* SVG Micro-Graphics Styling */
+        .graphic-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Footer / Logo */
+        footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        footer svg {
+            margin-right: 4px;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 992px) {
+            .roadmap {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .arrow-overlay {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>The Calculus Journey: From Axioms to Applications</h1>
+        <p class="subtitle">Follow the 13-week roadmap of MAT1001 to transform from basic number theory to advanced mathematical modeling.</p>
+    </header>
+
+    <div class="roadmap">
+        <!-- Background Flow Arrow (Connecting Card 1 to 5) -->
+        <svg class="arrow-overlay" viewBox="0 0 1140 400" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#4a90e2" />
+                    <stop offset="100%" stop-color="#1d5bbd" />
+                </linearGradient>
+            </defs>
+            <!-- Thick Curved Arrow Path -->
+            <path d="M 180 310 
+                     C 220 310, 240 250, 420 220 
+                     C 550 200, 700 280, 880 230
+                     L 880 210
+                     L 920 240
+                     L 880 270
+                     L 880 250
+                     C 700 300, 550 220, 420 240
+                     C 240 270, 220 330, 180 330 Z" 
+                  fill="url(#blueGradient)" opacity="0.85" stroke="#103b7b" stroke-width="1.5" />
+        </svg>
+
+        <!-- Column 1 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Lay the Foundations with Real Axioms</h2>
+            </div>
+            <div class="card-body">
+                <!-- Illustration Vector 1 -->
+                <svg width="160" height="200" viewBox="0 0 160 200">
+                    <!-- Domino Thought Bubble -->
+                    <path d="M 30 55 C 20 20, 110 10, 120 40 C 140 50, 130 80, 110 80 C 90 90, 40 85, 30 55 Z" fill="#fff" stroke="#000" stroke-width="2"/>
+                    <circle cx="35" cy="85" r="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+                    <circle cx="45" cy="100" r="2.5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+                    <!-- Dominoes -->
+                    <g transform="translate(40, 25) rotate(-15)">
+                        <rect x="0" y="0" width="10" height="20" rx="1" fill="#fff" stroke="#000" stroke-width="1.5"/>
+                        <circle cx="5" cy="5" r="1" fill="#000"/>
+                        <line x1="1" y1="10" x2="9" y2="10" stroke="#000"/>
+                        <circle cx="5" cy="15" r="1" fill="#000"/>
+                    </g>
+                    <g transform="translate(52, 28) rotate(5)">
+                        <rect x="0" y="0" width="10" height="20" rx="1" fill="#fff" stroke="#000" stroke-width="1.5"/>
+                        <line x1="1" y1="10" x2="9" y2="10" stroke="#000"/>
+                    </g>
+                    <!-- Cube: Least Upper Bound -->
+                    <g transform="translate(95, 30)">
+                        <rect x="0" y="5" width="22" height="22" fill="#e6c29c" stroke="#000" stroke-width="1.5"/>
+                        <path d="M 0 5 L 6 0 L 28 0 L 22 5 Z" fill="#f4d4b1" stroke="#000" stroke-width="1.5"/>
+                        <path d="M 22 5 L 28 0 L 28 17 L 22 22 Z" fill="#cb9b6c" stroke="#000" stroke-width="1.5"/>
+                        <text x="11" y="13" font-size="5" font-weight="bold" text-anchor="middle">Least</text>
+                        <text x="11" y="18" font-size="5" font-weight="bold" text-anchor="middle">Upper</text>
+                        <text x="11" y="23" font-size="5" font-weight="bold" text-anchor="middle">Bound</text>
+                    </g>
+                    <!-- Builder Character -->
+                    <circle cx="60" cy="120" r="10" fill="#fcd7b6" stroke="#000" stroke-width="1.5"/> <!-- Head -->
+                    <path d="M 48 116 Q 60 105 72 116 Z" fill="#2b7bbb" stroke="#000" stroke-width="1.5"/> <!-- Helmet -->
+                    <rect x="47" y="115" width="26" height="3" fill="#2b7bbb" stroke="#000" stroke-width="1"/>
+                    <path d="M 52 130 L 68 130 L 65 160 L 55 160 Z" fill="#2b7bbb" stroke="#000" stroke-width="1.5"/> <!-- Body -->
+                    <!-- Real Axioms Blocks -->
+                    <g transform="translate(65, 140)">
+                        <rect x="0" y="30" width="70" height="20" fill="#bbb" stroke="#000" stroke-width="1.5"/>
+                        <rect x="10" y="12" width="50" height="18" fill="#d5d5d5" stroke="#000" stroke-width="1.5"/>
+                        <rect x="20" y="-4" width="30" height="16" fill="#eaeaea" stroke="#000" stroke-width="1.5"/>
+                        <text x="35" y="42" font-size="13" font-weight="900" text-anchor="middle" fill="#111">Real</text>
+                        <text x="35" y="26" font-size="11" font-weight="900" text-anchor="middle" fill="#111">Axioms</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="card-footer">
+                Use mathematical induction and the <strong>Least Upper Bound</strong> property to establish the rules of real numbers.
+            </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Define Continuity with Epsilon-Delta Rigor</h2>
+            </div>
+            <div class="card-body">
+                <!-- Illustration Vector 2 -->
+                <svg width="160" height="200" viewBox="0 0 160 200">
+                    <!-- Graph Curve -->
+                    <path d="M 10 170 Q 70 160 90 110 T 150 20" fill="none" stroke="#2b7bbb" stroke-width="3"/>
+                    <circle cx="45" cy="155" r="4" fill="#d97724"/>
+                    <circle cx="108" cy="65" r="4" fill="#00c853"/>
+                    
+                    <!-- Magnifying Circle (Epsilon-Delta) -->
+                    <circle cx="90" cy="110" r="18" fill="rgba(175, 238, 238, 0.5)" stroke="#2b7bbb" stroke-width="2" stroke-dasharray="3,3"/>
+                    
+                    <!-- Person holding glass -->
+                    <g transform="translate(10, 70)">
+                        <circle cx="35" cy="20" r="9" fill="#fcd7b6" stroke="#000" stroke-width="1.5"/> <!-- Head -->
+                        <path d="M 25 29 C 25 29 35 32 45 29 L 42 60 L 28 60 Z" fill="#2b7bbb" stroke="#000" stroke-width="1.5"/> <!-- Torso -->
+                        <!-- Arm holding lens -->
+                        <path d="M 40 35 L 60 30" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+                        <!-- Lens -->
+                        <circle cx="68" cy="28" r="12" fill="#e0f7fa" stroke="#000" stroke-width="2"/>
+                        <text x="68" y="32" font-size="10" font-weight="bold" text-anchor="middle">ε-δ</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="card-footer">
+                Move beyond intuition to prove limits and apply the <strong>Intermediate Value Theorem</strong>.
+            </div>
+        </div>
+
+        <!-- Column 3 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Measure Change Using Differentiation</h2>
+            </div>
+            <div class="card-body">
+                <!-- Illustration Vector 3 -->
+                <svg width="160" height="200" viewBox="0 0 160 200">
+                    <!-- Formula & Speedometer top -->
+                    <text x="50" y="25" font-size="12" font-weight="bold" font-family="serif">f(x) =</text>
+                    <g transform="translate(90, 10)">
+                        <text x="20" y="10" font-size="10" font-weight="bold" font-family="serif" text-anchor="middle">ΔN(x)</text>
+                        <line x1="0" y1="14" x2="40" y2="14" stroke="#000" stroke-width="1.5"/>
+                        <text x="20" y="25" font-size="10" font-weight="bold" font-family="serif" text-anchor="middle">Δx</text>
+                    </g>
+                    <!-- Gauge Icon -->
+                    <g transform="translate(105, 45)">
+                        <path d="M 0 20 A 20 20 0 0 1 40 20 Z" fill="#fff" stroke="#000" stroke-width="1.5"/>
+                        <path d="M 0 20 A 20 20 0 0 1 8 6" fill="#81c784"/>
+                        <path d="M 8 6 A 20 20 0 0 1 28 4" fill="#ffd54f"/>
+                        <path d="M 28 4 A 20 20 0 0 1 40 20" fill="#e57373"/>
+                        <line x1="20" y1="20" x2="32" y2="8" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                    </g>
+                    <!-- Character with Caliper -->
+                    <g transform="translate(10, 80)">
+                        <circle cx="30" cy="15" r="9" fill="#fcd7b6" stroke="#000" stroke-width="1.5"/>
+                        <path d="M 20 24 L 40 24 L 37 60 L 23 60 Z" fill="#2b7bbb" stroke="#000" stroke-width="1.5"/>
+                        <!-- Caliper Ruler Tool -->
+                        <g transform="translate(15, 10) rotate(-25)">
+                            <rect x="0" y="0" width="80" height="12" fill="#cfd8dc" stroke="#000" stroke-width="1.5"/>
+                            <rect x="15" y="-6" width="10" height="24" fill="#b0bec5" stroke="#000" stroke-width="1.5"/>
+                            <line x1="10" y1="0" x2="10" y2="4" stroke="#000"/>
+                            <line x1="20" y1="0" x2="20" y2="4" stroke="#000"/>
+                            <line x1="30" y1="0" x2="30" y2="4" stroke="#000"/>
+                            <line x1="40" y1="0" x2="40" y2="4" stroke="#000"/>
+                        </g>
+                    </g>
+                    <!-- Graphs Bottom -->
+                    <g transform="translate(75, 130)">
+                        <text x="20" y="-35" font-size="10" font-weight="bold" text-anchor="middle">Mean Value</text>
+                        <text x="20" y="-23" font-size="10" font-weight="bold" text-anchor="middle">Theorem</text>
+                        <line x1="0" y1="30" x2="60" y2="30" stroke="#000" stroke-width="1.5"/>
+                        <line x1="5" y1="35" x2="5" y2="-15" stroke="#000" stroke-width="1.5"/>
+                        <path d="M 5 25 Q 30 25 55 -5" fill="none" stroke="#00c853" stroke-width="1.5"/>
+                        <line x1="5" y1="20" x2="45" y2="-10" stroke="#d97724" stroke-width="1.5"/>
+                        <line x1="15" y1="25" x2="55" y2="-5" stroke="#2b7bbb" stroke-width="1.5"/>
+                    </g>
+                    <text x="35" y="170" font-size="11" font-weight="bold" font-family="serif">f(x, y) = </text>
+                    <g transform="translate(70, 155)">
+                        <text x="10" y="10" font-size="9" font-weight="bold" font-family="serif">dv</text>
+                        <line x1="0" y1="13" x2="22" y2="13" stroke="#000" stroke-width="1.5"/>
+                        <text x="10" y="23" font-size="9" font-weight="bold" font-family="serif">dt</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="card-footer">
+                Calculate <strong>instantaneous rates of change</strong> and use the <strong>Mean Value Theorem</strong> to analyze function behavior.
+            </div>
+        </div>
+
+        <!-- Column 4 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Quantify Accumulation Through Integration</h2>
+            </div>
+            <div class="card-body">
+                <!-- Illustration Vector 4 -->
+                <svg width="160" height="200" viewBox="0 0 160 200">
+                    <!-- Axes -->
+                    <line x1="15" y1="180" x2="155" y2="180" stroke="#000" stroke-width="1.5"/>
+                    <line x1="20" y1="185" x2="20" y2="20" stroke="#000" stroke-width="1.5"/>
+                    
+                    <!-- Riemann Sum Bars -->
+                    <rect x="25" y="90" width="18" height="90" fill="#f48fb1" stroke="#000" stroke-width="1.5"/>
+                    <rect x="43" y="60" width="18" height="120" fill="#ffcc80" stroke="#000" stroke-width="1.5"/>
+                    <rect x="61" y="75" width="18" height="105" fill="#ffe082" stroke="#000" stroke-width="1.5"/>
+                    <rect x="79" y="100" width="18" height="80" fill="#a5d6a7" stroke="#000" stroke-width="1.5"/>
+                    <rect x="97" y="120" width="18" height="60" fill="#80deea" stroke="#000" stroke-width="1.5"/>
+                    <rect x="115" y="70" width="18" height="110" fill="#9fa8da" stroke="#000" stroke-width="1.5"/>
+
+                    <!-- Integral Curve Line -->
+                    <path d="M 20 100 Q 55 30 90 110 T 150 50" fill="none" stroke="#000" stroke-width="2.5"/>
+
+                    <!-- Person placing blocks -->
+                    <g transform="translate(100, 70)">
+                        <circle cx="20" cy="12" r="8" fill="#fcd7b6" stroke="#000" stroke-width="1.5"/>
+                        <path d="M 12 20 L 28 20 L 35 50 L 25 50 Z" fill="#2b7bbb" stroke="#000" stroke-width="1.5"/>
+                        <!-- Arms reaching -->
+                        <path d="M 15 25 L -5 35" stroke="#000" stroke-width="2.5"/>
+                        <path d="M 25 25 L 5 45" stroke="#000" stroke-width="2.5"/>
+                    </g>
+
+                    <!-- Labels -->
+                    <text x="45" y="200" font-size="10" font-weight="bold" text-anchor="middle">Upper</text>
+                    <text x="45" y="212" font-size="10" font-weight="bold" text-anchor="middle">Sums</text>
+                    <text x="100" y="200" font-size="10" font-weight="bold" text-anchor="middle">Lower</text>
+                    <text x="100" y="212" font-size="10" font-weight="bold" text-anchor="middle">Sums</text>
+                </svg>
+            </div>
+            <div class="card-footer">
+                Construct upper and lower sums to rigorously evaluate the <strong>area under a curve</strong>.
+            </div>
+        </div>
+
+        <!-- Column 5 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Unify Calculus via Fundamental Theorems</h2>
+            </div>
+            <div class="card-body">
+                <!-- Illustration Vector 5 -->
+                <svg width="160" height="200" viewBox="0 0 160 200">
+                    <!-- Central Character -->
+                    <g transform="translate(55, 60)">
+                        <circle cx="25" cy="15" r="10" fill="#fcd7b6" stroke="#000" stroke-width="1.5"/>
+                        <path d="M 12 25 L 38 25 L 35 70 L 15 70 Z" fill="#2b7bbb" stroke="#000" stroke-width="1.5"/>
+                        <!-- Outstretched arms -->
+                        <path d="M 15 30 L -15 35" stroke="#000" stroke-width="2.5"/>
+                        <path d="M 35 30 L 65 35" stroke="#000" stroke-width="2.5"/>
+                    </g>
+
+                    <!-- Left Graphic: Derivatives -->
+                    <g transform="translate(5, 40)">
+                        <text x="25" y="0" font-size="9" font-weight="bold" text-anchor="middle">Derivatives</text>
+                        <rect x="0" y="5" width="50" height="35" fill="#fff" stroke="#000" stroke-width="1"/>
+                        <path d="M 5 35 Q 25 30 45 10" fill="none" stroke="#2b7bbb" stroke-width="1.5"/>
+                        <line x1="5" y1="20" x2="35" y2="10" stroke="#d97724" stroke-width="1.5"/>
+                        <text x="35" y="32" font-size="8" font-family="serif">dy/dx</text>
+                    </g>
+
+                    <!-- Right Graphic: Integrals -->
+                    <g transform="translate(105, 40)">
+                        <text x="25" y="0" font-size="9" font-weight="bold" text-anchor="middle">Integrals</text>
+                        <rect x="0" y="5" width="50" height="35" fill="#fff" stroke="#000" stroke-width="1"/>
+                        <path d="M 5 35 Q 25 15 45 20 L 45 35 Z" fill="#bbdefb"/>
+                        <path d="M 5 35 Q 25 15 45 20" fill="none" stroke="#2b7bbb" stroke-width="1.5"/>
+                        <text x="40" y="18" font-size="14" font-family="serif">∫</text>
+                    </g>
+
+                    <!-- Bottom Left: Complex Optimization -->
+                    <g transform="translate(10, 145)">
+                        <!-- Up Arrow Icon -->
+                        <path d="M 10 20 L 20 5 L 25 12 L 35 0 L 35 8 L 25 20 Z" fill="#2b7bbb"/>
+                        <text x="25" y="30" font-size="8" font-weight="bold" text-anchor="middle">Complex</text>
+                        <text x="25" y="39" font-size="8" font-weight="bold" text-anchor="middle">Optimization</text>
+                    </g>
+
+                    <!-- Bottom Right: Real-World Modeling -->
+                    <g transform="translate(105, 145)">
+                        <!-- Globe Icon -->
+                        <circle cx="25" cy="12" r="10" fill="#a5d6a7" stroke="#000" stroke-width="1"/>
+                        <path d="M 17 10 Q 25 5 33 10 Q 25 20 17 10 Z" fill="#81c784"/>
+                        <text x="25" y="30" font-size="8" font-weight="bold" text-anchor="middle">Real-World</text>
+                        <text x="25" y="39" font-size="8" font-weight="bold" text-anchor="middle">Modeling</text>
+                        <text x="25" y="47" font-size="8" font-weight="bold" text-anchor="middle">Problems</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="dark-callout">
+                <p>Mastering the logical link derivatives and integrals through rigorous proof.</p>
+            </div>
+            <div class="card-footer">
+                Link derivatives and integrals to solve complex optimization and real world modeling problems.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </svg>
+        NotebookLM
+    </footer>
+</div>
+
+</body>
+</html>

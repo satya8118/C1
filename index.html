@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculus-I (MAT1001) — Lecture Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['$','$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --indigo: #3B3E8F; --indigo-deep: #262a63; --indigo-soft: #eceafb;
+    --amber: #D9992C; --amber-soft: #fbedd2;
+    --sage: #7C9473; --sage-soft: #e8efe3;
+    --paper: #FAF8F3; --ink: #22242E; --ink-soft: #565A6E; --line: #DEDAD0; --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.6; font-size:17px; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; color:var(--indigo-deep); letter-spacing:-0.01em; margin:0; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); font-weight:500; }
+  a{ color:var(--indigo); }
+
+  header.hero{
+    padding:56px 8vw 0;
+    background: radial-gradient(circle at 85% 10%, rgba(59,62,143,0.10), transparent 55%), var(--paper);
+  }
+  .navbar{
+    display:flex; align-items:center; gap:26px; padding-bottom:28px; margin-bottom:28px;
+    border-bottom:1px solid var(--line); flex-wrap:wrap;
+  }
+  .navbar a{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; text-decoration:none; color:var(--ink-soft);
+    letter-spacing:.03em;
+  }
+  .navbar a.current{ color:var(--indigo); font-weight:600; }
+  .navbar .brand{ font-family:'Fraunces',serif; font-weight:600; color:var(--indigo-deep); font-size:16px; margin-right:auto; }
+
+  .hero-body{ padding-bottom:44px; }
+  header.hero h1{ font-size:clamp(30px, 4.2vw, 48px); margin:12px 0 8px; line-height:1.1; }
+  .code-line{ font-family:'IBM Plex Mono', monospace; font-size:15px; color:var(--ink-soft); margin-top:4px; }
+  .code-line .sep{ color:var(--line); margin:0 10px; }
+  .instructor{ margin-top:16px; font-size:16px; color:var(--ink-soft); }
+  .instructor strong{ color:var(--ink); font-weight:600; }
+
+  .stat-row{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-top:28px; }
+  .stat{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 20px;
+  }
+  .stat .label{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); }
+  .stat .value{ font-family:'Fraunces',serif; font-size:20px; color:var(--indigo-deep); font-weight:600; margin-top:6px; line-height:1.3; }
+  .stat .value.big{ font-size:26px; }
+  .stat .value small{ font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:400; color:var(--ink-soft); display:block; margin-top:2px; }
+  .progress-track{ height:6px; border-radius:4px; background:var(--indigo-soft); margin-top:10px; overflow:hidden; }
+  .progress-fill{ height:100%; background:var(--indigo); border-radius:4px; }
+
+  main{ max-width:1100px; margin:0 auto; padding:48px 8vw 100px; }
+
+  .section-label{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; text-transform:uppercase;
+    letter-spacing:0.12em; color:var(--ink-soft); margin-bottom:18px; display:flex; align-items:center; gap:12px;
+  }
+  .section-label::after{ content:''; flex:1; height:1px; background:var(--line); }
+  .section-label .count{ color:var(--amber); font-weight:600; }
+  .section-label.saq-label .count{ color:var(--sage); }
+
+  section.page-section{ margin-top:64px; }
+  section.page-section:first-of-type{ margin-top:0; }
+
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:22px; }
+
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:24px 24px 22px; display:flex; flex-direction:column; min-height:170px;
+    text-decoration:none; color:inherit;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(38,42,99,0.10); border-color:#c7c2f5; }
+  .card .num{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; font-weight:600; color:#fff;
+    background:var(--indigo); border-radius:6px; padding:3px 9px; display:inline-block; width:fit-content; margin-bottom:14px;
+  }
+  .card h3{ font-size:19px; margin-bottom:8px; line-height:1.3; }
+  .card p.desc{ color:var(--ink-soft); font-size:14.5px; flex:1; margin:0 0 14px; }
+  .card .meta{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:8px; margin-top:auto; }
+  .card .meta .dot{ width:5px; height:5px; border-radius:50%; background:var(--sage); }
+
+  /* Nuggets & SAQ cards — same card language, colored top border to distinguish */
+  .card.nugget{ border-top:3px solid var(--amber); min-height:140px; }
+  .card.nugget .num{ background:var(--amber); }
+  .card.saq-card{ border-top:3px solid var(--sage); min-height:140px; }
+  .card.saq-card .num{ background:var(--sage); }
+
+  /* Placeholder styling — used until a real title/description is filled in */
+  .card.placeholder h3{ color:var(--ink-soft); }
+  .card.placeholder .badge-edit{
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em;
+    background:var(--amber-soft); color:#8a5f13; border:1px solid #eddcae; padding:2px 7px; border-radius:5px;
+    width:fit-content; margin-bottom:10px;
+  }
+
+  .card.add-new{
+    align-items:center; justify-content:center; text-align:center;
+    border:1.5px dashed var(--line); background:transparent; min-height:170px;
+  }
+  .card.add-new .plus{ font-family:'Fraunces',serif; font-size:34px; color:var(--ink-soft); line-height:1; margin-bottom:8px; }
+  .card.add-new p{ color:var(--ink-soft); font-size:14px; margin:0; }
+
+  footer{ max-width:1100px; margin:0 auto; padding:32px 8vw 60px; color:var(--ink-soft); font-size:13.5px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <nav class="navbar">
+    <span class="brand">Calculus-I</span>
+    <a class="current" href="index.html">Home</a>
+    <a href="syllabus.html">Syllabus</a>
+    <a href="PS.html">Problem Sets</a>
+    <a href="R.html">Resources</a>
+  </nav>
+  <div class="hero-body">
+    <div class="eyebrow">Course Home</div>
+    <h1>Calculus-I</h1>
+    <div class="code-line">MAT1001<span class="sep">·</span>Lecture Notes Index</div>
+    <div class="instructor">Instructor: <strong>A. Satyanarayana Reddy</strong></div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="label">Lectures uploaded</div>
+        <div class="value big">10</div>
+        <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
+      </div>
+      <div class="stat">
+        <div class="label">WE-1</div>
+        <div class="value">21 Sept<small>7:30 – 9:00 AM · 30 marks</small></div>
+      </div>
+      <div class="stat">
+        <div class="label">WE-2</div>
+        <div class="value">20 Nov<small>7:30 – 9:00 AM · 30 marks</small></div>
+      </div>
+      <div class="stat">
+        <div class="label">Continuous Assessment</div>
+        <div class="value">40 marks<small>Assignments, Python &amp; Desmos, Viva, Problem-solving</small></div>
+      </div>
+      <div class="stat">
+        <div class="label">Classes</div>
+        <div class="value">M / W / F<small>8:00 – 9:00 AM · Room G101</small></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ LECTURE NOTES ============ -->
+  <section class="page-section">
+    <div class="section-label">Lecture Notes <span class="count">10 lectures</span></div>
+    <div class="grid" id="lectureGrid">
+
+      <!--
+        TEMPLATE — copy this block for each new lecture (L11, L12, ...),
+        then remove the "placeholder" class and the badge-edit span once
+        the real title/description are filled in.
+
+        <a class="card" href="L11.html">
+          <div class="num">11</div>
+          <h3>Lecture title goes here</h3>
+          <p class="desc">One or two sentences describing what this lecture covers.</p>
+          <div class="meta"><span class="dot"></span> Added Mon DD, YYYY</div>
+        </a>
+      -->
+
+      <a class="card placeholder" href="Lec/L1.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">01</div>
+        <h3>Lecture 1</h3>
+        <p class="desc">About the course and introduction</p>
+        <div class="meta"><span class="dot"></span> L1.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L2.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">02</div>
+        <h3>Lecture 2</h3>
+        <p class="desc">Introduction Real number system, Real number line, properties of real numbers</p>
+        <div class="meta"><span class="dot"></span> L2.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L3.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">03</div>
+        <h3>Lecture 3</h3>
+        <p class="desc">Upper bounds and bounded above sets</p>
+        <div class="meta"><span class="dot"></span> L3.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L4.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">04</div>
+        <h3>Lecture 4</h3>
+        <p class="desc">Set operations and least upper bound</p>
+        <div class="meta"><span class="dot"></span> L4.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L5.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">05</div>
+        <h3>Lecture 5</h3>
+        <p class="desc">LUB property and its applications</p>
+        <div class="meta"><span class="dot"></span> L5.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L6.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">06</div>
+        <h3>Lecture 6</h3>
+        <p class="desc">Existence and uniqueness of nth root of unity</p>
+        <div class="meta"><span class="dot"></span> L6.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L7.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">07</div>
+        <h3>Lecture 7</h3>
+        <p class="desc">Absolute value</p>
+        <div class="meta"><span class="dot"></span> L7.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L8.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">08</div>
+        <h3>Lecture 8</h3>
+        <p class="desc">Introduction to functions</p>
+        <div class="meta"><span class="dot"></span> L8.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L9.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">09</div>
+        <h3>Lecture 9</h3>
+        <p class="desc">One-one and onto functions</p>
+        <div class="meta"><span class="dot"></span> L9.html</div>
+      </a>
+
+      <a class="card placeholder" href="Lec/L10.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">10</div>
+        <h3>Lecture 10</h3>
+        <p class="desc">Composition of functions and inverse of a function</p>
+        <div class="meta"><span class="dot"></span> L10.html</div>
+      </a>
+
+      <div class="card add-new">
+        <div class="plus">+</div>
+        <p>More lectures will appear here as they're added (L11, L12, …)</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ Calculus NUGGETS (full width, below lectures) ============ -->
+  <section class="page-section">
+    <div class="section-label">Calculus Nuggets <span class="count">3 nuggets per row</span></div>
+    <div class="grid" id="nuggetsGrid">
+
+      <!--
+        TEMPLATE — copy this block for each new nugget:
+
+        <a class="card nugget" href="N-slug.html">
+          <div class="num">N</div>
+          <h3>Nugget title</h3>
+          <p class="desc">One-line description, $math$ allowed.</p>
+          <div class="meta"><span class="dot"></span> N-slug.html</div>
+        </a>
+      -->
+      <a class="card nugget" href="Images.html">
+        <div class="num">-1</div>
+        <h3>Calculus through images</h3>
+        <p class="desc">Images</p>
+        <!--<div class="meta"><span class="dot"></span> Images.html</div>-->
+      </a>
+   
+     <a class="card nugget" href="CN/Intervals.html">
+        <div class="num">0</div>
+        <h3> Intervals </h3>
+        <p class="desc">  </p>
+         </a>
+ 
+
+      <a class="card nugget" href="https://satya8118.github.io/sqrt/" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <h3>Irrational numbers from $\sqrt2$</h3>
+        <p class="desc">$\sqrt2+r$ and $r\sqrt2$: how adding or multiplying by a rational produces new irrationals, and the reciprocal of an irrational number.</p>
+        <div class="meta"><span class="dot"></span> satya8118.github.io/sqrt</div>
+      </a>
+
+      <a class="card nugget" href="CN/AP.html">
+        <div class="num">02</div>
+        <h3>Archimedean Property</h3>
+        <p class="desc">Natural numbers are not bounded above — and why that simple fact underlies so much of real analysis.</p>
+        <!--<div class="meta"><span class="dot"></span> AP.html</div>-->
+      </a>
+
+      <a class="card nugget" href="CN/Newfromold.html">
+        <div class="num">03</div>
+        <h3>New functions from old</h3>
+        <p class="desc">$f(x)+c$, $f(x+c)$, $cf(x)$, $f(x/c)$ — reading off shifts, stretches, and reflections directly from a formula.</p>
+        
+      </a>
+      <a class="card nugget" href="CN/Functions.html">
+        <div class="num">04</div>
+        <h3>Functions</h3>
+        <p class="desc">Well known functions</p>
+         </a>
+    <a class="card nugget" href="CN/Graph.html">
+        <div class="num">05</div>
+        <h3>Graph of a function </h3>
+        <p class="desc"> Defintion and examples of graphs of functions</p>
+         </a>
+<a class="card nugget" href="CN/a^x.html">
+        <div class="num">06</div>
+        <h3> Expoenential Function </h3>
+        <p class="desc"> Defintion and examples of Exponential functions $a^x$</p>
+         </a>
+<a class="card nugget" href="CN/Bernstein.html">
+        <div class="num">07</div>
+        <h3> Bernstein Polynomials  </h3>
+        <p class="desc"> Defintion, examples and applications of Bernstein Polynomials $a^x$</p>
+         </a>
+<a class="card nugget" href="CN/Thomae.html">
+        <div class="num">08</div>
+        <h3> Thomae Function  </h3>
+        <p class="desc"> Discontinous at rationals but continous at irrational numbers $a^x$</p>
+         </a>
+<a class="card nugget" href="CN/unit.html">
+        <div class="num">09</div>
+        <h3> Unit Circle  </h3>
+        <p class="desc"> Points on the unit circle sine and cosine functions</p>
+         </a>
+<a class="card nugget" href="CN/ci.html">
+        <div class="num">10</div>
+        <h3> Functions at isloted points  </h3>
+        <p class="desc"> Every function with domain as set of isolted points is continuous.</p>
+         </a>
+<a class="card nugget" href="CN/cl.html">
+        <div class="num">11</div>
+        <h3> Local Properties of continous functions  </h3>
+        <p class="desc"> Function which is continous at a point preserves boundedness and sign</p>
+         </a>
+<a class="card nugget" href="CN/cm.html">
+        <div class="num">12</div>
+        <h3> Continuous functions+ Monotone+One-one  </h3>
+        <p class="desc"> Monotone Vs one-one for continuous functions</p>
+         </a>
+<a class="card nugget" href="CN/cm.html">
+        <div class="num">12</div>
+        <h3> Continuous functions+ Monotone+One-one  </h3>
+        <p class="desc"> Monotone Vs one-one for continuous functions</p>
+         </a>
+<a class="card nugget" href="CN/GT.html">
+        <div class="num">13</div>
+        <h3> Slope and x-intercept </h3>
+        <p class="desc"> At a given point on the curve we draw the tangent, how x-intercept of that tangent related to the curve? </p>
+         </a>
+<a class="card nugget" href="CN/CT.html">
+        <div class="num">14</div>
+        <h3> Curve Tracing </h3>
+        <p class="desc"> How to trace the curve of a function? </p>
+         </a>
+<a class="card nugget" href="CN/log.html">
+        <div class="num">15</div>
+        <h3> Logarithmic function </h3>
+        <p class="desc"> Logarithmic function and its properties </p>
+         </a>
+<a class="card nugget" href="CN/log.html">
+        <div class="num">16</div>
+        <h3> Logarithmic function </h3>
+        <p class="desc"> Logarithmic function and its properties </p>
+         </a>
+
+
+      <div class="card add-new">
+        <div class="plus">+</div>
+        <p>More nuggets will appear here as they're added</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ SELF-ASSESSMENT QUIZZES (full width, below nuggets) ============ -->
+  <section class="page-section">
+    <div class="section-label saq-label">Self-Assessment Quizzes <span class="count">1 quiz</span></div>
+    <div class="grid" id="saqGrid">
+
+      <!--
+        TEMPLATE — copy this block for each new quiz:
+
+        <a class="card saq-card" href="SAQ-slug.html">
+          <div class="num">N</div>
+          <h3>Quiz title</h3>
+          <p class="desc">One-line description of what it covers.</p>
+          <div class="meta"><span class="dot"></span> SAQ-slug.html</div>
+        </a>
+      -->
+
+      <a class="card saq-card placeholder" href="SAQ/SAQ1.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">01</div>
+        <h3>SAQ 1</h3>
+        <p class="desc">Self Assesment Quiz-1</p>
+        <div class="meta"><span class="dot"></span>SAQ1.html</div>
+      </a>
+      
+      <a class="card saq-card placeholder" href="SAQ/SAQ2.html">
+        <span class="badge-edit">Edit me</span>
+        <div class="num">02</div>
+        <h3>SAQ 2</h3>
+        <p class="desc">Self Assesment Quiz-2.</p>
+        <div class="meta"><span class="dot"></span> SAQ2.html</div>
+      </a>
+
+
+      <div class="card add-new">
+        <div class="plus">+</div>
+        <p>More quizzes will appear here as they're added</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Calculus-I (MAT1001) — maintained by A. Satyanarayana Reddy. Modeled on the layout of <a href="https://satya8118.github.io/RA" target="_blank" rel="noopener">satya8118.github.io/RA</a>. This index is updated as new lecture notes are uploaded.</p>
+</footer>
+
+</body>
+</html>

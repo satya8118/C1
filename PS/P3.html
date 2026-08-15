@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functional Equations: From School to University Math</title>
+    
+    <!-- KaTeX for rendering mathematical expressions -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" 
+            onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151d30;
+            --cyan-neon: #00f3ff;
+            --yellow-neon: #ffd700;
+            --orange-neon: #ff8c00;
+            --green-neon: #39ff14;
+            --pink-neon: #ff007f;
+            --text-main: #e2e8f0;
+            --text-muted: #cbd5e1;
+            --border-dim: #2a364f;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            max-width: 900px;
+        }
+
+        header h1 {
+            color: var(--yellow-neon);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+        }
+
+        .slide {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none; /* Controlled by JS */
+        }
+
+        .slide.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-title {
+            color: var(--yellow-neon);
+            font-size: 1.4rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-dim);
+            padding-bottom: 10px;
+        }
+
+        .question-body {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-main);
+            margin: 20px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: 2px solid;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-hint {
+            color: var(--orange-neon);
+            border-color: var(--orange-neon);
+        }
+
+        .btn-hint:hover {
+            background-color: var(--orange-neon);
+            color: #000;
+            box-shadow: 0 0 12px var(--orange-neon);
+        }
+
+        .btn-solution {
+            color: var(--cyan-neon);
+            border-color: var(--cyan-neon);
+        }
+
+        .btn-solution:hover {
+            background-color: var(--cyan-neon);
+            color: #000;
+            box-shadow: 0 0 12px var(--cyan-neon);
+        }
+
+        .hint-box, .solution-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .hint-box {
+            background-color: rgba(255, 140, 0, 0.1);
+            border-left: 4px solid var(--orange-neon);
+            color: var(--text-muted);
+        }
+
+        .solution-box {
+            background-color: rgba(0, 243, 255, 0.05);
+            border-left: 4px solid var(--cyan-neon);
+            color: var(--text-main);
+        }
+
+        .solution-title {
+            color: var(--cyan-neon);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .canvas-container {
+            text-align: center;
+            margin: 20px 0;
+            background: #0f172a;
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        canvas {
+            background-color: #0b0f19;
+            border-radius: 6px;
+            max-width: 100%;
+        }
+
+        .interactive-controls {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            color: var(--yellow-neon);
+        }
+
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        .btn-nav {
+            background-color: var(--yellow-neon);
+            color: #000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px var(--yellow-neon);
+        }
+
+        .btn-nav:disabled {
+            background-color: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .slide-indicator {
+            color: var(--text-muted);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--yellow-neon);
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin: 15px 0;
+            color: var(--yellow-neon);
+        }
+
+        code {
+            color: var(--pink-neon);
+            background-color: rgba(255, 0, 127, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Functional Equations of One Variable</h1>
+        <p>Interactive Exploration for Bridge Math &amp; Early University Level</p>
+    </header>
+
+    <div class="slide-container">
+    <!-- SLIDE 0: Warm-up Substitution & Algebraic Manipulation -->
+<div class="slide active" id="slide-0">
+    <h2 class="question-title">Problem 0: Introductory Change of Variable \( f(x+1) = x^2 - 3x + 2 \)</h2>
+    <div class="question-body">
+        Given \( f(x + 1) = x^2 - 3x + 2 \), find the explicit expression for \( f(x) \).
+    </div>
+
+    <div class="button-group">
+        <button class="btn-action btn-hint" onclick="toggleVisibility('hint-0')">Show Hint</button>
+        <button class="btn-action btn-solution" onclick="toggleVisibility('sol-0')">Show Solution</button>
+    </div>
+
+    <div id="hint-0" class="hint-box">
+        <strong style="color: var(--orange-neon);">Hint:</strong><br>
+        • <strong>Method 1:</strong> Factor the quadratic expression on the right and rewrite every term directly in terms of \( (x + 1) \).<br>
+        • <strong>Method 2:</strong> Use a classic change of variable: let \( t = x + 1 \implies x = t - 1 \), then substitute into the equation.
+    </div>
+
+    <div id="sol-0" class="solution-box">
+        <div class="solution-title">Full Solution (Two Methods):</div>
+
+        <!-- METHOD 1 -->
+        <p><strong style="color: var(--cyan-neon);">Method 1: Algebraic Manipulation &amp; Factoring</strong></p>
+        <p>First, factor the given quadratic expression:</p>
+        \[ x^2 - 3x + 2 = (x - 1)(x - 2) \]
+        <p>Rewrite each linear factor so that \( (x + 1) \) explicitly appears:</p>
+        \[ (x - 1) = (x + 1) - 2 \]
+        \[ (x - 2) = (x + 1) - 3 \]
+        <p>Substitute these expressions back into the equation:</p>
+        \[ f(x + 1) = \left[(x + 1) - 2\right]\left[(x + 1) - 3\right] \]
+        <p>Replacing the input variable \( (x + 1) \) with \( x \):</p>
+        \[ f(x) = (x - 2)(x - 3) = x^2 - 5x + 6 \]
+
+        <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+        <!-- METHOD 2 -->
+        <p><strong style="color: var(--cyan-neon);">Method 2: Variable Substitution (Let \( x + 1 = t \))</strong></p>
+        <p>Let \( t = x + 1 \). Express \( x \) in terms of \( t \):</p>
+        \[ x = t - 1 \]
+        <p>Substitute \( x = t - 1 \) everywhere into \( f(x + 1) = x^2 - 3x + 2 \):</p>
+        \[ f(t) = (t - 1)^2 - 3(t - 1) + 2 \]
+        <p>Expand and simplify:</p>
+        \[ f(t) = (t^2 - 2t + 1) - (3t - 3) + 2 \]
+        \[ f(t) = t^2 - 5t + 6 \]
+        <p>Replacing the dummy variable \( t \) with \( x \):</p>
+        \[ f(x) = x^2 - 5x + 6 \]
+
+        <div class="highlight-box">
+            <strong>Conclusion:</strong> The function is <strong>\( f(x) = x^2 - 5x + 6 \)</strong>.
+        </div>
+    </div>
+</div>
+    
+
+        <!-- SLIDE 1: Cauchy Additive Equation -->
+        <div class="slide active" id="slide-1">
+            <h2 class="question-title">Problem 1: Cauchy's Additive Equation</h2>
+            <div class="question-body">
+                Find all continuous functions \( f: \mathbb{R} \to \mathbb{R} \) satisfying:
+                \[ f(x + y) = f(x) + f(y) \quad \forall x, y \in \mathbb{R} \]
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas1" width="500" height="250"></canvas>
+                <div class="interactive-controls">
+                    <label for="sliderC">Change Slope \(c\): </label>
+                    <input type="range" id="sliderC" min="-3" max="3" step="0.2" value="1.5" oninput="drawCanvas1()">
+                    <span id="valC">1.5</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-1')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-1')">Show Solution</button>
+            </div>
+
+            <div id="hint-1" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                1. Set \( x = y = 0 \) to find \( f(0) \).<br>
+                2. Show by induction that \( f(nx) = n f(x) \) for all \( n \in \mathbb{N} \).<br>
+                3. Extend this result to integers \( \mathbb{Z} \), then to rational numbers \( \mathbb{Q} \).<br>
+                4. Apply continuity to extend from \( \mathbb{Q} \) to all real numbers \( \mathbb{R} \).
+            </div>
+
+            <div id="sol-1" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <ol style="line-height: 1.8;">
+                    <li><strong>Step 1 (Base Value):</strong> Letting \( x = y = 0 \) gives \( f(0) = f(0) + f(0) \implies f(0) = 0 \).</li>
+                    <li><strong>Step 2 (Positive Integers):</strong> For \( n \in \mathbb{N} \), repeated application gives \( f(nx) = n f(x) \). Let \( f(1) = c \). Then \( f(n) = c \cdot n \).</li>
+                    <li><strong>Step 3 (Naturals &amp; Integers):</strong> \( f(x + (-x)) = f(0) = 0 \implies f(-x) = -f(x) \). Thus, \( f(q) = cq \) for all \( q \in \mathbb{Z} \).</li>
+                    <li><strong>Step 4 (Rationals):</strong> For \( q = \frac{m}{n} \in \mathbb{Q} \), notice \( n f\left(\frac{m}{n}\right) = f\left(n \cdot \frac{m}{n}\right) = f(m) = cm \implies f\left(\frac{m}{n}\right) = c \frac{m}{n} \).</li>
+                    <li><strong>Step 5 (Continuity):</strong> Every real number \( x \) is a limit of a sequence of rational numbers \( q_k \to x \). Since \( f \) is continuous:
+                    \[ f(x) = \lim_{k \to \infty} f(q_k) = \lim_{k \to \infty} c q_k = c x \]</li>
+                </ol>
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The general continuous solution is <strong>\( f(x) = cx \)</strong> for any real constant \( c \).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: Cauchy Multiplicative Equation -->
+        <div class="slide" id="slide-2">
+            <h2 class="question-title">Problem 2: Logarithmic-type Functional Equation</h2>
+            <div class="question-body">
+                Find all continuous functions \( f: (0, \infty) \to \mathbb{R} \) satisfying:
+                \[ f(xy) = f(x) + f(y) \quad \forall x, y > 0 \]
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas2" width="500" height="250"></canvas>
+                <div class="interactive-controls">
+                    <label for="sliderK">Change Base Factor \(k\): </label>
+                    <input type="range" id="sliderK" min="-2" max="2" step="0.2" value="1" oninput="drawCanvas2()">
+                    <span id="valK">1.0</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-2')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-2')">Show Solution</button>
+            </div>
+
+            <div id="hint-2" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Transform the multiplicative domain into an additive domain! Substitute \( x = e^u \) and \( y = e^v \), and define a new function \( g(u) = f(e^u) \).
+            </div>
+
+            <div id="sol-2" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <p>Let \( x = e^u \) and \( y = e^v \) for \( u, v \in \mathbb{R} \). Substituting these into the given relation:</p>
+                \[ f(e^{u+v}) = f(e^u) + f(e^v) \]
+                <p>Define \( g(u) = f(e^u) \). Then the equation becomes Cauchy's Additive Equation:</p>
+                \[ g(u + v) = g(u) + g(v) \]
+                <p>Since \( f \) is continuous, \( g \) is also continuous. From Problem 1, the continuous solution to Cauchy's equation is:</p>
+                \[ g(u) = c u \quad \text{for some constant } c \]
+                <p>Substituting back \( u = \ln x \):</p>
+                \[ f(x) = g(\ln x) = c \ln x \]
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The general continuous solution is <strong>\( f(x) = c \ln x \)</strong> (or \( k \log_b x \)).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Involutive Equation f(f(x)) = x -->
+        <div class="slide" id="slide-3">
+            <h2 class="question-title">Problem 3: Self-Inverses (Involutions)</h2>
+            <div class="question-body">
+                Find continuous functions \( f: \mathbb{R} \setminus \{0\} \to \mathbb{R} \setminus \{0\} \) that are their own inverses:
+                \[ f(f(x)) = x \quad \forall x \neq 0 \]
+                Investigate the simple rational family \( f(x) = \frac{a}{x} \).
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas3" width="500" height="250"></canvas>
+                <div class="interactive-controls">
+                    <label for="sliderA">Parameter \(a\): </label>
+                    <input type="range" id="sliderA" min="0.5" max="3" step="0.5" value="1" oninput="drawCanvas3()">
+                    <span id="valA">1.0</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-3')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-3')">Show Solution</button>
+            </div>
+
+            <div id="hint-3" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Geometrically, the condition \( f(f(x)) = x \) means that the graph \( y = f(x) \) is symmetric across the main diagonal line \( y = x \).
+            </div>
+
+            <div id="sol-3" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <p>Functions satisfying \( f(f(x)) = x \) are called <strong>involutions</strong>.</p>
+                <ul>
+                    <li>The identity function \( f(x) = x \) is a trivial solution.</li>
+                    <li>The reflection \( f(x) = -x \) is another straight-line solution.</li>
+                    <li>For rational functions of the form \( f(x) = \frac{a}{x} \):
+                    \[ f(f(x)) = f\left(\frac{a}{x}\right) = \frac{a}{a/x} = x \]
+                    This satisfies the equation for any constant \( a \neq 0 \).</li>
+                    <li>More generally, any function whose graph is symmetric about the line \( y = x \) satisfies \( f = f^{-1} \).</li>
+                </ul>
+                <div class="highlight-box">
+                    <strong>Key Insight:</strong> Geometric symmetry across \( y = x \) provides an infinite family of continuous non-linear involutions, such as \( f(x) = \frac{a}{x} \) or \( f(x) = c - x \).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Linear Reciprocal System f(x) + f(1/x) = x -->
+        <div class="slide" id="slide-4">
+            <h2 class="question-title">Problem 4: Reciprocal Substitution Technique</h2>
+            <div class="question-body">
+                Find all functions \( f: \mathbb{R} \setminus \{0\} \to \mathbb{R} \) satisfying:
+                \[ 2 f(x) + 3 f\left(\frac{1}{x}\right) = x \quad \forall x \neq 0 \]
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-4')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-4')">Show Solution</button>
+            </div>
+
+            <div id="hint-4" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Replace \( x \) with \( \frac{1}{x} \) throughout the equation to construct a second linear equation involving \( f(x) \) and \( f\left(\frac{1}{x}\right) \). Solve the system algebraically!
+            </div>
+
+            <div id="sol-4" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <p>Given the original equation:</p>
+                <p>\[ \text{(1)} \quad 2 f(x) + 3 f\left(\frac{1}{x}\right) = x \]</p>
+                <p>Substitute \( x \to \frac{1}{x} \) into (1):</p>
+                <p>\[ \text{(2)} \quad 2 f\left(\frac{1}{x}\right) + 3 f(x) = \frac{1}{x} \]</p>
+
+                <p>We now have a \( 2 \times 2 \) system of linear equations in terms of \( f(x) \) and \( f(1/x) \). Let's eliminate \( f(1/x) \):</p>
+                <ul>
+                    <li>Multiply equation (1) by 2: \( 4 f(x) + 6 f\left(\frac{1}{x}\right) = 2x \)</li>
+                    <li>Multiply equation (2) by 3: \( 9 f(x) + 6 f\left(\frac{1}{x}\right) = \frac{3}{x} \)</li>
+                </ul>
+                <p>Subtract the first result from the second:</p>
+                \[ (9 f(x) - 4 f(x)) + 0 = \frac{3}{x} - 2x \]
+                \[ 5 f(x) = \frac{3}{x} - 2x \]
+                \[ f(x) = \frac{3}{5x} - \frac{2x}{5} \]
+
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The unique solution is <strong>\( f(x) = \frac{3 - 2x^2}{5x} \)</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Function and Inverse Relation f(x) + f^-1(x) = 2x -->
+        <div class="slide" id="slide-5">
+            <h2 class="question-title">Problem 5: Interaction with the Inverse Function</h2>
+            <div class="question-body">
+                Let \( f: \mathbb{R} \to \mathbb{R} \) be a strictly increasing bijective function such that:
+                \[ f(x) + f^{-1}(x) = 2x \quad \forall x \in \mathbb{R} \]
+                Prove that \( f(x) = x + c \) for some real constant \( c \).
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-5')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-5')">Show Solution</button>
+            </div>
+
+            <div id="hint-5" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Define a sequence by composition: let \( x_0 = a \), \( x_1 = f(x_0) \), \( x_2 = f(x_1) \), and so on. Rewrite the functional equation as a second-order linear recurrence relation: \( x_{n+1} - 2x_n + x_{n-1} = 0 \).
+            </div>
+
+            <div id="sol-5" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <p>Let \( x \in \mathbb{R} \). Define a sequence \( (x_n)_{n \in \mathbb{Z}} \) such that \( x_0 = x \) and \( x_{n+1} = f(x_n) \).</p>
+                <p>Since \( x_{n+1} = f(x_n) \), applying \( f^{-1} \) yields \( x_{n-1} = f^{-1}(x_n) \).</p>
+                <p>Substitute \( x = x_n \) into the original functional equation:</p>
+                \[ f(x_n) + f^{-1}(x_n) = 2x_n \implies x_{n+1} + x_{n-1} = 2x_n \]
+                <p>This is a linear second-order difference equation:</p>
+                \[ x_{n+1} - 2x_n + x_{n-1} = 0 \]
+                <p>The characteristic equation is \( r^2 - 2r + 1 = 0 \implies (r - 1)^2 = 0 \), which has a repeated root \( r = 1 \).</p>
+                <p>The general solution to this recurrence relation is:</p>
+                \[ x_n = A + B n \]
+                <p>For \( n = 0 \): \( x_0 = A = x \).</p>
+                <p>For \( n = 1 \): \( x_1 = f(x) = A + B = x + B \).</p>
+                <p>Notice that \( B = f(x) - x \). To ensure \( B \) is independent of \( x \), let \( B = f(0) - 0 = c \).</p>
+
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The general continuous solution is <strong>\( f(x) = x + c \)</strong> for any real constant \( c \).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Exponential Cauchy Equation f(x+y) = f(x)f(y) -->
+        <div class="slide" id="slide-6">
+            <h2 class="question-title">Problem 6: Exponential-type Cauchy Equation</h2>
+            <div class="question-body">
+                Find all continuous functions \( f: \mathbb{R} \to \mathbb{R} \) satisfying:
+                \[ f(x + y) = f(x) f(y) \quad \forall x, y \in \mathbb{R} \]
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas6" width="500" height="250"></canvas>
+                <div class="interactive-controls">
+                    <label for="sliderA6">Base parameter \(a\): </label>
+                    <input type="range" id="sliderA6" min="0.2" max="3" step="0.2" value="2" oninput="drawCanvas6()">
+                    <span id="valA6">2.0</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-6')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-6')">Show Solution</button>
+            </div>
+
+            <div id="hint-6" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                1. Test \( f(x) = 0 \) for all \( x \).<br>
+                2. If \( f \) is not identically zero, show \( f(x) > 0 \) everywhere by writing \( f(x) = \left[f\left(\frac{x}{2}\right)\right]^2 \).<br>
+                3. Take the logarithm of both sides to convert it into Cauchy's Additive Equation!
+            </div>
+
+            <div id="sol-6" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <ol style="line-height: 1.8;">
+                    <li><strong>Case 1 (Trivial Solution):</strong> If \( f(x_0) = 0 \) for some \( x_0 \), then \( f(x) = f(x - x_0 + x_0) = f(x - x_0)f(x_0) = 0 \) for all \( x \). So \( f(x) \equiv 0 \) is a solution.</li>
+                    <li><strong>Case 2 (Non-zero Solutions):</strong> Assume \( f(x) \neq 0 \) anywhere. Notice that:
+                    \[ f(x) = f\left(\frac{x}{2} + \frac{x}{2}\right) = \left[ f\left(\frac{x}{2}\right) \right]^2 > 0 \]
+                    Since \( f(x) > 0 \) for all \( x \), we can safely take the natural logarithm of both sides:
+                    \[ \ln f(x + y) = \ln(f(x) f(y)) = \ln f(x) + \ln f(y) \]</li>
+                    <li><strong>Reduction to Additive Cauchy:</strong> Define \( g(x) = \ln f(x) \). Then \( g(x+y) = g(x) + g(y) \). Since \( f \) is continuous, \( g \) is continuous. Thus, \( g(x) = cx \) for some real constant \( c \).</li>
+                    <li><strong>Exponentiate Back:</strong> 
+                    \[ \ln f(x) = cx \implies f(x) = e^{cx} = (e^c)^x = a^x \quad \text{where } a = e^c > 0 \]</li>
+                </ol>
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The continuous solutions are <strong>\( f(x) \equiv 0 \)</strong> and <strong>\( f(x) = a^x \)</strong> for any constant \( a > 0 \).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: d'Alembert's Functional Equation -->
+        <div class="slide" id="slide-7">
+            <h2 class="question-title">Problem 7: d'Alembert's (Cosine) Functional Equation</h2>
+            <div class="question-body">
+                Find all continuous non-zero functions \( f: \mathbb{R} \to \mathbb{R} \) satisfying \( f(0) = 1 \) and:
+                \[ f(x + y) + f(x - y) = 2 f(x) f(y) \quad \forall x, y \in \mathbb{R} \]
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas7" width="500" height="250"></canvas>
+                <div class="interactive-controls">
+                    <label for="sliderW7">Frequency parameter \(\omega\): </label>
+                    <input type="range" id="sliderW7" min="0.5" max="4" step="0.5" value="2" oninput="drawCanvas7()">
+                    <span id="valW7">2.0</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-7')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-7')">Show Solution</button>
+            </div>
+
+            <div id="hint-7" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Recall the trigonometric identity for the sum of cosines: \( \cos(x+y) + \cos(x-y) = 2 \cos x \cos y \). Also recall the hyperbolic cosine identity: \( \cosh(x+y) + \cosh(x-y) = 2 \cosh x \cosh y \).
+            </div>
+
+            <div id="sol-7" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <p>This fundamental relation in wave mechanics is known as <strong>d'Alembert's functional equation</strong>.</p>
+                <ul>
+                    <li><strong>Symmetry:</strong> Setting \( x = 0 \) gives \( f(y) + f(-y) = 2 f(0) f(y) = 2 f(y) \implies f(-y) = f(y) \). Thus, \( f \) is an <strong>even function</strong>.</li>
+                    <li><strong>Bounded Case (\(|f(x)| \le 1\)):</strong> The trigonometric identity:
+                    \[ \cos(\omega(x+y)) + \cos(\omega(x-y)) = 2 \cos(\omega x) \cos(\omega y) \]
+                    shows that \( f(x) = \cos(\omega x) \) is a continuous solution for any real parameter \( \omega \).</li>
+                    <li><strong>Unbounded Case (\(|f(x)| \ge 1\)):</strong> The hyperbolic identity:
+                    \[ \cosh(kx+ky) + \cosh(kx-ky) = 2 \cosh(kx) \cosh(ky) \]
+                    shows that \( f(x) = \cosh(kx) \) is also a valid continuous solution.</li>
+                </ul>
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The non-zero continuous solutions are <strong>\( f(x) = \cos(\omega x) \)</strong> and <strong>\( f(x) = \cosh(kx) \)</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Linear Fraction Substitution f(x) + f((x-1)/x) = x -->
+        <div class="slide" id="slide-8">
+            <h2 class="question-title">Problem 8: Cyclic Group Substitution (Order 3)</h2>
+            <div class="question-body">
+                Find all functions \( f: \mathbb{R} \setminus \{0, 1\} \to \mathbb{R} \) satisfying:
+                \[ f(x) + f\left(\frac{x - 1}{x}\right) = 1 + x \quad \forall x \neq 0, 1 \]
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-8')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-8')">Show Solution</button>
+            </div>
+
+            <div id="hint-8" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Define the transformation \( T(x) = \frac{x - 1}{x} = 1 - \frac{1}{x} \). Compute \( T(T(x)) \) and \( T(T(T(x))) \) to reveal a cyclic loop of length 3!
+            </div>
+
+            <div id="sol-8" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <p>Let \( T(x) = \frac{x - 1}{x} \). Notice how repeating this substitution cycles back:</p>
+                <ol style="line-height: 1.8;">
+                    <li>\( T(x) = \frac{x - 1}{x} \)</li>
+                    <li>\( T(T(x)) = \frac{\frac{x-1}{x} - 1}{\frac{x-1}{x}} = \frac{-1/x}{(x-1)/x} = \frac{1}{1 - x} \)</li>
+                    <li>\( T(T(T(x))) = \frac{\frac{1}{1-x} - 1}{\frac{1}{1-x}} = \frac{x/(1-x)}{1/(1-x)} = x \)</li>
+                </ol>
+                <p>Because \( T(T(T(x))) = x \), iterating three times produces a system of 3 linear equations:</p>
+                <ul style="line-height: 1.8;">
+                    <li><strong>Eq 1:</strong> \( f(x) + f\left(\frac{x-1}{x}\right) = 1 + x \)</li>
+                    <li><strong>Eq 2 (sub \( x \to \frac{x-1}{x} \)):</strong> \( f\left(\frac{x-1}{x}\right) + f\left(\frac{1}{1-x}\right) = 1 + \frac{x-1}{x} = 2 - \frac{1}{x} \)</li>
+                    <li><strong>Eq 3 (sub \( x \to \frac{1}{1-x} \)):</strong> \( f\left(\frac{1}{1-x}\right) + f(x) = 1 + \frac{1}{1-x} = \frac{2-x}{1-x} \)</li>
+                </ul>
+                <p>To isolate \( f(x) \), add Eq 1 and Eq 3, then subtract Eq 2:</p>
+                \[ 2 f(x) = (1 + x) + \left(\frac{2-x}{1-x}\right) - \left(2 - \frac{1}{x}\right) \]
+                \[ f(x) = \frac{x^3 - x^2 - 1}{2x(x - 1)} \]
+
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The unique solution is <strong>\( f(x) = \frac{x^3 - x^2 - 1}{2x(x - 1)} \)</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Jensen's Functional Equation -->
+        <div class="slide" id="slide-9">
+            <h2 class="question-title">Problem 9: Jensen's Midpoint Equation</h2>
+            <div class="question-body">
+                Find all continuous functions \( f: \mathbb{R} \to \mathbb{R} \) satisfying:
+                \[ f\left(\frac{x + y}{2}\right) = \frac{f(x) + f(y)}{2} \quad \forall x, y \in \mathbb{R} \]
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas9" width="500" height="250"></canvas>
+                <div class="interactive-controls">
+                    <label for="sliderM9">Slope \(m\): </label>
+                    <input type="range" id="sliderM9" min="-2" max="2" step="0.5" value="1" oninput="drawCanvas9()">
+                    <span id="valM9">1.0</span>
+                    <label for="sliderB9">Intercept \(b\): </label>
+                    <input type="range" id="sliderB9" min="-2" max="2" step="0.5" value="0.5" oninput="drawCanvas9()">
+                    <span id="valB9">0.5</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-9')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-9')">Show Solution</button>
+            </div>
+
+            <div id="hint-9" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Define a shifted function \( g(x) = f(x) - f(0) \). Show that \( g(x) \) satisfies Cauchy's Additive Equation \( g(x+y) = g(x) + g(y) \).
+            </div>
+
+            <div id="sol-9" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <ol style="line-height: 1.8;">
+                    <li>Set \( y = 0 \):
+                    \[ f\left(\frac{x}{2}\right) = \frac{f(x) + f(0)}{2} \implies f(x) = 2 f\left(\frac{x}{2}\right) - f(0) \]</li>
+                    <li>Substitute this expression for \( f\left(\frac{x+y}{2}\right) \) into Jensen's equation:
+                    \[ \frac{f(x+y) + f(0)}{2} = \frac{f(x) + f(y)}{2} \implies f(x+y) + f(0) = f(x) + f(y) \]</li>
+                    <li>Define \( g(x) = f(x) - f(0) \). Then \( g(0) = 0 \), and subtracting \( 2f(0) \) from both sides gives:
+                    \[ g(x+y) = g(x) + g(y) \]</li>
+                    <li>Since \( f \) is continuous, \( g \) is continuous. From Cauchy's Additive Equation (Problem 1), \( g(x) = mx \) for some constant \( m \).</li>
+                    <li>Therefore:
+                    \[ f(x) = g(x) + f(0) = mx + b \quad \text{where } b = f(0) \]</li>
+                </ol>
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The continuous solutions to Jensen's equation are all <strong>linear functions \( f(x) = mx + b \)</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: Polynomial Functional Equation f(x)f(1/x) = f(x) + f(1/x) -->
+        <div class="slide" id="slide-10">
+            <h2 class="question-title">Problem 10: Polynomial Product-Sum Relation</h2>
+            <div class="question-body">
+                Find all polynomials \( P(x) \) satisfying:
+                \[ P(x) P\left(\frac{1}{x}\right) = P(x) + P\left(\frac{1}{x}\right) \quad \forall x \neq 0 \]
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-10')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-10')">Show Solution</button>
+            </div>
+
+            <div id="hint-10" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Rearrange the equation into \( \left[ P(x) - 1 \right] \left[ P\left(\frac{1}{x}\right) - 1 \right] = 1 \). Let \( Q(x) = P(x) - 1 \) and compare degrees of terms!
+            </div>
+
+            <div id="sol-10" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <p>Rearranging the given equation:</p>
+                \[ P(x) P\left(\frac{1}{x}\right) - P(x) - P\left(\frac{1}{x}\right) + 1 = 1 \]
+                \[ \left[ P(x) - 1 \right] \left[ P\left(\frac{1}{x}\right) - 1 \right] = 1 \]
+                <p>Define \( Q(x) = P(x) - 1 \). Then \( Q(x) Q\left(\frac{1}{x}\right) = 1 \).</p>
+                <p>Let \( Q(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_0 \). Then:</p>
+                \[ \left( a_n x^n + \dots + a_0 \right) \left( a_n x^{-n} + \dots + a_0 \right) = 1 \]
+                <p>Multiplying out the highest and lowest powers forces all intermediate coefficients to vanish: \( a_{n-1} = a_{n-2} = \dots = a_1 = 0 \), and \( a_0 = 0 \). Thus \( Q(x) = \pm x^n \).</p>
+                <p>Substituting back \( P(x) = Q(x) + 1 \):</p>
+                \[ P(x) = 1 \pm x^n \quad \text{for } n \in \mathbb{N}_0 \]
+
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The polynomial solutions are <strong>\( P(x) = 1 + x^n \)</strong> and <strong>\( P(x) = 1 - x^n \)</strong> (including the constant polynomial \( P(x) \equiv 2 \)).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Nonlinear Differential-Functional Equation f'(x)f''(x) = f(2x) -->
+        <div class="slide" id="slide-11">
+            <h2 class="question-title">Problem 11: Product of Derivatives Equals Scaling \( f'(x)f''(x) = f(2x) \)</h2>
+            <div class="question-body">
+                Consider the nonlinear differential-functional equation:
+                \[ f'(x) f''(x) = f(2x) \]
+                Analyze the potential solutions under different functional classes:
+                <ol type="1" style="line-height: 1.8;">
+                    <li><strong>Polynomial Class:</strong> Show first that the degree of any non-zero polynomial solution must be 3. Then, assuming \( f(x) = ax^3 + bx^2 + cx + d \), show that \( a = 4/9 \) and \( b = c = d = 0 \).</li>
+                    <li><strong>Exponential Class:</strong> If \( f(x) = A e^{kx} \), does a non-trivial solution exist?</li>
+                    <li><strong>Trigonometric Class:</strong> If \( f(x) = A \sin(kx) \) or \( A \cos(kx) \), does a solution exist?</li>
+                    <li><strong>Power Series Class:</strong> Analyze \( f(x) = \sum_{n=0}^\infty a_n x^n \).</li>
+                </ol>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-11')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-11')">Show Solution</button>
+            </div>
+
+            <div id="hint-11" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                • <strong>Degree Proof:</strong> Equate leading powers: if \(\deg(f) = n\), the leading term of \(f'(x)f''(x)\) has power \((n-1)+(n-2) = 2n-3\), while \(f(2x)\) has power \(n\).<br>
+                • <strong>Coefficient Matching:</strong> For \(f(x) = ax^3 + bx^2 + cx + d\), compute \(f'(x)\) and \(f''(x)\), expand the product, and equate coefficients with \(f(2x) = 8ax^3 + 4bx^2 + 2cx + d\) term-by-term starting from constant/linear terms up to \(x^3\).
+            </div>
+
+            <div id="sol-11" class="solution-box">
+                <div class="solution-title">Full Analysis by Functional Class:</div>
+
+                <!-- 1. Polynomials -->
+                <p><strong style="color: var(--cyan-neon);">1) Polynomial Class Analysis</strong></p>
+                
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    <strong>Step A: Prove degree must be 3.</strong><br>
+                    Let \( f(x) = A_n x^n + A_{n-1}x^{n-1} + \dots + A_0 \) with leading coefficient \( A_n \neq 0 \) and degree \( n \ge 2 \).<br>
+                    • The leading term of \( f'(x) \) is \( n A_n x^{n-1} \).<br>
+                    • The leading term of \( f''(x) \) is \( n(n-1) A_n x^{n-2} \).<br>
+                    • The leading term of \( f'(x) f''(x) \) is \( n^2 (n-1) A_n^2 x^{2n-3} \).<br>
+                    • The leading term of \( f(2x) \) is \( A_n (2x)^n = 2^n A_n x^n \).
+                </p>
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    Equating leading powers gives:
+                </p>
+                \[ 2n - 3 = n \implies n = 3 \]
+
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    <strong>Step B: Solve for coefficients of \( f(x) = ax^3 + bx^2 + cx + d \).</strong><br>
+                    Compute derivatives and expansions:
+                </p>
+                <ul style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+                    <li>\( f'(x) = 3ax^2 + 2bx + c \)</li>
+                    <li>\( f''(x) = 6ax + 2b \)</li>
+                    <li>\( f(2x) = 8ax^3 + 4bx^2 + 2cx + d \)</li>
+                </ul>
+
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    Multiply \( f'(x) f''(x) \):
+                </p>
+                <div style="overflow-x: auto; padding: 2px 0;">
+                    \[
+                    \begin{aligned}
+                    f'(x) f''(x) &amp;= (3ax^2 + 2bx + c)(6ax + 2b) \\
+                    &amp;= 18a^2 x^3 + (6ab + 12ab)x^2 + (4b^2 + 6ac)x + 2bc \\
+                    &amp;= 18a^2 x^3 + 18ab x^2 + (4b^2 + 6ac)x + 2bc
+                    \end{aligned}
+                    \]
+                </div>
+
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    Equating coefficients of \( f'(x)f''(x) \) and \( f(2x) \):
+                </p>
+                <ol style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.8;">
+                    <li><strong>\( x^3 \)-term:</strong> \( 18a^2 = 8a \implies a = \frac{8}{18} = \frac{4}{9} \) (since \( a \neq 0 \)).</li>
+                    <li><strong>\( x^2 \)-term:</strong> \( 18ab = 4b \implies \left(18 \cdot \frac{4}{9}\right) b = 4b \implies 8b = 4b \implies 4b = 0 \implies b = 0 \).</li>
+                    <li><strong>Constant term:</strong> Comparing constants gives \( 2bc = d \). Since \( b = 0 \), we get \( d = 0 \).</li>
+                    <li><strong>\( x \)-term:</strong> \( 4b^2 + 6ac = 2c \implies 0 + 6\left(\frac{4}{9}\right)c = 2c \implies \frac{8}{3}c = 2c \implies \frac{2}{3}c = 0 \implies c = 0 \).</li>
+                </ol>
+
+                <div class="highlight-box" style="margin: 8px 0;">
+                    Polynomial Solution: <strong>\( a = \frac{4}{9} \) and \( b = c = d = 0 \implies f(x) = \frac{4}{9}x^3 \)</strong> (or trivial \( f(x) \equiv 0 \)).
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+                <!-- 2. Exponentials -->
+                <p><strong style="color: var(--cyan-neon);">2) Exponential Class</strong></p>
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    Test \( f(x) = A e^{kx} \) for constants \( A \neq 0, k \neq 0 \):
+                </p>
+                <ul style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+                    <li>\( f'(x) = A k e^{kx} \), \quad \( f''(x) = A k^2 e^{kx} \)</li>
+                    <li>\( f'(x) f''(x) = A^2 k^3 e^{2kx} \)</li>
+                    <li>\( f(2x) = A e^{2kx} \)</li>
+                </ul>
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    Equating both sides gives \( A^2 k^3 e^{2kx} = A e^{2kx} \implies A k^3 = 1 \implies A = \frac{1}{k^3} \).
+                </p>
+                <div class="highlight-box" style="margin: 8px 0;">
+                    Exponential Solution: <strong>\( f(x) = \frac{1}{k^3} e^{kx} \)</strong> for any real constant \( k \neq 0 \) (e.g., \( e^x \), \( \frac{1}{8}e^{2x} \)).
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+                <!-- 3. Trigonometrics -->
+                <p><strong style="color: var(--cyan-neon);">3) Trigonometric Class</strong></p>
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    Test \( f(x) = A \sin(kx) \):
+                </p>
+                <ul style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+                    <li>\( f'(x) = A k \cos(kx) \), \quad \( f''(x) = -A k^2 \sin(kx) \)</li>
+                    <li>\( f'(x) f''(x) = -A^2 k^3 \sin(kx) \cos(kx) = -\frac{1}{2} A^2 k^3 \sin(2kx) \)</li>
+                    <li>\( f(2x) = A \sin(2kx) \)</li>
+                </ul>
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    Equating both sides: \( -\frac{1}{2} A^2 k^3 \sin(2kx) = A \sin(2kx) \implies A k^3 = -2 \implies A = -\frac{2}{k^3} \).
+                </p>
+                <div class="highlight-box" style="margin: 8px 0;">
+                    Trigonometric Solution: <strong>\( f(x) = -\frac{2}{k^3} \sin(kx) \)</strong> for any \( k \neq 0 \) (e.g., \( -2\sin x \)).
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--border-dim); margin: 15px 0;">
+
+                <!-- 4. Power Series -->
+                <p><strong style="color: var(--cyan-neon);">4) Power Series Class</strong></p>
+                <p style="font-size: 0.95rem; color: #cbd5e1;">
+                    Let \( f(x) = \sum_{n=m}^\infty a_n x^n \) where \( m \) is the lowest non-zero power (\( a_m \neq 0 \)).
+                    Equating lowest powers gives \( 2m - 3 = m \implies m = 3 \).
+                </p>
+                <div class="highlight-box">
+                    <strong>Summary of Solutions to \( f'(x)f''(x) = f(2x) \):</strong><br>
+                    • Polynomial: <strong>\( f(x) = \frac{4}{9}x^3 \)</strong><br>
+                    • Exponential: <strong>\( f(x) = \frac{1}{k^3} e^{kx} \)</strong><br>
+                    • Trigonometric: <strong>\( f(x) = -\frac{2}{k^3} \sin(kx) \)</strong><br>
+                    • Power Series: <strong>\( f(x) = \frac{4}{9}x^3 + \sum_{n=4}^\infty a_n x^n \)</strong> \(\blacksquare\)
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Involutive Rational Argument Substitution -->
+        <div class="slide" id="slide-12">
+            <h2 class="question-title">Problem 12: Involutive Fraction Transformation</h2>
+            <div class="question-body">
+                Find all functions \( f: \mathbb{R} \setminus \{1\} \to \mathbb{R} \) satisfying:
+                \[ f\left(\frac{x}{x - 1}\right) = 2 f(x) + x^2 \quad \forall x \neq 1 \]
+            </div>
+
+            <div class="button-group">
+                <button class="btn-action btn-hint" onclick="toggleVisibility('hint-12')">Show Hint</button>
+                <button class="btn-action btn-solution" onclick="toggleVisibility('sol-12')">Show Solution</button>
+            </div>
+
+            <div id="hint-12" class="hint-box">
+                <strong style="color: var(--orange-neon);">Hint:</strong><br>
+                Define the substitution transformation \( T(x) = \frac{x}{x - 1} \). Compute \( T(T(x)) \) to show that this transformation is an <strong>involution</strong> (its own inverse). Substitute \( u = \frac{x}{x-1} \) back into the functional equation to generate a second linear relation!
+            </div>
+
+            <div id="sol-12" class="solution-box">
+                <div class="solution-title">Full Solution:</div>
+                <p>Let \( T(x) = \frac{x}{x - 1} \). Check the iteration of \( T \):</p>
+                \[ T(T(x)) = \frac{\frac{x}{x-1}}{\frac{x}{x-1} - 1} = \frac{\frac{x}{x-1}}{\frac{x - (x - 1)}{x-1}} = \frac{x}{1} = x \]
+                <p>Since \( T(T(x)) = x \), substituting \( x \to \frac{x}{x-1} \) toggles the arguments back and forth, giving an order-2 linear system:</p>
+
+                <p style="margin-top: 15px;"><strong>Equation (1):</strong> Original equation</p>
+                \[ \text{(1)} \quad f\left(\frac{x}{x - 1}\right) - 2 f(x) = x^2 \]
+
+                <p style="margin-top: 15px;"><strong>Equation (2):</strong> Substitute \( x \to \frac{x}{x - 1} \) into (1):</p>
+                \[ f(x) - 2 f\left(\frac{x}{x - 1}\right) = \left(\frac{x}{x - 1}\right)^2 \]
+
+                <p style="margin-top: 15px;">We now eliminate \( f\left(\frac{x}{x-1}\right) \) from the system:</p>
+                <ul>
+                    <li>Multiply Equation (1) by 2:
+                    \[ 2 f\left(\frac{x}{x - 1}\right) - 4 f(x) = 2x^2 \]</li>
+                    <li>Add Equation (2) to this result:
+                    \[ \left[ 2 f\left(\frac{x}{x - 1}\right) - 4 f(x) \right] + \left[ f(x) - 2 f\left(\frac{x}{x - 1}\right) \right] = 2x^2 + \frac{x^2}{(x - 1)^2} \]</li>
+                    <li>Simplify the left-hand side:
+                    \[ -3 f(x) = 2x^2 + \frac{x^2}{(x - 1)^2} \]</li>
+                </ul>
+
+                <p style="margin-top: 15px;">Divide both sides by \(-3\):</p>
+                \[ f(x) = -\frac{2}{3}x^2 - \frac{x^2}{3(x - 1)^2} \]
+                <p>Combine into a single common rational fraction:</p>
+                \[ f(x) = -\frac{x^2 \left(2(x - 1)^2 + 1\right)}{3(x - 1)^2} = -\frac{x^2 (2x^2 - 4x + 3)}{3(x - 1)^2} \]
+
+                <div class="highlight-box">
+                    <strong>Conclusion:</strong> The unique solution is <strong>\( f(x) = -\frac{2x^4 - 4x^3 + 3x^2}{3(x - 1)^2} \)</strong>.
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- SLIDE 13: Difference of Cubes Functional Relation -->
+<div class="slide" id="slide-13">
+    <h2 class="question-title">Problem 13: Algebraic Identity Substitution \( f\left(x - \frac{1}{x}\right) = x^3 - \frac{1}{x^3} \)</h2>
+    <div class="question-body">
+        Find all functions \( f: \mathbb{R} \to \mathbb{R} \) satisfying:
+        \[ f\left(x - \frac{1}{x}\right) = x^3 - \frac{1}{x^3} \quad \forall x \neq 0 \]
+    </div>
+
+    <div class="button-group">
+        <button class="btn-action btn-hint" onclick="toggleVisibility('hint-13')">Show Hint</button>
+        <button class="btn-action btn-solution" onclick="toggleVisibility('sol-13')">Show Solution</button>
+    </div>
+
+    <div id="hint-13" class="hint-box">
+        <strong style="color: var(--orange-neon);">Hint:</strong><br>
+        Let \( t = x - \frac{1}{x} \). Express the right-hand side \( x^3 - \frac{1}{x^3} \) in terms of \( t \) by expanding \( t^3 = \left(x - \frac{1}{x}\right)^3 \).
+    </div>
+
+    <div id="sol-13" class="solution-box">
+        <div class="solution-title">Full Solution:</div>
+        <p>Let \( t = x - \frac{1}{x} \). We cube both sides of this substitution:</p>
+        \[ t^3 = \left(x - \frac{1}{x}\right)^3 = x^3 - 3x^2\left(\frac{1}{x}\right) + 3x\left(\frac{1}{x^2}\right) - \frac{1}{x^3} \]
+        <p>Group the terms to highlight \( \left(x - \frac{1}{x}\right) \):</p>
+        \[ t^3 = x^3 - \frac{1}{x^3} - 3\left(x - \frac{1}{x}\right) \]
+        <p>Substitute \( t = x - \frac{1}{x} \) back into the identity:</p>
+        \[ t^3 = x^3 - \frac{1}{x^3} - 3t \]
+        <p>Rearranging to solve for \( x^3 - \frac{1}{x^3} \):</p>
+        \[ x^3 - \frac{1}{x^3} = t^3 + 3t \]
+        <p>Since \( f\left(x - \frac{1}{x}\right) = x^3 - \frac{1}{x^3} \), substituting \( t \) gives:</p>
+        \[ f(t) = t^3 + 3t \]
+        <p>Since the range of \( t = x - \frac{1}{x} \) for \( x \neq 0 \) covers all of \( \mathbb{R} \), this relationship holds for all real numbers.</p>
+
+        <div class="highlight-box">
+            <strong>Conclusion:</strong> The unique solution is <strong>\( f(x) = x^3 + 3x \)</strong>.
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 14: Cyclic Transformation (Order 3) f(x) + f(1/(1-x)) = x -->
+<div class="slide" id="slide-14">
+    <h2 class="question-title">Problem 14: Cyclic Linear Fraction System \( f(x) + f\left(\frac{1}{1-x}\right) = x \)</h2>
+    <div class="question-body">
+        Find all functions \( f: \mathbb{R} \setminus \{0, 1\} \to \mathbb{R} \) satisfying:
+        \[ f(x) + f\left(\frac{1}{1-x}\right) = x \quad \forall x \neq 0, 1 \]
+    </div>
+
+    <div class="button-group">
+        <button class="btn-action btn-hint" onclick="toggleVisibility('hint-14')">Show Hint</button>
+        <button class="btn-action btn-solution" onclick="toggleVisibility('sol-14')">Show Solution</button>
+    </div>
+
+    <div id="hint-14" class="hint-box">
+        <strong style="color: var(--orange-neon);">Hint:</strong><br>
+        Define the transformation \( T(x) = \frac{1}{1-x} \). Calculate \( T(T(x)) \) and \( T(T(T(x))) \) to reveal an order-3 cyclic loop. Successively substitute these arguments into the functional equation to set up a system of 3 linear equations.
+    </div>
+
+    <div id="sol-14" class="solution-box">
+        <div class="solution-title">Full Solution:</div>
+        <p>Consider the substitution map \( T(x) = \frac{1}{1-x} \). Let's trace its iterations:</p>
+        <ol style="line-height: 1.8;">
+            <li>\( T(x) = \frac{1}{1-x} \)</li>
+            <li>\( T(T(x)) = \frac{1}{1 - \frac{1}{1-x}} = \frac{1}{\frac{-x}{1-x}} = \frac{x-1}{x} = 1 - \frac{1}{x} \)</li>
+            <li>\( T(T(T(x))) = \frac{1}{1 - \left(1 - \frac{1}{x}\right)} = \frac{1}{1/x} = x \)</li>
+        </ol>
+
+        <p>Because \( T(T(T(x))) = x \), performing three successive substitutions generates a system of 3 linear equations in terms of \( f(x) \), \( f\left(\frac{1}{1-x}\right) \), and \( f\left(\frac{x-1}{x}\right) \):</p>
+
+        <ul style="line-height: 1.8;">
+            <li><strong>Eq 1:</strong> \( f(x) + f\left(\frac{1}{1-x}\right) = x \)</li>
+            <li><strong>Eq 2 (sub \( x \to \frac{1}{1-x} \)):</strong> \( f\left(\frac{1}{1-x}\right) + f\left(\frac{x-1}{x}\right) = \frac{1}{1-x} \)</li>
+            <li><strong>Eq 3 (sub \( x \to \frac{x-1}{x} \)):</strong> \( f\left(\frac{x-1}{x}\right) + f(x) = \frac{x-1}{x} \)</li>
+        </ul>
+
+        <p>To isolate \( f(x) \), sum Eq 1 and Eq 3, then subtract Eq 2:</p>
+        \[ 2f(x) = x + \left(\frac{x-1}{x}\right) - \left(\frac{1}{1-x}\right) \]
+        \[ 2f(x) = x + 1 - \frac{1}{x} + \frac{1}{x-1} \]
+        \[ 2f(x) = \frac{x \cdot x(x-1) + 1 \cdot x(x-1) - 1 \cdot (x-1) + 1 \cdot x}{x(x-1)} \]
+        \[ 2f(x) = \frac{x^3 - x^2 + x^2 - x - x + 1 + x}{x(x-1)} = \frac{x^3 - x + 1}{x(x-1)} \]
+
+        <p>Dividing by 2 gives:</p>
+        \[ f(x) = \frac{x^3 - x + 1}{2x(x-1)} \]
+
+        <div class="highlight-box">
+            <strong>Conclusion:</strong> The unique solution is <strong>\( f(x) = \frac{x^3 - x + 1}{2x(x-1)} \)</strong>.
+        </div>
+    </div>
+</div>
+<!-- SLIDE 15: Product-to-Sum with Non-Linear Coupling -->
+<div class="slide" id="slide-15">
+    <h2 class="question-title">Problem 15: Coupled Product-Sum Relation \( f(x)f(y) = f(x+y) + xy \)</h2>
+    <div class="question-body">
+        Find all functions \( f: \mathbb{R} \to \mathbb{R} \) satisfying:
+        \[ f(x) f(y) = f(x + y) + xy \quad \forall x, y \in \mathbb{R} \]
+    </div>
+
+    <div class="button-group">
+        <button class="btn-action btn-hint" onclick="toggleVisibility('hint-15')">Show Hint</button>
+        <button class="btn-action btn-solution" onclick="toggleVisibility('sol-15')">Show Solution</button>
+    </div>
+
+    <div id="hint-15" class="hint-box">
+        <strong style="color: var(--orange-neon);">Hint:</strong><br>
+        1. Set \( x = y = 0 \) to determine the possible values of \( f(0) \).<br>
+        2. Set \( y = 0 \) to see what \( f(0) \) forces upon \( f(x) \).<br>
+        3. Test linear functions of the form \( f(x) = ax + b \) or test small integer inputs to narrow down the possible functional form.
+    </div>
+
+    <div id="sol-15" class="solution-box">
+        <div class="solution-title">Full Solution:</div>
+        <p><strong>Step 1: Evaluate at origin</strong></p>
+        <p>Let \( x = 0 \) and \( y = 0 \):</p>
+        \[ f(0)^2 = f(0) + 0 \implies f(0)^2 - f(0) = 0 \implies f(0)(f(0) - 1) = 0 \]
+        <p>Thus, either \( f(0) = 0 \) or \( f(0) = 1 \).</p>
+
+        <p style="margin-top: 15px;"><strong>Case 1: Assume \( f(0) = 0 \)</strong></p>
+        <p>Set \( y = 0 \) in the original equation:</p>
+        \[ f(x) f(0) = f(x + 0) + 0 \implies f(x) \cdot 0 = f(x) \implies f(x) = 0 \quad \forall x \in \mathbb{R} \]
+        <p>Checking \( f(x) \equiv 0 \) in the main equation gives \( 0 = 0 + xy \implies xy = 0 \), which is <strong>not true for all \( x, y \)</strong>. Hence, \( f(0) \neq 0 \).</p>
+
+        <p style="margin-top: 15px;"><strong>Case 2: Assume \( f(0) = 1 \)</strong></p>
+        <p>Set \( y = -x \):</p>
+        \[ f(x) f(-x) = f(0) - x^2 = 1 - x^2 \]
+        <p>Now set \( y = 1 \):</p>
+        \[ f(x) f(1) = f(x + 1) + x \]
+        <p>Let \( f(1) = k \). Then \( f(x+1) = k f(x) - x \).</p>
+        <p>Testing candidate solutions of linear form \( f(x) = ax + b \):</p>
+        <ul>
+            <li>Since \( f(0) = 1 \), we have \( b = 1 \), so \( f(x) = ax + 1 \).</li>
+            <li>Substitute \( f(x) = ax + 1 \) into the main functional equation:
+            \[ (ax + 1)(ay + 1) = a(x + y) + 1 + xy \]
+            \[ a^2 xy + a x + a y + 1 = a x + a y + 1 + xy \]
+            </li>
+        </ul>
+        <p>Comparing the \( xy \) terms on both sides:</p>
+        \[ a^2 xy = xy \implies a^2 = 1 \implies a = 1 \text{ or } a = -1 \]
+
+        <p style="margin-top: 15px;"><strong>Verification:</strong></p>
+        <ol style="line-height: 1.8;">
+            <li>If \( a = 1 \implies f(x) = x + 1 \):
+            \[ (x + 1)(y + 1) = xy + x + y + 1 = (x + y + 1) + xy = f(x + y) + xy \quad \checkmark \]
+            </li>
+            <li>If \( a = -1 \implies f(x) = 1 - x \):
+            \[ (1 - x)(1 - y) = 1 - x - y + xy = (1 - (x + y)) + xy = f(x + y) + xy \quad \checkmark \]
+            </li>
+        </ol>
+
+        <div class="highlight-box">
+            <strong>Conclusion:</strong> The only solutions are <strong>\( f(x) = x + 1 \)</strong> and <strong>\( f(x) = 1 - x \)</strong>.
+        </div>
+    </div>
+</div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button class="btn-nav" id="btnPrev" onclick="changeSlide(-1)">Previous</button>
+        <span class="slide-indicator" id="slideNum">Slide 1</span>
+        <button class="btn-nav" id="btnNext" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        let totalSlides = 1;
+
+        function updateSlideDisplay() {
+            // Dynamically count total slides present in the DOM
+            const slideElements = document.querySelectorAll('.slide');
+            totalSlides = slideElements.length;
+
+            slideElements.forEach((slide, index) => {
+                if (index + 1 === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            document.getElementById('slideNum').innerText = `Slide ${currentSlide} of ${totalSlides}`;
+            document.getElementById('btnPrev').disabled = (currentSlide === 1);
+            document.getElementById('btnNext').disabled = (currentSlide === totalSlides);
+
+            // Execute canvas functions dynamically if they exist
+            const canvasFuncName = `drawCanvas${currentSlide}`;
+            if (typeof window[canvasFuncName] === 'function') {
+                window[canvasFuncName]();
+            }
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 1) currentSlide = 1;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            updateSlideDisplay();
+        }
+
+        function toggleVisibility(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'block') {
+                el.style.display = 'none';
+            } else {
+                el.style.display = 'block';
+                if (window.renderMathInElement) {
+                    renderMathInElement(el);
+                }
+            }
+        }
+
+        // --- CANVAS GRAPHING FUNCTIONS ---
+
+        function setupCanvas(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return null;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Axes
+            ctx.strokeStyle = '#2a364f';
+            ctx.lineWidth = 1.5;
+
+            // X-axis
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
+
+            // Y-axis
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.stroke();
+
+            return { canvas, ctx, cx: canvas.width / 2, cy: canvas.height / 2 };
+        }
+
+        function drawCanvas1() {
+            const res = setupCanvas('canvas1');
+            if (!res) return;
+            const { ctx, cx, cy, canvas } = res;
+            const c = parseFloat(document.getElementById('sliderC').value);
+            document.getElementById('valC').innerText = c.toFixed(1);
+
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+
+            const scale = 30;
+            for (let px = 0; px <= canvas.width; px++) {
+                let x = (px - cx) / scale;
+                let y = c * x;
+                let py = cy - y * scale;
+
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(`f(x) = ${c.toFixed(1)}x`, 20, 30);
+        }
+
+        function drawCanvas2() {
+            const res = setupCanvas('canvas2');
+            if (!res) return;
+            const { ctx, cx, cy, canvas } = res;
+            const k = parseFloat(document.getElementById('sliderK').value);
+            document.getElementById('valK').innerText = k.toFixed(1);
+
+            ctx.strokeStyle = '#ff8c00';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+
+            const scale = 30;
+            let started = false;
+
+            for (let px = cx + 1; px <= canvas.width; px++) {
+                let x = (px - cx) / scale;
+                if (x <= 0) continue;
+                let y = k * Math.log(x);
+                let py = cy - y * scale;
+
+                if (!started) {
+                    ctx.moveTo(px, py);
+                    started = true;
+                } else {
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(`f(x) = ${k.toFixed(1)} ln(x)`, 20, 30);
+        }
+
+        function drawCanvas3() {
+            const res = setupCanvas('canvas3');
+            if (!res) return;
+            const { ctx, cx, cy, canvas } = res;
+            const a = parseFloat(document.getElementById('sliderA').value);
+            document.getElementById('valA').innerText = a.toFixed(1);
+
+            const scale = 40;
+
+            // Symmetry Axis y = x
+            ctx.strokeStyle = '#ff007f';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height);
+            ctx.lineTo(canvas.width, 0);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw f(x) = a/x
+            ctx.strokeStyle = '#39ff14';
+            ctx.lineWidth = 2.5;
+
+            // Positive branch
+            ctx.beginPath();
+            let started = false;
+            for (let px = cx + 2; px <= canvas.width; px++) {
+                let x = (px - cx) / scale;
+                if (x === 0) continue;
+                let y = a / x;
+                let py = cy - y * scale;
+
+                if (!started) {
+                    ctx.moveTo(px, py);
+                    started = true;
+                } else {
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.stroke();
+
+            // Negative branch
+            ctx.beginPath();
+            started = false;
+            for (let px = 0; px <= cx - 2; px++) {
+                let x = (px - cx) / scale;
+                if (x === 0) continue;
+                let y = a / x;
+                let py = cy - y * scale;
+
+                if (!started) {
+                    ctx.moveTo(px, py);
+                    started = true;
+                } else {
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(`f(x) = ${a.toFixed(1)} / x`, 20, 30);
+        }
+
+        function drawCanvas6() {
+            const res = setupCanvas('canvas6');
+            if (!res) return;
+            const { ctx, cx, cy, canvas } = res;
+            const a = parseFloat(document.getElementById('sliderA6').value);
+            document.getElementById('valA6').innerText = a.toFixed(1);
+
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+
+            const scale = 30;
+            let started = false;
+
+            for (let px = 0; px <= canvas.width; px++) {
+                let x = (px - cx) / scale;
+                let y = Math.pow(a, x);
+                let py = cy - y * scale;
+
+                if (py < 0 || py > canvas.height) continue;
+
+                if (!started) {
+                    ctx.moveTo(px, py);
+                    started = true;
+                } else {
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(`f(x) = ${a.toFixed(1)}^x`, 20, 30);
+        }
+
+        function drawCanvas7() {
+            const res = setupCanvas('canvas7');
+            if (!res) return;
+            const { ctx, cx, cy, canvas } = res;
+            const w = parseFloat(document.getElementById('sliderW7').value);
+            document.getElementById('valW7').innerText = w.toFixed(1);
+
+            ctx.strokeStyle = '#ff007f';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+
+            const scale = 30;
+            for (let px = 0; px <= canvas.width; px++) {
+                let x = (px - cx) / scale;
+                let y = Math.cos(w * x);
+                let py = cy - y * scale;
+
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(`f(x) = cos(${w.toFixed(1)}x)`, 20, 30);
+        }
+
+        function drawCanvas9() {
+            const res = setupCanvas('canvas9');
+            if (!res) return;
+            const { ctx, cx, cy, canvas } = res;
+            const m = parseFloat(document.getElementById('sliderM9').value);
+            const b = parseFloat(document.getElementById('sliderB9').value);
+            document.getElementById('valM9').innerText = m.toFixed(1);
+            document.getElementById('valB9').innerText = b.toFixed(1);
+
+            ctx.strokeStyle = '#39ff14';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+
+            const scale = 30;
+            for (let px = 0; px <= canvas.width; px++) {
+                let x = (px - cx) / scale;
+                let y = m * x + b;
+                let py = cy - y * scale;
+
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(`f(x) = ${m.toFixed(1)}x + ${b.toFixed(1)}`, 20, 30);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updateSlideDisplay();
+        };
+    </script>
+</body>
+</html>

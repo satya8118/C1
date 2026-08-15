@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus Self-Assessment Quiz Slides</title>
+    <!-- MathJax for rendering LaTeX formulas -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #212529;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .slide-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 850px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            min-height: 550px;
+        }
+
+        .slide {
+            display: none;
+            flex-grow: 1;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .question-title {
+            color: #0d6efd;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .question-body {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-hint {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .btn-hint:hover { background-color: #e0a800; }
+
+        .btn-solution {
+            background-color: #198754;
+            color: white;
+        }
+        .btn-solution:hover { background-color: #157347; }
+
+        .hint-box {
+            display: none;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #664d03;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .solution-box {
+            display: none;
+            background-color: #f1f8ff;
+            border-left: 4px solid #0d6efd;
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .solution-title {
+            font-weight: bold;
+            color: #0a58ca;
+            margin-bottom: 10px;
+        }
+
+        /* Footer Navigation Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #e9ecef;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .btn-nav {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-nav:hover { background-color: #0b5ed7; }
+        .btn-nav:disabled {
+            background-color: #ced4da;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        .highlight-box {
+            background-color: #e2e3e5;
+            border-left: 4px solid #0d6efd;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+
+    <!-- SLIDE 1 -->
+    <div class="slide active">
+        <h2 class="question-title">SAQ 1: Double Zeros & Derivatives</h2>
+        <div class="question-body">
+            <p>
+                Let \( f \) be a polynomial. Suppose that \( f \) has a double zero at \( a \) and \( b \) (with \( a < b \)). 
+                <em>(A polynomial \( f \) has a double zero at \( x = c \) if \( f(x) = (x - c)^2 g(x) \) for some polynomial \( g \))</em>.
+            </p>
+            <p>Show that \( f'(x) \) has at least three roots in \( [a, b] \).</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-1')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-1')">Show Answer</button>
+        </div>
+
+        <div id="hint-1" class="hint-box">
+            <strong>Hint:</strong> What are the values of \( f(a), f'(a), f(b), \) and \( f'(b) \)? Apply Rolle's Theorem to \( f(x) \) on the interval \( [a, b] \).
+        </div>
+
+        <div id="sol-1" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Since \( f \) has a double zero at both \( a \) and \( b \):</p>
+            <ul>
+                <li>\( f(a) = 0 \) and \( f'(a) = 0 \)</li>
+                <li>\( f(b) = 0 \) and \( f'(b) = 0 \)</li>
+            </ul>
+            <p>By <strong>Rolle's Theorem</strong> applied to \( f(x) \) on \( [a, b] \), since \( f(a) = f(b) = 0 \), there exists at least one point \( c \in (a, b) \) such that \( f'(c) = 0 \).</p>
+            <p>Collecting roots of \( f'(x) \):</p>
+            <ol>
+                <li>\( x = a \) (since \( f'(a) = 0 \))</li>
+                <li>\( x = c \) where \( c \in (a, b) \)</li>
+                <li>\( x = b \) (since \( f'(b) = 0 \))</li>
+            </ol>
+            <p>Since \( a < c < b \), these three roots are distinct and lie in \( [a, b] \). \(\blacksquare\)</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 2: Parallel Tangent Lines</h2>
+        <div class="question-body">
+            <p>
+                Suppose that \( f \) and \( g \) are continuous on \( [a, b] \) and that \( f' \) and \( g' \) are continuous on \( (a, b) \). 
+                Assume that \( f(a) = g(a) \) and \( f(b) = g(b) \).
+            </p>
+            <p>
+                Prove that there is a number \( c \) in \( (a, b) \) such that the line tangent to the graph of \( f \) at \( (c, f(c)) \) is parallel to the line tangent to the graph of \( g \) at \( (c, g(c)) \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-2')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-2')">Show Answer</button>
+        </div>
+
+        <div id="hint-2" class="hint-box">
+            <strong>Hint:</strong> Define an auxiliary function \( h(x) = f(x) - g(x) \) and apply Rolle's Theorem to \( h(x) \).
+        </div>
+
+        <div id="sol-2" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Define \( h(x) = f(x) - g(x) \).</p>
+            <ul>
+                <li>\( h(a) = f(a) - g(a) = 0 \)</li>
+                <li>\( h(b) = f(b) - g(b) = 0 \)</li>
+            </ul>
+            <p>By Rolle's Theorem, there exists \( c \in (a, b) \) such that \( h'(c) = 0 \).</p>
+            <p>\[ h'(c) = f'(c) - g'(c) = 0 \implies f'(c) = g'(c) \]</p>
+            <p>Since derivative values equal tangent slopes, equal slopes imply parallel tangent lines at \( x = c \). \(\blacksquare\)</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 3: Second Derivative Zeroes</h2>
+        <div class="question-body">
+            <p>
+                Let \( f \) be twice differentiable on \( (a, b) \), and suppose that \( f(x) = 0 \) at three distinct points in \( (a, b) \). 
+                Prove that there is a point \( x_0 \) in \( (a, b) \) at which \( f''(x_0) = 0 \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-3')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-3')">Show Answer</button>
+        </div>
+
+        <div id="hint-3" class="hint-box">
+            <strong>Hint:</strong> Use Rolle's Theorem twice: first to find roots of \( f'(x) \), then apply it to \( f'(x) \) to find roots of \( f''(x) \).
+        </div>
+
+        <div id="sol-3" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Let three roots be \( x_1 < x_2 < x_3 \).</p>
+            <p>Applying Rolle's Theorem to \( f(x) \) on \( [x_1, x_2] \) and \( [x_2, x_3] \):</p>
+            <ul>
+                <li>Exists \( c_1 \in (x_1, x_2) \) such that \( f'(c_1) = 0 \).</li>
+                <li>Exists \( c_2 \in (x_2, x_3) \) such that \( f'(c_2) = 0 \).</li>
+            </ul>
+            <p>Now apply Rolle's Theorem to \( f'(x) \) on \( [c_1, c_2] \):</p>
+            <p>Since \( f'(c_1) = f'(c_2) = 0 \), there exists \( x_0 \in (c_1, c_2) \) such that \( f''(x_0) = 0 \). \(\blacksquare\)</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 4: Strictly Increasing Functions</h2>
+        <div class="question-body">
+            <p>
+                Prove that if \( f \) is continuous on \( [a, b] \) and differentiable on \( (a, b) \), and \( f'(x) > 0 \) for all \( x \in (a, b) \), then \( f \) is strictly increasing on \( [a, b] \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-4')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-4')">Show Answer</button>
+        </div>
+
+        <div id="hint-4" class="hint-box">
+            <strong>Hint:</strong> Pick two points \( x_1 < x_2 \) in \( [a, b] \) and apply the Mean Value Theorem on \( [x_1, x_2] \).
+        </div>
+
+        <div id="sol-4" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>For any \( x_1 < x_2 \) in \( [a, b] \), MVT guarantees a point \( c \in (x_1, x_2) \) such that:</p>
+            <p>\[ \frac{f(x_2) - f(x_1)}{x_2 - x_1} = f'(c) \implies f(x_2) - f(x_1) = f'(c)(x_2 - x_1) \]</p>
+            <p>Since \( f'(c) > 0 \) and \( x_2 - x_1 > 0 \), their product is positive, so \( f(x_2) > f(x_1) \). Thus, \( f \) is strictly increasing. \(\blacksquare\)</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 5: Degree of Polynomials</h2>
+        <div class="question-body">
+            <p>
+                If \( f'''(x) = 0 \) on \( (-\infty, \infty) \), show that there are constants \( A \), \( B \), and \( C \) such that \( f(x) = Ax^2 + Bx + C \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-5')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-5')">Show Answer</button>
+        </div>
+
+        <div id="hint-5" class="hint-box">
+            <strong>Hint:</strong> Work backward by repeatedly applying the fact that if a derivative is zero everywhere, the original function is constant.
+        </div>
+
+        <div id="sol-5" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <ol>
+                <li>Since \( (f'')' = 0 \), \( f''(x) = 2A \) for some constant \( A \).</li>
+                <li>Since \( (f'(x) - 2Ax)' = 0 \), \( f'(x) = 2Ax + B \).</li>
+                <li>Since \( (f(x) - (Ax^2 + Bx))' = 0 \), \( f(x) = Ax^2 + Bx + C \). \(\blacksquare\)</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- SLIDE 6 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 6: Function Majorization</h2>
+        <div class="question-body">
+            <p>A function \( f \) is said to <strong>majorize</strong> a function \( g \) on \( [a, b] \) if \( f(x) \ge g(x) \) for all \( a \le x \le b \).</p>
+            <p>If \( m > n > 0 \), show that \( x^n \) majorizes \( x^m \) on \( [0, 1] \).</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-6')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-6')">Show Answer</button>
+        </div>
+
+        <div id="hint-6" class="hint-box">
+            <strong>Hint:</strong> Express \( x^m \) as \( x^n \cdot x^{m-n} \) and consider what happens when raising numbers strictly between 0 and 1 to positive powers.
+        </div>
+
+        <div id="sol-6" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Since \( m > n > 0 \), we have \( m - n > 0 \).</p>
+            <ul>
+                <li>At \( x = 0 \) and \( x = 1 \): \( x^n = x^m \).</li>
+                <li>For \( x \in (0, 1) \): raising a fraction to a positive power gives a value less than 1, so \( x^{m-n} < 1 \).</li>
+            </ul>
+            <p>Multiply both sides by \( x^n \):</p>
+            <p>\[ x^n \cdot x^{m-n} < x^n \cdot 1 \implies x^m < x^n \]</p>
+            <p>Thus, \( x^n \ge x^m \) on \( [0, 1] \), so \( x^n \) majorizes \( x^m \). \(\blacksquare\)</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 7 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 7: Constant Derivative</h2>
+        <div class="question-body">
+            <p>
+                Suppose that \( f \) is differentiable on the whole real line \( (-\infty, \infty) \) and that \( f'(x) \) is constant. Prove that \( f \) is linear.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-7')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-7')">Show Answer</button>
+        </div>
+
+        <div id="hint-7" class="hint-box">
+            <strong>Hint:</strong> Let \( f'(x) = m \) for all \( x \). You can prove \( f \) is linear in two ways: (1) apply MVT on the interval between \( 0 \) and \( x \), or (2) define an auxiliary function \( g(x) = f(x) - mx \) and check its derivative.
+        </div>
+
+        <div id="sol-7" class="solution-box">
+            <div class="solution-title">Solution (Both Methods):</div>
+            <p>Let \( m \) be the constant value of \( f'(x) \), so that \( f'(x) = m \) for all \( x \in (-\infty, \infty) \).</p>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd; margin-top: 10px;">Method 1: Using the Mean Value Theorem Directly</div>
+            <p>Fix any real number \( x \ne 0 \). Since \( f \) is differentiable everywhere, it is continuous on the closed interval between \( 0 \) and \( x \), and differentiable on the open interval between them.</p>
+            <p>By the <strong>Mean Value Theorem</strong> applied to \( f \) on the interval between \( 0 \) and \( x \), there exists a point \( c \) between \( 0 \) and \( x \) such that:</p>
+            <p>\[ \frac{f(x) - f(0)}{x - 0} = f'(c) \]</p>
+            <p>Since \( f'(c) = m \) everywhere:</p>
+            <p>\[ \frac{f(x) - f(0)}{x} = m \implies f(x) - f(0) = mx \implies f(x) = mx + f(0) \]</p>
+            <p>Setting the constant \( C = f(0) \), we get \( f(x) = mx + C \), which is a linear function.</p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Method 2: Using an Auxiliary Function</div>
+            <p>Define an auxiliary function \( g(x) = f(x) - mx \).</p>
+            <p>Differentiating \( g(x) \) with respect to \( x \):</p>
+            <p>\[ g'(x) = f'(x) - m = m - m = 0 \quad \text{for all } x \in (-\infty, \infty) \]</p>
+            <p>Since the derivative of \( g(x) \) is zero everywhere, \( g(x) \) must be a constant function. Let \( g(x) = C \) for some constant \( C \).</p>
+            <p>Evaluating at \( x = 0 \):</p>
+            <p>\[ C = g(0) = f(0) - m(0) = f(0) \]</p>
+            <p>Substituting \( g(x) = f(0) \) back into the definition of \( g(x) \):</p>
+            <p>\[ f(x) - mx = f(0) \implies f(x) = mx + f(0) \]</p>
+            <p>Thus, \( f(x) \) is of the form \( mx + C \), so \( f \) is linear. \(\blacksquare\)</p>
+        </div>
+    </div>
+    
+    <!-- SLIDE 8 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 8: Optimization - Minimal Perimeter</h2>
+        <div class="question-body">
+            <p>Of all rectangles with area 1, which has the smallest perimeter?</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-8')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-8')">Show Answer</button>
+        </div>
+
+        <div id="hint-8" class="hint-box">
+            <strong>Hint:</strong> Let sides be \( x \) and \( y \). Use area \( xy = 1 \) to write perimeter \( P(x) = 2x + \frac{2}{x} \) and minimize it using calculus.
+        </div>
+
+        <div id="sol-8" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Perimeter function: \( P(x) = 2x + 2x^{-1} \)</p>
+            <p>\[ P'(x) = 2 - \frac{2}{x^2} = 0 \implies x^2 = 1 \implies x = 1 \]</p>
+            <p>Second derivative test: \( P''(1) = 4 > 0 \) (local minimum).</p>
+            <p>Since \( x = 1 \), \( y = \frac{1}{1} = 1 \).</p>
+            <div class="highlight-box">
+                The rectangle with minimal perimeter is a <strong>square</strong> of dimensions \( 1 \times 1 \). \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 9 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 9: Distance Optimization</h2>
+        <div class="question-body">
+            <p>
+                Find the point on the arc of the parabola \( y = x^2 \) for \( 0 < x < 1 \) which is nearest to the point \( (0, 1) \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-9')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-9')">Show Answer</button>
+        </div>
+
+        <div id="hint-9" class="hint-box">
+            <strong>Hint:</strong> Minimize the square of distance function \( D(x) = x^2 + (x^2 - 1)^2 \).
+        </div>
+
+        <div id="sol-9" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Squared distance function: \( f(x) = x^2 + (x^2 - 1)^2 = x^4 - x^2 + 1 \)</p>
+            <p>\[ f'(x) = 4x^3 - 2x = 2x(2x^2 - 1) = 0 \]</p>
+            <p>For \( x \in (0, 1) \), we get \( 2x^2 - 1 = 0 \implies x = \frac{1}{\sqrt{2}} \).</p>
+            <p>Corresponding \( y \)-value: \( y = \left(\frac{1}{\sqrt{2}}\right)^2 = \frac{1}{2} \).</p>
+            <div class="highlight-box">
+                The nearest point is <strong>\( \left( \frac{1}{\sqrt{2}}, \frac{1}{2} \right) \)</strong>. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 10 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 10: Extreme Value Existence</h2>
+        <div class="question-body">
+            <p>Find a function defined on \( [0, 1] \) which does not have a maximum value on \( [0, 1] \).</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-10')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-10')">Show Answer</button>
+        </div>
+
+        <div id="hint-10" class="hint-box">
+            <strong>Hint:</strong> The Extreme Value Theorem states continuous functions on closed intervals must have maximums. Therefore, your function must be discontinuous.
+        </div>
+
+        <div id="sol-10" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Consider the discontinuous function:</p>
+            <p>\[ f(x) = \begin{cases} x & \text{if } 0 \le x < 1 \\ 0 & \text{if } x = 1 \end{cases} \]</p>
+            <p>Range is \( [0, 1) \). The upper bound is 1, but it is never attained anywhere in \( [0, 1] \). Thus, it has no maximum. \(\blacksquare\)</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 11 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 11: Product Optimization</h2>
+        <div class="question-body">
+            <p>
+                One positive number plus the square of another equals 48. Choose the numbers so that their product is as large as possible.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-11')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-11')">Show Answer</button>
+        </div>
+
+        <div id="hint-11" class="hint-box">
+            <strong>Hint:</strong> Write \( x = 48 - y^2 \). Maximize \( P(y) = y(48 - y^2) = 48y - y^3 \).
+        </div>
+
+        <div id="sol-11" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Product: \( P(y) = 48y - y^3 \)</p>
+            <p>Derivative: \( P'(y) = 48 - 3y^2 = 0 \implies y^2 = 16 \implies y = 4 \)</p>
+            <p>Find \( x \): \( x = 48 - 4^2 = 32 \).</p>
+            <div class="highlight-box">
+                The numbers are <strong>\( 32 \)</strong> and <strong>\( 4 \)</strong>. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 12 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 12: Continuous Non-Differentiable Peak</h2>
+        <div class="question-body">
+            <p>Find a function on \( [-1, 1] \) which is continuous but which is not differentiable at its maximum point.</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-12')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-12')">Show Answer</button>
+        </div>
+
+        <div id="hint-12" class="hint-box">
+            <strong>Hint:</strong> Think of standard functions with sharp corners/cusps like the absolute value function.
+        </div>
+
+        <div id="sol-12" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p>Consider \( f(x) = 1 - |x| \) on \( [-1, 1] \).</p>
+            <ul>
+                <li>Continuous on \( [-1, 1] \).</li>
+                <li>Maximum value is \( 1 \), attained at \( x = 0 \).</li>
+                <li>One-sided derivatives at \( x = 0 \) are \( -1 \) (right) and \( +1 \) (left), so \( f'(0) \) does not exist. \(\blacksquare\)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- SLIDE 13 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 13: Least Squares Approximation</h2>
+        <div class="question-body">
+            <p>
+                Given \( n \) numbers, \( a_1, a_2, \dots, a_n \), find a number \( x \) which best approximates them in the sense that the sum of the squares of the differences between \( x \) and the \( n \) numbers is as small as possible.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-13')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-13')">Show Answer</button>
+        </div>
+
+        <div id="hint-13" class="hint-box">
+            <strong>Hint:</strong> Define a function \( S(x) = \sum_{i=1}^{n} (x - a_i)^2 \). Expand or differentiate \( S(x) \) with respect to \( x \), set the derivative equal to zero, and solve for \( x \).
+        </div>
+
+        <div id="sol-13" class="solution-box">
+            <div class="solution-title">Solution:</div>
+            <p><strong>Step 1: Set up the sum of squares function.</strong></p>
+            <p>We want to minimize the function:</p>
+            <p>\[ S(x) = \sum_{i=1}^{n} (x - a_i)^2 = (x - a_1)^2 + (x - a_2)^2 + \dots + (x - a_n)^2 \]</p>
+
+            <p><strong>Step 2: Find the critical point.</strong></p>
+            <p>Differentiate \( S(x) \) with respect to \( x \):</p>
+            <p>\[ S'(x) = \sum_{i=1}^{n} 2(x - a_i) = 2 \left( \sum_{i=1}^{n} x - \sum_{i=1}^{n} a_i \right) \]</p>
+            <p>Since \(\sum_{i=1}^{n} x = n x\), setting \( S'(x) = 0 \) gives:</p>
+            <p>\[ 2 \left( nx - \sum_{i=1}^{n} a_i \right) = 0 \implies nx = \sum_{i=1}^{n} a_i \implies x = \frac{1}{n} \sum_{i=1}^{n} a_i \]</p>
+
+            <p><strong>Step 3: Verify the minimum.</strong></p>
+            <p>Taking the second derivative:</p>
+            <p>\[ S''(x) = \frac{d}{dx} \left[ 2 \left( nx - \sum_{i=1}^{n} a_i \right) \right] = 2n \]</p>
+            <p>Since \( n \ge 1 \), \( S''(x) = 2n > 0 \), confirming that this critical point gives a global minimum.</p>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong> The number \( x \) that minimizes the sum of squared differences is the <strong>arithmetic mean</strong> of the given numbers:
+                \[ x = \bar{a} = \frac{a_1 + a_2 + \dots + a_n}{n} \]
+                \(\blacksquare\)
+            </div>
+        </div>
+        </div>
+     <!-- SLIDE 14 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 14: Proof of the Product Rule</h2>
+        <div class="question-body">
+            <p>
+                Prove the Product Rule for differentiation:
+                \[ (fg)'(x_0) = f'(x_0)g(x_0) + f(x_0)g'(x_0) \]
+                using the limit definition of the derivative and geometric decomposition.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-14')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-14')">Show Answer</button>
+        </div>
+
+        <div id="hint-14" class="hint-box">
+            <strong>Hint:</strong> Think of \( f(x) \) and \( g(x) \) as lengths of the sides of a rectangle, where area is \( f(x)g(x) \). Express the total change in area by decomposing the lighter region into three smaller sub-rectangles, then evaluate the limit as \( \Delta x \to 0 \).
+        </div>
+
+        <div id="sol-14" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof (Product Rule):</div>
+
+            <p>To find \((fg)'(x_0)\), we start with the limit definition of the derivative:</p>
+            <p style="overflow-x: auto; padding: 5px 0;">
+                \[ 
+                \lim_{\Delta x \to 0} \frac{(fg)(x_0 + \Delta x) - (fg)(x_0)}{\Delta x} = \lim_{\Delta x \to 0} \frac{f(x_0 + \Delta x)g(x_0 + \Delta x) - f(x_0)g(x_0)}{\Delta x} \quad \text{--- (1)} 
+                \]
+            </p>
+
+            <p>
+                Simplifying this expression is not as straightforward as for the sum rule. We may make use of a geometric device: think of \( f(x) \) and \( g(x) \) as the lengths of the sides of a rectangle; then \( f(x)g(x) \) is its area. The rectangles for \( x = x_0 \) and \( x = x_0 + \Delta x \) are shown below:
+            </p>
+
+            <!-- GEOMETRIC SVG DIAGRAM (IMPROVED & EXPANDED) -->
+            <div style="text-align: center; margin: 20px 0; width: 100%; overflow-x: auto;">
+                <svg width="480" height="230" viewBox="0 0 480 230" style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; max-width: 100%; height: auto; display: block; margin: 0 auto;">
+                    <!-- Inner Dark Rectangle: f(x0) * g(x0) -->
+                    <rect x="140" y="80" width="160" height="90" fill="#6c757d" stroke="#212529" stroke-width="1.5"/>
+
+                    <!-- Outer Light Regions (3 Sub-rectangles) -->
+                    <!-- Top-Left Region: f(x0) * Δg -->
+                    <rect x="140" y="30" width="160" height="50" fill="#f8f9fa" stroke="#212529" stroke-width="1.5"/>
+                    <!-- Bottom-Right Region: Δf * g(x0) -->
+                    <rect x="300" y="80" width="70" height="90" fill="#f8f9fa" stroke="#212529" stroke-width="1.5"/>
+                    <!-- Top-Right Region: Δf * Δg -->
+                    <rect x="300" y="30" width="70" height="50" fill="#ffffff" stroke="#212529" stroke-width="1.5"/>
+
+                    <!-- Dashed Division Lines -->
+                    <line x1="300" y1="30" x2="300" y2="170" stroke="#495057" stroke-dasharray="4,3" stroke-width="1.2"/>
+                    <line x1="140" y1="80" x2="370" y2="80" stroke="#495057" stroke-dasharray="4,3" stroke-width="1.2"/>
+
+                    <!-- Bottom Labels (X-Axis Dimensions) -->
+                    <!-- f(x0) -->
+                    <text x="220" y="192" font-size="12" font-style="italic" font-family="sans-serif" text-anchor="middle" fill="#212529">f(x₀)</text>
+                    <!-- Δf -->
+                    <text x="335" y="192" font-size="11" font-style="italic" font-family="sans-serif" text-anchor="middle" fill="#212529">f(x₀+Δx) - f(x₀)</text>
+                    <!-- f(x0 + Δx) Total Top Label -->
+                    <text x="255" y="18" font-size="12" font-style="italic" font-family="sans-serif" text-anchor="middle" fill="#212529">f(x₀ + Δx)</text>
+
+                    <!-- Left Side Labels (Y-Axis Dimensions - Ample Margin Provided) -->
+                    <!-- g(x0) -->
+                    <text x="125" y="130" font-size="12" font-style="italic" font-family="sans-serif" text-anchor="end" fill="#212529">g(x₀)</text>
+                    <!-- Δg -->
+                    <text x="125" y="58" font-size="11" font-style="italic" font-family="sans-serif" text-anchor="end" fill="#212529">g(x₀+Δx) - g(x₀)</text>
+
+                    <!-- Right Side Label (Total Y-Dimension) -->
+                    <!-- g(x0 + Δx) -->
+                    <text x="385" y="105" font-size="12" font-style="italic" font-family="sans-serif" text-anchor="start" fill="#212529">g(x₀ + Δx)</text>
+
+                    <!-- External Dimension Bracket Lines -->
+                    <!-- Left Bracket Ticks -->
+                    <line x1="133" y1="30" x2="133" y2="170" stroke="#adb5bd" stroke-width="1"/>
+                    <line x1="130" y1="30" x2="136" y2="30" stroke="#adb5bd" stroke-width="1"/>
+                    <line x1="130" y1="80" x2="136" y2="80" stroke="#adb5bd" stroke-width="1"/>
+                    <line x1="130" y1="170" x2="136" y2="170" stroke="#adb5bd" stroke-width="1"/>
+
+                    <!-- Right Bracket Ticks -->
+                    <line x1="377" y1="30" x2="377" y2="170" stroke="#adb5bd" stroke-width="1"/>
+                    <line x1="374" y1="30" x2="380" y2="30" stroke="#adb5bd" stroke-width="1"/>
+                    <line x1="374" y1="170" x2="380" y2="170" stroke="#adb5bd" stroke-width="1"/>
+                </svg>
+            </div>
+            <p>
+                The area of the large rectangle is \( f(x_0 + \Delta x)g(x_0 + \Delta x) \); that of the darker rectangle is \( f(x_0)g(x_0) \). 
+                The difference \( f(x_0 + \Delta x)g(x_0 + \Delta x) - f(x_0)g(x_0) \) is the area of the lighter region, which can be decomposed into three rectangles having areas:
+            </p>
+            <ul>
+                <li>\([f(x_0 + \Delta x) - f(x_0)] g(x_0)\)</li>
+                <li>\([f(x_0 + \Delta x) - f(x_0)] [g(x_0 + \Delta x) - g(x_0)]\)</li>
+                <li>\(f(x_0) [g(x_0 + \Delta x) - g(x_0)]\)</li>
+            </ul>
+
+            <p>Thus we have the identity:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \begin{aligned}
+                f(x_0 + \Delta x)g(x_0 + \Delta x) - f(x_0)g(x_0) &= [f(x_0 + \Delta x) - f(x_0)] g(x_0) \\
+                &\quad + f(x_0) [g(x_0 + \Delta x) - g(x_0)] \\
+                &\quad + [f(x_0 + \Delta x) - f(x_0)] [g(x_0 + \Delta x) - g(x_0)] \quad \text{--- (2)}
+                \end{aligned}
+                \]
+            </div>
+
+            <p><em>(If you do not like geometric arguments, you can verify this identity algebraically.)</em></p>
+
+            <p>Substituting (2) into (1), we obtain:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \begin{aligned}
+                \lim_{\Delta x \to 0} \Big\{ &\frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} g(x_0) + f(x_0) \frac{g(x_0 + \Delta x) - g(x_0)}{\Delta x} \\
+                &+ \frac{[f(x_0 + \Delta x) - f(x_0)][g(x_0 + \Delta x) - g(x_0)]}{\Delta x} \Big\} \quad \text{--- (3)}
+                \end{aligned}
+                \]
+            </div>
+
+            <p>By the sum and constant multiple rules for limits, (3) equals:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \begin{aligned}
+                &\left[ \lim_{\Delta x \to 0} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} \right] g(x_0) + f(x_0) \left[ \lim_{\Delta x \to 0} \frac{g(x_0 + \Delta x) - g(x_0)}{\Delta x} \right] \\
+                &\quad + \lim_{\Delta x \to 0} \frac{[f(x_0 + \Delta x) - f(x_0)][g(x_0 + \Delta x) - g(x_0)]}{\Delta x} \quad \text{--- (4)}
+                \end{aligned}
+                \]
+            </div>
+
+            <p>
+                We recognize the first two limits in (4) as \( f'(x_0) \) and \( g'(x_0) \), so the first two terms give:
+                \[ f'(x_0)g(x_0) + f(x_0)g'(x_0) \]
+                — precisely the product rule.
+            </p>
+
+            <p>
+                To show that the third limit, represented geometrically by the small rectangle in the upper right-hand corner of the figure, is zero, we use the <strong>continuity of \( g \)</strong>. By the product rule for limits:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \begin{aligned}
+                \lim_{\Delta x \to 0} &\left[ \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} \cdot [g(x_0 + \Delta x) - g(x_0)] \right] \\
+                &= \left[ \lim_{\Delta x \to 0} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x} \right] \cdot \left[ \lim_{\Delta x \to 0} [g(x_0 + \Delta x) - g(x_0)] \right] \\
+                &= f'(x_0) \cdot 0 = 0
+                \end{aligned}
+                \]
+            </div>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong>
+                \[ (fg)'(x_0) = f'(x_0)g(x_0) + f(x_0)g'(x_0) \]
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 15 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 15: Symmetry Properties of Step Function Integrals</h2>
+        <div class="question-body">
+            <p>
+                Let \( s : [-a, a] \to \mathbb{R} \) be a step function on a symmetric interval about zero, where \( a > 0 \). Prove the following:
+            </p>
+            <ol type="a">
+                <li>If \( s \) is <strong>even</strong> (i.e., \( s(-t) = s(t) \)), then:
+                    \[ \int_{-a}^{a} s(t) \, dt = 2 \int_{0}^{a} s(t) \, dt \]
+                </li>
+                <li>If \( s \) is <strong>odd</strong> (i.e., \( s(-t) = -s(t) \)), then:
+                    \[ \int_{-a}^{a} s(t) \, dt = 0 \]
+                </li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-15')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-15')">Show Answer</button>
+        </div>
+
+        <div id="hint-15" class="hint-box">
+            <strong>Hint:</strong> Use the additivity property of integrals to split \( \int_{-a}^{a} s(t) \, dt \) into \( \int_{-a}^{0} s(t) \, dt + \int_{0}^{a} s(t) \, dt \). For the integral over \( [-a, 0] \), use a substitution \( u = -t \) (or partition symmetry) to express it in terms of an integral over \( [0, a] \).
+        </div>
+
+        <div id="sol-15" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof (Using Step Function Definition):</div>
+
+            <p><strong>Step 1: Partitioning the Domain</strong></p>
+            <p>
+                Since \( s \) is a step function on \( [-a, a] \), there exists a partition \( P = \{t_0, t_1, \dots, t_n\} \) of \( [-a, a] \) containing \( 0 \), where \( s(t) = c_k \) (a constant) on each open subinterval \( (t_{k-1}, t_k) \).
+            </p>
+            <p>
+                By domain additivity of step function integrals:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \int_{-a}^{a} s(t) \, dt = \int_{-a}^{0} s(t) \, dt + \int_{0}^{a} s(t) \, dt \quad \text{--- (1)} \]
+            </div>
+
+            <p><strong>Step 2: Expressing Integrals as Finite Sums</strong></p>
+            <p>
+                For any subinterval \( I_k = (t_{k-1}, t_k) \subset [0, a] \), let \( s(t) = c_k \). The symmetric reflection interval is \( I_k' = (-t_k, -t_{k-1}) \subset [-a, 0] \), which has the same length \( \Delta t_k = t_k - t_{k-1} \).
+            </p>
+            <p>The integral over \( [0, a] \) is the finite sum:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \int_{0}^{a} s(t) \, dt = \sum_{k} c_k \Delta t_k \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(a) Proof for Even Step Functions</div>
+            <p>
+                If \( s \) is <strong>even</strong>, then on the reflected interval \( (-t_k, -t_{k-1}) \), \( s(t) = s(-t) = c_k \).
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \int_{-a}^{0} s(t) \, dt = \sum_{k} c_k \Delta t_k = \int_{0}^{a} s(t) \, dt \]
+            </div>
+            <p>Substituting into (1):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \int_{-a}^{a} s(t) \, dt = \int_{0}^{a} s(t) \, dt + \int_{0}^{a} s(t) \, dt = 2 \int_{0}^{a} s(t) \, dt \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(b) Proof for Odd Step Functions</div>
+            <p>
+                If \( s \) is <strong>odd</strong>, then on the reflected interval \( (-t_k, -t_{k-1}) \), \( s(t) = -s(-t) = -c_k \).
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \int_{-a}^{0} s(t) \, dt = \sum_{k} (-c_k) \Delta t_k = -\int_{0}^{a} s(t) \, dt \]
+            </div>
+            <p>Substituting into (1):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \int_{-a}^{a} s(t) \, dt = -\int_{0}^{a} s(t) \, dt + \int_{0}^{a} s(t) \, dt = 0 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong>
+                <p style="margin: 5px 0 0 0;">
+                    (a) Even \( s(t) \): \( \int_{-a}^{a} s(t) \, dt = 2 \int_{0}^{a} s(t) \, dt \) <br>
+                    (b) Odd \( s(t) \): \( \int_{-a}^{a} s(t) \, dt = 0 \) \(\blacksquare\)
+                </p>
+            </div>
+        </div>
+        </div>
+        <!-- SLIDE 16 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 16: Properties of Function Compositions</h2>
+        <div class="question-body">
+            <p>
+                Suppose \( f : X \to Y \) and \( g : Y \to Z \). Show the following:
+            </p>
+            <ol type="a">
+                <li>If \( g \circ f \) is <strong>injective</strong> (one-to-one), then \( f \) is injective.</li>
+                <li>If \( g \circ f \) is <strong>surjective</strong> (onto), then \( g \) is surjective.</li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-16')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-16')">Show Answer</button>
+        </div>
+
+        <div id="hint-16" class="hint-box">
+            <strong>Hint:</strong><br>
+            For (a): Start by assuming \( f(x_1) = f(x_2) \) for some \( x_1, x_2 \in X \), then apply \( g \) to both sides.<br>
+            For (b): Take an arbitrary element \( z \in Z \). Use the surjectivity of \( g \circ f \) to find an element in \( X \) that maps to \( z \).
+        </div>
+
+        <div id="sol-16" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof:</div>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(a) If \( g \circ f \) is injective, then \( f \) is injective.</div>
+            <p>
+                To show that \( f \) is injective, we must prove that for any \( x_1, x_2 \in X \), if \( f(x_1) = f(x_2) \), then \( x_1 = x_2 \).
+            </p>
+            <p>
+                Assume \( f(x_1) = f(x_2) \).
+            </p>
+            <p>
+                Applying \( g \) to both sides gives:
+                \[ g(f(x_1)) = g(f(x_2)) \]
+            </p>
+            <p>
+                By definition of function composition, this means:
+                \[ (g \circ f)(x_1) = (g \circ f)(x_2) \]
+            </p>
+            <p>
+                Since \( g \circ f \) is given to be injective, it follows that \( x_1 = x_2 \).
+            </p>
+            <p>
+                Therefore, \( f \) is injective.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(b) If \( g \circ f \) is surjective, then \( g \) is surjective.</div>
+            <p>
+                To show that \( g \) is surjective, we must prove that for every \( z \in Z \), there exists some element \( y \in Y \) such that \( g(y) = z \).
+            </p>
+            <p>
+                Let \( z \in Z \) be an arbitrary element.
+            </p>
+            <p>
+                Since \( g \circ f : X \to Z \) is surjective, there exists an element \( x \in X \) such that:
+                \[ (g \circ f)(x) = z \]
+            </p>
+            <p>
+                By definition of composition, this means:
+                \[ g(f(x)) = z \]
+            </p>
+            <p>
+                Define \( y = f(x) \). Since \( f : X \to Y \), we have \( y \in Y \).
+            </p>
+            <p>
+                Thus, \( g(y) = z \), which proves that every element in \( Z \) has a pre-image in \( Y \) under \( g \).
+            </p>
+            <p>
+                Therefore, \( g \) is surjective.
+            </p>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong><br>
+                (a) \( g \circ f \) injective \(\implies f\) injective.<br>
+                (b) \( g \circ f \) surjective \(\implies g\) surjective. \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 17 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 17: Bijectivity of a Rational Function</h2>
+        <div class="question-body">
+            <p>
+                Show that \( g : \mathbb{R} \setminus \{-3/2\} \to \mathbb{R} \setminus \{2\} \), defined by:
+                \[ g(x) = \frac{4x - 1}{2x + 3} \]
+                is a bijection.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-17')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-17')">Show Answer</button>
+        </div>
+
+        <div id="hint-17" class="hint-box">
+            <strong>Hint:</strong><br>
+            1. <strong>Injectivity:</strong> Assume \( g(x_1) = g(x_2) \), cross-multiply, and simplify to show \( x_1 = x_2 \).<br>
+            2. <strong>Surjectivity:</strong> Set \( y = \frac{4x - 1}{2x + 3} \), solve for \( x \) in terms of \( y \), and verify that for any \( y \ne 2 \), there is a valid domain value \( x \ne -3/2 \).
+        </div>
+
+        <div id="sol-17" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof:</div>
+
+            <p>A function is a <strong>bijection</strong> if it is both <em>injective</em> (one-to-one) and <em>surjective</em> (onto).</p>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Part 1: Injectivity (One-to-One)</div>
+            <p>
+                Let \( x_1, x_2 \in \mathbb{R} \setminus \{-3/2\} \) and assume \( g(x_1) = g(x_2) \):
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \frac{4x_1 - 1}{2x_1 + 3} = \frac{4x_2 - 1}{2x_2 + 3} \]
+            </div>
+            <p>Cross-multiplying yields:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ (4x_1 - 1)(2x_2 + 3) = (4x_2 - 1)(2x_1 + 3) \]
+            </div>
+            <p>Expanding both sides:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 8x_1 x_2 + 12x_1 - 2x_2 - 3 = 8x_1 x_2 + 12x_2 - 2x_1 - 3 \]
+            </div>
+            <p>Cancel \( 8x_1 x_2 \) and \( -3 \) from both sides:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 12x_1 - 2x_2 = 12x_2 - 2x_1 \implies 14x_1 = 14x_2 \implies x_1 = x_2 \]
+            </div>
+            <p>Thus, \( g \) is <strong>injective</strong>.</p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Part 2: Surjectivity (Onto)</div>
+            <p>
+                Let \( y \in \mathbb{R} \setminus \{2\} \) be an arbitrary element in the codomain. We must find \( x \in \mathbb{R} \setminus \{-3/2\} \) such that \( g(x) = y \):
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ y = \frac{4x - 1}{2x + 3} \]
+            </div>
+            <p>Multiply by \( 2x + 3 \) and solve for \( x \):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \begin{aligned}
+                y(2x + 3) &= 4x - 1 \\
+                2xy + 3y &= 4x - 1 \\
+                3y + 1 &= 4x - 2xy \\
+                3y + 1 &= x(4 - 2y) \\
+                x &= \frac{3y + 1}{4 - 2y}
+                \end{aligned}
+                \]
+            </div>
+            <p>
+                Since \( y \ne 2 \), the denominator \( 4 - 2y \ne 0 \), so \( x \) is well-defined.
+            </p>
+            <p>
+                Next, verify that \( x \ne -3/2 \):
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \frac{3y + 1}{4 - 2y} = -\frac{3}{2} \implies 2(3y + 1) = -3(4 - 2y) \implies 6y + 2 = -12 + 6y \implies 2 = -12 \quad \text{(Contradiction)} \]
+            </div>
+            <p>
+                Hence, for every \( y \in \mathbb{R} \setminus \{2\} \), there exists an \( x \in \mathbb{R} \setminus \{-3/2\} \) such that \( g(x) = y \).
+            </p>
+            <p>Thus, \( g \) is <strong>surjective</strong>.</p>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong><br>
+                Since \( g \) is both injective and surjective, \( g \) is a <strong>bijection</strong> with inverse:
+                \[ g^{-1}(y) = \frac{3y + 1}{4 - 2y} \]
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 18 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 18: Upper Bound Limit</h2>
+        <div class="question-body">
+            <p>
+                Suppose \( x \in \mathbb{R} \) satisfies:
+                \[ \frac{n}{n+1} \le x \le 1 \quad \text{for every } n \in \mathbb{N} \]
+                Show that \( x = 1 \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-18')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-18')">Show Answer</button>
+        </div>
+
+        <div id="hint-18" class="hint-box">
+            <strong>Hint:</strong> Use the Squeeze Theorem by taking the limit as \( n \to \infty \) across the inequality chain, or use a proof by contradiction by assuming \( x < 1 \) and using the Archimedean Property with \( \epsilon = 1 - x > 0 \).
+        </div>
+
+        <div id="sol-18" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof (Two Methods):</div>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Method 1: Taking Limits (Squeeze Argument)</div>
+            <p>We are given that for all \( n \in \mathbb{N} \):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \frac{n}{n+1} \le x \le 1 \]
+            </div>
+            <p>Taking the limit as \( n \to \infty \) on all sides of the inequality:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \lim_{n \to \infty} \frac{n}{n+1} \le \lim_{n \to \infty} x \le \lim_{n \to \infty} 1 \]
+            </div>
+            <p>Evaluating the limits:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \lim_{n \to \infty} \frac{n}{n+1} = \lim_{n \to \infty} \frac{1}{1 + \frac{1}{n}} = 1 \]
+            </div>
+            <p>Therefore:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 1 \le x \le 1 \]
+            </div>
+            <p>By the Squeeze Theorem (or standard inequality properties), we conclude that \( x = 1 \).</p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Method 2: Proof by Contradiction (Archimedean Property)</div>
+            <p>We already know \( x \le 1 \). Suppose for contradiction that \( x < 1 \).</p>
+            <p>Then \( \epsilon = 1 - x > 0 \).</p>
+            <p>By the <strong>Archimedean Property</strong> of real numbers, there exists a natural number \( N \in \mathbb{N} \) such that:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ N+1 > \frac{1}{\epsilon} = \frac{1}{1-x} \]
+            </div>
+            <p>Rearranging this inequality:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 1 - x > \frac{1}{N+1} \implies x < 1 - \frac{1}{N+1} = \frac{N}{N+1} \]
+            </div>
+            <p>
+                This contradicts the given statement that \( \frac{n}{n+1} \le x \) for <em>every</em> \( n \in \mathbb{N} \) (specifically for \( n = N \)).
+            </p>
+            <p>Thus, our assumption that \( x < 1 \) must be false. Therefore, \( x = 1 \).</p>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong>
+                \[ x = 1 \]
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 19 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 19: Integrals of the Greatest Integer Function</h2>
+        <div class="question-body">
+            <p>
+                Let \([x]\) (or \(\lfloor x \rfloor\)) denote the greatest integer function. Prove the following for each \( n \in \mathbb{N} \):
+            </p>
+            <ol type="a">
+                <li>
+                    \[ \int_{0}^{n} [x] \, dx = \frac{n(n - 1)}{2} \]
+                </li>
+                <li>
+                    \[ \int_{0}^{n^2} [\sqrt{x}] \, dx = \frac{n(n - 1)(4n + 1)}{6} \]
+                </li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-19')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-19')">Show Answer</button>
+        </div>
+
+        <div id="hint-19" class="hint-box">
+            <strong>Hint:</strong><br>
+            For (a): Break the integral \(\int_{0}^{n}\) into a sum of integrals over subintervals \([k, k+1]\) where \([x] = k\).<br>
+            For (b): Break the integral \(\int_{0}^{n^2}\) over subintervals \([k^2, (k+1)^2]\) where \([\sqrt{x}] = k\), and use the standard sum formulas for \(\sum k\) and \(\sum k^2\).
+        </div>
+
+        <div id="sol-19" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof:</div>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(a) Proof for \(\int_{0}^{n} [x] \, dx\)</div>
+            <p>
+                The greatest integer function \([x]\) is a step function. On each subinterval \([k, k+1)\) for an integer \( k \), we have \([x] = k\).
+            </p>
+            <p>
+                Splitting the interval of integration \([0, n]\) into \( n \) unit subintervals:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \int_{0}^{n} [x] \, dx = \sum_{k=0}^{n-1} \int_{k}^{k+1} [x] \, dx
+                \]
+            </div>
+            <p>
+                Since \([x] = k\) on \([k, k+1)\):
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \int_{k}^{k+1} [x] \, dx = \int_{k}^{k+1} k \, dx = k \cdot ((k+1) - k) = k
+                \]
+            </div>
+            <p>
+                Summing these up:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \int_{0}^{n} [x] \, dx = \sum_{k=0}^{n-1} k = 0 + 1 + 2 + \dots + (n-1) = \frac{(n-1)n}{2} = \frac{n(n-1)}{2}
+                \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(b) Proof for \(\int_{0}^{n^2} [\sqrt{x}] \, dx\)</div>
+            <p>
+                For \( x \in [k^2, (k+1)^2) \), we have \( k \le \sqrt{x} < k+1 \), which implies \([\sqrt{x}] = k\).
+            </p>
+            <p>
+                Splitting the integral \([0, n^2]\) at the perfect square points \( k^2 \) for \( k = 0, 1, \dots, n-1 \):
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \int_{0}^{n^2} [\sqrt{x}] \, dx = \sum_{k=0}^{n-1} \int_{k^2}^{(k+1)^2} [\sqrt{x}] \, dx
+                \]
+            </div>
+            <p>
+                Evaluating the integral on each subinterval:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \int_{k^2}^{(k+1)^2} k \, dx = k \cdot \left( (k+1)^2 - k^2 \right) = k \cdot (2k + 1) = 2k^2 + k
+                \]
+            </div>
+            <p>
+                Summing from \( k = 0 \) to \( n-1 \):
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \int_{0}^{n^2} [\sqrt{x}] \, dx = \sum_{k=0}^{n-1} (2k^2 + k) = 2 \sum_{k=0}^{n-1} k^2 + \sum_{k=0}^{n-1} k
+                \]
+            </div>
+            <p>
+                Using standard summation formulas for \( m = n-1 \):
+            </p>
+            <ul>
+                <li>\(\sum_{k=0}^{n-1} k = \frac{(n-1)n}{2}\)</li>
+                <li>\(\sum_{k=0}^{n-1} k^2 = \frac{(n-1)n(2n-1)}{6}\)</li>
+            </ul>
+            <p>
+                Substituting these formulas in:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \begin{aligned}
+                \int_{0}^{n^2} [\sqrt{x}] \, dx &= 2 \cdot \frac{n(n-1)(2n-1)}{6} + \frac{n(n-1)}{2} \\
+                &= \frac{n(n-1)(2n-1)}{3} + \frac{n(n-1)}{2} \\
+                &= \frac{n(n-1)}{6} \left[ 2(2n-1) + 3 \right] \\
+                &= \frac{n(n-1)}{6} (4n - 2 + 3) \\
+                &= \frac{n(n-1)(4n+1)}{6}
+                \end{aligned}
+                \]
+            </div>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong><br>
+                (a) \( \int_{0}^{n} [x] \, dx = \frac{n(n-1)}{2} \)<br>
+                (b) \( \int_{0}^{n^2} [\sqrt{x}] \, dx = \frac{n(n-1)(4n+1)}{6} \) \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 20 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 20: Exponential Functions & Graphs</h2>
+        <div class="question-body">
+            <p>
+                Consider the exponential function with base \( a > 0 \):
+            </p>
+            <ol type="a">
+                <li>Write an equation that defines the exponential function with base \( a > 0 \).</li>
+                <li>What is the domain of this function?</li>
+                <li>If \( a \ne 1 \), what is the range of this function?</li>
+                <li>Sketch the general shape of the graph of the exponential function for each of the following cases:
+                    <ol type="i">
+                        <li>\( a > 1 \)</li>
+                        <li>\( a = 1 \)</li>
+                        <li>\( 0 < a < 1 \)</li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-20')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-20')">Show Answer</button>
+        </div>
+
+        <div id="hint-20" class="hint-box">
+            <strong>Hint:</strong><br>
+            • Think about which input values \( x \) can be plugged into \( a^x \) and what sign the outputs always have.<br>
+            • For \( a > 1 \), the function grows exponentially. For \( a = 1 \), it is a constant line. For \( 0 < a < 1 \), it decays exponentially.
+        </div>
+
+        <div id="sol-20" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Solution:</div>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(a) Defining Equation</div>
+            <p>The exponential function with base \( a > 0 \) is defined by:</p>
+            <p>\[ f(x) = a^x \]</p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(b) Domain</div>
+            <p>The exponent \( x \) can be any real number.</p>
+            <p>\[ \text{Domain: } (-\infty, \infty) \text{ or } \mathbb{R} \]</p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(c) Range (for \( a \ne 1 \))</div>
+            <p>For any \( a > 0 \) with \( a \ne 1 \), \( a^x \) is strictly positive for all real numbers \( x \).</p>
+            <p>\[ \text{Range: } (0, \infty) \]</p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">(d) Graphs for Different Bases</div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 15px;">
+                <!-- Case i: a > 1 -->
+                <div style="flex: 1; min-width: 200px; max-width: 240px; text-align: center;">
+                    <div style="font-weight: 600; margin-bottom: 5px; font-size: 0.95rem;">(i) \( a > 1 \) (Exponential Growth)</div>
+                    <svg width="220" height="160" viewBox="0 0 220 160" style="background: #fff; border: 1px solid #ccc; border-radius: 6px;">
+                        <!-- Axes -->
+                        <line x1="20" y1="130" x2="200" y2="130" stroke="#333" stroke-width="1.5"/>
+                        <line x1="110" y1="10" x2="110" y2="150" stroke="#333" stroke-width="1.5"/>
+                        <!-- Curve -->
+                        <path d="M 25 127 Q 100 120 190 20" fill="none" stroke="#0d6efd" stroke-width="2.5"/>
+                        <!-- Y-intercept point -->
+                        <circle cx="110" cy="95" r="4" fill="#dc3545"/>
+                        <text x="118" y="98" font-size="11" fill="#212529">(0, 1)</text>
+                        <!-- Axis Labels -->
+                        <text x="195" y="145" font-size="11" text-anchor="end">x</text>
+                        <text x="102" y="20" font-size="11" text-anchor="end">y</text>
+                    </svg>
+                </div>
+
+                <!-- Case ii: a = 1 -->
+                <div style="flex: 1; min-width: 200px; max-width: 240px; text-align: center;">
+                    <div style="font-weight: 600; margin-bottom: 5px; font-size: 0.95rem;">(ii) \( a = 1 \) (Constant Line)</div>
+                    <svg width="220" height="160" viewBox="0 0 220 160" style="background: #fff; border: 1px solid #ccc; border-radius: 6px;">
+                        <!-- Axes -->
+                        <line x1="20" y1="130" x2="200" y2="130" stroke="#333" stroke-width="1.5"/>
+                        <line x1="110" y1="10" x2="110" y2="150" stroke="#333" stroke-width="1.5"/>
+                        <!-- Horizontal Line y = 1 -->
+                        <line x1="25" y1="95" x2="195" y2="95" stroke="#198754" stroke-width="2.5"/>
+                        <!-- Y-intercept point -->
+                        <circle cx="110" cy="95" r="4" fill="#dc3545"/>
+                        <text x="118" y="90" font-size="11" fill="#212529">(0, 1)</text>
+                        <!-- Axis Labels -->
+                        <text x="195" y="145" font-size="11" text-anchor="end">x</text>
+                        <text x="102" y="20" font-size="11" text-anchor="end">y</text>
+                    </svg>
+                </div>
+
+                <!-- Case iii: 0 < a < 1 -->
+                <div style="flex: 1; min-width: 200px; max-width: 240px; text-align: center;">
+                    <div style="font-weight: 600; margin-bottom: 5px; font-size: 0.95rem;">(iii) \( 0 < a < 1 \) (Exponential Decay)</div>
+                    <svg width="220" height="160" viewBox="0 0 220 160" style="background: #fff; border: 1px solid #ccc; border-radius: 6px;">
+                        <!-- Axes -->
+                        <line x1="20" y1="130" x2="200" y2="130" stroke="#333" stroke-width="1.5"/>
+                        <line x1="110" y1="10" x2="110" y2="150" stroke="#333" stroke-width="1.5"/>
+                        <!-- Curve -->
+                        <path d="M 30 20 Q 120 120 195 127" fill="none" stroke="#d63384" stroke-width="2.5"/>
+                        <!-- Y-intercept point -->
+                        <circle cx="110" cy="95" r="4" fill="#dc3545"/>
+                        <text x="118" y="98" font-size="11" fill="#212529">(0, 1)</text>
+                        <!-- Axis Labels -->
+                        <text x="195" y="145" font-size="11" text-anchor="end">x</text>
+                        <text x="102" y="20" font-size="11" text-anchor="end">y</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 20px;">
+                <strong>Summary of Graph Shapes:</strong>
+                <ul>
+                    <li><strong>\( a > 1 \):</strong> Strictly increasing continuous curve passing through \((0, 1)\) with horizontal asymptote \( y = 0 \) as \( x \to -\infty \).</li>
+                    <li><strong>\( a = 1 \):</strong> Flat horizontal line \( y = 1^x = 1 \) for all \( x \).</li>
+                    <li><strong>\( 0 < a < 1 \):</strong> Strictly decreasing continuous curve passing through \((0, 1)\) with horizontal asymptote \( y = 0 \) as \( x \to \infty \).</li>
+                </ul>
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 21 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 21: Uniqueness of Real Roots</h2>
+        <div class="question-body">
+            <p>
+                Show that the polynomial equation \( x^3 + 2x - 5 = 0 \) has exactly one real root.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-21')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-21')">Show Answer</button>
+        </div>
+
+        <div id="hint-21" class="hint-box">
+            <strong>Hint:</strong><br>
+            1. Use the <strong>Intermediate Value Theorem (IVT)</strong> to show that <em>at least one</em> root exists.<br>
+            2. Use the derivative \( f'(x) \) to show that the function is <strong>strictly increasing</strong> (or use Rolle's Theorem) to prove that there cannot be more than one root.
+        </div>
+
+        <div id="sol-21" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof:</div>
+
+            <p>Let \( f(x) = x^3 + 2x - 5 \). Since \( f(x) \) is a polynomial, it is continuous and differentiable on the entire real line \( (-\infty, \infty) \).</p>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd; margin-top: 10px;">Step 1: Existence of at least one root (Intermediate Value Theorem)</div>
+            <p>Evaluating \( f(x) \) at selected points:</p>
+            <ul>
+                <li>\( f(0) = (0)^3 + 2(0) - 5 = -5 < 0 \)</li>
+                <li>\( f(2) = (2)^3 + 2(2) - 5 = 8 + 4 - 5 = 7 > 0 \)</li>
+            </ul>
+            <p>
+                Since \( f(x) \) is continuous on the interval \( [0, 2] \) and \( f(0) < 0 < f(2) \), by the <strong>Intermediate Value Theorem (IVT)</strong>, there exists at least one real number \( c \in (0, 2) \) such that \( f(c) = 0 \).
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Step 2: Uniqueness of the root (Strict Monotonicity)</div>
+            <p>Differentiating \( f(x) \) with respect to \( x \):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f'(x) = 3x^2 + 2 \]
+            </div>
+            <p>
+                Since \( x^2 \ge 0 \) for all real numbers \( x \), we have \( 3x^2 + 2 \ge 2 > 0 \) for all \( x \in \mathbb{R} \).
+            </p>
+            <p>
+                Because \( f'(x) > 0 \) everywhere, \( f(x) \) is a strictly increasing function on \( (-\infty, \infty) \). A strictly increasing function is one-to-one (injective) and can assume the value \( 0 \) at most once.
+            </p>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong><br>
+                Since \( f(x) \) assumes the value \( 0 \) at least once (by IVT) and at most once (by strict monotonicity), the equation \( x^3 + 2x - 5 = 0 \) has <strong>exactly one real root</strong>.
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    
+    <!-- SLIDE 22 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 22: Unique Real Root of a Cubic Polynomial</h2>
+        <div class="question-body">
+            <p>
+                Prove that the equation \( x^3 + px + q = 0 \) has <strong>exactly one real root</strong> if \( p > 0 \).
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-22')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-22')">Show Answer</button>
+        </div>
+
+        <div id="hint-22" class="hint-box">
+            <strong>Hint:</strong><br>
+            1. Differentiate \( f(x) = x^3 + px + q \) and use \( p > 0 \) to show that \( f(x) \) is strictly increasing (at most one root).<br>
+            2. Examine the limits \( \lim_{x \to \infty} f(x) \) and \( \lim_{x \to -\infty} f(x) \), then apply the Intermediate Value Theorem to guarantee at least one root.
+        </div>
+
+        <div id="sol-22" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof:</div>
+
+            <p>Let \( f(x) = x^3 + px + q \). Since \( f(x) \) is a polynomial, it is continuous and differentiable everywhere on \( \mathbb{R} \).</p>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd; margin-top: 10px;">Step 1: At most one root (Strict Monotonicity)</div>
+            <p>Differentiating \( f(x) \) with respect to \( x \):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f'(x) = 3x^2 + p \]
+            </div>
+            <p>
+                Since \( x^2 \ge 0 \) for all \( x \in \mathbb{R} \) and we are given that \( p > 0 \), it follows that:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f'(x) = 3x^2 + p \ge p > 0 \quad \text{for all } x \in \mathbb{R} \]
+            </div>
+            <p>
+                Because \( f'(x) > 0 \) everywhere, \( f(x) \) is a <strong>strictly increasing function</strong> on \( (-\infty, \infty) \). Therefore, \( f(x) \) can assume the value \( 0 \) <strong>at most once</strong>.
+            </p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Step 2: At least one root (Intermediate Value Theorem)</div>
+            <p>Evaluating the end behavior of \( f(x) \) as \( x \to \pm\infty \):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \lim_{x \to \infty} f(x) = +\infty \quad \text{and} \quad \lim_{x \to -\infty} f(x) = -\infty \]
+            </div>
+            <p>
+                By the definition of limits, there exist real numbers \( u \) and \( v \) such that:
+                \[ f(u) > 0 \quad \text{and} \quad f(v) < 0 \]
+            </p>
+            <p>
+                Since \( f(x) \) is continuous on the interval \([v, u]\) and \( f(v) < 0 < f(u) \), by the <strong>Intermediate Value Theorem (IVT)</strong>, there exists at least one number \( c \in (v, u) \) such that \( f(c) = 0 \).
+            </p>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong><br>
+                Since \( f(x) \) assumes the value \( 0 \) at least once (by IVT) and at most once (by strict monotonicity), the equation \( x^3 + px + q = 0 \) has <strong>exactly one real root</strong> when \( p > 0 \).
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 23 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 23: Application of the Mean Value Theorem</h2>
+        <div class="question-body">
+            <p>
+                Suppose that \( f(x) \) is differentiable everywhere, that \( f(2) = -3 \), and that 
+                \( 1 < f'(x) < 2 \) for all \( x \in (2, 5) \). Show that:
+                \[ 0 < f(5) < 3 \]
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-23')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-23')">Show Answer</button>
+        </div>
+
+        <div id="hint-23" class="hint-box">
+            <strong>Hint:</strong> Apply the <strong>Mean Value Theorem (MVT)</strong> to the function \( f(x) \) on the closed interval \( [2, 5] \). Express \( f(5) - f(2) \) in terms of \( f'(c) \) for some \( c \in (2, 5) \), then use the given bounds \( 1 < f'(c) < 2 \).
+        </div>
+
+        <div id="sol-23" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Proof:</div>
+
+            <p>
+                Since \( f(x) \) is differentiable everywhere, it is continuous on \( [2, 5] \) and differentiable on \( (2, 5) \).
+            </p>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd; margin-top: 10px;">Step 1: Apply the Mean Value Theorem</div>
+            <p>
+                By the <strong>Mean Value Theorem (MVT)</strong>, there exists at least one number \( c \in (2, 5) \) such that:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f'(c) = \frac{f(5) - f(2)}{5 - 2} \]
+            </div>
+            <p>Substitute \( f(2) = -3 \) into the equation:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f'(c) = \frac{f(5) - (-3)}{3} = \frac{f(5) + 3}{3} \]
+            </div>
+            <p>Multiplying both sides by 3 gives:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f(5) + 3 = 3 f'(c) \quad \text{--- (1)} \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Step 2: Apply the Derivative Bounds</div>
+            <p>
+                We are given that \( 1 < f'(x) < 2 \) for all \( x \in (2, 5) \). Since \( c \in (2, 5) \), it follows that:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 1 < f'(c) < 2 \]
+            </div>
+            <p>Multiply the entire inequality by 3:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 3 < 3 f'(c) < 6 \]
+            </div>
+            <p>Substitute equation (1), \( 3 f'(c) = f(5) + 3 \), into the inequality:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 3 < f(5) + 3 < 6 \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Step 3: Isolate \( f(5) \)</div>
+            <p>Subtract 3 from all parts of the inequality:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 3 - 3 < f(5) < 6 - 3 \]
+            </div>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 0 < f(5) < 3 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong><br>
+                By the Mean Value Theorem and the given bounds on \( f'(x) \), we have established that:
+                \[ 0 < f(5) < 3 \]
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 24 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 24: Mean Value Theorem for a Quadratic Function</h2>
+        <div class="question-body">
+            <p>
+                For a quadratic function \( f(x) = Ax^2 + Bx + C \), with \( A \ne 0 \), on an interval \( [a, b] \), find the number \( c \in (a, b) \) determined by the Mean Value Theorem.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-24')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-24')">Show Answer</button>
+        </div>
+
+        <div id="hint-24" class="hint-box">
+            <strong>Hint:</strong><br>
+            Calculate the derivative \( f'(x) \) and the average rate of change \( \frac{f(b) - f(a)}{b - a} \). Set them equal according to the Mean Value Theorem equation \( f'(c) = \frac{f(b) - f(a)}{b - a} \) and solve for \( c \).
+        </div>
+
+        <div id="sol-24" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Solution:</div>
+
+            <p>
+                Since \( f(x) = Ax^2 + Bx + C \) is a polynomial, it is continuous on \( [a, b] \) and differentiable on \( (a, b) \). By the Mean Value Theorem (MVT), there exists a number \( c \in (a, b) \) such that:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f'(c) = \frac{f(b) - f(a)}{b - a} \quad \text{--- (1)} \]
+            </div>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd; margin-top: 10px;">Step 1: Compute the Derivative</div>
+            <p>Differentiating \( f(x) \) gives:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f'(x) = 2Ax + B \implies f'(c) = 2Ac + B \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Step 2: Calculate the Average Rate of Change</div>
+            <p>Evaluating the difference \( f(b) - f(a) \):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[
+                \begin{aligned}
+                f(b) - f(a) &= (Ab^2 + Bb + C) - (Aa^2 + Ba + C) \\
+                &= A(b^2 - a^2) + B(b - a) \\
+                &= A(b - a)(b + a) + B(b - a) \\
+                &= (b - a) \left[ A(b + a) + B \right]
+                \end{aligned}
+                \]
+            </div>
+            <p>Dividing by \( b - a \) (since \( a \ne b \)):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ \frac{f(b) - f(a)}{b - a} = A(b + a) + B \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Step 3: Equate and Solve for \( c \)</div>
+            <p>Setting the derivative equal to the average rate of change:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 2Ac + B = A(b + a) + B \]
+            </div>
+            <p>Subtract \( B \) from both sides:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ 2Ac = A(b + a) \]
+            </div>
+            <p>Since \( A \ne 0 \), divide both sides by \( 2A \):</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ c = \frac{a + b}{2} \]
+            </div>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong><br>
+                For any quadratic function on an interval \( [a, b] \), the value \( c \) guaranteed by the Mean Value Theorem is always the <strong>midpoint of the interval</strong>:
+                \[ c = \frac{a + b}{2} \]
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+    <!-- SLIDE 25 -->
+    <div class="slide">
+        <h2 class="question-title">SAQ 25: Bounds on Constant for Three Distinct Real Roots</h2>
+        <div class="question-body">
+            <p>
+                If \( f(x) = x^3 + 3x^2 + k \) has <strong>three distinct real roots</strong>, what are the bounds on \( k \)?
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-action btn-hint" onclick="toggleVisibility('hint-25')">Show Hint</button>
+            <button class="btn-action btn-solution" onclick="toggleVisibility('sol-25')">Show Answer</button>
+        </div>
+
+        <div id="hint-25" class="hint-box">
+            <strong>Hint:</strong><br>
+            1. Find the critical points of \( f(x) \) by solving \( f'(x) = 0 \).<br>
+            2. For a cubic polynomial to cross the x-axis three times, its local maximum must be strictly positive (\( f(x_{\text{max}}) > 0 \)) and its local minimum must be strictly negative (\( f(x_{\text{min}}) < 0 \)).
+        </div>
+
+        <div id="sol-25" class="solution-box" style="overflow-x: auto;">
+            <div class="solution-title">Solution:</div>
+
+            <p>Let \( f(x) = x^3 + 3x^2 + k \). Since \( f(x) \) is a cubic polynomial with a positive leading coefficient, it has the end behavior \( \lim_{x \to -\infty} f(x) = -\infty \) and \( \lim_{x \to \infty} f(x) = \infty \).</p>
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd; margin-top: 10px;">Step 1: Find Critical Points</div>
+            <p>Take the derivative of \( f(x) \) and set it to zero:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f'(x) = 3x^2 + 6x = 3x(x + 2) = 0 \]
+            </div>
+            <p>The critical points are \( x = -2 \) and \( x = 0 \).</p>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Step 2: Evaluate Local Extrema</div>
+            <p>Using the Second Derivative Test, \( f''(x) = 6x + 6 \):</p>
+            <ul>
+                <li> At \( x = -2 \): \( f''(-2) = -6 < 0 \implies \) <strong>Local Maximum</strong> at \( (-2, f(-2)) \)</li>
+                <li> At \( x = 0 \): \( f''(0) = 6 > 0 \implies \) <strong>Local Minimum</strong> at \( (0, f(0)) \)</li>
+            </ul>
+            <p>Evaluating the function at these critical values:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f(-2) = (-2)^3 + 3(-2)^2 + k = -8 + 12 + k = k + 4 \]
+                \[ f(0) = (0)^3 + 3(0)^2 + k = k \]
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cce5ff; margin: 15px 0;">
+
+            <div class="part-title" style="font-weight: bold; color: #0d6efd;">Step 3: Apply Condition for Three Distinct Roots</div>
+            <p>
+                A continuous cubic polynomial has 3 distinct real roots if and only if its local maximum is strictly above the x-axis and its local minimum is strictly below the x-axis:
+            </p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ f(-2) > 0 \quad \text{and} \quad f(0) < 0 \]
+            </div>
+            <p>Substituting the values of local extrema:</p>
+            <ol>
+                <li>\( k + 4 > 0 \implies k > -4 \)</li>
+                <li>\( k < 0 \)</li>
+            </ol>
+            <p>Combining these two inequalities gives:</p>
+            <div style="overflow-x: auto; max-width: 100%; padding: 5px 0;">
+                \[ -4 < k < 0 \]
+            </div>
+
+            <div class="highlight-box">
+                <strong>Conclusion:</strong><br>
+                The bounds on \( k \) for \( f(x) = x^3 + 3x^2 + k \) to have three distinct real roots are:
+                \[ -4 < k < 0 \quad \text{or} \quad k \in (-4, 0) \]
+                \(\blacksquare\)
+            </div>
+        </div>
+    </div>
+        <!-- NAVIGATION CONTROLS -->
+    <div class="controls">
+        <button class="btn-nav" id="prevBtn" onclick="changeSlide(-1)" disabled>Previous</button>
+        <span class="page-indicator" id="pageIndicator">Slide 1 of 12</span>
+        <button class="btn-nav" id="nextBtn" onclick="changeSlide(1)">Next</button>
+    </div>
+
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function updateSlide() {
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentSlide);
+        });
+
+        // Update button states
+        document.getElementById('prevBtn').disabled = currentSlide === 0;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+        // Update indicator
+        document.getElementById('pageIndicator').innerText = `Slide ${currentSlide + 1} of ${totalSlides}`;
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        updateSlide();
+    }
+
+    function toggleVisibility(elementId) {
+        const el = document.getElementById(elementId);
+        if (el.style.display === "block") {
+            el.style.display = "none";
+        } else {
+            el.style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>
