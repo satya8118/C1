@@ -330,6 +330,308 @@ window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]
     </div>
 
   </div>
+ <div class="question-block" data-qid="q3">
+    <div class="qheader">
+      <span class="qnum">Question 3</span>
+      <h2>Matching the largest domain</h2>
+    </div>
+
+    <div class="statement">
+      <div class="setup">Setup</div>
+      Each function below is defined by its formula alone — its <strong>largest domain</strong> is every real \(x\) for which the formula actually makes sense.
+      <ul class="func-list">
+        <li><span class="flabel">A</span> \(f(x)=\sqrt{x-3}\)</li>
+        <li><span class="flabel">B</span> \(f(x)=\dfrac{1}{x^2-4}\)</li>
+        <li><span class="flabel">C</span> \(f(x)=\ln(5-x)\)</li>
+        <li><span class="flabel">D</span> \(f(x)=\dfrac{1}{\sqrt{9-x^2}}\)</li>
+      </ul>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 1</div>
+      <div class="subq-text">Which function above has largest domain \([3,\infty)\)?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q3-1-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q3-1-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q3-1-hint">A square root needs a nonnegative radicand. Which of the four has a square root sitting directly over a simple linear expression?</div>
+      <div class="panel answer" id="q3-1-ans">Function A. \(\sqrt{x-3}\) needs \(x-3\ge0\), i.e. \(x\ge3\), giving domain \([3,\infty)\).</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 2</div>
+      <div class="subq-text">Which function above has largest domain \(\mathbb R\setminus\{-2,2\}\)?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q3-2-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q3-2-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q3-2-hint">Two missing points, symmetric about \(0\) — think about which denominator vanishes at exactly \(x=\pm2\).</div>
+      <div class="panel answer" id="q3-2-ans">Function B. \(x^2-4=0\) exactly when \(x=\pm2\), so those two points must be excluded; every other real number is fine.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 3</div>
+      <div class="subq-text">Which function above has largest domain \((-\infty,5)\)?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q3-3-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q3-3-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q3-3-hint">A logarithm needs a strictly positive argument.</div>
+      <div class="panel answer" id="q3-3-ans">Function C. \(\ln(5-x)\) needs \(5-x>0\), i.e. \(x<5\), giving domain \((-\infty,5)\).</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 4</div>
+      <div class="subq-text">Which function above has largest domain \((-3,3)\)?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q3-4-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q3-4-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q3-4-hint">A square root <em>in a denominator</em> needs the radicand strictly positive, not just nonnegative — zero would make the fraction undefined too.</div>
+      <div class="panel answer" id="q3-4-ans">Function D. \(9-x^2>0\) (strict, since it also sits under a fraction) gives \(x^2<9\), i.e. \(-3<x<3\).</div>
+    </div>
+  </div>
+
+  <div class="question-block" data-qid="q4">
+    <div class="qheader">
+      <span class="qnum">Question 4</span>
+      <h2>Matching the largest codomain (the range)</h2>
+    </div>
+
+    <div class="statement">
+      <div class="setup">Setup</div>
+      A codomain can technically be chosen as anything containing the function's outputs — but the <strong>tightest possible codomain</strong>, the one that makes the function onto by construction, is exactly its <strong>range</strong>. Each function below has domain all of \(\mathbb R\):
+      <ul class="func-list">
+        <li><span class="flabel">A</span> \(f(x)=x^2\)</li>
+        <li><span class="flabel">B</span> \(f(x)=\sin x\)</li>
+        <li><span class="flabel">C</span> \(f(x)=e^x\)</li>
+        <li><span class="flabel">D</span> \(f(x)=\dfrac{1}{1+x^2}\)</li>
+      </ul>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 1</div>
+      <div class="subq-text">Which function above has range (largest codomain) \([0,\infty)\)?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q4-1-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q4-1-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q4-1-hint">Which of the four can never be negative, but does hit \(0\) exactly?</div>
+      <div class="panel answer" id="q4-1-ans">Function A. \(x^2\ge0\) always, with \(0\) achieved at \(x=0\), and every nonnegative value achieved by some \(x\) — range \([0,\infty)\).</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 2</div>
+      <div class="subq-text">Which function above has range \([-1,1]\)?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q4-2-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q4-2-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q4-2-hint">Which of the four oscillates, bounded above and below by the same magnitude?</div>
+      <div class="panel answer" id="q4-2-ans">Function B. \(\sin x\) sweeps through every value in \([-1,1]\) and never leaves that band.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 3</div>
+      <div class="subq-text">Which function above has range \((0,\infty)\)?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q4-3-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q4-3-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q4-3-hint">Which of the four is always strictly positive but gets arbitrarily close to \(0\) without ever reaching it?</div>
+      <div class="panel answer" id="q4-3-ans">Function C. \(e^x>0\) for every real \(x\), \(e^x\to0\) as \(x\to-\infty\) (never reaching it), and \(e^x\) grows without bound — range \((0,\infty)\).</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 4</div>
+      <div class="subq-text">Which function above has range \((0,1]\)?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q4-4-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q4-4-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q4-4-hint">This is the only remaining option — but check it directly: what's the largest value this function can take, and at which \(x\)?</div>
+      <div class="panel answer" id="q4-4-ans">Function D. \(\dfrac{1}{1+x^2}\) is maximized at \(x=0\), giving the value \(1\) (attained), and \(\to0^+\) as \(|x|\to\infty\) (never attained) — range \((0,1]\).</div>
+    </div>
+  </div>
+
+  <div class="question-block" data-qid="q5">
+    <div class="qheader">
+      <span class="qnum">Question 5</span>
+      <h2>One-one functions</h2>
+    </div>
+
+    <div class="statement">
+      <div class="setup">Setup</div>
+      For each function and stated domain, decide whether it is one-one (injective).
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 1</div>
+      <div class="subq-text">\(f:\mathbb R\to\mathbb R\), \(f(x)=2x+5\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q5-1-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q5-1-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q5-1-hint">Suppose \(f(x_1)=f(x_2)\). Does that force \(x_1=x_2\)?</div>
+      <div class="panel answer" id="q5-1-ans">One-one. If \(2x_1+5=2x_2+5\), then \(x_1=x_2\). Every straight line with nonzero slope is one-one.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 2</div>
+      <div class="subq-text">\(f:\mathbb R\to\mathbb R\), \(f(x)=x^2\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q5-2-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q5-2-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q5-2-hint">Can you find two different real numbers with the same square?</div>
+      <div class="panel answer" id="q5-2-ans">Not one-one. \(f(-2)=f(2)=4\), but \(-2\ne2\) — a single counterexample is enough to kill injectivity.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 3</div>
+      <div class="subq-text">\(f:[0,\infty)\to\mathbb R\), \(f(x)=x^2\) (same formula, restricted domain).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q5-3-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q5-3-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q5-3-hint">Part 2's counterexample used \(-2\). Is \(-2\) available here?</div>
+      <div class="panel answer" id="q5-3-ans">One-one. Restricting the domain to \([0,\infty)\) removes every negative "twin" — on this domain, \(x_1^2=x_2^2\) with \(x_1,x_2\ge0\) forces \(x_1=x_2\). Restricting the domain is exactly how a non-injective formula is turned into an injective function.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 4</div>
+      <div class="subq-text">\(f:\mathbb R\to\mathbb R\), \(f(x)=x^3-x\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q5-4-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q5-4-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q5-4-hint">Factor \(f(x)=x(x-1)(x+1)\) and evaluate at a few small integers.</div>
+      <div class="panel answer" id="q5-4-ans">Not one-one. \(f(-1)=f(0)=f(1)=0\) — three different inputs sharing one output. A cubic with a local max and a local min is never one-one on all of \(\mathbb R\).</div>
+    </div>
+  </div>
+
+  <div class="question-block" data-qid="q6">
+    <div class="qheader">
+      <span class="qnum">Question 6</span>
+      <h2>Onto functions</h2>
+    </div>
+
+    <div class="statement">
+      <div class="setup">Setup</div>
+      For each function, domain, and stated codomain, decide whether it is onto (surjective) — i.e. whether the range equals the codomain exactly.
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 1</div>
+      <div class="subq-text">\(f:\mathbb R\to\mathbb R\), \(f(x)=2x+5\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q6-1-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q6-1-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q6-1-hint">Given any target \(y\in\mathbb R\), can you always solve \(2x+5=y\) for a real \(x\)?</div>
+      <div class="panel answer" id="q6-1-ans">Onto. For any \(y\in\mathbb R\), \(x=\dfrac{y-5}{2}\) is a real number with \(f(x)=y\). Every line with nonzero slope is onto \(\mathbb R\).</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 2</div>
+      <div class="subq-text">\(f:\mathbb R\to\mathbb R\), \(f(x)=x^2\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q6-2-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q6-2-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q6-2-hint">Is there any real \(x\) with \(x^2=-1\)?</div>
+      <div class="panel answer" id="q6-2-ans">Not onto. No real \(x\) gives \(f(x)=-1\) (or any negative value) — the range \([0,\infty)\) is a proper subset of the codomain \(\mathbb R\).</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 3</div>
+      <div class="subq-text">\(f:\mathbb R\to[0,\infty)\), \(f(x)=x^2\) (same formula, tightened codomain).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q6-3-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q6-3-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q6-3-hint">Every value in the new, smaller codomain — is each one actually hit by some \(x\)?</div>
+      <div class="panel answer" id="q6-3-ans">Onto. Every \(y\ge0\) is hit, e.g. by \(x=\sqrt y\). Shrinking the codomain down to exactly the range (Question 4's idea) is precisely how a non-surjective function is turned into a surjective one — the mirror image of what restricting the domain did for injectivity in Question 5.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 4</div>
+      <div class="subq-text">\(f:\mathbb R\to\mathbb R\), \(f(x)=x^3\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q6-4-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q6-4-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q6-4-hint">Does every real number have a real cube root?</div>
+      <div class="panel answer" id="q6-4-ans">Onto. Every \(y\in\mathbb R\) has a real cube root \(x=\sqrt[3]y\), with \(f(x)=y\) — unlike \(x^2\), odd-power functions don't lose the negative half of the codomain.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 5</div>
+      <div class="subq-text">\(f:\mathbb R\to(-1,1)\), \(f(x)=\dfrac{x}{1+|x|}\).</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q6-5-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q6-5-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q6-5-hint">Try solving \(y=\dfrac{x}{1+|x|}\) for \(x\) in terms of \(y\), assuming \(-1<y<1\).</div>
+      <div class="panel answer" id="q6-5-ans">Onto. For \(-1<y<1\), solving gives \(x=\dfrac{y}{1-|y|}\), a real number, and one can check \(f(x)=y\). As \(x\to\pm\infty\), \(f(x)\to\pm1\) without ever reaching them, matching the open interval \((-1,1)\) exactly — this is a standard example of a bijection between \(\mathbb R\) and a bounded open interval.</div>
+    </div>
+  </div>
+
+  <div class="question-block" data-qid="q7">
+    <div class="qheader">
+      <span class="qnum">Question 7</span>
+      <h2>The Horizontal Line Test</h2>
+    </div>
+
+    <div class="statement">
+      <div class="setup">Setup</div>
+      The horizontal line test reads one-one-ness and onto-ness directly off a graph, without any algebra.
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 1</div>
+      <div class="subq-text">State the horizontal line test for one-one functions, in your own words.</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q7-1-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q7-1-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q7-1-hint">Think about what it would mean, graphically, for two different \(x\)-values to share the same \(y\)-value.</div>
+      <div class="panel answer" id="q7-1-ans">A function is one-one if and only if every horizontal line \(y=k\) intersects its graph <em>at most once</em>. Two intersection points on the same horizontal line would mean two different inputs sharing one output — exactly what one-one-ness forbids.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 2</div>
+      <div class="subq-text">State the horizontal line test for onto functions (with codomain \(Y\)), in your own words.</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q7-2-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q7-2-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q7-2-hint">Onto means every element of the codomain gets hit by something.</div>
+      <div class="panel answer" id="q7-2-ans">A function \(f:X\to Y\) is onto if and only if every horizontal line \(y=k\), for \(k\in Y\), intersects the graph <em>at least once</em>. Combine both tests: a bijection is exactly a function where every horizontal line (at a codomain height) meets the graph <em>exactly</em> once.</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 3</div>
+      <div class="subq-text">Apply the test to \(f:\mathbb R\to\mathbb R\), \(f(x)=x^3-3x\). It has a local maximum at \(x=-1\) (value \(2\)) and a local minimum at \(x=1\) (value \(-2\)). Is \(f\) one-one?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q7-3-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q7-3-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q7-3-hint">Picture the horizontal line \(y=0\), passing between the local max (height \(2\)) and local min (height \(-2\)). How many times could it cross a curve that rises, then falls, then rises again through that band?</div>
+      <div class="panel answer" id="q7-3-ans">Not one-one. Any horizontal line \(y=k\) with \(-2<k<2\) crosses the graph three times — once on each of the rising-falling-rising pieces of the curve. (In fact \(f(0)=0\), \(f(-\sqrt3)=0\), \(f(\sqrt3)=0\): three roots, so the line \(y=0\) alone already gives three intersections.)</div>
+    </div>
+
+    <div class="subq">
+      <div class="subq-label">Part 4</div>
+      <div class="subq-text">Apply the test to \(f:\mathbb R\to\mathbb R\), \(f(x)=e^x\). Is it one-one? Is it onto?</div>
+      <div class="btn-row">
+        <button class="reveal-btn hint-btn" data-target="q7-4-hint">Show hint</button>
+        <button class="reveal-btn answer-btn" data-target="q7-4-ans">Show final answer</button>
+      </div>
+      <div class="panel hint" id="q7-4-hint">\(e^x\) is strictly increasing everywhere, but stays strictly positive everywhere too.</div>
+      <div class="panel answer" id="q7-4-ans">One-one: yes — every horizontal line meets the strictly increasing curve at most once. Onto \(\mathbb R\): no — a horizontal line like \(y=-1\) never meets the graph at all, since \(e^x>0\) always; the range is only \((0,\infty)\), a proper subset of the stated codomain \(\mathbb R\).</div>
+    </div>
+  </div>
 
   <!-- Add further <div class="question-block"> ... </div> blocks here as more questions are added. -->
 
