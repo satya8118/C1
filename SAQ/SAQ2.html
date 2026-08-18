@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Number System Quiz: Real Numbers & Order Properties</title>
+    <!-- Modern MathJax 3 configuration for standalone rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --correct-bg: #15803d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #991b1b;
+            --incorrect-border: #ef4444;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h1 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0;
+        }
+
+        .quiz-instructions {
+            background-color: var(--card-bg);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .q-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .q-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .q-tag {
+            display: inline-block;
+            background-color: #0369a1;
+            color: #e0f2fe;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+        }
+
+        .option input {
+            margin-top: 3px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .option-text {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .feedback.correct-bg {
+            background-color: rgba(34, 197, 94, 0.15);
+            border: 1px solid var(--correct-border);
+            color: #86efac;
+        }
+
+        .feedback.incorrect-bg {
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--incorrect-border);
+            color: #fca5a5;
+        }
+
+        .btn-container {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            background-color: var(--accent);
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        #submit-all {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            margin-top: 30px;
+            margin-bottom: 50px;
+            background-color: #10b981;
+            color: #0f172a;
+        }
+
+        #submit-all:hover {
+            background-color: #059669;
+        }
+
+        .score-board {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            border: 2px solid var(--accent);
+            padding: 12px 20px;
+            border-radius: 30px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            z-index: 100;
+            display: none;
+        }
+
+        .opt-correct {
+            border-color: var(--correct-border) !important;
+            background-color: rgba(34, 197, 94, 0.2) !important;
+        }
+        .opt-incorrect {
+            border-color: var(--incorrect-border) !important;
+            background-color: rgba(239, 68, 68, 0.2) !important;
+        }
+        .opt-missed {
+            border-color: #eab308 !important;
+            background-color: rgba(234, 179, 8, 0.15) !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>  Quiz on Real Numbers </h1>
+        <p class="subtitle">Topics: Real Number System, Order Properties, Absolute Value, Boundedness, LUB Property & Subsets of $\mathbb{R}$</p>
+    </header>
+
+    <div class="quiz-instructions">
+        <strong>Instructions:</strong>
+        <ul>
+            <li>This test contains 30 objective-type questions.</li>
+            <li><strong>One or more options may be correct</strong> for each question. Select all options that apply.</li>
+            <li>To earn full credit for a question, you must select <em>all</em> correct options and <em>no</em> incorrect options.</li>
+            <li>Click "Check Answer" under each question to verify immediately, or complete the full test and click "Submit Entire Quiz" at the bottom.</li>
+        </ul>
+    </div>
+
+    <form id="quiz-form">
+        <div id="questions-wrapper"></div>
+        <button type="button" id="submit-all" onclick="gradeQuiz()">Submit Entire Quiz</button>
+    </form>
+</div>
+
+<div id="score-board" class="score-board">
+    Score: <span id="score-val">0</span> / 30
+</div>
+
+<script>
+const quizData = [
+    {
+        id: 1,
+        topic: "Order Properties",
+        question: "Let $a, b, c \\in \\mathbb{R}$. Which of the following properties are valid in the ordered field of real numbers?",
+        options: [
+            "If $a < b$ and $c < 0$, then $ac > bc$.",
+            "If $a < b$, then $a + c < b + c$ for any $c \\in \\mathbb{R}$.",
+            "If $a^2 > b^2$, then $a > b$.",
+            "If $a < b$ and $a, b > 0$, then $\\frac{1}{a} > \\frac{1}{b}$."
+        ],
+        correct: [0, 1, 3],
+        explanation: "Options A, B, and D are standard order axioms/theorems in $\\mathbb{R}$. Option C fails for negative numbers (e.g., $(-3)^2 > 2^2$ but $-3 \\ngtr 2$)."
+    },
+    {
+        id: 2,
+        topic: "Absolute Value",
+        question: "Which of the following statements involving absolute values are true for all $x, y \\in \\mathbb{R}$?",
+        options: [
+            "$|x - y| \\ge ||x| - |y||$",
+            "$|x + y| = |x| + |y|$ if and only if $xy \\ge 0$.",
+            "$|x - y| \\le |x| - |y|$",
+            "$|x y| = |x||y|$"
+        ],
+        correct: [0, 1, 3],
+        explanation: "A is the reverse triangle inequality. B holds iff $x, y$ have the same sign. D is the multiplicative property. C is false."
+    },
+    {
+        id: 3,
+        topic: "Absolute Value",
+        question: "The set of all real numbers $x$ satisfying $|2x - 5| < 7$ can be expressed as:",
+        options: [
+            "$\\{x \\in \\mathbb{R} : -1 < x < 6\\}$",
+            "$(-1, 6)$",
+            "$\\{x \\in \\mathbb{R} : x < 6\\} \\cap \\{x \\in \\mathbb{R} : x > -1\\}$",
+            "$\\{x \\in \\mathbb{R} : x < -1\\} \\cup \\{x \\in \\mathbb{R} : x > 6\\}$"
+        ],
+        correct: [0, 1, 2],
+        explanation: "$|2x - 5| < 7 \\iff -7 < 2x - 5 < 7 \\iff -2 < 2x < 12 \\iff -1 < x < 6$. Options A, B, and C correctly represent the open interval $(-1, 6)$."
+    },
+    {
+        id: 4,
+        topic: "Subsets of Real Numbers",
+        question: "Consider the set $S = \\left\\{ x \\in \\mathbb{R} : \\frac{x - 1}{x + 2} \\ge 0 \\right\\}$. Which of the following describe $S$?",
+        options: [
+            "$(-\\infty, -2) \\cup [1, \\infty)$",
+            "$(-\\infty, -2] \\cup [1, \\infty)$",
+            "$\\{x \\in \\mathbb{R} : x < -2 \\text{ or } x \\ge 1\\}$",
+            "$\\mathbb{R} \\setminus (-2, 1)$"
+        ],
+        correct: [0, 2],
+        explanation: "Sign chart for $\\frac{x-1}{x+2}$: positive for $x > 1$ or $x < -2$. Zero at $x=1$. Undefined at $x=-2$. Thus $S = (-\\infty, -2) \\cup [1, \\infty)$."
+    },
+    {
+        id: 5,
+        topic: "Real Number System",
+        question: "Which of the following statements regarding the structure of $\\mathbb{R}$ are correct?",
+        options: [
+            "Between any two distinct real numbers, there exists an infinite number of rational numbers.",
+            "Between any two distinct real numbers, there exists an infinite number of irrational numbers.",
+            "The set of rational numbers $\\mathbb{Q}$ is closed under addition and multiplication.",
+            "The set of irrational numbers is closed under addition and multiplication."
+        ],
+        correct: [0, 1, 2],
+        explanation: "Rational and irrational numbers are both dense in $\\mathbb{R}$. $\\mathbb{Q}$ forms a field. Irrationals are NOT closed under addition (e.g. $\\sqrt{2} + (-\\sqrt{2}) = 0 \\in \\mathbb{Q}$)."
+    },
+    {
+        id: 6,
+        topic: "LUB Property",
+        question: "The Least Upper Bound Property (Completeness Axiom) of $\\mathbb{R}$ states that:",
+        options: [
+            "Every non-empty set of real numbers has a least upper bound in $\\mathbb{R}$.",
+            "Every non-empty set of real numbers that is bounded above has a least upper bound in $\\mathbb{R}$.",
+            "Every non-empty set of real numbers that is bounded below has a greatest lower bound in $\\mathbb{R}$.",
+            "Every set bounded above has a maximum element in the set."
+        ],
+        correct: [1, 2],
+        explanation: "Completeness states every non-empty set bounded above has a least upper bound (LUB) in $\\mathbb{R}$. Equivalently, every non-empty set bounded below has a greatest lower bound (GLB)."
+    },
+    {
+        id: 7,
+        topic: "Bounded Sets & LUB",
+        question: "Consider the set $A = \\left\\{ 1 - \\frac{1}{n} : n \\in \\mathbb{N} \\right\\} = \\left\\{ 0, \\frac{1}{2}, \\frac{2}{3}, \\frac{3}{4}, \\dots \\right\\}$. Which statements are true?",
+        options: [
+            "$\\text{lub}(A) = 1$",
+            "$\\text{glb}(A) = 0$",
+            "$\\max(A) = 1$",
+            "$\\min(A) = 0$"
+        ],
+        correct: [0, 1, 3],
+        explanation: "As $n \\to \\infty$, $1 - 1/n \\to 1$, but $1 \\notin A$, so $\\text{lub}(A) = 1$ but maximum does not exist. The minimum element is $0$ (for $n=1$), which is in $A$, so $\\text{glb}(A) = 0$ and $\\min(A) = 0$."
+    },
+    {
+        id: 8,
+        topic: "LUB Property",
+        question: "Let $S \\subset \\mathbb{R}$ be non-empty and bounded above. Let $u = \\text{lub}(S)$. Which of the following statements are logically equivalent to $u = \\text{lub}(S)$?",
+        options: [
+            "$x \\le u$ for all $x \\in S$, and for every $\\epsilon > 0$, there exists $x_0 \\in S$ such that $x_0 > u - \\epsilon$.",
+            "$u$ is an upper bound of $S$, and if $v < u$, then $v$ is not an upper bound of $S$.",
+            "$x \\le u$ for all $x \\in S$, and for every $v < u$, there exists $x \\in S$ with $x > v$.",
+            "$u \\in S$ and $x \\le u$ for all $x \\in S$."
+        ],
+        correct: [0, 1, 2],
+        explanation: "A, B, and C are equivalent characterizations of the least upper bound. D describes the maximum of $S$, which requires $u \\in S$."
+    },
+    {
+        id: 9,
+        topic: "Real Number System",
+        question: "Which of the following are consequences or equivalent forms of the Archimedean Property of $\\mathbb{R}$?",
+        options: [
+            "For any $x \\in \\mathbb{R}$, there exists $n \\in \\mathbb{N}$ such that $n > x$.",
+            "For any $\\epsilon > 0$, there exists $n \\in \\mathbb{N}$ such that $\\frac{1}{n} < \\epsilon$.",
+            "If $x \\in \\mathbb{R}$ satisfies $0 \\le x < \\frac{1}{n}$ for all $n \\in \\mathbb{N}$, then $x = 0$.",
+            "The set $\\mathbb{N}$ of natural numbers is bounded above in $\\mathbb{R}$."
+        ],
+        correct: [0, 1, 2],
+        explanation: "A, B, and C are equivalent statements of the Archimedean property. D is false; $\\mathbb{N}$ is unbounded above in $\\mathbb{R}$."
+    },
+    {
+        id: 10,
+        topic: "LUB Property & Applications",
+        question: "Let $A, B \\subseteq \\mathbb{R}$ be non-empty sets bounded above. Define $A + B = \\{a + b : a \\in A, b \\in B\\}$. Which of the following are always true?",
+        options: [
+            "$\\text{lub}(A + B) = \\text{lub}(A) + \\text{lub}(B)$",
+            "If $A \\subseteq B$, then $\\text{lub}(A) \\le \\text{lub}(B)$.",
+            "$\\text{lub}(A \\cup B) = \\max(\\text{lub}(A), \\text{lub}(B))$",
+            "$\\text{lub}(A \\cap B) = \\min(\\text{lub}(A), \\text{lub}(B))$"
+        ],
+        correct: [0, 1, 2],
+        explanation: "A, B, and C are established properties. D is false because $A \\cap B$ could be empty, or its least upper bound could be strictly smaller."
+    },
+    {
+        id: 11,
+        topic: "Subsets of Real Numbers",
+        question: "Consider the set $S = \\left\\{ x \\in \\mathbb{R} : x^2 - 3x + 2 < 0 \\right\\}$. Which of the following sets are subsets of $S$?",
+        options: [
+            "$(1.1, 1.9)$",
+            "$\\{3/2\\}$",
+            "$(1, 2)$",
+            "$[1, 2]$"
+        ],
+        correct: [0, 1, 2],
+        explanation: "$x^2 - 3x + 2 < 0 \\iff (x-1)(x-2) < 0 \\iff x \\in (1, 2)$. Thus $S = (1, 2)$. A, B, and C are subsets of $(1, 2)$. D is NOT a subset because $1, 2 \\notin S$."
+    },
+    {
+        id: 12,
+        topic: "LUB Property & Applications",
+        question: "Which conditions guarantee that the intersection $\\bigcap_{n=1}^{\\infty} I_n$ of a sequence of intervals $I_n \\subset \\mathbb{R}$ is non-empty?",
+        options: [
+            "Each $I_n$ is closed and bounded $[a_n, b_n]$, and $I_{n+1} \\subseteq I_n$ for all $n \\in \\mathbb{N}$.",
+            "Each $I_n$ is an open interval $(a_n, b_n)$, and $I_{n+1} \\subseteq I_n$ for all $n \\in \\mathbb{N}$.",
+            "Each $I_n = [n, \\infty)$ for $n \\in \\mathbb{N}$.",
+            "Each $I_n = (0, 1/n)$ for $n \\in \\mathbb{N}$."
+        ],
+        correct: [0],
+        explanation: "Option A is the Nested Intervals Theorem (requires closed and bounded intervals). Options B, C, and D have empty intersections."
+    },
+    {
+        id: 13,
+        topic: "Real Number System",
+        question: "Which of the following numbers are irrational?",
+        options: [
+            "$\\sqrt{2} + \\sqrt{3}$",
+            "$\\log_{10}(2)$",
+            "$0.121221222122221\\dots$ (where the number of 2s increases by 1 each time)",
+            "$3.14159$"
+        ],
+        correct: [0, 1, 2],
+        explanation: "A and B are provably irrational numbers. C is a non-repeating non-terminating decimal, hence irrational. D is a terminating decimal, which is rational."
+    },
+    {
+        id: 14,
+        topic: "Bounded Sets & LUB",
+        question: "Let $S = \\left\\{ \\frac{(-1)^n}{n} + \\frac{1}{n} : n \\in \\mathbb{N} \\right\\}$. Which of the following statements are true?",
+        options: [
+            "For even $n = 2k$, the terms are $\\frac{2}{2k} = \\frac{1}{k}$.",
+            "For odd $n$, the terms are $0$.",
+            "$\\text{lub}(S) = 1$",
+            "$\\text{glb}(S) = 0$"
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "The set values are $\{0\} \\cup \{1/k : k \\in \\mathbb{N}\}$. The highest value is $1$ (for $n=2$), and the lowest is $0$ (for all odd $n$). Thus $\\text{lub}(S) = 1$ and $\\text{glb}(S) = 0$."
+    },
+    {
+        id: 15,
+        topic: "Absolute Value",
+        question: "For any real numbers $x, y, z \\in \\mathbb{R}$, which of the following inequalities always hold?",
+        options: [
+            "$|x - z| \\le |x - y| + |y - z|$",
+            "$|x + y + z| \\le |x| + |y| + |z|$",
+            "$|x - y| \\ge |x| - |y|$",
+            "$|x - y| \\ge |y| - |x|$"
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "A is the triangle inequality with an intermediate point $y$. B is the generalized triangle inequality. C and D follow from $|x-y| = |y-x| \\ge ||x| - |y||$."
+    },
+    {
+        id: 16,
+        topic: "LUB Property & Applications",
+        question: "Let $f, g : [0, 1] \\to \\mathbb{R}$ be bounded functions. Which of the following relations are always correct?",
+        options: [
+            "$\\text{lub}_{x \\in [0,1]} (f(x) + g(x)) \\le \\text{lub}_{x \\in [0,1]} f(x) + \\text{lub}_{x \\in [0,1]} g(x)$",
+            "$\\text{glb}_{x \\in [0,1]} (f(x) + g(x)) \\ge \\text{glb}_{x \\in [0,1]} f(x) + \\text{glb}_{x \\in [0,1]} g(x)$",
+            "$\\text{lub}_{x \\in [0,1]} (f(x) + g(x)) = \\text{lub}_{x \\in [0,1]} f(x) + \\text{lub}_{x \\in [0,1]} g(x)$",
+            "$\\text{lub}_{x \\in [0,1]} (f(x) g(x)) = \\left(\\text{lub}_{x \\in [0,1]} f(x)\\right) \\left(\\text{lub}_{x \\in [0,1]} g(x)\\right)$ for positive functions."
+        ],
+        correct: [0, 1],
+        explanation: "A and B are standard inequality properties for bounds of sums of functions. C and D fail if maximums occur at different points."
+    },
+    {
+        id: 17,
+        topic: "Subsets of Real Numbers",
+        question: "A subset $I \\subseteq \\mathbb{R}$ is defined to be an **interval** if whenever $x, y \\in I$ and $x < z < y$, then $z \\in I$. Which of the following sets meet this definition?",
+        options: [
+            "The empty set $\\emptyset$",
+            "Single point sets $\\{a\\}$ where $a \\in \\mathbb{R}$",
+            "The set of rational numbers $\\mathbb{Q}$",
+            "$\\mathbb{R} \\setminus \\{0\\}$"
+        ],
+        correct: [0, 1],
+        explanation: "Empty set and singletons satisfy the definition vacuously. $\\mathbb{Q}$ fails because irrationals lie between rationals. $\\mathbb{R} \\setminus \\{0\\}$ fails because $-1 < 0 < 1$ with $0 \\notin I$."
+    },
+    {
+        id: 18,
+        topic: "Bounded Above Sets",
+        question: "Let $S \\subset \\mathbb{R}$ be a set bounded above, and let $U_S$ be the set of all upper bounds of $S$. Which of the following statements are true regarding $U_S$?",
+        options: [
+            "$U_S$ is non-empty.",
+            "$U_S$ is bounded below.",
+            "$\\text{glb}(U_S) = \\text{lub}(S)$",
+            "$U_S$ is bounded above."
+        ],
+        correct: [0, 1, 2],
+        explanation: "Since $S$ is bounded above, $U_S \\neq \\emptyset$. $S$ provides lower bounds for $U_S$, so $U_S$ is bounded below. By definition, $\\text{glb}(U_S) = \\text{lub}(S)$. $U_S$ extends to $+\\infty$, so it is unbounded above."
+    },
+    {
+        id: 19,
+        topic: "Absolute Value",
+        question: "The set $S = \\{x \\in \\mathbb{R} : |x - 2| \\le |x + 4|\\}$ is equal to:",
+        options: [
+            "$[-1, \\infty)$",
+            "$\\{x \\in \\mathbb{R} : x \\ge -1\\}$",
+            "$(-\\infty, -1]$",
+            "$\\{x \\in \\mathbb{R} : (x-2)^2 \\le (x+4)^2\\}$"
+        ],
+        correct: [0, 1, 3],
+        explanation: "Squaring both sides: $(x-2)^2 \\le (x+4)^2 \\iff x^2 - 4x + 4 \\le x^2 + 8x + 16 \\iff -12 \\le 12x \\iff x \\ge -1$. Options A, B, and D describe $[-1, \\infty)$."
+    },
+    {
+        id: 20,
+        topic: "Bounded Sets & LUB",
+        question: "Let $S = \\left\\{ \\frac{x}{x+1} : x > -1 \\right\\}$. Which statements are true about $S$?",
+        options: [
+            "$S$ is bounded below by $0$ for $x \\ge 0$, but unbounded below overall on $x > -1$.",
+            "$\\text{lub}(S) = 1$",
+            "$S = (-\\infty, 1)$",
+            "$S$ is bounded above by $1$."
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "Let $f(x) = \\frac{x}{x+1} = 1 - \\frac{1}{x+1}$. As $x \\to -1^+$, $f(x) \\to -\\infty$. As $x \\to \\infty$, $f(x) \\to 1$. The image set is $(-\\infty, 1)$, so $\\text{lub}(S) = 1$ and it is unbounded below."
+    },
+    {
+        id: 21,
+        topic: "Real Number System",
+        question: "Which of the following algebraic properties hold in $\\mathbb{R}$ but NOT in $\\mathbb{Z}$ (integers)?",
+        options: [
+            "Existence of additive identity",
+            "Existence of multiplicative identity",
+            "Existence of multiplicative inverse for every non-zero element",
+            "Distributive law of multiplication over addition"
+        ],
+        correct: [2],
+        explanation: "$\\mathbb{Z}$ has 0, 1, and distributivity. However, non-zero integers like $2$ do not have multiplicative inverses in $\\mathbb{Z}$ ($1/2 \\notin \\mathbb{Z}$). Thus C distinguishes field $\\mathbb{R}$ from $\\mathbb{Z}$."
+    },
+    {
+        id: 22,
+        topic: "LUB Property & Applications",
+        question: "Let $S \\subseteq \\mathbb{R}$ be a non-empty bounded set. Define $-S = \\{-x : x \\in S\\}$. Which of the following relationships are correct?",
+        options: [
+            "$\\text{lub}(-S) = -\\text{glb}(S)$",
+            "$\\text{glb}(-S) = -\\text{lub}(S)$",
+            "$\\text{lub}(-S) = \\text{lub}(S)$",
+            "$\\text{glb}(-S) = \\text{glb}(S)$"
+        ],
+        correct: [0, 1],
+        explanation: "Reflecting a set across the origin swaps upper bounds with lower bounds and negates them: $\\text{lub}(-S) = -\\text{glb}(S)$ and $\\text{glb}(-S) = -\\text{lub}(S)$."
+    },
+    {
+        id: 23,
+        topic: "Subsets of Real Numbers",
+        question: "Let $A = \\{x \\in \\mathbb{R} : x^2 - 5x + 6 \\le 0\\}$ and $B = \\{x \\in \\mathbb{R} : |x - 2.5| \\le 0.5\\}$. How are $A$ and $B$ related?",
+        options: [
+            "$A = B$",
+            "$A \\subseteq B$",
+            "$B \\subseteq A$",
+            "$A \\cap B = [2, 3]$"
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "$A: (x-2)(x-3) \\le 0 \\implies x \\in [2, 3]$. $B: |x - 2.5| \\le 0.5 \\iff 2 \\le x \\le 3$. Since $A = B = [2, 3]$, all four options are mathematically true."
+    },
+    {
+        id: 24,
+        topic: "Real Number System",
+        question: "Let $a, b \\in \\mathbb{R}$ with $a < b$. Which of the following explicitly guarantees an irrational number in $(a, b)$?",
+        options: [
+            "$a + \\frac{b - a}{\\sqrt{2}}$",
+            "If $q \\in \\mathbb{Q}$ is chosen such that $0 < q < \\frac{b-a}{\\sqrt{2}}$, then $a + q\\sqrt{2}$ is irrational and in $(a, b)$.",
+            "$\\frac{a + b}{2}$",
+            "$\\sqrt{a b}$ assuming $a, b > 0$"
+        ],
+        correct: [1],
+        explanation: "Option B is a standard construction: $a + q\\sqrt{2}$ is strictly irrational and lies within $(a, b)$."
+    },
+    {
+        id: 25,
+        topic: "Bounded Above Sets",
+        question: "Which of the following sets of real numbers are bounded above?",
+        options: [
+            "$S_1 = \\{x \\in \\mathbb{R} : x^3 - x < 0\\}$",
+            "$S_2 = \\{n - n^2 : n \\in \\mathbb{N}\\}$",
+            "$S_3 = \\{x \\in \\mathbb{R} : 2^x < 100\\}$",
+            "$S_4 = \\{\\cos(n) : n \\in \\mathbb{N}\\}$"
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "$S_1 = (-\\infty, -1) \\cup (0, 1)$ is bounded above by $1$. $S_2$ has maximum $0$. $S_3$ is bounded above by $\\log_2(100)$. $S_4$ is bounded above by $1$."
+    },
+    {
+        id: 26,
+        topic: "Real Number System",
+        question: "Which of the following properties uniquely characterize the Real Number System $\\mathbb{R}$ (up to isomorphism)?",
+        options: [
+            "It is an ordered field.",
+            "It is a complete ordered field.",
+            "It is an Archimedean ordered field.",
+            "It is an uncountable set."
+        ],
+        correct: [1],
+        explanation: "The Real Number System $\\mathbb{R}$ is the unique (up to isomorphism) complete ordered field."
+    },
+    {
+        id: 27,
+        topic: "LUB Property",
+        question: "Let $A, B$ be non-empty bounded subsets of $\\mathbb{R}$ such that $A \\subseteq B$. Which of the following inequalities MUST hold?",
+        options: [
+            "$\\text{glb}(B) \\le \\text{glb}(A)$",
+            "$\\text{lub}(A) \\le \\text{lub}(B)$",
+            "$\\text{glb}(A) \\le \\text{lub}(A)$",
+            "$\\text{lub}(A) \\le \\text{glb}(B)$"
+        ],
+        correct: [0, 1, 2],
+        explanation: "Enlarging a set expands its bounds: $\\text{glb}(B) \\le \\text{glb}(A)$ and $\\text{lub}(A) \\le \\text{lub}(B)$. Also $\\text{glb}(A) \\le \\text{lub}(A)$ holds for any non-empty set."
+    },
+    {
+        id: 28,
+        topic: "Subsets of Real Numbers",
+        question: "The set $S = \\{x \\in \\mathbb{R} : x^2 + 1 \\le 0\\}$ is:",
+        options: [
+            "The empty set $\\emptyset$",
+            "Bounded above by every real number",
+            "Bounded below by every real number",
+            "Satisfies $\\text{lub}(S) = -\\infty$ in the extended real numbers"
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "Since $x^2 + 1 \\ge 1 > 0$, $S = \\emptyset$. Any real number is vacuously an upper bound and lower bound for $\\emptyset$. In the extended real system, $\\text{lub}(\\emptyset) = -\\infty$."
+    },
+    {
+        id: 29,
+        topic: "Absolute Value",
+        question: "The metric/distance function $d(x, y) = |x - y|$ on $\\mathbb{R}$ satisfies which of the following properties for all $x, y, z \\in \\mathbb{R}$?",
+        options: [
+            "$d(x, y) \\ge 0$, and $d(x, y) = 0 \\iff x = y$",
+            "$d(x, y) = d(y, x)$",
+            "$d(x, z) \\le d(x, y) + d(y, z)$",
+            "$d(c x, c y) = |c| d(x, y)$ for any $c \\in \\mathbb{R}$"
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "A, B, and C are metric space axioms. D is the homogeneity property of the absolute value distance."
+    },
+    {
+        id: 30,
+        topic: "LUB Property & Applications",
+        question: "Let $S \\subset (0, \\infty)$ be a non-empty bounded set with $\\text{glb}(S) > 0$. Define $S^{-1} = \\{1/x : x \\in S\\}$. Which of the following statements are correct?",
+        options: [
+            "$\\text{lub}(S^{-1}) = \\frac{1}{\\text{glb}(S)}$",
+            "$\\text{glb}(S^{-1}) = \\frac{1}{\\text{lub}(S)}$",
+            "$S^{-1}$ is bounded above and below.",
+            "$\\text{lub}(S^{-1}) = \\frac{1}{\\text{lub}(S)}$"
+        ],
+        correct: [0, 1, 2],
+        explanation: "Inverting positive numbers reverses inequalities: if $a \\le x \\le b$, then $1/b \\le 1/x \\le 1/a$. Hence $\\text{lub}(S^{-1}) = 1/\\text{glb}(S)$ and $\\text{glb}(S^{-1}) = 1/\\text{lub}(S)$."
+    }
+];
+
+function renderQuiz() {
+    const container = document.getElementById('questions-wrapper');
+    container.innerHTML = '';
+
+    quizData.forEach((q, index) => {
+        const qCard = document.createElement('div');
+        qCard.className = 'q-card';
+        qCard.id = `q-card-${q.id}`;
+
+        let optionsHTML = '';
+        q.options.forEach((opt, optIndex) => {
+            optionsHTML += `
+                <label class="option" id="opt-label-${q.id}-${optIndex}">
+                    <input type="checkbox" name="q${q.id}" value="${optIndex}" onchange="resetQuestionState(${q.id})">
+                    <span class="option-text">(${String.fromCharCode(65 + optIndex)}) ${opt}</span>
+                </label>
+            `;
+        });
+
+        qCard.innerHTML = `
+            <span class="q-tag">${q.topic}</span>
+            <div class="q-header">Question ${index + 1}: ${q.question}</div>
+            <div class="options">
+                ${optionsHTML}
+            </div>
+            <div class="btn-container">
+                <button type="button" onclick="checkSingleQuestion(${q.id})">Check Answer</button>
+            </div>
+            <div class="feedback" id="feedback-${q.id}"></div>
+        `;
+
+        container.appendChild(qCard);
+    });
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+    }
+}
+
+function resetQuestionState(qId) {
+    const feedback = document.getElementById(`feedback-${qId}`);
+    feedback.style.display = 'none';
+    feedback.className = 'feedback';
+
+    const q = quizData.find(item => item.id === qId);
+    q.options.forEach((_, optIndex) => {
+        const label = document.getElementById(`opt-label-${qId}-${optIndex}`);
+        label.classList.remove('opt-correct', 'opt-incorrect', 'opt-missed');
+    });
+}
+
+function checkSingleQuestion(qId) {
+    const q = quizData.find(item => item.id === qId);
+    const selectedOptions = Array.from(document.querySelectorAll(`input[name="q${qId}"]:checked`)).map(cb => parseInt(cb.value));
+    const feedback = document.getElementById(`feedback-${qId}`);
+
+    q.options.forEach((_, optIndex) => {
+        const label = document.getElementById(`opt-label-${qId}-${optIndex}`);
+        label.classList.remove('opt-correct', 'opt-incorrect', 'opt-missed');
+
+        const isSelected = selectedOptions.includes(optIndex);
+        const isCorrect = q.correct.includes(optIndex);
+
+        if (isSelected && isCorrect) {
+            label.classList.add('opt-correct');
+        } else if (isSelected && !isCorrect) {
+            label.classList.add('opt-incorrect');
+        } else if (!isSelected && isCorrect) {
+            label.classList.add('opt-missed');
+        }
+    });
+
+    const isFullyCorrect = selectedOptions.length === q.correct.length && 
+                           selectedOptions.every(val => q.correct.includes(val));
+
+    feedback.style.display = 'block';
+    if (isFullyCorrect) {
+        feedback.className = 'feedback correct-bg';
+        feedback.innerHTML = `<strong>Correct!</strong><br>${q.explanation}`;
+    } else {
+        feedback.className = 'feedback incorrect-bg';
+        const correctLetters = q.correct.map(i => String.fromCharCode(65 + i)).join(', ');
+        feedback.innerHTML = `<strong>Incorrect or Incomplete.</strong><br>Correct Option(s): <strong>${correctLetters}</strong><br>${q.explanation}`;
+    }
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([feedback]);
+    }
+
+    return isFullyCorrect;
+}
+
+function gradeQuiz() {
+    let score = 0;
+    quizData.forEach(q => {
+        const isCorrect = checkSingleQuestion(q.id);
+        if (isCorrect) score++;
+    });
+
+    const scoreBoard = document.getElementById('score-board');
+    const scoreVal = document.getElementById('score-val');
+    scoreVal.innerText = score;
+    scoreBoard.style.display = 'block';
+
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
