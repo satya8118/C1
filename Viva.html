@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Analysis &middot; Question Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\(', '\)']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" id="MathJax-script" async></script>
+<style>
+:root{
+  --indigo: #8f85e6;
+  --indigo-deep: #d6d1ff;
+  --indigo-soft: #756adf;
+  --amber: #e8a53c;
+  --amber-soft: #4a3a1a;
+  --sage: #86c091;
+  --sage-soft: #16261a;
+  --paper: #000000;
+  --card: #131218;
+  --ink: #f1f0f6;
+  --ink-soft: #b6b3c8;
+  --line: #2b2833;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.6), 0 8px 24px -12px rgba(143,133,230,0.28);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(143,133,230,0.10) 0%, transparent 60%),
+    radial-gradient(1000px 500px at 100% 0%, rgba(232,165,60,0.07) 0%, transparent 55%),
+    var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', system-ui, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+.wrap{max-width:820px; margin:0 auto; padding:0 20px;}
+
+header.top{padding:40px 0 22px; text-align:center;}
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--amber); font-weight:600; margin-bottom:10px;
+}
+h1{
+  font-family:'Fraunces', serif; font-weight:600; font-size:clamp(28px,4.6vw,40px);
+  margin:0 0 10px; color:var(--indigo-deep); letter-spacing:-0.01em;
+}
+.sub{color:var(--ink-soft); font-size:15px; max-width:540px; margin:0 auto;}
+
+/* ---------- Toolbar ---------- */
+#toolbar{
+  position:sticky; top:0; z-index:50;
+  background:rgba(247,246,251,0.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+  padding:14px 20px 12px;
+  margin-bottom:26px;
+}
+.toolbar-inner{max-width:820px; margin:0 auto;}
+#search{
+  width:100%; padding:11px 14px; border-radius:10px; border:1.5px solid var(--line);
+  font-family:'IBM Plex Sans',sans-serif; font-size:15px; background:#0d0c11; color:var(--ink);
+  margin-bottom:10px;
+}
+#search:focus{outline:none; border-color:var(--indigo-soft); box-shadow:0 0 0 3px rgba(108,98,184,0.15);}
+.chip-row{display:flex; flex-wrap:wrap; gap:7px; align-items:center;}
+.chip{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+  padding:6px 12px; border-radius:99px; border:1.5px solid var(--line);
+  background:#0d0c11; color:var(--ink-soft); cursor:pointer; user-select:none;
+  transition:all .12s ease; white-space:nowrap;
+}
+.chip:hover{border-color:var(--indigo-soft);}
+.chip.active{background:var(--indigo); color:#fff; border-color:var(--indigo);}
+.toolbar-bottom{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin-top:12px; flex-wrap:wrap;
+}
+#count-label{font-size:13px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+.actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.btn{
+  appearance:none; border:none; cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13.5px;
+  padding:8px 14px; border-radius:9px;
+  transition:transform .12s ease, background .12s ease;
+}
+.btn:hover{transform:translateY(-1px);}
+.btn-primary{background:var(--indigo); color:#fff;}
+.btn-primary:hover{background:var(--indigo-deep);}
+.btn-primary:disabled{background:#312f3a; color:#726f80; cursor:not-allowed; transform:none;}
+.btn-ghost{background:transparent; color:var(--indigo); border:1.5px solid var(--indigo-soft);}
+.btn-ghost:hover{background:#1c1a28;}
+.btn-sm{font-size:12.5px; padding:6px 11px;}
+#copy-feedback{font-size:12.5px; color:var(--sage); font-family:'IBM Plex Mono',monospace; min-height:16px;}
+
+/* ---------- Question list ---------- */
+#list{margin-top:4px;}
+.qcard{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px 20px; margin-bottom:12px;
+  display:flex; gap:14px; align-items:flex-start;
+  transition:border-color .12s ease;
+}
+.qcard.selected{border-color:var(--sage); background:var(--sage-soft);}
+.qcard.hidden{display:none;}
+.qcard input[type=checkbox]{
+  margin-top:4px; width:17px; height:17px; accent-color:var(--indigo); flex-shrink:0; cursor:pointer;
+}
+.qbody{flex:1; min-width:0;}
+.qmeta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;}
+.qnum{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+  color:#fff; background:var(--indigo-soft); padding:2px 8px; border-radius:99px;
+}
+.qtopic{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--amber); font-weight:600;
+}
+.qkind{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.04em;
+  color:var(--sage); background:var(--sage-soft); padding:2px 8px; border-radius:6px; font-weight:600;
+}
+.qcard.selected .qkind{background:#0d0c11;}
+.qtext{font-size:16px; color:var(--ink);}
+
+#empty-state{
+  text-align:center; padding:50px 20px; color:var(--ink-soft); display:none;
+}
+
+footer{text-align:center; color:var(--ink-soft); font-size:12.5px; padding:30px 20px 10px;}
+
+@media print{
+  #toolbar{display:none;}
+  body{background:#fff !important; color:#111 !important; padding-bottom:0;}
+  .qcard{box-shadow:none; break-inside:avoid; border:1px solid #ccc; background:#fff !important; color:#111 !important;}
+  .qcard input[type=checkbox]{display:none;}
+  .qtext, .qtopic, .qkind, .qnum{color:#111 !important; background:none !important;}
+}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <div class="toolbar-inner">
+    <input id="search" type="text" placeholder="Search questions&hellip;">
+    <div class="chip-row" id="topic-chips"></div>
+    <div class="toolbar-bottom">
+      <div>
+        <span id="count-label"></span>
+        <span id="copy-feedback"></span>
+      </div>
+      <div class="actions">
+        <button class="btn btn-ghost btn-sm" id="select-all-btn">Select all shown</button>
+        <button class="btn btn-ghost btn-sm" id="clear-btn">Clear selection</button>
+        <button class="btn btn-primary btn-sm" id="copy-text-btn">Copy selected &middot; plain text</button>
+        <button class="btn btn-primary btn-sm" id="copy-latex-btn">Copy selected &middot; LaTeX</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Real Analysis</div>
+    <h1>Question Bank</h1>
+    <p class="sub">A growing collection of definitions, statements, and standard proofs. Search or filter by topic, tick the ones you want, and copy them straight into a tutorial sheet or assignment.</p>
+  </header>
+
+  <div id="list"></div>
+  <div id="empty-state">No questions match your search.</div>
+
+  <footer> 21 questions in the bank so far &middot; more will be added over time.</footer>
+</div>
+
+<script>
+const QUESTIONS = [{"topic": "Number systems", "kind": "Definition", "q": "Define rational numbers.", "id": 1}, {"topic": "Number systems", "kind": "Prove", "q": "Show that $\\sqrt{2}$ is an irrational number.", "id": 2}, {"topic": "Number systems", "kind": "Prove", "q": "Show that $\\sqrt{2} + r$, where $r \\in \\mathbb{Q}$, is an irrational number.", "id": 3}, {"topic": "Number systems", "kind": "Prove", "q": "Show that $r\\sqrt{2}$, where $r \\in \\mathbb{Q}$ and $r \\ne 0$, is an irrational number.", "id": 4}, {"topic": "Number systems", "kind": "Prove", "q": "Show that if $x$ is irrational, then $\\dfrac{1}{x}$ is irrational.", "id": 5}, {"topic": "Algebraic & order properties of $\\mathbb{R}$", "kind": "Prove", "q": "If $a, b \\in \\mathbb{R}$ and $ab = 0$, then either $a = 0$ or $b = 0$.", "id": 6}, {"topic": "Algebraic & order properties of $\\mathbb{R}$", "kind": "Prove", "q": "If $a, b \\in \\mathbb{R}$ and $a^2 + b^2 = 0$, then $a = 0$ and $b = 0$.", "id": 7}, {"topic": "Algebraic & order properties of $\\mathbb{R}$", "kind": "Prove", "q": "If $a > b > 0$, then $\\dfrac{1}{a} < \\dfrac{1}{b}$.", "id": 8}, {"topic": "Algebraic & order properties of $\\mathbb{R}$", "kind": "Prove", "q": "If $a > b > 0$, then $a^n < b^n$ for all $n \\in \\mathbb{N}$.", "id": 9}, {"topic": "Bounds & the LUB property", "kind": "Definition", "q": "Define an upper bound.", "id": 10}, {"topic": "Bounds & the LUB property", "kind": "Explain", "q": "Let $A \\ne \\emptyset$. Then what do you mean by “$\\alpha$ is not an upper bound of $A$”?", "id": 11}, {"topic": "Bounds & the LUB property", "kind": "Definition", "q": "Define bounded above.", "id": 12}, {"topic": "Bounds & the LUB property", "kind": "Prove", "q": "Show that $\\mathbb{R}$ is not bounded above.", "id": 13}, {"topic": "Bounds & the LUB property", "kind": "Prove", "q": "Show that $\\mathbb{R}^+ = (0, \\infty)$ is not bounded above.", "id": 14}, {"topic": "Bounds & the LUB property", "kind": "Prove", "q": "If $\\emptyset \\ne A \\subseteq B$ and $B$ is bounded above, then $A$ is bounded above.", "id": 15}, {"topic": "Bounds & the LUB property", "kind": "State", "q": "State the Least Upper Bound Property of $\\mathbb{R}$.", "id": 16}, {"topic": "Bounds & the LUB property", "kind": "State", "q": "State Archimedean Property.", "id": 17}, {"topic": "Bounds & the LUB property", "kind": "Prove", "q": "If $x>0,$ then show that $\\exists n\\in \\mathbb{N}$ such that $x>1/n.$  ", "id": 18}, {"topic": "Bounds & the LUB property", "kind": "Prove", "q": " Prove that $\\mathbb{Z}$ is not bounded below", "id": 19},{"topic": "Bounds & the LUB property", "kind": "Prove", "q": "$\\mathbb{Q}$ is dense in $\\mathbb{R}$", "id": 20},{"topic": "Bounds & the LUB property", "kind": "Prove", "q": "$\\mathbb{R}\\setminus\\mathbb{Q}$ is dense in $\\mathbb{R}$","id": 21}  ];
+const TOPICS = ["Number systems", "Algebraic & order properties of $\\mathbb{R}$", "Bounds & the LUB property"];
+
+let activeTopic = 'All';
+let searchTerm = '';
+let selected = new Set();
+
+const listEl = document.getElementById('list');
+const emptyState = document.getElementById('empty-state');
+const countLabel = document.getElementById('count-label');
+const chipsEl = document.getElementById('topic-chips');
+
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function buildChips(){
+  const all = ['All', ...TOPICS];
+  all.forEach(topic => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (topic === activeTopic ? ' active' : '');
+    chip.textContent = topic === 'All' ? `All (${QUESTIONS.length})` : `${topic} (${QUESTIONS.filter(q=>q.topic===topic).length})`;
+    chip.addEventListener('click', () => {
+      activeTopic = topic;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      applyFilters();
+    });
+    chipsEl.appendChild(chip);
+  });
+}
+
+function buildList(){
+  const frag = document.createDocumentFragment();
+  QUESTIONS.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.id = 'q-' + q.id;
+    card.dataset.topic = q.topic;
+    card.dataset.search = (q.q + ' ' + q.topic + ' ' + q.kind).toLowerCase();
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.id = 'cb-' + q.id;
+    cb.addEventListener('change', () => {
+      if (cb.checked) selected.add(q.id); else selected.delete(q.id);
+      card.classList.toggle('selected', cb.checked);
+      updateCount();
+    });
+    card.appendChild(cb);
+
+    const body = document.createElement('div');
+    body.className = 'qbody';
+    body.innerHTML = `
+      <div class="qmeta">
+        <span class="qnum">Q${q.id}</span>
+        <span class="qtopic">${escapeHtml(q.topic)}</span>
+        <span class="qkind">${escapeHtml(q.kind)}</span>
+      </div>
+      <div class="qtext">${escapeHtml(q.q)}</div>
+    `;
+    card.appendChild(body);
+    card.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'INPUT') { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); }
+    });
+
+    frag.appendChild(card);
+  });
+  listEl.appendChild(frag);
+}
+
+function applyFilters(){
+  let visibleCount = 0;
+  QUESTIONS.forEach(q => {
+    const card = document.getElementById('q-' + q.id);
+    const topicMatch = activeTopic === 'All' || q.topic === activeTopic;
+    const searchMatch = !searchTerm || card.dataset.search.includes(searchTerm);
+    const show = topicMatch && searchMatch;
+    card.classList.toggle('hidden', !show);
+    if (show) visibleCount++;
+  });
+  emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+  updateCount();
+}
+
+function updateCount(){
+  const visible = QUESTIONS.filter(q => !document.getElementById('q-'+q.id).classList.contains('hidden'));
+  countLabel.textContent = `Showing ${visible.length} of ${QUESTIONS.length} \u00b7 ${selected.size} selected`;
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  searchTerm = e.target.value.trim().toLowerCase();
+  applyFilters();
+});
+
+document.getElementById('select-all-btn').addEventListener('click', () => {
+  QUESTIONS.forEach(q => {
+    const card = document.getElementById('q-' + q.id);
+    if (!card.classList.contains('hidden')){
+      const cb = document.getElementById('cb-' + q.id);
+      cb.checked = true;
+      selected.add(q.id);
+      card.classList.add('selected');
+    }
+  });
+  updateCount();
+});
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  selected.clear();
+  QUESTIONS.forEach(q => {
+    document.getElementById('cb-' + q.id).checked = false;
+    document.getElementById('q-' + q.id).classList.remove('selected');
+  });
+  updateCount();
+  document.getElementById('copy-feedback').textContent = '';
+});
+
+function getSelectedQuestions(){
+  return QUESTIONS.filter(q => selected.has(q.id));
+}
+
+document.getElementById('copy-text-btn').addEventListener('click', () => {
+  const chosen = getSelectedQuestions();
+  if (chosen.length === 0){ document.getElementById('copy-feedback').textContent = 'Select at least one question first.'; return; }
+  const text = chosen.map((q,i) => `${i+1}. ${q.q}`).join('\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copy-feedback').textContent = `Copied ${chosen.length} question(s) as plain text.`;
+  }).catch(() => { document.getElementById('copy-feedback').textContent = 'Could not access clipboard.'; });
+});
+
+document.getElementById('copy-latex-btn').addEventListener('click', () => {
+  const chosen = getSelectedQuestions();
+  if (chosen.length === 0){ document.getElementById('copy-feedback').textContent = 'Select at least one question first.'; return; }
+  const body = chosen.map(q => `  \\item ${q.q}`).join('\n');
+  const text = `\\begin{enumerate}\n${body}\n\\end{enumerate}`;
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copy-feedback').textContent = `Copied ${chosen.length} question(s) as LaTeX.`;
+  }).catch(() => { document.getElementById('copy-feedback').textContent = 'Could not access clipboard.'; });
+});
+
+buildChips();
+buildList();
+applyFilters();
+
+(function typesetWhenReady(attemptsLeft){
+  if (window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise().catch(err => console.error('MathJax typeset error:', err));
+  } else if (attemptsLeft > 0){
+    setTimeout(() => typesetWhenReady(attemptsLeft - 1), 100);
+  }
+})(100); // retries for up to ~10s while the CDN script finishes loading
+</script>
+</body>
+</html>
