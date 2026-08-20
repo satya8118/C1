@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Algebraic Properties of Number Systems (Corrected)</title>
+<style>
+  :root{
+    --navy:#0d1b6e;
+    --add-bg:#c9f2df;
+    --add-head:#93e6bd;
+    --mul-bg:#e3d9fb;
+    --mul-head:#c3aaf5;
+    --prop-bg:#cfe8fb;
+    --border:#0d1b6e;
+    --fix-bg:#fff3b0;
+    --fix-border:#c98a00;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:"Cambria Math","STIX Two Math","Latin Modern Math",Georgia,serif;
+    background:#dde3f2;
+    margin:0;
+    padding:14px;
+    color:#12163a;
+    font-size:13px;
+  }
+  .sheet{
+    max-width:1500px;
+    margin:0 auto;
+    background:#fff;
+    border:3px solid var(--navy);
+    border-radius:10px;
+    padding:14px 20px 16px;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    border-radius:8px;
+    padding:10px 20px;
+    text-align:center;
+    margin-bottom:10px;
+  }
+  header h1{margin:0 0 3px 0;font-size:1.65em;letter-spacing:.3px;}
+  header h2{margin:0;font-weight:normal;font-size:0.92em;opacity:0.92;font-family:Georgia,serif;}
+  .bb{font-family:"Cambria Math","STIX Two Math",serif;}
+  .badge{
+    display:inline-block;
+    background:#ffde59;
+    color:#3a2a00;
+    font-weight:bold;
+    font-family:Arial,sans-serif;
+    font-size:0.68em;
+    padding:2px 10px;
+    border-radius:20px;
+    margin-top:6px;
+  }
+  table.main{
+    width:100%;
+    border-collapse:collapse;
+    border:2.5px solid var(--border);
+    border-radius:6px;
+    overflow:hidden;
+    font-size:0.95em;
+  }
+  table.main th,table.main td{
+    border:1px solid var(--border);
+    text-align:center;
+    padding:5px 4px;
+    vertical-align:middle;
+    line-height:1.25;
+  }
+  thead tr.top th{font-size:1.15em;padding:6px;}
+  th.prop-head{background:var(--prop-bg);}
+  th.add-head{background:var(--add-head);}
+  th.mul-head{background:var(--mul-head);}
+  td.prop-col{
+    background:var(--prop-bg);
+    text-align:left;
+    font-weight:bold;
+    padding-left:10px;
+    min-width:150px;
+    font-family:Georgia,serif;
+    font-size:0.92em;
+  }
+  td.prop-col .def{
+    display:block;
+    font-weight:normal;
+    font-size:0.82em;
+    color:#33406b;
+    margin-top:1px;
+  }
+  tr.add-row td:not(.prop-col){background:var(--add-bg);}
+  tr.mul-row td:not(.prop-col){background:var(--mul-bg);}
+  .small{font-size:0.76em;font-weight:normal;display:block;margin-top:1px;line-height:1.15;color:#233;}
+  .fixed{
+    position:relative;
+    outline:2.5px solid var(--fix-border);
+    outline-offset:-2.5px;
+    background:var(--fix-bg) !important;
+  }
+  .legend{
+    font-family:Arial,sans-serif;
+    font-size:0.72em;
+    margin:6px 0 0 2px;
+    color:#444;
+  }
+  .legend span.swatch{
+    display:inline-block;width:11px;height:11px;
+    background:var(--fix-bg);outline:2px solid var(--fix-border);
+    vertical-align:middle;margin-right:4px;
+  }
+  .panels{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  .panel{
+    border-radius:6px;
+    padding:8px 12px;
+    border:1.5px solid var(--border);
+    font-size:0.86em;
+  }
+  .panel h3{margin:0 0 4px 0;color:var(--navy);font-family:Arial,sans-serif;font-size:1em;}
+  .panel.notes{background:#dff5e6;}
+  .panel.counter{background:#fbe1ee;}
+  .panel.takeaway{background:#dceeff;}
+  .panel ul{padding-left:16px;margin:0;}
+  .panel li{margin-bottom:4px;line-height:1.28;}
+  footer.credit{
+    text-align:center;
+    font-size:0.68em;
+    color:#666;
+    margin-top:8px;
+    font-family:Arial,sans-serif;
+  }
+
+  @media print{
+    @page{ size: A3 landscape; margin: 8mm; }
+    body{background:#fff;padding:0;font-size:11px;}
+    .sheet{border:2px solid #000;box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<header>
+  <h1>Algebraic Properties of Number Systems</h1>
+  <h2 class="bb">Natural Numbers (ℕ) &nbsp;·&nbsp; Integers (ℤ) &nbsp;·&nbsp; Rational Numbers (ℚ) &nbsp;·&nbsp; Irrational Numbers (𝕀=ℝ\ℚ) &nbsp;·&nbsp; Real Numbers (ℝ)</h2>
+  <div class="badge"></div>
+</header>
+
+<table class="main">
+  <thead>
+    <tr class="top">
+      <th class="prop-head">Property</th>
+      <th colspan="5" class="add-head">Addition</th>
+      <th colspan="5" class="mul-head">Multiplication</th>
+    </tr>
+    <tr class="bb">
+      <th class="prop-head"> </th>
+      <th class="add-head">ℕ</th><th class="add-head">ℤ</th><th class="add-head">ℚ</th><th class="add-head">𝕀</th><th class="add-head">ℝ</th>
+      <th class="mul-head">ℕ</th><th class="mul-head">ℤ</th><th class="mul-head">ℚ</th><th class="mul-head">𝕀</th><th class="mul-head">ℝ</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr class="add-row mul-row">
+      <td class="prop-col">Closure
+        <span class="def">∀a,b∈S, a∗b∈S</span>
+      </td>
+      <td>Yes</td><td>Yes</td><td>Yes</td>
+      <td class="fixed">No</td>
+      <td>Yes</td>
+      <td>Yes</td><td>Yes</td><td>Yes</td>
+      <td class="fixed">No</td>
+      <td>Yes</td>
+    </tr>
+
+    <tr class="add-row mul-row">
+      <td class="prop-col">Associative
+        <span class="def">(a∗b)∗c = a∗(b∗c)</span>
+      </td>
+      <td>Yes</td><td>Yes</td><td>Yes</td>
+      <td>Yes<span class="small">inherited from ℝ</span></td>
+      <td>Yes</td>
+      <td>Yes</td><td>Yes</td><td>Yes</td>
+      <td>Yes<span class="small">inherited from ℝ</span></td>
+      <td>Yes</td>
+    </tr>
+
+    <tr class="add-row mul-row">
+      <td class="prop-col">Identity
+        <span class="def">∃e∈S: a∗e=a</span>
+      </td>
+      <td class="fixed">None</td>
+      <td>0</td><td>0</td>
+      <td class="fixed">None</td>
+      <td>0</td>
+      <td>1</td><td>1</td><td>1</td>
+      <td class="fixed">None</td>
+      <td>1</td>
+    </tr>
+
+    <tr class="add-row mul-row">
+      <td class="prop-col">Inverse
+        <span class="def">∀a∈S,∃b∈S: a∗b=e</span>
+      </td>
+      <td>No<span class="small">e.g. 1</span></td>
+      <td>Yes<span class="small">−a</span></td>
+      <td>Yes<span class="small">−a</span></td>
+      <td class="fixed">N/A</td>
+      <td>Yes<span class="small">−a</span></td>
+      <td class="fixed">No<span class="small">e.g. 2</span></td>
+      <td>No<span class="small">e.g. 2</span></td>
+      <td>Yes<span class="small">a≠0</span></td>
+      <td class="fixed">N/A</td>
+      <td>Yes<span class="small">a≠0</span></td>
+    </tr>
+
+    <tr class="add-row mul-row">
+      <td class="prop-col">Commutative
+        <span class="def">a∗b = b∗a</span>
+      </td>
+      <td>Yes</td><td>Yes</td><td>Yes</td>
+      <td>Yes<span class="small">inherited from ℝ</span></td>
+      <td>Yes</td>
+      <td>Yes</td><td>Yes</td><td>Yes</td>
+      <td>Yes<span class="small">inherited from ℝ</span></td>
+      <td>Yes</td>
+    </tr>
+
+  </tbody>
+</table>
+<p class="legend"><span class="swatch"></span>Gold cells were incorrect in the original chart and have been corrected.</p>
+
+<div class="panels">
+  <div class="panel notes bb">
+    <h3>Notes</h3>
+    <ul>
+      <li>ℕ = {1, 2, 3, …}</li>
+      <li>ℤ = {…, −2, −1, 0, 1, 2, …}</li>
+      <li>ℚ = {p⁄q : p,q∈ℤ, q≠0}</li>
+      <li>𝕀 = {x∈ℝ : x∉ℚ}</li>
+      <li>ℝ = ℚ ∪ 𝕀</li>
+      <li> Group means Closure, Associative, Existence of Identity, Existence of inverse
+    </ul>
+  </div>
+
+  <div class="panel counter bb">
+    <h3>Counterexamples</h3>
+    <ul>
+      <li>Identity, ℕ, +: need e with a+e=a ∀a, forcing e=0, but 0∉ℕ.</li>
+      <li>Inverse, ℕ, +: 1+b=0 has no solution b∈ℕ.</li>
+      <li>Closure, 𝕀, +: √2+(−√2)=0∉𝕀.</li>
+      <li>Closure, 𝕀, ×: √2×√2=2∉𝕀.</li>
+      <li>Identity, 𝕀: 0∉𝕀 and 1∉𝕀 — neither identity exists.</li>
+      <li>Inverse, ℕ &amp; ℤ, ×: 2×b=1 has no solution b∈ℕ or ℤ.</li>
+    </ul>
+  </div>
+
+  <div class="panel takeaway bb">
+    <h3>Key Takeaways</h3>
+    <ul>
+      <li>ℕ, ℤ, ℚ, ℝ are closed under +, ×. <b>𝕀 is closed under neither.</b></li>
+      <li>Associativity &amp; commutativity hold everywhere (inherited from ℝ) — they don't need closure.</li>
+      <li>ℕ has no additive identity (0∉ℕ), so no additive inverses either.</li>
+      <li>𝕀 has no identity for + or × (0∉𝕀, 1∉𝕀), so "inverse" isn't meaningful for 𝕀 alone.</li>
+      <li>Excluding 0, ℚ\{0} and ℝ\{0} are multiplicative groups; ℤ and ℕ are not (e.g. 2 has no integer inverse).</li>
+    </ul>
+  </div>
+</div>
+
+
+</div>
+<footer class="credit">Reference sheet — algebraic structure of number systems.</footer>
+</body>
+</html>
