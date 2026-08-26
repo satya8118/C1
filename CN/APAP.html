@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications of LUB Property in Real Analysis</title>
+    <!-- MathJax for rendering LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-bg: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1);
+            
+            /* Theme Colors */
+            --green-primary: #28a745;
+            --green-bg: #f4fbf6;
+            
+            --blue-primary: #007bff;
+            --blue-bg: #f0f7ff;
+            
+            --slate-primary: #4f6d7a;
+            --slate-bg: #f2f5f7;
+            
+            --indigo-primary: #6610f2;
+            --indigo-bg: #f6f0ff;
+            
+            --orange-primary: #fd7e14;
+            --orange-bg: #fff8f0;
+            
+            --purple-primary: #6f42c1;
+            --purple-bg: #f8f0ff;
+            
+            --amber-primary: #d97706;
+            --amber-bg: #fffbee;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--primary-bg);
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Fixed Control Bar */
+        .controls-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 2px solid #007bff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .control-btn {
+            padding: 8px 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            color: white;
+            background-color: #007bff;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .control-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .status-text {
+            font-size: 0.95rem;
+            color: #555;
+            min-width: 250px;
+        }
+
+        /* Tcolorbox styling */
+        .tcolorbox {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            border-left: 5px solid #6c757d;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .tcolorbox-header {
+            padding: 12px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            background-color: rgba(0,0,0,0.03);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .tcolorbox-content {
+            padding: 20px;
+        }
+
+        /* Color Variations */
+        .tcolorbox.green { border-color: var(--green-primary); }
+        .tcolorbox.green .tcolorbox-header { background-color: var(--green-bg); color: var(--green-primary); }
+        
+        .tcolorbox.blue { border-color: var(--blue-primary); }
+        .tcolorbox.blue .tcolorbox-header { background-color: var(--blue-bg); color: var(--blue-primary); }
+
+        .tcolorbox.slate { border-color: var(--slate-primary); }
+        .tcolorbox.slate .tcolorbox-header { background-color: var(--slate-bg); color: var(--slate-primary); }
+
+        .tcolorbox.indigo { border-color: var(--indigo-primary); }
+        .tcolorbox.indigo .tcolorbox-header { background-color: var(--indigo-bg); color: var(--indigo-primary); }
+
+        .tcolorbox.orange { border-color: var(--orange-primary); }
+        .tcolorbox.orange .tcolorbox-header { background-color: var(--orange-bg); color: var(--orange-primary); }
+
+        .tcolorbox.purple { border-color: var(--purple-primary); }
+        .tcolorbox.purple .tcolorbox-header { background-color: var(--purple-bg); color: var(--purple-primary); }
+
+        .tcolorbox.amber { border-color: var(--amber-primary); }
+        .tcolorbox.amber .tcolorbox-header { background-color: var(--amber-bg); color: var(--amber-primary); }
+
+        /* Sentence Reveal System */
+        .sentence {
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .sentence.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sentence.highlight {
+            background-color: rgba(255, 235, 59, 0.35);
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        /* Formatting & Layout */
+        .math-display {
+            text-align: center;
+            margin: 12px 0;
+            font-size: 1.1rem;
+        }
+
+        ol, ul {
+            padding-left: 20px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px 10px;
+            text-align: center;
+        }
+
+        th { background-color: #f1f3f5; }
+
+        .diagram-container {
+            text-align: center;
+            margin: 15px 0;
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .diagram-caption {
+            font-size: 0.88rem;
+            color: #6c757d;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .animated-svg { max-width: 100%; height: auto; }
+
+        .pulse-element {
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0.2; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Applications of LUB Property</h1>
+        <p>Sentence-by-Sentence Auto-Advancing Presentation (5s Interval)</p>
+    </header>
+
+    <!-- Lemma 1 -->
+    <div class="tcolorbox green">
+        <div class="tcolorbox-header">Lemma 1 &mdash; Existence of Integer Part</div>
+        <div class="tcolorbox-content">
+            <div class="sentence"><p>For any real number $x$, there exists an integer $m$ such that:</p></div>
+            <div class="sentence math-display">$$m \le x < m+1$$</div>
+            <div class="sentence"><p><strong>Proof:</strong> Define the set $S_x = \{ z \in \mathbb{Z} \mid z \le x \}$.</p></div>
+            
+            <ol>
+                <li class="sentence">
+                    <strong>Proof that $S_x$ is non-empty by Contradiction:</strong> Assume $S_x = \emptyset$.
+                </li>
+                <li class="sentence">
+                    If $S_x$ is empty, there exists no integer $z \in \mathbb{Z}$ such that $z \le x$.
+                </li>
+                <li class="sentence">
+                    This implies that for every integer $z \in \mathbb{Z}$, we must have $z > x$.
+                </li>
+                <li class="sentence">
+                    Consequently, $x$ becomes a <strong>lower bound</strong> for the set of integers $\mathbb{Z}$.
+                </li>
+                <li class="sentence">
+                    However, this is a direct contradiction because the set of integers $\mathbb{Z}$ is <strong>not bounded below</strong>.
+                </li>
+                <li class="sentence">
+                    Thus, our assumption must be false, proving that $S_x$ is indeed non-empty ($S_x \neq \emptyset$).
+                </li>
+                <li class="sentence">
+                    $S_x$ is <strong>bounded above</strong> by the real number $x$ by definition of its elements.
+                </li>
+                <li class="sentence">
+                    By the <strong>Least Upper Bound (LUB) Property</strong>, let $m = \text{lub}(S_x)$.
+                </li>
+                <li class="sentence">
+                    Since $m-1 < m$, $m-1$ is not an upper bound of $S_x$, so there exists an integer $k \in S_x$ such that $k > m-1$, which means $k+1 > m$.
+                </li>
+                <li class="sentence">
+                    Thus, we conclude that $m = k$, leading directly to the inequality $m \le x < m+1$.
+                </li>
+            </ol>
+
+            <div class="sentence diagram-container">
+                <svg class="animated-svg" width="500" height="110" viewBox="0 0 500 110" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="20" y1="50" x2="480" y2="50" stroke="#343a40" stroke-width="2" />
+                    <rect class="pulse-element" x="20" y="40" width="260" height="20" fill="#28a745" />
+                    <line x1="200" y1="32" x2="200" y2="68" stroke="#28a745" stroke-width="3"/>
+                    <text x="200" y="88" text-anchor="middle" font-weight="bold" fill="#28a745">m = lub(Sₓ)</text>
+                    <circle cx="280" cy="50" r="6" fill="#dc3545" />
+                    <text x="280" y="30" text-anchor="middle" fill="#dc3545" font-weight="bold">x</text>
+                    <line x1="350" y1="32" x2="350" y2="68" stroke="#007bff" stroke-width="3"/>
+                    <text x="350" y="88" text-anchor="middle" font-weight="bold" fill="#007bff">m+1</text>
+                </svg>
+                <div class="diagram-caption">Figure 1: Visual representation showing $m$ as the supremum of integer lower bounds.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theorem: Uniqueness -->
+    <div class="tcolorbox blue">
+        <div class="tcolorbox-header">Theorem &mdash; Uniqueness of the Integer Part</div>
+        <div class="tcolorbox-content">
+            <div class="sentence"><p>The integer $m$ satisfying the condition $m \le x < m+1$ is strictly <strong>unique</strong>.</p></div>
+            <div class="sentence"><p><strong>Proof:</strong> Assume by contradiction that distinct integers $m$ and $n$ both satisfy $m \le x < m+1$ and $n \le x < n+1$.</p></div>
+            <div class="sentence"><p>Without loss of generality, assume $n > m$, which implies that $n \ge m+1$.</p></div>
+            <div class="sentence"><p>However, from $n \le x < m+1$, we obtain $n < m+1$.</p></div>
+            <div class="sentence"><p>This yields the clear contradiction $n \ge m+1$ and $n < m+1$.</p></div>
+            <div class="sentence"><p>Therefore, our initial assumption must be false, proving that $m = n$. $\blacksquare$</p></div>
+
+            <div class="sentence diagram-container">
+                <svg class="animated-svg" width="500" height="100" viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="20" y1="50" x2="480" y2="50" stroke="#343a40" stroke-width="2" />
+                    <rect x="130" y="40" width="110" height="20" fill="#007bff" fill-opacity="0.15" />
+                    <text x="130" y="80" text-anchor="middle" font-weight="bold" fill="#007bff">m</text>
+                    <text x="240" y="80" text-anchor="middle" font-weight="bold" fill="#007bff">m+1</text>
+                    <rect x="260" y="40" width="110" height="20" fill="#dc3545" fill-opacity="0.15" />
+                    <text x="260" y="80" text-anchor="middle" font-weight="bold" fill="#dc3545">n</text>
+                    <text x="370" y="80" text-anchor="middle" font-weight="bold" fill="#dc3545">n+1</text>
+                    <text x="250" y="25" text-anchor="middle" font-size="13" fill="#dc3545" font-weight="bold">Contradiction: Disjoint Intervals</text>
+                </svg>
+                <div class="diagram-caption">Figure 2: Distinct integer intervals cannot overlap to contain the same real number $x$.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 0 -->
+    <div class="tcolorbox slate">
+        <div class="tcolorbox-header">Step 0 &mdash; Integers Between Real Numbers</div>
+        <div class="tcolorbox-content">
+            <div class="sentence"><p><strong>Sufficient Condition:</strong> If $b - a > 1$, then there is always at least one integer strictly between $a$ and $b$.</p></div>
+            <div class="sentence"><p>Specifically, setting $m = \lfloor a \rfloor + 1$ guarantees that $a < m < b$.</p></div>
+            <div class="sentence"><p>The table below summarizes this behavior for different interval lengths:</p></div>
+            
+            <table class="sentence">
+                <thead>
+                    <tr><th>$a$</th><th>$b$</th><th>$b - a$</th><th>Integer in $(a,b)$?</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0.3</td><td>1.8</td><td>1.5 > 1</td><td>Yes ($m = 1$)</td></tr>
+                    <tr><td>0.7</td><td>1.3</td><td>0.6 &le; 1</td><td>Yes ($m = 1$)</td></tr>
+                    <tr><td>0.2</td><td>0.8</td><td>0.6 &le; 1</td><td>No integer exists</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="tcolorbox indigo">
+        <div class="tcolorbox-header">Step 1 &mdash; Reformulating Rational Density</div>
+        <div class="tcolorbox-content">
+            <div class="sentence"><p>Finding a rational number $\frac{m}{n}$ between $a$ and $b$ is equivalent to finding an integer $m$ inside the scaled interval:</p></div>
+            <div class="sentence math-display">$$na < m < nb$$</div>
+            <div class="sentence"><p>To guarantee that an integer exists between $na$ and $nb$, it suffices to make the width of the interval greater than 1.</p></div>
+            <div class="sentence"><p>This gives the inequality $n(b - a) > 1$, which simplifies to choosing $n > \frac{1}{b-a}$.</p></div>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="tcolorbox green">
+        <div class="tcolorbox-header">Step 2 &mdash; Automated Interactive Scaling Concept</div>
+        <div class="tcolorbox-content">
+            <div class="sentence"><p>Consider the interval with bounds $a = 0.35$ and $b = 0.65$, giving an original width of $b-a = 0.30$.</p></div>
+            <div class="sentence"><p>We require a multiplier $n > \frac{1}{0.30} \approx 3.33$, so $n=4$ guarantees an integer inside the scaled interval.</p></div>
+            <div class="sentence"><p>Watch the diagram below automatically step through values of $n$ from 1 to 5 to show how scaling stretches the interval until an integer is trapped.</p></div>
+            
+            <div class="sentence" style="background:#f0f4fb; border:1px solid #3498db; border-radius:8px; padding:12px; text-align:center; margin-top: 15px;">
+                <svg id="zoomSVG" viewBox="0 0 720 220" style="width:100%; max-width:720px; background:#fafbfc; border-radius:6px;"></svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rational Density Theorem -->
+    <div class="tcolorbox orange">
+        <div class="tcolorbox-header">Theorem &mdash; Density of Rationals in $\mathbb{R}$</div>
+        <div class="tcolorbox-content">
+            <div class="sentence"><p>If $x, y \in \mathbb{R}$ with $x < y$, there exists a rational number $r \in \mathbb{Q}$ such that $x < r < y$.</p></div>
+            <div class="sentence"><p><strong>Proof Outline:</strong></p></div>
+            <ol>
+                <li class="sentence">By the Archimedean property, choose a positive integer $n \in \mathbb{N}$ such that $n(y-x) > 1$, which gives $nx + 1 < ny$.</li>
+                <li class="sentence">Apply Lemma 1 to find an integer $m$ such that $m \le nx < m+1$.</li>
+                <li class="sentence">From $nx < m+1$, we get $x < \frac{m+1}{n}$.</li>
+                <li class="sentence">From $m \le nx \implies m+1 \le nx + 1 < ny$, we get $\frac{m+1}{n} < y$.</li>
+                <li class="sentence">Combining both inequalities yields $x < \frac{m+1}{n} < y$. Setting $r = \frac{m+1}{n} \in \mathbb{Q}$ completes the proof. $\blacksquare$</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Irrational Density Theorem -->
+    <div class="tcolorbox purple">
+        <div class="tcolorbox-header">Theorem &mdash; Density of Irrationals in $\mathbb{R}$</div>
+        <div class="tcolorbox-content">
+            <div class="sentence"><p>If $a, b \in \mathbb{R}$ with $a < b$, there exists an irrational number $\xi \in \mathbb{R}\setminus\mathbb{Q}$ such that $a < \xi < b$.</p></div>
+            <div class="sentence"><p><strong>Proof:</strong> We apply the density of rational numbers to the shifted endpoints $(a + \sqrt{2}, b + \sqrt{2})$.</p></div>
+            <div class="sentence"><p>By rational density, there exists a rational number $r \in \mathbb{Q}$ such that $a + \sqrt{2} < r < b + \sqrt{2}$.</p></div>
+            <div class="sentence"><p>Subtracting $\sqrt{2}$ across all terms yields the inequality $a < r - \sqrt{2} < b$.</p></div>
+            <div class="sentence"><p>Defining $\xi = r - \sqrt{2}$, we see that $\xi$ is strictly irrational because the difference of a rational and an irrational is irrational.</p></div>
+            <div class="sentence"><p>Hence, $a < \xi < b$ with $\xi \notin \mathbb{Q}$. $\blacksquare$</p></div>
+        </div>
+    </div>
+
+    <!-- Examples -->
+    <div class="tcolorbox amber">
+        <div class="tcolorbox-header">Worked Examples &mdash; Constructing Irrationals</div>
+        <div class="tcolorbox-content">
+            <div class="sentence"><p>The table below demonstrates explicit constructions of irrational numbers between given real bounds using the shift method:</p></div>
+            
+            <table class="sentence">
+                <thead>
+                    <tr>
+                        <th>$a$</th><th>$b$</th>
+                        <th>Rational $r \in (a+\sqrt{2}, b+\sqrt{2})$</th>
+                        <th>Irrational $\xi = r-\sqrt{2}$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$0$</td><td>$1$</td>
+                        <td>$r = 2$</td>
+                        <td>$2 - \sqrt{2} \approx 0.586 \in (0,1)$</td>
+                    </tr>
+                    <tr>
+                        <td>$1$</td><td>$2$</td>
+                        <td>$r = 3$</td>
+                        <td>$3 - \sqrt{2} \approx 1.586 \in (1,2)$</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Sticky Control Bar -->
+<div class="controls-bar">
+    <button id="playBtn" class="control-btn" onclick="togglePresentation()">Start Presentation</button>
+    <button id="restartBtn" class="control-btn" style="background-color: #6c757d;" onclick="restartPresentation()">Restart</button>
+    <div id="statusText" class="status-text">Click Start to reveal sentence-by-sentence.</div>
+</div>
+
+<script>
+let currentIndex = -1;
+let isPlaying = false;
+let autoTimer = null;
+let zoomLoopTimer = null;
+let currentZoomN = 1;
+
+const sentences = document.querySelectorAll('.sentence');
+const playBtn = document.getElementById('playBtn');
+const statusText = document.getElementById('statusText');
+
+function revealNextSentence() {
+    if (!isPlaying) return;
+
+    // Remove previous highlight
+    if (currentIndex >= 0 && currentIndex < sentences.length) {
+        sentences[currentIndex].classList.remove('highlight');
+    }
+
+    currentIndex++;
+
+    if (currentIndex >= sentences.length) {
+        isPlaying = false;
+        playBtn.textContent = "Start Presentation";
+        statusText.textContent = "Presentation complete!";
+        return;
+    }
+
+    const currentEl = sentences[currentIndex];
+    currentEl.classList.add('visible');
+    currentEl.classList.add('highlight');
+
+    // Smooth scroll into view
+    currentEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Typeset MathJax if needed for newly revealed content
+    if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([currentEl]);
+    }
+
+    statusText.textContent = `Showing sentence ${currentIndex + 1} of ${sentences.length}`;
+
+    // Wait 5 seconds before revealing the next sentence
+    autoTimer = setTimeout(revealNextSentence, 5000);
+}
+
+function togglePresentation() {
+    if (isPlaying) {
+        // Pause
+        isPlaying = false;
+        clearTimeout(autoTimer);
+        playBtn.textContent = "Resume Presentation";
+        statusText.textContent = "Paused.";
+    } else {
+        // Play
+        isPlaying = true;
+        playBtn.textContent = "Pause Presentation";
+        revealNextSentence();
+    }
+}
+
+function restartPresentation() {
+    clearTimeout(autoTimer);
+    isPlaying = false;
+    
+    // Hide all sentences
+    sentences.forEach(s => {
+        s.classList.remove('visible');
+        s.classList.remove('highlight');
+    });
+
+    currentIndex = -1;
+    isPlaying = true;
+    playBtn.textContent = "Pause Presentation";
+    revealNextSentence();
+}
+
+/* ─────── Automated Interactive SVG Script ─────── */
+(function(){
+    var A = 0.35, B = 0.65;
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.getElementById('zoomSVG');
+    if (!svg) return;
+
+    function mk(tag, at, txt) {
+        var e = document.createElementNS(NS, tag);
+        for (var k in at) e.setAttribute(k, at[k]);
+        if (txt !== undefined) e.textContent = txt;
+        return e;
+    }
+
+    function renderZoom(n) {
+        svg.innerHTML = '';
+        var TY = 50, BY = 150, TL = 50, TR = 670;
+        var na = A * n, nb = B * n;
+
+        // Base Line
+        svg.appendChild(mk('line', { x1: TL, y1: TY, x2: TR, y2: TY, stroke: '#aaa', 'stroke-width': '2' }));
+        svg.appendChild(mk('text', { x: TL - 10, y: TY + 5, 'text-anchor': 'end', fill: '#555', 'font-size': '12' }, 'a,b:'));
+        
+        var xa0 = TL + A * (TR - TL), xb0 = TL + B * (TR - TL);
+        svg.appendChild(mk('rect', { x: xa0, y: TY - 10, width: xb0 - xa0, height: 20, fill: '#bbdefb', stroke: '#1565c0' }));
+        svg.appendChild(mk('text', { x: xa0, y: TY - 15, 'text-anchor': 'middle', fill: '#1565c0', 'font-weight': 'bold' }, 'a(0.35)'));
+        svg.appendChild(mk('text', { x: xb0, y: TY - 15, 'text-anchor': 'middle', fill: '#1565c0', 'font-weight': 'bold' }, 'b(0.65)'));
+
+        // Scaled Line
+        svg.appendChild(mk('line', { x1: TL, y1: BY, x2: TR, y2: BY, stroke: '#aaa', 'stroke-width': '2' }));
+        svg.appendChild(mk('text', { x: TL - 10, y: BY + 5, 'text-anchor': 'end', fill: '#555', 'font-size': '12' }, 'n*a, n*b:'));
+
+        var BSCALE = (TR - TL) / 4.5;
+        var xna = TL + na * BSCALE, xnb = TL + nb * BSCALE;
+        var hasInt = Math.floor(nb) > Math.floor(na) && (na % 1 !== 0);
+
+        svg.appendChild(mk('rect', { x: xna, y: BY - 10, width: Math.max(xnb - xna, 2), height: 20, fill: hasInt ? '#c8e6c9' : '#ffcdd2', stroke: hasInt ? '#2e7d32' : '#c62828' }));
+        svg.appendChild(mk('text', { x: xna, y: BY + 30, 'text-anchor': 'middle', fill: '#333', 'font-size': '12' }, na.toFixed(2)));
+        svg.appendChild(mk('text', { x: xnb, y: BY + 30, 'text-anchor': 'middle', fill: '#333', 'font-size': '12' }, nb.toFixed(2)));
+
+        for(var i=0; i<=4; i++) {
+            var xi = TL + i * BSCALE;
+            svg.appendChild(mk('line', { x1: xi, y1: BY - 5, x2: xi, y2: BY + 5, stroke: '#bbb' }));
+            svg.appendChild(mk('text', { x: xi, y: BY - 15, 'text-anchor': 'middle', fill: '#999', 'font-size': '10' }, i));
+        }
+
+        // Indicator showing multiplier state
+        svg.appendChild(mk('text', { x: TR, y: 30, 'text-anchor': 'end', fill: '#1565c0', 'font-size': '14', 'font-weight': 'bold' }, 'Automated n = ' + n));
+    }
+
+    // Automated loop cycling n from 1 to 5 every 2 seconds
+    function startAutomatedZoom() {
+        renderZoom(currentZoomN);
+        zoomLoopTimer = setInterval(function() {
+            currentZoomN = (currentZoomN % 5) + 1;
+            renderZoom(currentZoomN);
+        }, 2000);
+    }
+
+    startAutomatedZoom();
+})();
+</script>
+
+</body>
+</html>
