@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculus I — Semester-Long Function Project</title>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#2f3b6b;
+    --indigo-deep:#1e2648;
+    --amber:#c08a3e;
+    --sage:#6f8f6a;
+    --rose:#a35d5d;
+    --paper:#faf8f3;
+    --card:#ffffff;
+    --ink:#232323;
+    --ink-soft:#5b5b5b;
+    --line:#e3dfd4;
+    --stripe:#f4f1e8;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; color:var(--indigo-deep); margin:0; }
+  a{ color:var(--indigo); }
+
+  header.hero{
+    background:linear-gradient(155deg, var(--indigo-deep), var(--indigo) 65%);
+    color:#f4f1e8;
+    padding:56px 24px 44px;
+    text-align:center;
+  }
+  header.hero .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:14px;
+  }
+  header.hero h1{
+    color:#fdfbf6;
+    font-size:clamp(1.7rem, 4vw, 2.6rem);
+    max-width:820px;
+    margin:0 auto 12px;
+  }
+  header.hero p.tag{
+    max-width:600px;
+    margin:0 auto;
+    color:#d8d5c8;
+    font-size:1.02rem;
+  }
+  header.hero .badge{
+    display:inline-block;
+    margin-top:22px;
+    padding:6px 18px;
+    border:1px solid rgba(244,241,232,0.35);
+    border-radius:999px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+  }
+
+  nav.toc{
+    position:sticky; top:0; z-index:20;
+    background:rgba(250,248,243,0.96);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+    white-space:nowrap;
+    padding:10px 18px;
+  }
+  nav.toc a{
+    color:var(--ink-soft);
+    text-decoration:none;
+    font-size:0.86rem;
+    font-weight:500;
+    margin-right:22px;
+    padding-bottom:3px;
+    border-bottom:2px solid transparent;
+  }
+  nav.toc a:hover{ color:var(--indigo); border-bottom-color:var(--amber); }
+
+  main{ max-width:920px; margin:0 auto; padding:8px 22px 80px; }
+
+  section{ padding-top:46px; scroll-margin-top:56px; }
+  section h2{
+    font-size:1.5rem;
+    display:flex; align-items:baseline; gap:10px;
+    border-bottom:2px solid var(--line);
+    padding-bottom:10px; margin-bottom:18px;
+  }
+  section h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.95rem;
+    color:var(--amber);
+    font-weight:600;
+  }
+  section h3{ font-size:1.12rem; color:var(--indigo); margin:26px 0 10px; }
+  section h4{
+    font-family:'IBM Plex Mono', monospace; font-size:0.8rem; text-transform:uppercase;
+    letter-spacing:0.06em; color:var(--rose); margin:30px 0 10px;
+  }
+
+  p{ color:var(--ink); margin:0 0 12px; }
+  .muted{ color:var(--ink-soft); font-size:0.94rem; }
+
+  ol.tasks, ol.rules{ margin:0 0 6px; padding-left:22px; }
+  ol.tasks li, ol.rules li{ margin-bottom:9px; padding-left:2px; }
+  ol.tasks li::marker, ol.rules li::marker{ color:var(--amber); font-weight:600; font-family:'IBM Plex Mono', monospace; }
+
+  .phase-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--sage);
+    border-radius:6px;
+    padding:20px 22px;
+    margin-bottom:20px;
+  }
+  .phase-card .weeks{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0 24px;
+    font-size:0.92rem;
+    background:var(--card);
+  }
+  caption{ caption-side:top; text-align:left; font-size:0.85rem; color:var(--ink-soft); margin-bottom:6px; }
+  th, td{
+    border:1px solid var(--line);
+    padding:9px 12px;
+    text-align:left;
+    vertical-align:top;
+  }
+  th{
+    background:var(--indigo-deep);
+    color:#f4f1e8;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+  tbody tr:nth-child(even){ background:var(--stripe); }
+  td.center, th.center{ text-align:center; }
+  tr.new-row td:first-child{ border-left:3px solid var(--rose); }
+  tr.new-row td:nth-child(2)::after{
+    content:"NEW"; font-family:'IBM Plex Mono', monospace; font-size:0.62rem;
+    color:var(--rose); border:1px solid var(--rose); border-radius:3px;
+    padding:1px 4px; margin-left:8px; vertical-align:middle;
+  }
+  tr.bonus-row td{ background:#f5ecec; }
+  .rubric-table tr.total td{
+    background:#efe6d3; font-weight:700; border-top:2px solid var(--amber);
+  }
+
+  .group-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:14px 0 8px;
+  }
+  @media (max-width:720px){ .group-grid{ grid-template-columns:1fr; } }
+  .group-card{
+    background:var(--card); border:1px solid var(--line); border-radius:6px; padding:16px 18px;
+  }
+  .group-card .g-name{
+    font-family:'IBM Plex Mono', monospace; color:var(--amber); font-size:0.8rem;
+    text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;
+  }
+  .group-card .g-count{ font-size:0.86rem; color:var(--ink-soft); margin-bottom:10px; }
+
+  .note-box{
+    background:#eef1e6;
+    border:1px solid var(--sage);
+    border-radius:6px;
+    padding:14px 18px;
+    font-size:0.92rem;
+    color:#3f4e3c;
+    margin:10px 0 22px;
+  }
+  .warn-box{
+    background:#f6ecec;
+    border:1px solid var(--rose);
+    border-radius:6px;
+    padding:14px 18px;
+    font-size:0.92rem;
+    color:#5c3a3a;
+    margin:10px 0 22px;
+  }
+
+  footer{
+    text-align:center; padding:34px 20px 50px; color:var(--ink-soft); font-size:0.85rem;
+    border-top:1px solid var(--line); margin-top:40px;
+  }
+
+  ::selection{ background:#d8c79c; }
+
+  @media print{
+    nav.toc{ position:static; }
+    header.hero{ background:var(--indigo-deep) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Calculus I · Semester Project</div>
+  <h1>One function, one semester</h1>
+  <p class="tag">Every concept from the course, applied to a single function you carry from the first week to the last.</p>
+  <div class="badge">25 marks · 150 students · Department of Mathematics, SNIOE</div>
+</header>
+
+<nav class="toc">
+  <a href="#overview">Overview</a>
+  <a href="#rules">Ground rules</a>
+  <a href="#tasks">Task list</a>
+  <a href="#rubric">Rubric</a>
+  <a href="#bank">Function bank</a>
+  <a href="#groups">Group allocation</a>
+</nav>
+
+<main>
+
+  <section id="overview">
+    <h2><span class="num">§1</span> Overview</h2>
+    <p>Each student is assigned one function from the bank below — <strong>50 function templates</strong>, reused across <strong>3 groups of 50 students</strong>, with a different parameter value per student. You will work with this same function throughout the semester, applying each new concept from the course to it as soon as it is taught.</p>
+    <p>The project is submitted in five phases aligned with the course syllabus, and compiled into one final portfolio at the end of the semester. The project is worth <strong>25 marks</strong> in total — see the rubric in §4.</p>
+  </section>
+
+  <section id="rules">
+    <h2><span class="num">§2</span> Ground rules</h2>
+    <ol class="rules">
+      <li>Your function and parameter value are assigned by roll number — see the allocation table in §6. Do not change your function or parameter without written permission.</li>
+      <li>Every claim (domain, one-one, continuity, etc.) must be justified with a short proof or clearly shown computation — a bare answer earns no credit.</li>
+      <li>Use <strong>Desmos</strong> for quick graphical exploration and verification; use <strong>Python</strong> (matplotlib, numpy, scipy) for at least one numerical or plotted verification per phase, as specified. Include the plot and a one-line caption.</li>
+      <li>Some functions (especially #35–#41 and #48–#50) do not have elementary antiderivatives, or involve limits/asymptotes that need care — where a computation cannot be done by hand, say so explicitly and evaluate it numerically instead. This is expected, not a shortcoming.</li>
+      <li>Each phase is submitted (handwritten or typed, plus your Desmos link and Python plots/code) by the deadline announced in class; late phases lose 10% per day.</li>
+      <li>At the end of the semester, compile all five phases into a single portfolio document with a one-page summary of your function's complete behaviour.</li>
+    </ol>
+  </section>
+
+  <section id="tasks">
+    <h2><span class="num">§3</span> Task list, by phase</h2>
+
+    <div class="phase-card">
+      <div class="weeks">Weeks 1-3</div>
+      <h3>Phase 1 — Getting to know your function</h3>
+      <ol class="tasks">
+        <li>State the domain and range of \(f\), with full justification.</li>
+        <li>Locate all zeros of \(f\) (solve \(f(x)=0\)), and determine the sign of \(f\) on each interval of its domain.</li>
+        <li>Sketch the graph of \(f\) by hand, then verify it on Desmos. Mark intercepts, asymptotes, and any restricted domain.</li>
+        <li>Produce and interpret the graphs of the shifts \(f(x+c)\), \(f(x)+c\), \(f(cx)\), \(c\cdot f(x)\), \(-f(x)\), \(f(-x)\) for at least two values of \(c\) each (Desmos or matplotlib).</li>
+      </ol>
+    </div>
+
+    <div class="phase-card">
+      <div class="weeks">Weeks 4–6</div>
+      <h3>Phase 2 — Structure of the function</h3>
+      <ol class="tasks">
+        <li>Determine whether \(f\) is one-one on its full domain. If not, identify the largest interval containing a given point on which it is one-one.</li>
+        <li>On that interval, find the inverse \(f^{-1}\) and state its domain and range. Graph \(f\) and \(f^{-1}\) together with the line \(y=x\).</li>
+        <li>Determine whether \(f\) is onto its codomain (\(\mathbb{R}\), or the interval you take as codomain). Restate as a bijection onto its range where needed.</li>
+        <li>Compute and simplify, wherever defined: \(f(x)+f^{-1}(x)\), \((f+f)(x)=2f(x)\), \((f\cdot f)(x)=f(x)^2\), and \((f\circ f)(x)\). Comment on how the domain changes under each combination.</li>
+      </ol>
+    </div>
+
+    <div class="phase-card">
+      <div class="weeks">Weeks 6–9</div>
+      <h3>Phase 3 — Continuity and differentiability</h3>
+      <ol class="tasks">
+        <li>Prove continuity of \(f\) at a generic interior point of its domain, and examine continuity at any boundary/singular point (e.g. where the domain has a hole or the definition changes).</li>
+        <li>Determine where \(f\) is differentiable; identify and justify any point of non-differentiability.</li>
+        <li>Compute \(f'(x)\) and find the equation of the tangent line to the graph at a specified point \(x=x_0\) (instructor- or self-chosen). Plot the curve and its tangent together.</li>
+        <li>Discuss monotonicity: find the intervals on which \(f\) is increasing / decreasing using the sign of \(f'\).</li>
+      </ol>
+    </div>
+
+    <div class="phase-card">
+      <div class="weeks">Weeks 9–11</div>
+      <h3>Phase 4 — Extrema and shape of the graph</h3>
+      <ol class="tasks">
+        <li>Find all local extrema (first- and second-derivative tests) and determine whether \(f\) has a global maximum and/or minimum on its domain.</li>
+        <li>Find \(f''(x)\); determine the intervals on which \(f\) is concave and convex, and locate all inflection points.</li>
+        <li>Compute the curvature \(\kappa(x) = \dfrac{|f''(x)|}{(1+f'(x)^2)^{3/2}}\) of the graph and evaluate it at the same point \(x_0\) used for the tangent line.</li>
+        <li>Summarise Phases 3–4 in a single annotated graph: mark extrema, inflection points, concave/convex intervals, and the tangent at \(x_0\).</li>
+      </ol>
+    </div>
+
+    <div class="phase-card">
+      <div class="weeks">Weeks 12–13</div>
+      <h3>Phase 5 — Integration and arc length</h3>
+      <ol class="tasks">
+        <li>Find an antiderivative \(F(x)\) of \(f\), by hand where elementary; where it is not elementary in closed form, say so explicitly and evaluate it numerically instead.</li>
+        <li>Evaluate a definite integral of \(f\) over a meaningful interval from your domain analysis (e.g. between two zeros, or over one period).</li>
+        <li>Set up the arc-length integral \(\displaystyle\int \sqrt{1+f'(x)^2}\,dx\) over a chosen interval; evaluate it exactly if possible, otherwise numerically (<code>scipy.integrate.quad</code> or Desmos).</li>
+        <li>Use Python (matplotlib/numpy/scipy) to reproduce your key graphs (function, tangent, shifts) and to numerically verify at least one hand computation (a root, an extremum, or the definite integral).</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="rubric">
+    <h2><span class="num">§4</span> Grading rubric — 25 marks total</h2>
+    <table class="rubric-table">
+      <thead><tr><th>Component</th><th class="center">Marks</th></tr></thead>
+      <tbody>
+        <tr><td>Phase 1 — Domain, range, zeros, graph, shifts</td><td class="center">4</td></tr>
+        <tr><td>Phase 2 — One-one/onto, inverse, algebra &amp; composition of functions</td><td class="center">5</td></tr>
+        <tr><td>Phase 3 — Continuity, differentiability, tangent, monotonicity</td><td class="center">5</td></tr>
+        <tr><td>Phase 4 — Extrema, concavity/convexity, curvature, annotated graph</td><td class="center">5</td></tr>
+        <tr><td>Phase 5 — Antiderivative, definite integral, arc length, Python verification</td><td class="center">4</td></tr>
+        <tr><td>Presentation: clarity of write-up, correct justification (not just answers), consistent notation</td><td class="center">2</td></tr>
+        <tr class="total"><td>Total</td><td class="center">25</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="bank">
+    <h2><span class="num">§5</span> Function bank</h2>
+    <p class="muted">Each row is a template with one parameter \(a\). The same 50 templates are reused for all three groups; only the value of \(a\) assigned to each student differs (see §6), so no two students receive an identical function.</p>
+
+    <h4>Algebraic &amp; piecewise (1–11)</h4>
+    <table>
+      <thead><tr><th class="center">#</th><th>Function family \(f(x)\)</th><th>Why it works well as a semester function</th></tr></thead>
+      <tbody>
+        <tr><td class="center">1</td><td>\(ax+|x|\)</td><td>Piecewise-linear; slope jumps at 0 unless \(a=\pm1\) (exclude). Contrasts continuity vs differentiability.</td></tr>
+        <tr><td class="center">2</td><td>\(x|x-a|\)</td><td>Cubic-like piecewise; corner at \(x=a\) moves with \(a\).</td></tr>
+        <tr><td class="center">3</td><td>\(x^3-ax\)</td><td>\(a>0\) gives a local max/min pair; \(a\le 0\) is monotone — good one-one discussion.</td></tr>
+        <tr><td class="center">4</td><td>\(ax^2-x^4\)</td><td>W- or M-shaped depending on sign of \(a\); two symmetric extrema.</td></tr>
+        <tr><td class="center">5</td><td>\(x+a/x\) &nbsp;(\(x\ne0\))</td><td>AM–GM flavour; clean min/max, vertical asymptote.</td></tr>
+        <tr><td class="center">6</td><td>\(1/(x^2-a^2)\)</td><td>Two vertical asymptotes at \(\pm a\); forces careful domain work.</td></tr>
+        <tr><td class="center">7</td><td>\((x-a)/(x^2+1)\)</td><td>Bounded, horizontal asymptote \(y=0\); extremum shifts with \(a\).</td></tr>
+        <tr><td class="center">8</td><td>\((x^2-a)/(x^2+a)\), \(a>0\)</td><td>Even; horizontal asymptote \(y=1\); zeros at \(x=\pm\sqrt a\).</td></tr>
+        <tr><td class="center">9</td><td>\(\sqrt{x^2+a}-x\)</td><td>Domain \(\mathbb{R}\); distinct asymptotic behaviour as \(x\to\pm\infty\).</td></tr>
+        <tr><td class="center">10</td><td>\(ax^3-3x\)</td><td>Inflection always at 0; extrema exist only for \(a>0\).</td></tr>
+        <tr><td class="center">11</td><td>\(|x^2-a|\)</td><td>Non-differentiable at \(x=\pm\sqrt a\) (\(a>0\)) — differentiability-failure case.</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Exponential &amp; logarithmic (12–22)</h4>
+    <table>
+      <thead><tr><th class="center">#</th><th>Function family \(f(x)\)</th><th>Why it works well as a semester function</th></tr></thead>
+      <tbody>
+        <tr><td class="center">12</td><td>\(x\cdot e^{ax}\)</td><td>Single critical point at \(x=-1/a\); clean extremum/inflection pair.</td></tr>
+        <tr><td class="center">13</td><td>\(x^2\cdot e^{-ax}\)</td><td>Two critical points; local vs global max.</td></tr>
+        <tr><td class="center">14</td><td>\(a\cdot x\cdot e^{-x^2}\)</td><td>Odd, bounded bump; good for global extrema and antiderivatives.</td></tr>
+        <tr><td class="center">15</td><td>\(e^{-x^2/a}\)</td><td>Even Gaussian bump; inflection points at \(x=\pm\sqrt{a/2}\).</td></tr>
+        <tr><td class="center">16</td><td>\(\ln(x^2+a)\), \(a>0\)</td><td>Domain \(\mathbb{R}\); even; min at 0; log growth for large \(x\).</td></tr>
+        <tr><td class="center">17</td><td>\(\ln(1+ax^2)\)</td><td>Growth/curvature rate varies with \(a\).</td></tr>
+        <tr><td class="center">18</td><td>\(\ln x+ax\), \(x>0\)</td><td>Monotone for \(a\ge0\); interior max for \(a<0\).</td></tr>
+        <tr><td class="center">19</td><td>\(x^a\cdot e^{-x}\), \(x>0\)</td><td>Gamma-integrand shape; single hump; good for by-parts integration.</td></tr>
+        <tr><td class="center">20</td><td>\(e^{ax}-ax\)</td><td>Always convex; minimum at \(x=0\) for \(a\ne0\).</td></tr>
+        <tr><td class="center">21</td><td>\(a\ln x - x\), \(x>0\)</td><td>Max at \(x=a\); concave throughout.</td></tr>
+        <tr><td class="center">22</td><td>\(x\ln x-ax\), \(x>0\)</td><td>Entropy-like; convex, single minimum.</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Trigonometric &amp; inverse trig (23–33)</h4>
+    <table>
+      <thead><tr><th class="center">#</th><th>Function family \(f(x)\)</th><th>Why it works well as a semester function</th></tr></thead>
+      <tbody>
+        <tr><td class="center">23</td><td>\(x+a\sin x\)</td><td>Monotone iff \(|a|\le1\) — an \(a\)-dependent one-one condition.</td></tr>
+        <tr><td class="center">24</td><td>\(a\sin x+\cos x\)</td><td>\(=\sqrt{a^2+1}\sin(x+\varphi)\); amplitude/phase, \(a\)-dependent range.</td></tr>
+        <tr><td class="center">25</td><td>\(ax-\sin x\)</td><td>Monotonicity flavour mirrors #23.</td></tr>
+        <tr><td class="center">26</td><td>\(\tan^{-1}(ax)\)</td><td>Bounded range \((-\pi/2,\pi/2)\); odd; \(a\) controls steepness.</td></tr>
+        <tr><td class="center">27</td><td>\(a/(1+x^2)\)</td><td>Even, bounded, max at 0; clean definite integral (arctan).</td></tr>
+        <tr><td class="center">28</td><td>\(x\cos(ax)\), on \([-\pi/a,\pi/a]\)</td><td>Oscillation controlled by \(a\); must restrict domain for one-one part.</td></tr>
+        <tr><td class="center">29</td><td>\(a\cos x-x\)</td><td>Monotonicity flips depending on \(a\).</td></tr>
+        <tr><td class="center">30</td><td>\(a\tan^{-1}x-x\)</td><td>Max/min depending on sign of \(a\).</td></tr>
+        <tr><td class="center">31</td><td>\(\csc x-a\sin x\), \(x\in(0,\pi)\)</td><td>Bounded below via AM–GM when \(a\le1\); richer than a bare \(\csc x\).</td></tr>
+        <tr><td class="center">32</td><td>\(x-a\tan x\), \(x\in(-\pi/2,\pi/2)\)</td><td>Vertical asymptotes at \(\pm\pi/2\); odd.</td></tr>
+        <tr><td class="center">33</td><td>\(a\sin x+x\cos x\)</td><td>Mixes polynomial and trig growth; stress-tests product rule and curvature.</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Oscillatory, hybrid &amp; exotic (34–50)</h4>
+    <p class="muted">Added for the larger cohort — several of these are deliberately more advanced (oscillation near a point, removable/jump discontinuities, non-elementary antiderivatives) and pair well with stronger students or bonus discussion in class.</p>
+    <table>
+      <thead><tr><th class="center">#</th><th>Function family \(f(x)\)</th><th>Why it works well as a semester function</th></tr></thead>
+      <tbody>
+        <tr class=""><td class="center">34</td><td>\(x^2+ax+|x|\)</td><td>Quadratic core perturbed by a corner at 0; smooth except at \(x=0\); vertex shifts with \(a\) on each side.</td></tr>
+        <tr class=""><td class="center">35</td><td>\(x\sin(a/x)\), \(f(0):=0\)</td><td>Continuous at 0 by the Squeeze Theorem despite infinite oscillation nearby, but <em>not</em> differentiable at 0 — a sharp continuity-vs-differentiability contrast.</td></tr>
+        <tr class=""><td class="center">36</td><td>\(x^2\sin(a/x)\), \(f(0):=0\)</td><td>Differentiable everywhere including \(x=0\) (with \(f'(0)=0\)), yet \(f'\) itself is discontinuous at 0 — a step beyond the usual Phase 3 examples.</td></tr>
+        <tr class=""><td class="center">37</td><td>\(\operatorname{csch}(ax)/\sin x\), \(x\in(0,\pi)\)</td><td>Blends hyperbolic decay with a trig singularity; vertical asymptotes at both ends of \((0,\pi)\); extrema/curvature need numerical work.</td></tr>
+        <tr class=""><td class="center">38</td><td>\(x^{ax}\), \(x>0\)</td><td>Rewrite as \(e^{ax\ln x}\); single global minimum at \(x=1/(ea)\); a genuine log-differentiation exercise, non-elementary antiderivative.</td></tr>
+        <tr class=""><td class="center">39</td><td>\(a\,x^2 e^{-x}\sin x\)</td><td>Damped oscillator; many local extrema on a chosen window; good repeated-integration-by-parts practice.</td></tr>
+        <tr class=""><td class="center">40</td><td>\(\sin(ax^2)\)</td><td>"Chirp" function — zero-spacing shrinks as \(x\) grows; even; antiderivative is a Fresnel-type integral (non-elementary).</td></tr>
+        <tr class=""><td class="center">41</td><td>\(ax/(1+x^4)\)</td><td>Odd, bounded, two symmetric extrema, horizontal asymptote 0 — a faster-decaying alternative to #7.</td></tr>
+        <tr class=""><td class="center">42</td><td>\(\ln(\cosh(ax))\)</td><td>Smooth convex "soft" version of \(a|x|\); asymptotic to \(a|x|-\ln2\); contrasts nicely with #1's genuine corner.</td></tr>
+        <tr class=""><td class="center">43</td><td>\(\sinh(ax)-ax\)</td><td>Odd; strictly increasing everywhere; inflection at \(x=0\) separates concave/convex regions.</td></tr>
+        <tr class=""><td class="center">44</td><td>\(\tanh(ax)\)</td><td>Bounded \((-1,1)\); odd; inflection at 0; horizontal asymptotes \(\pm1\); clean antiderivative \(\tfrac1a\ln\cosh(ax)\).</td></tr>
+        <tr class=""><td class="center">45</td><td>\(a\,x\tanh x\)</td><td>Even; asymptotically linear (\(\approx a|x|\)) for large \(|x|\), smooth near 0 — nice curvature computation.</td></tr>
+        <tr class=""><td class="center">46</td><td>\(a(x-\sin x)\)</td><td>Strictly increasing although \(f'\) touches 0 at isolated points \(x=2k\pi\) — subtle monotonicity argument; inflections at \(x=2k\pi\).</td></tr>
+        <tr class=""><td class="center">47</td><td>\(a(1-\cos x)\)</td><td>Periodic and \(\ge0\); must restrict to one period for the one-one/inverse part; zeros at \(x=2k\pi\).</td></tr>
+        <tr class=""><td class="center">48</td><td>\((x^2-a^2)/(x-a)\), \(x\ne a\)</td><td>Simplifies to \(x+a\); a classic removable discontinuity — define \(f(a):=2a\) to extend continuously. The only "fix the discontinuity" case in the bank.</td></tr>
+        <tr class=""><td class="center">49</td><td>\(a\big(x-\lfloor x\rfloor\big)\)</td><td><strong>Bonus/challenge pick.</strong> Sawtooth — the only genuinely discontinuous family: jump discontinuities at every integer, periodic, piecewise linear. Best suited to a stronger student.</td></tr>
+        <tr class=""><td class="center">50</td><td>\(a\,x\,|\sin x|\)</td><td>Piecewise smooth; non-differentiable at every zero of \(\sin x\) (multiples of \(\pi\)); envelope \(a|x|\) — extrema/curvature computed piece by piece.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="groups">
+    <h2><span class="num">§6</span> Group allocation and parameter ranges</h2>
+    <p class="muted">Within each group, function #1 goes to roll number 1, function #2 to the next roll number, and so on through #50; the parameter \(a\) for each student is read off the range below in the same order. \(3 \times 50 = 150\) students.</p>
+    <div class="group-grid">
+      <div class="group-card">
+        <div class="g-name">Students of Tuesday Tutorial</div>
+        <div class="g-count">50 students</div>
+        <p>\(a = 2, 3, 4, \dots, 51\)<br>(positive integers, skipping degenerate values noted per template, e.g. \(a=1\) in #1)</p>
+      </div>
+      <div class="group-card">
+        <div class="g-name">Wednesday Tutorial</div>
+        <div class="g-count">50 students</div>
+        <p>\(a = 0.5, 1.5, 2.5, \dots, 49.5\)<br>(half-integers)</p>
+      </div>
+      <div class="group-card">
+        <div class="g-name">Thursday Tutorial</div>
+        <div class="g-count">50 students</div>
+        <p>\(a = -2, -3, \dots, -51\), and fractional values (e.g. \(1/2, 1/3,\dots\)) where a template requires \(a>0\)</p>
+      </div>
+    </div>
+    <div class="warn-box"><strong>Sanity-check before printing the final roster:</strong> a handful of templates (#8, #16, #19, #21, #22, #38) are written for \(a>0\). For Group C, substitute a small positive fraction (e.g. \(1/2, 1/3, \dots\)) in place of the negative value for just those rows, exactly as was done for the original 33 templates.</div>
+    <div class="note-box">A full roll-number-to-(function, \(a\)) list will be posted separately once the class roster is finalised.</div>
+  </section>
+
+</main>
+
+<footer>
+  Calculus I · Department of Mathematics · Shiv Nadar Institutition of Eminence.
+</footer>
+
+</body>
+</html>
