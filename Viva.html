@@ -170,15 +170,16 @@ footer{text-align:center; color:var(--ink-soft); font-size:12.5px; padding:30px 
 
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">Real Analysis</div>
+    <div class="eyebrow">Calculus-1</div>
     <h1>Question Bank</h1>
-    <p class="sub">A growing collection of definitions, statements, and standard proofs. Search or filter by topic, tick the ones you want, and copy them straight into a tutorial sheet or assignment.</p>
+    <p class="sub">A growing collection of definitions, statements, and standard proofs. 
+      Search or filter by topic, tick the ones you want, and copy them straight into a tutorial sheet or assignment.</p>
   </header>
 
   <div id="list"></div>
   <div id="empty-state">No questions match your search.</div>
 
-  <footer> 21 questions in the bank so far &middot; more will be added over time.</footer>
+  <footer> 30 questions in the bank so far &middot; more will be added over time.</footer>
 </div>
 
 <script>
@@ -213,7 +214,7 @@ const QUESTIONS = [{"topic": "Number systems", "kind": "Definition", "q": "Defin
                    {"topic": "Functions", "kind": "Definition", "q": "Define composition of two maps.", "id": 29},
                    {"topic": "Functions", "kind": "Find/Explain", "q": "Let $f: \\mathbb{R} \\to \\mathbb{R}$ be a bijective map. Find its inverse $f^{-1}$. How are the graphs of $f$ and $f^{-1}$ related?", "id": 30}
                   ];
-const TOPICS = ["Number systems", "Algebraic & order properties of $\\mathbb{R}$", "Bounds & the LUB property"];
+const TOPICS = ["Number systems", "Algebraic & order properties of $\\mathbb{R}$", "Bounds & the LUB property","Functions"];
 
 let activeTopic = 'All';
 let searchTerm = '';
