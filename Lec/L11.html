@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Limit of a Function — An Informal Introduction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --indigo: #6C72E6; --indigo-deep: #A3A8F5; --indigo-soft: #1E2042;
+    --amber: #E2AC4B; --amber-soft: #382A12;
+    --sage: #8DA983; --sage-soft: #1E2B1C;
+    --red: #E06B5E; --red-soft: #3D1C19;
+    --paper: #0F1117; --card-bg: #161922; --ink: #E6E8EE; --ink-soft: #9DA3B4; --line: #2A2E3D; --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.65; font-size:17px; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; color:var(--indigo-deep); letter-spacing:-0.01em; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); font-weight:500; }
+  header.hero{ padding:72px 8vw 56px; background: radial-gradient(circle at 82% 18%, rgba(108,114,230,0.15), transparent 55%), var(--paper); border-bottom:1px solid var(--line); }
+  header.hero h1{ font-size:clamp(28px, 4vw, 46px); margin:10px 0 18px; max-width:820px; line-height:1.12; color:#fff; }
+  header.hero p.sub{ max-width:660px; color:var(--ink-soft); font-size:17.5px; }
+  main{ max-width:920px; margin:0 auto; padding:0 8vw 120px; }
+  section.block{ display:none; padding-top:60px; }
+  section.block.shown{ display:block; animation:fade .5s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  .kicker{ display:flex; align-items:center; gap:12px; margin-bottom:6px;}
+  .kicker .num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:#fff; background:var(--indigo); border-radius:6px; padding:3px 9px; }
+  h2.title{ font-size:clamp(23px,2.9vw,30px); margin:4px 0 18px; color:#fff; }
+  p{ color:var(--ink); }
+  p.lede{ color:var(--ink-soft); font-size:17px; }
+  .card{ background:var(--card-bg); border:1px solid var(--line); border-radius:var(--radius); padding:22px 26px; margin:18px 0; }
+  .card .card-label{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:600; margin-bottom:8px; display:block; }
+  .card.def{ background:var(--indigo-soft); border-color:#323668; } .card.def .card-label{ color:var(--indigo); }
+  .card.int{ background:var(--amber-soft); border-color:#54411C; } .card.int .card-label{ color:var(--amber); }
+  .card.remark{ background:var(--sage-soft); border-color:#2C3E29; } .card.remark .card-label{ color:var(--sage); }
+  .card.alert{ background:var(--red-soft); border-color:#5A2B27; } .card.alert .card-label{ color:var(--red); }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  @media(max-width:760px){ .grid2, .grid3{ grid-template-columns:1fr; } }
+  .demo{ background:var(--card-bg); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px 26px; margin:24px 0; }
+  .demo .demo-label{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--indigo); margin-bottom:10px; }
+  .demo svg{ width:100%; height:auto; display:block; background:#0B0D13; border-radius:10px; border:1px solid var(--line); }
+  .controls{ display:flex; align-items:center; gap:14px; margin-top:14px; flex-wrap:wrap; }
+  input[type=range]{ flex:1; min-width:150px; accent-color:var(--indigo); }
+  .readout{ font-family:'IBM Plex Mono', monospace; font-size:13.5px; background:var(--indigo-soft); padding:6px 12px; border-radius:8px; color:var(--indigo-deep); min-width:60px; text-align:center; border:1px solid #323668; }
+  table.datatable{ border-collapse:collapse; width:100%; font-family:'IBM Plex Mono',monospace; font-size:13.5px; margin:14px 0; background:var(--card-bg); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  table.datatable th, table.datatable td{ border-bottom:1px solid var(--line); padding:8px 12px; text-align:center; color:var(--ink); }
+  table.datatable th{ background:var(--indigo-soft); color:var(--indigo-deep); font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; }
+  table.datatable tr:last-child td{ border-bottom:none; }
+  table.datatable td.highlight{ background:var(--amber-soft); color:var(--amber); font-weight:600; }
+  .continue-wrap{ text-align:center; margin:56px 0 0; }
+  button.continue{ font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:15px; background:var(--indigo); color:#0F1117; border:none; padding:13px 26px; border-radius:999px; cursor:pointer; transition:transform .15s ease, background .15s ease; }
+  button.continue:hover{ background:var(--indigo-deep); transform:translateY(-1px); }
+  .reveal-btn{ font-family:'IBM Plex Mono', monospace; font-size:13px; background:transparent; border:1.5px solid var(--indigo); color:var(--indigo); padding:9px 15px; border-radius:8px; cursor:pointer; margin-top:6px; }
+  .reveal-btn:hover{ background:var(--indigo-soft); }
+  .answer{ display:none; margin-top:12px; padding:16px 18px; background:var(--sage-soft); border-left:3px solid var(--sage); border-radius:8px; color:var(--ink); }
+  .answer.shown{ display:block; }
+  .qbox{ background:var(--card-bg); border:1px solid var(--line); border-radius:var(--radius); padding:20px 24px; margin:18px 0; }
+  .qbox .qlabel{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--amber); font-weight:600; margin-bottom:8px; }
+  .tier{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:#0F1117; padding:3px 10px; border-radius:6px; display:inline-block; margin-bottom:10px; font-weight:600; }
+  .tier.A{ background:var(--sage); } .tier.B{ background:var(--amber); } .tier.C{ background:var(--indigo); }
+  .caption{ font-size:13.5px; color:var(--ink-soft); margin-top:8px; }
+  .progress{ position:fixed; top:0; left:0; height:3px; background:var(--amber); width:0%; z-index:50; transition:width .4s ease; }
+  .boxed{ display:inline-block; border:1.5px solid var(--line); padding:8px 14px; border-radius:8px; background:var(--card-bg); margin:8px 0; }
+  footer{ max-width:920px; margin:0 auto; padding:32px 8vw 70px; color:var(--ink-soft); font-size:13.5px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+<div class="progress" id="progressBar"></div>
+
+<header class="hero">
+  <div class="eyebrow">Calculus · Limits</div>
+  <h1>The Limit of a Function</h1>
+  <p class="sub">Before calculus can define a slope at a single instant or an area under a curve, it needs to make precise the phrase "gets closer and closer to." This lesson builds that treated by the book by Thomas &amp; Finney do — starting from a function that's undefined exactly where we want to look, building a table of values, and only then writing down a definition for what we've already seen happening.</p>
+</header>
+
+<main>
+
+<!-- SECTION 1: motivating example -->
+<section class="block shown" id="l1">
+  <div class="kicker"><span class="num">01</span><span class="eyebrow">A function with a hole in it</span></div>
+  <h2 class="title">A function that's almost defined</h2>
+
+  <div class="card int">
+    <span class="card-label">The setup</span>
+    Consider \(f(x)=\dfrac{x^2-4}{x-2}\). Try plugging in \(x=2\): you get \(\dfrac{0}{0}\), which is undefined. So \(f\) has no value at \(x=2\) — there's a genuine hole in its domain right there. And yet, for every \(x\ne2\), we can simplify:
+    \[ f(x)=\frac{x^2-4}{x-2}=\frac{(x-2)(x+2)}{x-2}=x+2 \quad (x\ne2). \]
+  </div>
+
+  <p class="lede">Away from \(x=2\), \(f\) is just the line \(y=x+2\) — and that line has a perfectly good value at \(x=2\): namely \(4\). The question calculus asks isn't "what is \(f(2)\)?" (there's no answer) but rather: <strong>as \(x\) gets closer and closer to \(2\), what does \(f(x)\) get closer and closer to?</strong></p>
+
+  <div class="demo">
+    <div class="demo-label">Graph of f(x) = (x² − 4)/(x − 2)</div>
+    <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+      <line x1="30" y1="250" x2="450" y2="250" stroke="#565A6E" stroke-width="1.2"/>
+      <line x1="250" y1="20" x2="250" y2="270" stroke="#565A6E" stroke-width="1.2"/>
+      <text x="454" y="254" font-size="13" font-family="IBM Plex Sans" fill="#9DA3B4">x</text>
+      <text x="256" y="28" font-size="13" font-family="IBM Plex Sans" fill="#9DA3B4">y</text>
+      <line x1="90" y1="330" x2="410" y2="10" stroke="#6C72E6" stroke-width="2.4"/>
+      <circle cx="250" cy="170" r="7" fill="#0B0D13" stroke="#E06B5E" stroke-width="2.4"/>
+      <text x="250" y="270" font-size="12" text-anchor="middle" font-family="IBM Plex Sans" fill="#9DA3B4">2</text>
+      <text x="230" y="150" font-size="12" text-anchor="end" font-family="IBM Plex Sans" fill="#E06B5E">4</text>
+      <line x1="250" y1="170" x2="270" y2="170" stroke="#E06B5E" stroke-width="1" stroke-dasharray="3,3"/>
+    </svg>
+    <p class="caption">The graph is the line \(y=x+2\) everywhere <em>except</em> a single open hole at \((2,4)\) — drawn as a hollow circle. The function is undefined right at the hole, but the line clearly aims straight at the point \((2,4)\) from both sides.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l2">Continue — building a table of values ↓</button></div>
+</section>
+
+<!-- SECTION 2: table of values -->
+<section class="block" id="l2">
+  <div class="kicker"><span class="num">02</span><span class="eyebrow">Trusting the numbers</span></div>
+  <h2 class="title">What the numbers show</h2>
+  <p class="lede">Instead of guessing from the picture, compute \(f(x)\) at values of \(x\) that creep toward \(2\) — some from below, some from above — and watch what happens.</p>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — squeeze x toward 2 from both sides</div>
+    <svg id="tableSvg" viewBox="0 0 480 260" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">how close?</label>
+      <input type="range" id="tableSlider" min="0" max="5" value="0" step="1">
+      <div class="readout" id="tableReadout">distance = 1</div>
+    </div>
+    <table class="datatable">
+      <tr><th>x (from left)</th><th>f(x)</th><th></th><th>x (from right)</th><th>f(x)</th></tr>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <p class="caption">Drag the slider toward "closer." Watch both columns of \(f(x)\) squeeze toward \(4\) — from the left <em>and</em> from the right — even though \(x=2\) itself is never actually used.</p>
+  </div>
+
+  <div class="card remark">
+    <span class="card-label">The key observation</span>
+    No matter how close \(x\) gets to \(2\) — from either direction — \(f(x)\) gets correspondingly close to \(4\). We say: <strong>the limit of \(f(x)\) as \(x\) approaches \(2\) is \(4\)</strong>, written \(\displaystyle\lim_{x\to2}f(x)=4\) — regardless of the fact that \(f(2)\) itself doesn't exist.
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l3">Continue — writing down the definition ↓</button></div>
+</section>
+
+<!-- SECTION 3: informal definition -->
+<section class="block" id="l3">
+  <div class="kicker"><span class="num">03</span><span class="eyebrow">Putting words to what we just saw</span></div>
+  <h2 class="title">The informal definition of a limit</h2>
+
+  <div class="card def">
+    <span class="card-label">Informal Definition — Limit of a Function</span>
+    Let \(f(x)\) be defined on an open interval about \(c\), except possibly at \(c\) itself. If \(f(x)\) gets arbitrarily close to \(L\) for all \(x\) sufficiently close to \(c\) (on either side of \(c\)), we say <strong>the limit of \(f(x)\) as \(x\) approaches \(c\) is \(L\)</strong>, written
+    \[ \lim_{x\to c} f(x) = L. \]
+  </div>
+
+  <div class="card int">
+    <span class="card-label">Three things worth underlining</span>
+    <ol>
+      <li><strong>\(f\) need not be defined at \(c\).</strong> The whole point of our example was a function undefined exactly at the point we cared about.</li>
+      <li><strong>Even if \(f(c)\) exists, the limit doesn't have to equal it.</strong> A function's value at a point and its limit at that point are, in principle, two entirely different questions — they usually agree, but not always, as we'll see.</li>
+      <li><strong>"Approaches" means from both directions at once.</strong> Both the left-hand approach and the right-hand approach must reach the <em>same</em> target \(L\) for the (two-sided) limit to exist — our next section makes this precise.</li>
+    </ol>
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — watch a point walk toward (2, 4) from both sides</div>
+    <svg id="approachSvg" viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">step</label>
+      <input type="range" id="approachSlider" min="0" max="20" value="0" step="1">
+      <div class="readout" id="approachReadout">x = 1.00 and x = 3.00</div>
+    </div>
+    <p class="caption">The blue dot approaches from the left, the amber dot from the right. Neither dot ever lands exactly on the hole — but both visibly converge on it.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l3_5">Continue — new example: piecewise limits ↓</button></div>
+</section>
+
+<!-- SECTION 3.5: Piecewise example -->
+<section class="block" id="l3_5">
+  <div class="kicker"><span class="num">03.5</span><span class="eyebrow">Interactive Example</span></div>
+  <h2 class="title">Defined value vs. Limit value</h2>
+
+  <div class="card int">
+    <span class="card-label">A point displaced</span>
+    Consider a function defined as:
+    \[ f(x) = \begin{cases} x + 1 & x \ne 2 \\ 5 & x = 2 \end{cases} \]
+    Here, \(f(2) = 5\), but what is \(\displaystyle\lim_{x\to2}f(x)\)? Drag the slider to observe how \(f(x)\) behaves near \(x = 2\).
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — f(x) with displaced point at x = 2</div>
+    <svg id="displacedSvg" viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">approach x = 2</label>
+      <input type="range" id="displacedSlider" min="0" max="20" value="0" step="1">
+      <div class="readout" id="displacedReadout">x = 1.000</div>
+    </div>
+    <p class="caption">Notice that as \(x\to2\), \(f(x)\to3\), even though \(f(2)=5\). The limit ignores the single displaced point at \(x=2\).</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l4">Continue — one-sided limits ↓</button></div>
+</section>
+
+<!-- SECTION 4: one-sided limits -->
+<section class="block" id="l4">
+  <div class="kicker"><span class="num">04</span><span class="eyebrow">Approaching from just one direction</span></div>
+  <h2 class="title">One-sided limits</h2>
+  <p class="lede">Sometimes a function behaves completely differently depending on which side you approach from — a jump in the graph. To describe this, we separate the two directions.</p>
+
+  <div class="grid2">
+    <div class="card def">
+      <span class="card-label">Right-hand limit</span>
+      \(\displaystyle\lim_{x\to c^+}f(x)=L\) means \(f(x)\to L\) as \(x\) approaches \(c\) through values <em>greater</em> than \(c\).
+    </div>
+    <div class="card def">
+      <span class="card-label">Left-hand limit</span>
+      \(\displaystyle\lim_{x\to c^-}f(x)=L\) means \(f(x)\to L\) as \(x\) approaches \(c\) through values <em>less</em> than \(c\).
+    </div>
+  </div>
+
+  <div class="card remark">
+    <span class="card-label">The two-sided limit exists exactly when both agree</span>
+    \[ \lim_{x\to c}f(x)=L \quad\iff\quad \lim_{x\to c^-}f(x)=L \ \text{ and }\ \lim_{x\to c^+}f(x)=L. \]
+    If the left- and right-hand limits disagree, the (two-sided) limit simply does not exist at \(c\) — there's no single number both sides are heading toward.
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — a function with a jump at x = 1</div>
+    <svg id="jumpSvg" viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">step</label>
+      <input type="range" id="jumpSlider" min="0" max="12" value="0" step="1">
+      <div class="readout" id="jumpReadout">approaching x = 1</div>
+    </div>
+    <table class="datatable">
+      <tr><th>From the left</th><th>g(x)</th><th>From the right</th><th>g(x)</th></tr>
+      <tbody id="jumpBody"></tbody>
+    </table>
+    <p class="caption">\(g(x)=x+1\) for \(x<1\), and \(g(x)=x+2\) for \(x\ge1\). The left-hand limit heads to \(2\); the right-hand limit heads to \(3\). Since \(2\ne3\), \(\displaystyle\lim_{x\to1}g(x)\) does not exist — even though both one-sided limits exist individually.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l5">Continue — three ways a limit can fail ↓</button></div>
+</section>
+
+<!-- SECTION 5: DNE gallery -->
+<section class="block" id="l5">
+  <div class="kicker"><span class="num">05</span><span class="eyebrow">A field guide to "does not exist"</span></div>
+  <h2 class="title">Three ways a limit can fail to exist</h2>
+  <p class="lede">"The limit doesn't exist" isn't one phenomenon — it's a family of different behaviors. Thomas &amp; Finney catalogue three classic types.</p>
+
+  <div class="grid3">
+    <div class="card alert">
+      <span class="card-label">Type 1 — Jump</span>
+      <svg viewBox="0 0 180 140" xmlns="http://www.w3.org/2000/svg">
+        <line x1="15" y1="115" x2="165" y2="115" stroke="#565A6E" stroke-width="1"/>
+        <line x1="90" y1="15" x2="90" y2="125" stroke="#565A6E" stroke-width="1"/>
+        <line x1="20" y1="100" x2="90" y2="65" stroke="#E6E8EE" stroke-width="2"/>
+        <circle cx="90" cy="65" r="4" fill="none" stroke="#E6E8EE" stroke-width="1.6"/>
+        <line x1="90" y1="45" x2="160" y2="25" stroke="#E6E8EE" stroke-width="2"/>
+        <circle cx="90" cy="45" r="4" fill="#E6E8EE"/>
+      </svg>
+      <p style="font-size:13.5px;">Left- and right-hand limits both exist, but disagree — like \(g(x)\) above. Different targets, no single limit.</p>
+    </div>
+
+    <div class="card alert">
+      <span class="card-label">Type 2 — Unbounded</span>
+      <svg viewBox="0 0 180 140" xmlns="http://www.w3.org/2000/svg">
+        <line x1="15" y1="115" x2="165" y2="115" stroke="#565A6E" stroke-width="1"/>
+        <line x1="90" y1="15" x2="90" y2="125" stroke="#565A6E" stroke-width="1"/>
+        <path d="M25,120 Q75,120 88,20" fill="none" stroke="#E6E8EE" stroke-width="2"/>
+        <path d="M92,20 Q105,120 155,120" fill="none" stroke="#E6E8EE" stroke-width="2"/>
+      </svg>
+      <p style="font-size:13.5px;">\(f(x)=\dfrac{1}{x^2}\) as \(x\to0\): values grow without bound. There's no finite number the function is heading toward.</p>
+    </div>
+
+    <div class="card alert">
+      <span class="card-label">Type 3 — Oscillation</span>
+      <svg viewBox="0 0 180 140" xmlns="http://www.w3.org/2000/svg">
+        <line x1="15" y1="70" x2="165" y2="70" stroke="#565A6E" stroke-width="1"/>
+        <line x1="90" y1="15" x2="90" y2="125" stroke="#565A6E" stroke-width="1"/>
+        <path d="M92,70 Q95,20 100,70 Q104,110 110,70 Q114,35 118,70 Q121,95 125,70 Q128,50 131,70 Q134,80 137,70 Q140,60 143,70 Q146,73 149,70" fill="none" stroke="#E6E8EE" stroke-width="1.6"/>
+        <path d="M88,70 Q85,20 80,70 Q76,110 70,70 Q66,35 62,70 Q59,95 55,70 Q52,50 49,70 Q46,80 43,70 Q40,60 37,70 Q34,73 31,70" fill="none" stroke="#E6E8EE" stroke-width="1.6"/>
+      </svg>
+      <p style="font-size:13.5px;">\(f(x)=\sin(1/x)\) as \(x\to0\): the function oscillates between \(-1\) and \(1\) infinitely often, faster and faster, never settling.</p>
+    </div>
+  </div>
+
+  <div class="qbox">
+    <div class="qlabel">Check yourself</div>
+    <p>Which of the three types above best describes \(f(x)=\dfrac1x\) as \(x\to0\)? (Consider both \(x\to0^-\) and \(x\to0^+\) separately first.)</p>
+    <button class="reveal-btn" data-ans="l5q">Show answer</button>
+    <div class="answer" id="l5q">As \(x\to0^+\), \(\frac1x\to+\infty\); as \(x\to0^-\), \(\frac1x\to-\infty\). This is really a blend of Types 1 and 2 — the one-sided behaviors don't even settle on finite numbers to disagree about, so the limit fails to exist for the "unbounded" reason on each side individually, and the two sides don't match either.</div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l5_5">Continue — interactive oscillation test ↓</button></div>
+</section>
+
+<!-- SECTION 5.5: Oscillation interactive -->
+<section class="block" id="l5_5">
+  <div class="kicker"><span class="num">05.5</span><span class="eyebrow">Interactive Example</span></div>
+  <h2 class="title">Exploring Rapid Oscillation: sin(1/x)</h2>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — Zoom into x = 0 for sin(1/x)</div>
+    <svg id="oscSvg" viewBox="0 0 480 260" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">Zoom Level (near 0)</label>
+      <input type="range" id="oscSlider" min="1" max="10" value="1" step="1">
+      <div class="readout" id="oscReadout">window width = 1.00</div>
+    </div>
+    <p class="caption">As you zoom in closer to 0, notice how the waves compress tighter and tighter without ever leveling off at a single height.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l6">Continue — a famous limit ↓</button></div>
+</section>
+
+<!-- SECTION 6: sin(x)/x -->
+<section class="block" id="l6">
+  <div class="kicker"><span class="num">06</span><span class="eyebrow">A limit you'll use constantly</span></div>
+  <h2 class="title">The famous limit: lim (sin x)/x = 1</h2>
+  <p class="lede">\(f(x)=\dfrac{\sin x}{x}\) is undefined at \(x=0\) (again, \(\frac00\)) — but the table of values tells a striking story.</p>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — sin(x)/x as x → 0</div>
+    <svg id="sincSvg" viewBox="0 0 480 260" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">how close?</label>
+      <input type="range" id="sincSlider" min="0" max="5" value="0" step="1">
+      <div class="readout" id="sincReadout">x = ±1</div>
+    </div>
+    <table class="datatable">
+      <tr><th>x</th><th>sin(x)/x</th><th></th><th>x</th><th>sin(x)/x</th></tr>
+      <tbody id="sincBody"></tbody>
+    </table>
+    <p class="caption">Both columns squeeze toward \(1\), even though the fraction is \(\frac00\) right at \(x=0\). This particular limit — proved rigorously with the Squeeze Theorem — is the hinge that the derivatives of \(\sin x\) and \(\cos x\) are built on.</p>
+  </div>
+
+  <div class="card remark">
+    <span class="card-label">Remark</span>
+    Notice the pattern from Section 1 repeating: a function undefined exactly at the interesting point, whose values nonetheless approach a clear, finite target from both sides. This is the single most common shape a "find the limit" problem takes throughout calculus.
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l7">Continue — limit laws, informally ↓</button></div>
+</section>
+
+<!-- SECTION 7: limit laws -->
+<section class="block" id="l7">
+  <div class="kicker"><span class="num">07</span><span class="eyebrow">Building bigger limits from small ones</span></div>
+  <h2 class="title">Limit laws (informal statement)</h2>
+  <p class="lede">Once you know a couple of basic limits, these rules let you combine them without going back to a table every time. Suppose \(\lim_{x\to c}f(x)=L\) and \(\lim_{x\to c}g(x)=M\), both finite.</p>
+
+  <table class="datatable" style="font-family:'IBM Plex Sans',sans-serif;">
+    <tr><th>Rule</th><th>Statement</th></tr>
+    <tr><td>Sum</td><td class="mono">\(\lim_{x\to c}[f(x)+g(x)]=L+M\)</td></tr>
+    <tr><td>Difference</td><td class="mono">\(\lim_{x\to c}[f(x)-g(x)]=L-M\)</td></tr>
+    <tr><td>Constant multiple</td><td class="mono">\(\lim_{x\to c}[k\cdot f(x)]=k L\)</td></tr>
+    <tr><td>Product</td><td class="mono">\(\lim_{x\to c}[f(x)g(x)]=LM\)</td></tr>
+    <tr><td>Quotient</td><td class="mono">\(\lim_{x\to c}\dfrac{f(x)}{g(x)}=\dfrac{L}{M}\), provided \(M\ne0\)</td></tr>
+    <tr><td>Power</td><td class="mono">\(\lim_{x\to c}[f(x)]^n=L^n\)</td></tr>
+  </table>
+
+  <div class="card int">
+    <span class="card-label">Why this matters in practice</span>
+    Two limits every calculus student should have on instant recall: \(\lim_{x\to c}k=k\) (a constant function's limit is that constant) and \(\lim_{x\to c}x=c\) (the identity function's limit is just \(c\)). Combine those two with the rules above, and you can compute the limit of <em>any</em> polynomial or rational function (where the denominator's limit isn't zero) just by substituting \(x=c\) directly — no table needed.
+  </div>
+
+  <div class="qbox">
+    <div class="qlabel">Try it</div>
+    <p>Using the rules above, evaluate \(\displaystyle\lim_{x\to3}(2x^2-5x+1)\).</p>
+    <button class="reveal-btn" data-ans="l7q">Show answer</button>
+    <div class="answer" id="l7q">Since this is a polynomial, direct substitution works: \(2(3)^2-5(3)+1=18-15+1=4\).</div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="l8">Continue — self-assessment quiz ↓</button></div>
+</section>
+
+<!-- SECTION 8: self-assessment -->
+<section class="block" id="l8">
+  <div class="kicker"><span class="num">08</span><span class="eyebrow">Self-Assessment Quiz</span></div>
+  <h2 class="title">Check your understanding</h2>
+
+  <div class="qbox">
+    <span class="tier A">Part A — recall</span>
+    <p>State the informal definition of \(\lim_{x\to c}f(x)=L\) in your own words.</p>
+    <button class="reveal-btn" data-ans="s1">Show answer</button>
+    <div class="answer" id="s1">As \(x\) gets arbitrarily close to \(c\) (from either side, without necessarily equaling \(c\)), the values \(f(x)\) get arbitrarily close to \(L\).</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier A">Part A — recall</span>
+    <p>True or false: if \(f(c)\) is undefined, then \(\lim_{x\to c}f(x)\) cannot exist.</p>
+    <button class="reveal-btn" data-ans="s2">Show answer</button>
+    <div class="answer" id="s2">False. Section 1's example, \(f(x)=\frac{x^2-4}{x-2}\), is undefined at \(x=2\), yet \(\lim_{x\to2}f(x)=4\) exists perfectly well. A function's value at a point and its limit at that point are separate questions.</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier B">Part B — apply</span>
+    <p>Let \(h(x)=3\) for \(x<0\) and \(h(x)=3\) for \(x>0\), but \(h(0)=9\). Does \(\lim_{x\to0}h(x)\) exist? If so, what is it?</p>
+    <button class="reveal-btn" data-ans="s3">Show answer</button>
+    <div class="answer" id="s3">Yes, it exists and equals \(3\). The limit only cares about values <em>near</em> \(0\), not the value <em>at</em> \(0\) — both one-sided limits are \(3\), so \(\lim_{x\to0}h(x)=3\), even though \(h(0)=9\) disagrees with it.</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier B">Part B — apply</span>
+    <p>For the jump function \(g(x)\) from Section 4 (\(g(x)=x+1\) for \(x<1\), \(g(x)=x+2\) for \(x\ge1\)), find \(\lim_{x\to1^-}g(x)\), \(\lim_{x\to1^+}g(x)\), and \(g(1)\).</p>
+    <button class="reveal-btn" data-ans="s4">Show answer</button>
+    <div class="answer" id="s4">\(\lim_{x\to1^-}g(x)=1+1=2\). \(\lim_{x\to1^+}g(x)=1+2=3\). \(g(1)=1+2=3\) (since the rule for \(x\ge1\) applies at \(x=1\)). Three genuinely different numbers — a good reminder that a one-sided limit, the function's actual value, and the two-sided limit (which here doesn't exist) can all disagree.</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier C">Part C — think</span>
+    <p>Sketch (mentally or on paper) a function with \(\lim_{x\to2^-}f(x)=5\), \(\lim_{x\to2^+}f(x)=5\), but \(f(2)=0\). Does \(\lim_{x\to2}f(x)\) exist? What's special — or not special — about this situation?</p>
+    <button class="reveal-btn" data-ans="s5">Show answer</button>
+    <div class="answer" id="s5">Yes, \(\lim_{x\to2}f(x)=5\) exists, exactly like Section 1's hole example — the limit is entirely about the approach, not the landing value. What's slightly different here from Section 1 is that \(f(2)\) is <em>defined</em> (equal to \(0\)) but simply doesn't match the limit — a removable discontinuity with an actual (wrong) value plugged in, rather than an undefined hole. Both situations lead to the same lesson: don't confuse "the function's value at \(c\)" with "the limit as \(x\to c\)."</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier C">Part C — think</span>
+    <p>Why does Type 3 (oscillation, like \(\sin(1/x)\) near \(0\)) not fit neatly into either "jump" or "unbounded"? What makes it a genuinely different failure mode?</p>
+    <button class="reveal-btn" data-ans="s6">Show answer</button>
+    <div class="answer" id="s6">A jump has two well-defined one-sided limits that simply disagree — the function still "settles" on each side. Unbounded behavior heads toward \(\pm\infty\) in a consistent direction. Oscillation does neither: \(\sin(1/x)\) keeps sweeping through every value between \(-1\) and \(1\) infinitely often as \(x\to0\), never settling toward any single number, however briefly, from either side. There isn't even a one-sided limit to speak of — the failure is more severe than a mere disagreement between two sides.</div>
+  </div>
+
+  <div class="card remark" style="margin-top:34px;">
+    <strong>Where this goes next.</strong> With the informal picture in hand, the next natural step is the precise \(\varepsilon\text{-}\delta\) definition — turning "arbitrarily close" into an actual inequality you can prove things with. From there: continuity (what it means for a function to have no holes or jumps at all), and then the derivative itself, which is nothing but a very particular limit — the limit of a slope.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Content in the style of Thomas &amp; Finney, <em>Calculus and Analytic Geometry</em> — informal treatment of limits.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.continue').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const next = document.getElementById(btn.dataset.next);
+      next.classList.add('shown');
+      next.scrollIntoView({behavior:'smooth', block:'start'});
+      updateProgress();
+      if (window.MathJax) MathJax.typesetPromise([next]);
+    });
+  });
+  document.querySelectorAll('.reveal-btn[data-ans]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const ans = document.getElementById(btn.dataset.ans);
+      ans.classList.toggle('shown');
+      if (window.MathJax) MathJax.typesetPromise([ans]);
+    });
+  });
+  function updateProgress(){
+    const total = document.querySelectorAll('.block').length;
+    const shown = document.querySelectorAll('.block.shown').length;
+    document.getElementById('progressBar').style.width = (shown/total*100)+'%';
+  }
+  updateProgress();
+
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs){ const e = document.createElementNS(NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function txt(x,y,s,opts){ const t = el('text', Object.assign({x:x,y:y,'font-size':11.5,'font-family':"IBM Plex Sans, sans-serif",fill:'#9DA3B4'}, opts||{})); t.textContent = s; return t; }
+
+  // ---------- Table-of-values demo (Section 2) ----------
+  const tableSvg = document.getElementById('tableSvg');
+  const tableSlider = document.getElementById('tableSlider');
+  const tableReadout = document.getElementById('tableReadout');
+  const tableBody = document.getElementById('tableBody');
+  const distances = [1, 0.5, 0.1, 0.01, 0.001, 0.0001];
+  function fHole(x){ return x+2; }
+
+  function drawTableDemo(){
+    const idx = parseInt(tableSlider.value);
+    const d = distances[idx];
+    tableReadout.textContent = 'distance = '+d;
+
+    tableBody.innerHTML = '';
+    [d, d*0.5, d*0.1].forEach(dist=>{
+      const xL = 2-dist, xR = 2+dist;
+      const tr = document.createElement('tr');
+      const highlightClass = (dist===d) ? ' class="highlight"' : '';
+      tr.innerHTML = `<td${highlightClass}>${xL.toFixed(5)}</td><td${highlightClass}>${fHole(xL).toFixed(5)}</td><td>→ 2 ←</td><td${highlightClass}>${xR.toFixed(5)}</td><td${highlightClass}>${fHole(xR).toFixed(5)}</td>`;
+      tableBody.appendChild(tr);
+    });
+
+    tableSvg.innerHTML = '';
+    const plotX=40, plotW=400, plotY0=220, scale=40;
+    tableSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    tableSvg.appendChild(el('line',{x1:plotX+plotW/2,y1:20,x2:plotX+plotW/2,y2:plotY0+10, stroke:'#565A6E','stroke-width':1.2}));
+    const cx = plotX+plotW/2;
+    tableSvg.appendChild(el('line',{x1:plotX+20,y1:plotY0-1*scale,x2:plotX+plotW-20,y2:20, stroke:'#6C72E6','stroke-width':2.2}));
+    tableSvg.appendChild(el('circle',{cx:cx,cy:plotY0-4*scale,r:6,fill:'#0B0D13',stroke:'#E06B5E','stroke-width':2.2}));
+
+    const xL = 2-d, xR = 2+d;
+    const pxL = cx - d*60, pxR = cx + d*60;
+    const pyL = plotY0-fHole(xL)*scale, pyR = plotY0-fHole(xR)*scale;
+    tableSvg.appendChild(el('circle',{cx:Math.max(plotX+20,Math.min(plotX+plotW-20,pxL)),cy:pyL,r:5,fill:'#6C72E6'}));
+    tableSvg.appendChild(el('circle',{cx:Math.max(plotX+20,Math.min(plotX+plotW-20,pxR)),cy:pyR,r:5,fill:'#E2AC4B'}));
+    tableSvg.appendChild(txt(cx,plotY0+18,'2',{'text-anchor':'middle'}));
+  }
+  tableSlider.addEventListener('input', drawTableDemo);
+  drawTableDemo();
+
+  // ---------- Approach animation (Section 3) ----------
+  const approachSvg = document.getElementById('approachSvg');
+  const approachSlider = document.getElementById('approachSlider');
+  const approachReadout = document.getElementById('approachReadout');
+  function drawApproach(){
+    const step = parseInt(approachSlider.value);
+    const t = step/20;
+    const d = 1*(1-t) + 0.001*t;
+    const xL = 2-d, xR = 2+d;
+    approachReadout.textContent = `x = ${xL.toFixed(3)} and x = ${xR.toFixed(3)}`;
+
+    approachSvg.innerHTML = '';
+    const plotX=40, plotW=400, plotY0=250, scale=40;
+    approachSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    approachSvg.appendChild(el('line',{x1:plotX+plotW/2,y1:20,x2:plotX+plotW/2,y2:plotY0+10, stroke:'#565A6E','stroke-width':1.2}));
+    const cx = plotX+plotW/2;
+    approachSvg.appendChild(el('line',{x1:plotX+20,y1:plotY0-1*scale,x2:plotX+plotW-20,y2:20, stroke:'#6C72E6','stroke-width':2.2}));
+    approachSvg.appendChild(el('circle',{cx:cx,cy:plotY0-4*scale,r:7,fill:'#0B0D13',stroke:'#E06B5E','stroke-width':2.4}));
+    approachSvg.appendChild(txt(cx,plotY0-4*scale-14,'(2, 4)',{'text-anchor':'middle',fill:'#E06B5E'}));
+
+    const pxOffset = Math.max(4, d*80);
+    const pxL = cx - pxOffset, pxR = cx + pxOffset;
+    const pyL = plotY0-fHole(2-d)*scale, pyR = plotY0-fHole(2+d)*scale;
+    approachSvg.appendChild(el('circle',{cx:pxL,cy:pyL,r:6,fill:'#6C72E6'}));
+    approachSvg.appendChild(el('circle',{cx:pxR,cy:pyR,r:6,fill:'#E2AC4B'}));
+    approachSvg.appendChild(txt(cx,plotY0+18,'2',{'text-anchor':'middle'}));
+  }
+  approachSlider.addEventListener('input', drawApproach);
+  drawApproach();
+
+  // ---------- Displaced point demo (Section 3.5) ----------
+  const displacedSvg = document.getElementById('displacedSvg');
+  const displacedSlider = document.getElementById('displacedSlider');
+  const displacedReadout = document.getElementById('displacedReadout');
+
+  function drawDisplaced(){
+    const step = parseInt(displacedSlider.value);
+    const t = step / 20;
+    const xVal = 1 + t * 0.999;
+    displacedReadout.textContent = `x = ${xVal.toFixed(3)}`;
+
+    displacedSvg.innerHTML = '';
+    const plotX=40, plotW=400, plotY0=250, scale=35;
+    const cx = plotX + plotW/2;
+
+    displacedSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    displacedSvg.appendChild(el('line',{x1:cx,y1:20,x2:cx,y2:plotY0+10, stroke:'#565A6E','stroke-width':1.2}));
+
+    // Line y = x + 1
+    displacedSvg.appendChild(el('line',{x1:plotX+20,y1:plotY0-1.5*scale,x2:plotX+plotW-20,y2:plotY0-4.5*scale, stroke:'#6C72E6','stroke-width':2.2}));
+    // Hollow circle at (2, 3)
+    displacedSvg.appendChild(el('circle',{cx:cx,cy:plotY0-3*scale,r:6,fill:'#0B0D13',stroke:'#E06B5E','stroke-width':2.2}));
+    // Displaced point at (2, 5)
+    displacedSvg.appendChild(el('circle',{cx:cx,cy:plotY0-5*scale,r:6,fill:'#E2AC4B'}));
+    displacedSvg.appendChild(txt(cx+12,plotY0-5*scale+4,'(2, 5)',{fill:'#E2AC4B'}));
+
+    // Current interactive point
+    const px = cx - (2 - xVal)*80;
+    const py = plotY0 - (xVal + 1)*scale;
+    displacedSvg.appendChild(el('circle',{cx:px,cy:py,r:6,fill:'#8DA983'}));
+
+    displacedSvg.appendChild(txt(cx,plotY0+18,'2',{'text-anchor':'middle'}));
+  }
+  displacedSlider.addEventListener('input', drawDisplaced);
+  drawDisplaced();
+
+  // ---------- Jump function demo (Section 4) ----------
+  const jumpSvg = document.getElementById('jumpSvg');
+  const jumpSlider = document.getElementById('jumpSlider');
+  const jumpReadout = document.getElementById('jumpReadout');
+  const jumpBody = document.getElementById('jumpBody');
+  function gJump(x){ return x<1 ? x+1 : x+2; }
+  function drawJump(){
+    const step = parseInt(jumpSlider.value);
+    const distsJ = [1,0.5,0.2,0.1,0.05,0.02,0.01,0.005,0.002,0.001,0.0005,0.0002,0.0001];
+    const d = distsJ[Math.min(step, distsJ.length-1)];
+    jumpReadout.textContent = 'distance from 1 = '+d;
+
+    jumpBody.innerHTML = '';
+    const xL = 1-d, xR = 1+d;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${xL.toFixed(5)}</td><td>${gJump(xL).toFixed(5)}</td><td>${xR.toFixed(5)}</td><td>${gJump(xR).toFixed(5)}</td>`;
+    jumpBody.appendChild(tr);
+
+    jumpSvg.innerHTML = '';
+    const plotX=40, plotW=400, plotY0=250, scale=45;
+    jumpSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    jumpSvg.appendChild(el('line',{x1:plotX+plotW/2,y1:20,x2:plotX+plotW/2,y2:plotY0+10, stroke:'#565A6E','stroke-width':1.2}));
+    const cx = plotX+plotW/2;
+    jumpSvg.appendChild(el('line',{x1:plotX+20,y1:plotY0-(0.2+1)*scale,x2:cx,y2:plotY0-2*scale, stroke:'#E6E8EE','stroke-width':2.2}));
+    jumpSvg.appendChild(el('circle',{cx:cx,cy:plotY0-2*scale,r:6,fill:'#0B0D13',stroke:'#6C72E6','stroke-width':2.2}));
+    jumpSvg.appendChild(el('line',{x1:cx,y1:plotY0-3*scale,x2:plotX+plotW-20,y2:plotY0-(3+ (plotW-40)/ (plotW/2) *1 )*scale, stroke:'#E6E8EE','stroke-width':2.2}));
+    jumpSvg.appendChild(el('circle',{cx:cx,cy:plotY0-3*scale,r:6,fill:'#E2AC4B'}));
+    jumpSvg.appendChild(txt(cx,plotY0+18,'1',{'text-anchor':'middle'}));
+
+    const pxOffset = Math.max(4, d*90);
+    const pxL = cx - pxOffset, pxR = cx + pxOffset;
+    const pyL = plotY0-gJump(1-d)*scale, pyR = plotY0-gJump(1+d)*scale;
+    jumpSvg.appendChild(el('circle',{cx:pxL,cy:pyL,r:5,fill:'#6C72E6'}));
+    jumpSvg.appendChild(el('circle',{cx:pxR,cy:pyR,r:5,fill:'#E2AC4B'}));
+  }
+  jumpSlider.addEventListener('input', drawJump);
+  drawJump();
+
+  // ---------- Oscillation demo (Section 5.5) ----------
+  const oscSvg = document.getElementById('oscSvg');
+  const oscSlider = document.getElementById('oscSlider');
+  const oscReadout = document.getElementById('oscReadout');
+
+  function drawOsc(){
+    const zoom = parseInt(oscSlider.value);
+    const range = 1 / zoom;
+    oscReadout.textContent = `window width = ±${range.toFixed(2)}`;
+
+    oscSvg.innerHTML = '';
+    const plotX=40, plotW=400, plotY0=130, scale=90;
+    const cx = plotX + plotW/2;
+
+    oscSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    oscSvg.appendChild(el('line',{x1:cx,y1:20,x2:cx,y2:240, stroke:'#565A6E','stroke-width':1.2}));
+
+    let path = '';
+    const points = 300;
+    for(let i=0; i<=points; i++){
+      const x = -range + (2 * range * i / points);
+      if(Math.abs(x) < 0.0001) continue;
+      const y = Math.sin(1 / x);
+      const px = cx + (x / range) * (plotW / 2);
+      const py = plotY0 - y * scale;
+      path += (path==='' ? 'M' : ' L') + ` ${px} ${py}`;
+    }
+    oscSvg.appendChild(el('path',{d:path, fill:'none', stroke:'#E06B5E', 'stroke-width':1.5}));
+  }
+  oscSlider.addEventListener('input', drawOsc);
+  drawOsc();
+
+  // ---------- sin(x)/x demo (Section 6) ----------
+  const sincSvg = document.getElementById('sincSvg');
+  const sincSlider = document.getElementById('sincSlider');
+  const sincReadout = document.getElementById('sincReadout');
+  const sincBody = document.getElementById('sincBody');
+  const sincDistances = [1, 0.5, 0.1, 0.01, 0.001, 0.0001];
+  function fSinc(x){ return x===0 ? 1 : Math.sin(x)/x; }
+
+  function drawSinc(){
+    const idx = parseInt(sincSlider.value);
+    const d = sincDistances[idx];
+    sincReadout.textContent = `x = ±${d}`;
+
+    sincBody.innerHTML = '';
+    [d, d*0.5, d*0.1].forEach(dist=>{
+      const xL = -dist, xR = dist;
+      const tr = document.createElement('tr');
+      const hc = (dist===d) ? ' class="highlight"' : '';
+      tr.innerHTML = `<td${hc}>${xL.toFixed(5)}</td><td${hc}>${fSinc(xL).toFixed(6)}</td><td>→ 0 ←</td><td${hc}>${xR.toFixed(5)}</td><td${hc}>${fSinc(xR).toFixed(6)}</td>`;
+      sincBody.appendChild(tr);
+    });
+
+    sincSvg.innerHTML = '';
+    const plotX=40, plotW=400, plotY0=220, scale=180;
+    sincSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    sincSvg.appendChild(el('line',{x1:plotX+plotW/2,y1:20,x2:plotX+plotW/2,y2:plotY0+10, stroke:'#565A6E','stroke-width':1.2}));
+    const cx = plotX+plotW/2;
+    let path = '';
+    for(let i=0;i<=100;i++){
+      const x = -8 + 16*i/100;
+      const px = cx + x*(plotW/2/8);
+      const py = plotY0 - fSinc(x)*scale;
+      path += (i===0?'M':' L') + ` ${px} ${py}`;
+    }
+    sincSvg.appendChild(el('path',{d:path, fill:'none', stroke:'#6C72E6', 'stroke-width':2}));
+    sincSvg.appendChild(el('circle',{cx:cx,cy:plotY0-1*scale,r:6,fill:'#0B0D13',stroke:'#E06B5E','stroke-width':2.2}));
+    sincSvg.appendChild(txt(cx,plotY0-1*scale-12,'(0, 1)',{'text-anchor':'middle',fill:'#E06B5E'}));
+    sincSvg.appendChild(txt(cx,plotY0+18,'0',{'text-anchor':'middle'}));
+
+    const pxOffset = Math.max(4, d*(plotW/2/8));
+    sincSvg.appendChild(el('circle',{cx:cx-pxOffset,cy:plotY0-fSinc(-d)*scale,r:5,fill:'#6C72E6'}));
+    sincSvg.appendChild(el('circle',{cx:cx+pxOffset,cy:plotY0-fSinc(d)*scale,r:5,fill:'#E2AC4B'}));
+  }
+  sincSlider.addEventListener('input', drawSinc);
+  drawSinc();
+</script>
+</body>
+</html>

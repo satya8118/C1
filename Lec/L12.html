@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Precise (ε–δ) Definition of a Limit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --indigo: #3B3E8F; --indigo-deep: #262a63; --indigo-soft: #eceafb;
+    --amber: #D9992C; --amber-soft: #fbedd2;
+    --sage: #7C9473; --sage-soft: #e8efe3;
+    --red: #C0483B; --red-soft: #f6e2df;
+    --paper: #FAF8F3; --ink: #22242E; --ink-soft: #565A6E; --line: #DEDAD0; --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.65; font-size:17px; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; color:var(--indigo-deep); letter-spacing:-0.01em; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); font-weight:500; }
+  header.hero{ padding:72px 8vw 56px; background: radial-gradient(circle at 82% 18%, rgba(59,62,143,0.10), transparent 55%), var(--paper); border-bottom:1px solid var(--line); }
+  header.hero h1{ font-size:clamp(28px, 4vw, 46px); margin:10px 0 18px; max-width:820px; line-height:1.12; }
+  header.hero p.sub{ max-width:660px; color:var(--ink-soft); font-size:17.5px; }
+  main{ max-width:920px; margin:0 auto; padding:0 8vw 120px; }
+  section.block{ display:none; padding-top:60px; }
+  section.block.shown{ display:block; animation:fade .5s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  .kicker{ display:flex; align-items:center; gap:12px; margin-bottom:6px;}
+  .kicker .num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:#fff; background:var(--indigo); border-radius:6px; padding:3px 9px; }
+  h2.title{ font-size:clamp(23px,2.9vw,30px); margin:4px 0 18px; }
+  p{ color:var(--ink); }
+  p.lede{ color:var(--ink-soft); font-size:17px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px 26px; margin:18px 0; }
+  .card .card-label{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:600; margin-bottom:8px; display:block; }
+  .card.def{ background:var(--indigo-soft); border-color:#d4d1f5; } .card.def .card-label{ color:var(--indigo); }
+  .card.int{ background:var(--amber-soft); border-color:#eddcae; } .card.int .card-label{ color:#8a5f13; }
+  .card.remark{ background:var(--sage-soft); border-color:#d3e0cb; } .card.remark .card-label{ color:#3a5233; }
+  .demo{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px 26px; margin:24px 0; }
+  .demo .demo-label{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--indigo); margin-bottom:10px; }
+  .demo svg{ width:100%; height:auto; display:block; background:#fdfcf9; border-radius:10px; }
+  .controls{ display:flex; align-items:center; gap:14px; margin-top:14px; flex-wrap:wrap; }
+  input[type=range]{ flex:1; min-width:150px; accent-color:var(--indigo); }
+  .readout{ font-family:'IBM Plex Mono', monospace; font-size:13.5px; background:var(--indigo-soft); padding:6px 12px; border-radius:8px; color:var(--indigo-deep); min-width:60px; text-align:center; }
+  .status-pill{ font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; padding:8px 16px; border-radius:999px; display:inline-block; margin-top:10px; }
+  .status-pill.pass{ background:var(--sage-soft); color:#3a5233; border:1.5px solid var(--sage); }
+  .status-pill.fail{ background:var(--red-soft); color:#7a2e24; border:1.5px solid var(--red); }
+  .game-btn{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:14px; background:var(--indigo); color:#fff;
+    border:none; padding:11px 20px; border-radius:999px; cursor:pointer; transition:background .15s ease;
+  }
+  .game-btn:hover{ background:var(--indigo-deep); }
+  .game-btn:disabled{ background:var(--line); color:var(--ink-soft); cursor:not-allowed; }
+  .continue-wrap{ text-align:center; margin:56px 0 0; }
+  button.continue{ font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:15px; background:var(--indigo); color:#fff; border:none; padding:13px 26px; border-radius:999px; cursor:pointer; transition:transform .15s ease, background .15s ease; }
+  button.continue:hover{ background:var(--indigo-deep); transform:translateY(-1px); }
+  .reveal-btn{ font-family:'IBM Plex Mono', monospace; font-size:13px; background:transparent; border:1.5px solid var(--indigo); color:var(--indigo); padding:9px 15px; border-radius:8px; cursor:pointer; margin-top:6px; }
+  .reveal-btn:hover{ background:var(--indigo-soft); }
+  .answer{ display:none; margin-top:12px; padding:16px 18px; background:var(--sage-soft); border-left:3px solid var(--sage); border-radius:8px; }
+  .answer.shown{ display:block; }
+  .qbox{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:20px 24px; margin:18px 0; }
+  .qbox .qlabel{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--amber); font-weight:600; margin-bottom:8px; }
+  .tier{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:#fff; padding:3px 10px; border-radius:6px; display:inline-block; margin-bottom:10px; }
+  .tier.A{ background:var(--sage); } .tier.B{ background:var(--amber); } .tier.C{ background:var(--indigo); }
+  .caption{ font-size:13.5px; color:var(--ink-soft); margin-top:8px; }
+  .progress{ position:fixed; top:0; left:0; height:3px; background:var(--amber); width:0%; z-index:50; transition:width .4s ease; }
+  .boxed{ display:inline-block; border:1.5px solid var(--ink); padding:8px 14px; border-radius:8px; background:#fff; margin:8px 0; }
+  footer{ max-width:920px; margin:0 auto; padding:32px 8vw 70px; color:var(--ink-soft); font-size:13.5px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+<div class="progress" id="progressBar"></div>
+
+<header class="hero">
+  <div class="eyebrow">Calculus · Limits, Part II</div>
+  <h1>The Precise Definition of a Limit</h1>
+  <p class="sub">Last time we said "\(f(x)\) gets arbitrarily close to \(L\) as \(x\) gets arbitrarily close to \(c\)" and left it at that — good enough to build intuition, not good enough to prove anything with. Today we turn "arbitrarily close" into an actual inequality: the \(\varepsilon\)-\(\delta\) definition that every rigorous limit argument in this course rests on.</p>
+</header>
+
+<main>
+
+<!-- SECTION 1: why we need precision -->
+<section class="block shown" id="f1">
+  <div class="kicker"><span class="num">01</span><span class="eyebrow">Closing the gap in "arbitrarily close"</span></div>
+  <h2 class="title">Why the informal definition isn't enough</h2>
+
+  <p class="lede">"Gets arbitrarily close" is a fine intuition, but it's not a sentence you can do algebra with. It doesn't tell you <em>how</em> close is close enough, doesn't let you check a claimed limit is actually correct, and gives you nothing to write in a proof. What we need is a way to say "close" that comes with an actual number attached.</p>
+
+  <div class="card int">
+    <span class="card-label">The strategy</span>
+    We'll measure closeness on the output side with a tolerance \(\varepsilon\) (epsilon) — how far \(f(x)\) is allowed to stray from \(L\) — and on the input side with a tolerance \(\delta\) (delta) — how far \(x\) is allowed to stray from \(c\). The claim "\(\lim_{x\to c}f(x)=L\)" will mean: <strong>no matter how small a tolerance \(\varepsilon\) you demand on the output, some tolerance \(\delta\) on the input is enough to guarantee it.</strong>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f2">Continue — an analogy from the machine shop ↓</button></div>
+</section>
+
+<!-- SECTION 2: generator shaft analogy -->
+<section class="block" id="f2">
+  <div class="kicker"><span class="num">02</span><span class="eyebrow">A physical picture first</span></div>
+  <h2 class="title">The generator shaft analogy</h2>
+
+  <p class="lede">Picture a machinist manufacturing a cylindrical shaft that needs to fit a generator housing to a tight tolerance. The target diameter is \(L\). Nothing manufactured is ever perfectly exact, so the machinist works to whatever precision the customer demands: "the diameter must land within \(\varepsilon\) of \(L\)."</p>
+
+  <div class="demo">
+    <div class="demo-label">The machinist's problem</div>
+    <svg viewBox="0 0 480 160" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="55" width="260" height="50" rx="6" fill="#3B3E8F" fill-opacity="0.18" stroke="#3B3E8F" stroke-width="2"/>
+      <line x1="40" y1="40" x2="40" y2="120" stroke="#565A6E" stroke-width="1"/>
+      <line x1="300" y1="40" x2="300" y2="120" stroke="#565A6E" stroke-width="1"/>
+      <line x1="40" y1="45" x2="300" y2="45" stroke="#D9992C" stroke-width="1.3" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <text x="170" y="34" font-size="13" text-anchor="middle" font-family="IBM Plex Sans" fill="#8a5f13">target diameter L</text>
+      <defs><marker id="ah" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#D9992C"/></marker></defs>
+      <text x="360" y="75" font-size="13" font-family="IBM Plex Sans" fill="#22242E">"Diameter must be</text>
+      <text x="360" y="93" font-size="13" font-family="IBM Plex Sans" fill="#22242E">within ε of L."</text>
+    </svg>
+    <p class="caption">The customer sets \(\varepsilon\) — the allowed error in diameter. The machinist's job is to find a corresponding setting on the lathe that guarantees the finished shaft lands within that window.</p>
+  </div>
+
+  <div class="card remark">
+    <span class="card-label">Where the two tolerances come from</span>
+    The machinist controls the lathe's cutting position — call it \(x\), with the ideal setting at \(c\). No control setting is perfectly exact either, so the achieved diameter \(f(x)\) depends on how precisely \(x\) is set. The question becomes: <strong>how tight must the control setting be — that is, how small must \(|x-c|\) be — to guarantee the diameter \(f(x)\) lands within \(\varepsilon\) of \(L\)?</strong> That required tightness on the control setting is exactly what we'll call \(\delta\).
+  </div>
+
+  <p>As the customer's demanded diameter tolerance \(\varepsilon\) gets stricter, the machinist typically has to tighten the control setting tolerance \(\delta\) to match. That back-and-forth — a smaller \(\varepsilon\) forcing a smaller \(\delta\) — is precisely the logical structure the formal definition captures.</p>
+
+  <div class="continue-wrap"><button class="continue" data-next="f3">Continue — the formal definition itself ↓</button></div>
+</section>
+
+<!-- SECTION 3: formal definition -->
+<section class="block" id="f3">
+  <div class="kicker"><span class="num">03</span><span class="eyebrow">The definition</span></div>
+  <h2 class="title">The ε–δ definition of a limit</h2>
+
+  <div class="card def">
+    <span class="card-label">Definition — Limit of a Function</span>
+    Let \(f(x)\) be defined on an open interval about \(c\), except possibly at \(c\) itself. We say that <strong>the limit of \(f(x)\) as \(x\) approaches \(c\) is the number \(L\)</strong>, and write
+    \[ \lim_{x\to c} f(x) = L, \]
+    if for every number \(\varepsilon>0\), there exists a corresponding number \(\delta>0\) such that for all \(x\),
+    \[ 0<|x-c|<\delta \quad\implies\quad |f(x)-L|<\varepsilon. \]
+  </div>
+
+  <div class="card int">
+    <span class="card-label">Reading the definition piece by piece</span>
+    <ul>
+      <li><strong>\(0<|x-c|\)</strong> — this rules out \(x=c\) itself. The limit never depends on what happens (or doesn't happen) exactly at \(c\).</li>
+      <li><strong>\(|x-c|<\delta\)</strong> — \(x\) is within \(\delta\) of \(c\); together with the line above, \(x\) is <em>near but not equal to</em> \(c\).</li>
+      <li><strong>\(|f(x)-L|<\varepsilon\)</strong> — the output \(f(x)\) is within \(\varepsilon\) of \(L\).</li>
+      <li><strong>"For every \(\varepsilon\), there exists \(\delta\)"</strong> — the order of the quantifiers matters enormously: \(\varepsilon\) is chosen first (by an adversary, demanding precision), and only then do you get to choose \(\delta\) in response. \(\delta\) is allowed to depend on \(\varepsilon\) — and in practice, always does.</li>
+    </ul>
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — Figure 2.17: the relation of δ and ε</div>
+    <svg id="figSvg" viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">ε</label>
+      <input type="range" id="figEps" min="10" max="150" value="80" step="1">
+      <div class="readout" id="figEpsReadout">ε = 0.80</div>
+    </div>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">δ</label>
+      <input type="range" id="figDelta" min="5" max="200" value="60" step="1">
+      <div class="readout" id="figDeltaReadout">δ = 0.60</div>
+    </div>
+    <div id="figStatus"></div>
+    <p class="caption">Drag \(\varepsilon\) to set the horizontal tolerance band \([L-\varepsilon,L+\varepsilon]\) (amber). Then drag \(\delta\) to find a vertical band \([c-\delta,c+\delta]\) (blue) narrow enough that the whole piece of curve inside it stays trapped in the amber band. Shrink \(\varepsilon\) and you'll need to shrink \(\delta\) again to keep up — exactly the challenge the next section turns into a game.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f4">Continue — the challenge–response game ↓</button></div>
+</section>
+
+<!-- SECTION 4: challenge game -->
+<section class="block" id="f4">
+  <div class="kicker"><span class="num">04</span><span class="eyebrow">Making the quantifiers concrete</span></div>
+  <h2 class="title">The challenge–response game</h2>
+  <p class="lede">Here's the cleanest way to feel the logic of "for every \(\varepsilon\), there's a \(\delta\)": treat it as a game. An opponent names a tolerance \(\varepsilon\), as small and mean as they like. You must respond with a \(\delta\) that works. If you succeed, they're allowed to come back with an even smaller \(\varepsilon\) — and you must find an even smaller \(\delta\). The limit statement is true exactly when you can <em>always</em> win, no matter how small they push \(\varepsilon\).</p>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — can you always find a winning δ? (f(x) = 2x, c = 3, L = 6)</div>
+    <svg id="gameSvg" viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <div class="readout" id="gameEpsReadout" style="min-width:140px;">Challenge: ε = 1</div>
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">your δ</label>
+      <input type="range" id="gameDelta" min="0" max="300" value="150" step="1">
+      <div class="readout" id="gameDeltaReadout">δ = 0.50</div>
+    </div>
+    <div class="controls">
+      <button class="game-btn" id="submitBtn" type="button">Submit response</button>
+      <button class="game-btn" id="nextBtn" type="button" disabled>Next challenge (smaller ε) →</button>
+      <button class="game-btn" id="resetGameBtn" type="button" style="background:var(--ink-soft);">Reset game</button>
+    </div>
+    <div id="gameStatus"></div>
+    <p class="caption">Round <span id="roundNum">1</span> of an endless sequence — the book's page runs \(\varepsilon=\frac{1}{10},\frac{1}{100},\frac{1}{1000},\frac{1}{100{,}000},\dots\) and never stops. If you can always produce a winning \(\delta\), no matter how far the sequence goes, that's exactly what "\(\lim_{x\to3}2x=6\)" asserts.</p>
+  </div>
+
+  <div class="qbox">
+    <div class="qlabel">Spot the pattern</div>
+    <p>After a few rounds, do you notice a relationship between the winning \(\delta\) and the challenge \(\varepsilon\)? (We'll prove this pattern algebraically in Section 6.)</p>
+    <button class="reveal-btn" data-ans="f4q">Show answer</button>
+    <div class="answer" id="f4q">For \(f(x)=2x\), the winning \(\delta\) is always exactly \(\varepsilon/2\). Since the slope is \(2\), doubling the input-distance doubles the output-distance — so to keep the output within \(\varepsilon\), the input must stay within \(\varepsilon/2\). This is no coincidence; it's exactly the formula Section 6 derives for every linear function.</div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f5">Continue — the two trivial warm-ups ↓</button></div>
+</section>
+
+<!-- SECTION 5: constant and identity -->
+<section class="block" id="f5">
+  <div class="kicker"><span class="num">05</span><span class="eyebrow">Worked example 1</span></div>
+  <h2 class="title">The two easiest possible limits</h2>
+  <p class="lede">Before tackling anything curved, verify the definition on the two functions where there's nothing to compute at all.</p>
+
+  <div class="qbox">
+    <div class="qlabel">Constant function: prove lim(x→c) k = k</div>
+    <p>Given \(\varepsilon>0\), what \(\delta\) works? (Trick question — think about what \(|f(x)-L|\) even equals here.)</p>
+    <button class="reveal-btn" data-ans="f5proof1">Show proof</button>
+    <div class="answer" id="f5proof1">Here \(f(x)=k\) and \(L=k\), so \(|f(x)-L|=|k-k|=0<\varepsilon\) for <em>every</em> \(x\), regardless of how close \(x\) is to \(c\). So literally any \(\delta>0\) works — say \(\delta=1\). The implication \(0<|x-c|<1\implies|k-k|<\varepsilon\) is true no matter what, since the right side is always true.</div>
+  </div>
+
+  <div class="qbox">
+    <div class="qlabel">Identity function: prove lim(x→c) x = c</div>
+    <p>Given \(\varepsilon>0\), what \(\delta\) works? Hint: what is \(|f(x)-L|\) here, exactly?</p>
+    <button class="reveal-btn" data-ans="f5proof2">Show proof</button>
+    <div class="answer" id="f5proof2">Here \(f(x)=x\) and \(L=c\), so \(|f(x)-L|=|x-c|\) — literally the same quantity the hypothesis controls. So choose \(\delta=\varepsilon\) exactly: then \(0<|x-c|<\delta=\varepsilon\) directly gives \(|f(x)-L|=|x-c|<\varepsilon\). No algebra needed — the input tolerance and output tolerance are literally the same number for this function.</div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f6">Continue — a genuine linear function ↓</button></div>
+</section>
+
+<!-- SECTION 6: linear function -->
+<section class="block" id="f6">
+  <div class="kicker"><span class="num">06</span><span class="eyebrow">Worked example 2</span></div>
+  <h2 class="title">A general linear function: lim(x→c) (mx + b) = mc + b</h2>
+  <p class="lede">Assume \(m\ne0\). This confirms the pattern the challenge game already revealed.</p>
+
+  <div class="qbox">
+    <div class="qlabel">Try it yourself</div>
+    <p>Start by simplifying \(|f(x)-L|=|(mx+b)-(mc+b)|\) — factor out \(m\) — and solve the resulting inequality for \(|x-c|\).</p>
+    <button class="reveal-btn" data-ans="f6proof">Show proof</button>
+    <div class="answer" id="f6proof">
+      \[ |f(x)-L| = |(mx+b)-(mc+b)| = |mx-mc| = |m||x-c|. \]
+      <p>We want this \(<\varepsilon\), i.e. \(|m||x-c|<\varepsilon\), i.e. \(|x-c|<\dfrac{\varepsilon}{|m|}\). So <strong>choose \(\delta=\dfrac{\varepsilon}{|m|}\)</strong>. Check: if \(0<|x-c|<\delta=\dfrac{\varepsilon}{|m|}\), then \(|f(x)-L|=|m||x-c|<|m|\cdot\dfrac{\varepsilon}{|m|}=\varepsilon\). Done — for every \(\varepsilon>0\), this \(\delta\) works.</p>
+    </div>
+  </div>
+
+  <div class="card remark">
+    <span class="card-label">Matches the game</span>
+    For \(f(x)=2x\) (so \(m=2\)), this formula gives \(\delta=\varepsilon/2\) — exactly the pattern from Section 4's game.
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f7">Continue — a curved example, where you need a trick ↓</button></div>
+</section>
+
+<!-- SECTION 7: quadratic -->
+<section class="block" id="f7">
+  <div class="kicker"><span class="num">07</span><span class="eyebrow">Worked example 3</span></div>
+  <h2 class="title">A curved function: lim(x→2) x² = 4</h2>
+  <p class="lede">Now \(|f(x)-L|=|x^2-4|=|x-2||x+2|\) — a product of two factors, only one of which is directly controlled by \(\delta\). This is the first genuinely new idea: we need to <em>bound</em> the uncontrolled factor first.</p>
+
+  <div class="qbox">
+    <div class="qlabel">Try it yourself</div>
+    <p>Suppose we agree, as a first restriction, that \(\delta\le1\). What does that force \(x\) to satisfy, and what bound does that put on \(|x+2|\)?</p>
+    <button class="reveal-btn" data-ans="f7proof">Show proof</button>
+    <div class="answer" id="f7proof">
+      <p>Factor: \(|x^2-4|=|x-2|\cdot|x+2|\). If we additionally require \(\delta\le1\), then \(|x-2|<\delta\le1\) forces \(1<x<3\), and so \(3<x+2<5\), giving \(|x+2|<5\).</p>
+      <p>Now \(|x^2-4|=|x-2||x+2|<5|x-2|\). We want this \(<\varepsilon\), so it's enough to have \(|x-2|<\dfrac\varepsilon5\). Combined with the earlier restriction \(\delta\le1\):</p>
+      \[ \boxed{\delta=\min\left(1,\ \frac\varepsilon5\right)} \]
+      <p>Check: if \(0<|x-2|<\delta\), then \(|x-2|<1\) (giving \(|x+2|<5\)) <em>and</em> \(|x-2|<\varepsilon/5\), so \(|x^2-4|=|x-2||x+2|<\dfrac\varepsilon5\cdot5=\varepsilon\). Done.</p>
+    </div>
+  </div>
+
+  <div class="card int">
+    <span class="card-label">The general technique</span>
+    Whenever \(|f(x)-L|\) factors into "\((x-c)\) times something else," first impose a convenient restriction like \(\delta\le1\) to trap the "something else" inside a fixed numerical bound. Only then solve for how small \(\delta\) needs to be to control the whole product — and take the smaller of the two requirements. This two-step move (bound, then solve) is the standard opening for almost every non-linear \(\varepsilon\)-\(\delta\) proof you'll meet.
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Interactive — verify δ = min(1, ε/5) actually works for x² near 2</div>
+    <svg id="quadSvg" viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="controls">
+      <label style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">ε</label>
+      <input type="range" id="quadEps" min="5" max="200" value="100" step="1">
+      <div class="readout" id="quadEpsReadout">ε = 1.00</div>
+    </div>
+    <div id="quadStatus"></div>
+    <p class="caption">Drag \(\varepsilon\); the formula automatically computes \(\delta=\min(1,\varepsilon/5)\) and checks it against the curve. It should pass every time — that's the whole content of the proof above, made visual.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="f8">Continue — check your understanding ↓</button></div>
+</section>
+
+<!-- SECTION 8: self-assessment -->
+<section class="block" id="f8">
+  <div class="kicker"><span class="num">08</span><span class="eyebrow">Before we move to continuity</span></div>
+  <h2 class="title">Self-assessment</h2>
+
+  <div class="qbox">
+    <span class="tier A">Part A — recall</span>
+    <p>Write the ε–δ definition of \(\lim_{x\to c}f(x)=L\) from memory.</p>
+    <button class="reveal-btn" data-ans="s1">Show answer</button>
+    <div class="answer" id="s1">For every \(\varepsilon>0\), there exists \(\delta>0\) such that for all \(x\), \(0<|x-c|<\delta\implies|f(x)-L|<\varepsilon\).</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier A">Part A — recall</span>
+    <p>In the definition, which is chosen first — \(\varepsilon\) or \(\delta\)? Why does the order matter?</p>
+    <button class="reveal-btn" data-ans="s2">Show answer</button>
+    <div class="answer" id="s2">\(\varepsilon\) is chosen first, and \(\delta\) is found in response to it — \(\delta\) is allowed to (and generally does) depend on \(\varepsilon\). If the order were reversed, the statement would be a completely different (and far stronger, usually false) claim: one single \(\delta\) that works for every \(\varepsilon\) at once.</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier B">Part B — apply</span>
+    <p>Using Section 6's formula, find a \(\delta\) that proves \(\lim_{x\to5}(3x-1)=14\) for \(\varepsilon=0.06\).</p>
+    <button class="reveal-btn" data-ans="s3">Show answer</button>
+    <div class="answer" id="s3">Here \(m=3\), so \(\delta=\varepsilon/|m|=0.06/3=0.02\).</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier B">Part B — apply</span>
+    <p>For \(\lim_{x\to2}x^2=4\) (Section 7) with \(\varepsilon=0.02\), what does the formula \(\delta=\min(1,\varepsilon/5)\) give? Which of the two terms is doing the limiting?</p>
+    <button class="reveal-btn" data-ans="s4">Show answer</button>
+    <div class="answer" id="s4">\(\varepsilon/5=0.004\), and \(\min(1,0.004)=0.004\). Here the \(\varepsilon/5\) term is the binding constraint — for small enough \(\varepsilon\), it's always the smaller of the two, since \(1\) is a fixed number but \(\varepsilon/5\to0\).</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier C">Part C — think</span>
+    <p>Why did the constant-function proof (Section 5) not need to use \(\varepsilon\) at all when choosing \(\delta\)? Connect this to the general "bound, then solve" technique from Section 7.</p>
+    <button class="reveal-btn" data-ans="s5">Show answer</button>
+    <div class="answer" id="s5">Because \(|f(x)-L|=0\) identically — the output-side quantity we needed to control was already zero, with nothing left depending on \(x\) or \(\delta\) at all. In Section 7's language, there was no "\(|x-c|\) times something" to factor; the something was already gone. It's the most extreme case of the general technique: sometimes the bound alone finishes the job, with no "solve" step required.</div>
+  </div>
+
+  <div class="qbox">
+    <span class="tier C">Part C — think</span>
+    <p>Construct, in outline, what you think the \(\varepsilon\)-\(\delta\) proof for \(\lim_{x\to3}x^3=27\) would need. Which factor would you need to bound, and what convenient restriction on \(\delta\) would you impose first?</p>
+    <button class="reveal-btn" data-ans="s6">Show answer</button>
+    <div class="answer" id="s6">Factor \(x^3-27=(x-3)(x^2+3x+9)\). You'd impose a first restriction like \(\delta\le1\) to trap \(x\) in \((2,4)\), giving a fixed numerical bound on \(x^2+3x+9\) (its max on that interval, at \(x=4\), is \(16+12+9=37\)). Then solve \(|x-3|<\varepsilon/37\) for the second requirement, and take \(\delta=\min(1,\varepsilon/37)\) — exactly the same two-step shape as Section 7, just with a bigger bounding constant.</div>
+  </div>
+
+  <div class="card remark" style="margin-top:34px;">
+    <strong>Where this goes next.</strong> With a rigorous definition in hand, the next natural step is <strong>continuity</strong> — the precise statement that a function has no holes or jumps, phrased as \(\lim_{x\to c}f(x)=f(c)\). From there, the derivative itself is defined as a very particular limit, and every \(\varepsilon\)-\(\delta\) instinct you've built today comes back to prove the differentiation rules you'll soon take for granted.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Content in the style of Thomas &amp; Finney, <em>Calculus and Analytic Geometry</em>, §2.3 — the precise definition of a limit.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.continue').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const next = document.getElementById(btn.dataset.next);
+      next.classList.add('shown');
+      next.scrollIntoView({behavior:'smooth', block:'start'});
+      updateProgress();
+      if (window.MathJax) MathJax.typesetPromise([next]);
+    });
+  });
+  document.querySelectorAll('.reveal-btn[data-ans]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const ans = document.getElementById(btn.dataset.ans);
+      ans.classList.toggle('shown');
+      if (window.MathJax) MathJax.typesetPromise([ans]);
+    });
+  });
+  function updateProgress(){
+    const total = document.querySelectorAll('.block').length;
+    const shown = document.querySelectorAll('.block.shown').length;
+    document.getElementById('progressBar').style.width = (shown/total*100)+'%';
+  }
+  updateProgress();
+
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs){ const e = document.createElementNS(NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function txt(x,y,s,opts){ const t = el('text', Object.assign({x:x,y:y,'font-size':11.5,'font-family':"IBM Plex Sans, sans-serif",fill:'#22242E'}, opts||{})); t.textContent = s; return t; }
+
+  // ---------- Figure 2.17 interactive ----------
+  const figSvg = document.getElementById('figSvg');
+  const figEps = document.getElementById('figEps');
+  const figDelta = document.getElementById('figDelta');
+  const figStatus = document.getElementById('figStatus');
+  const fC = 4, fL = Math.pow(4,1.5); // f(x)=x^1.5
+  function fFig(x){ return Math.pow(Math.max(x,0),1.5); }
+
+  function drawFig(){
+    const eps = parseInt(figEps.value)/100;
+    const delta = parseInt(figDelta.value)/100;
+    document.getElementById('figEpsReadout').textContent = 'ε = '+eps.toFixed(2);
+    document.getElementById('figDeltaReadout').textContent = 'δ = '+delta.toFixed(2);
+
+    figSvg.innerHTML = '';
+    const plotX=50, plotW=380, plotY0=280, scaleX=38, scaleY=11; // domain x:[1,9], f up to 27
+    function toPx(x,y){ return { x: plotX+(x-1)*scaleX, y: plotY0-(y)*scaleY }; }
+
+    figSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    figSvg.appendChild(el('line',{x1:plotX,y1:20,x2:plotX,y2:plotY0+10, stroke:'#565A6E','stroke-width':1.2}));
+
+    // epsilon band
+    const yTop = toPx(fC, fL+eps).y, yBot = toPx(fC, fL-eps).y;
+    figSvg.appendChild(el('rect',{x:plotX,y:yTop,width:plotW,height:(yBot-yTop), fill:'#D9992C','fill-opacity':0.18}));
+    // delta band
+    const xL = toPx(fC-delta,0).x, xR = toPx(fC+delta,0).x;
+    figSvg.appendChild(el('rect',{x:xL,y:20,width:(xR-xL),height:(plotY0-20), fill:'#3B3E8F','fill-opacity':0.14}));
+
+    // curve
+    let d = '';
+    for(let i=0;i<=100;i++){
+      const x = 1+8*i/100;
+      const p = toPx(x, fFig(x));
+      d += (i===0?'M':' L') + ` ${p.x} ${p.y}`;
+    }
+    figSvg.appendChild(el('path',{d:d, fill:'none', stroke:'#22242E', 'stroke-width':2.2}));
+
+    const cPx = toPx(fC, fL);
+    figSvg.appendChild(el('circle',{cx:cPx.x,cy:cPx.y,r:5,fill:'#C0483B'}));
+    figSvg.appendChild(txt(cPx.x,plotY0+18,'c',{'text-anchor':'middle'}));
+    figSvg.appendChild(txt(plotX-8,cPx.y+4,'L',{'text-anchor':'end'}));
+
+    // check: worst-case at x=c-delta and x=c+delta
+    const leftVal = fFig(fC-delta), rightVal = fFig(fC+delta);
+    const worksLeft = Math.abs(leftVal-fL) <= eps + 1e-9;
+    const worksRight = Math.abs(rightVal-fL) <= eps + 1e-9;
+    const ok = worksLeft && worksRight;
+    figStatus.innerHTML = ok
+      ? '<span class="status-pill pass">✓ This δ keeps the curve inside the ε-band</span>'
+      : '<span class="status-pill fail">✗ Curve escapes the band — try a smaller δ</span>';
+  }
+  figEps.addEventListener('input', drawFig);
+  figDelta.addEventListener('input', drawFig);
+  drawFig();
+
+  // ---------- Challenge-response game ----------
+  const gameSvg = document.getElementById('gameSvg');
+  const gameDelta = document.getElementById('gameDelta');
+  const gameEpsReadout = document.getElementById('gameEpsReadout');
+  const gameDeltaReadout = document.getElementById('gameDeltaReadout');
+  const gameStatus = document.getElementById('gameStatus');
+  const submitBtn = document.getElementById('submitBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const resetGameBtn = document.getElementById('resetGameBtn');
+  const roundNum = document.getElementById('roundNum');
+
+  const gC = 3, gL = 6;
+  function fGame(x){ return 2*x; }
+  const epsSequence = [1, 0.1, 0.01, 0.001, 0.0001, 0.00001];
+  let round = 0;
+
+  function drawGame(highlight){
+    const eps = epsSequence[round];
+    const delta = parseInt(gameDelta.value)/300*1.5; // slider 0..300 -> delta 0..1.5
+    gameEpsReadout.textContent = 'Challenge: ε = '+eps;
+    gameDeltaReadout.textContent = 'δ = '+delta.toFixed(4);
+    roundNum.textContent = (round+1);
+
+    gameSvg.innerHTML = '';
+    const plotX=50, plotW=380, plotY0=260, scaleX=55, scaleY=25; // domain x:[0,6], y up to 12
+    function toPx(x,y){ return { x: plotX+x*scaleX, y: plotY0-y*scaleY }; }
+
+    gameSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    gameSvg.appendChild(el('line',{x1:plotX,y1:20,x2:plotX,y2:plotY0+10, stroke:'#565A6E','stroke-width':1.2}));
+
+    const epsCapped = Math.min(eps, 3); // visually cap tiny eps so band stays visible
+    const yTop = toPx(0, gL+epsCapped).y, yBot = toPx(0, gL-epsCapped).y;
+    gameSvg.appendChild(el('rect',{x:plotX,y:yTop,width:plotW,height:(yBot-yTop), fill:'#D9992C','fill-opacity':0.18}));
+    const deltaCapped = Math.min(delta, 1.5);
+    const xL = toPx(gC-deltaCapped,0).x, xR = toPx(gC+deltaCapped,0).x;
+    gameSvg.appendChild(el('rect',{x:xL,y:20,width:(xR-xL),height:(plotY0-20), fill: highlight==='fail' ? '#C0483B' : '#3B3E8F', 'fill-opacity':0.16}));
+
+    let d = '';
+    for(let i=0;i<=1;i++){
+      const x = i*6;
+      const p = toPx(x, fGame(x));
+      d += (i===0?'M':' L') + ` ${p.x} ${p.y}`;
+    }
+    gameSvg.appendChild(el('path',{d:d, fill:'none', stroke:'#22242E', 'stroke-width':2.2}));
+
+    const cPx = toPx(gC, gL);
+    gameSvg.appendChild(el('circle',{cx:cPx.x,cy:cPx.y,r:5,fill:'#C0483B'}));
+    gameSvg.appendChild(txt(cPx.x,plotY0+18,'c = 3',{'text-anchor':'middle'}));
+    gameSvg.appendChild(txt(plotX-8,cPx.y+4,'L = 6',{'text-anchor':'end'}));
+
+    if(highlight){
+      gameStatus.innerHTML = highlight==='pass'
+        ? '<span class="status-pill pass">✓ Winning response! Click "Next challenge" for a smaller ε.</span>'
+        : '<span class="status-pill fail">✗ Not small enough — shrink δ and submit again.</span>';
+    } else {
+      gameStatus.innerHTML = '';
+    }
+  }
+
+  function checkGame(){
+    const eps = epsSequence[round];
+    const delta = parseInt(gameDelta.value)/300*1.5;
+    const worksLeft = Math.abs(fGame(gC-delta)-gL) <= eps + 1e-12;
+    const worksRight = Math.abs(fGame(gC+delta)-gL) <= eps + 1e-12;
+    const ok = worksLeft && worksRight && delta > 0;
+    drawGame(ok ? 'pass' : 'fail');
+    nextBtn.disabled = !ok;
+  }
+
+  submitBtn.addEventListener('click', checkGame);
+  gameDelta.addEventListener('input', ()=>drawGame(null));
+  nextBtn.addEventListener('click', ()=>{
+    round = Math.min(round+1, epsSequence.length-1);
+    nextBtn.disabled = true;
+    drawGame(null);
+  });
+  resetGameBtn.addEventListener('click', ()=>{
+    round = 0;
+    nextBtn.disabled = true;
+    gameDelta.value = 150;
+    drawGame(null);
+  });
+  drawGame(null);
+
+  // ---------- Quadratic verification demo ----------
+  const quadSvg = document.getElementById('quadSvg');
+  const quadEps = document.getElementById('quadEps');
+  const quadStatus = document.getElementById('quadStatus');
+  function fQuad(x){ return x*x; }
+  function drawQuadDemo(){
+    const eps = parseInt(quadEps.value)/100;
+    document.getElementById('quadEpsReadout').textContent = 'ε = '+eps.toFixed(2);
+    const delta = Math.min(1, eps/5);
+
+    quadSvg.innerHTML = '';
+    const plotX=50, plotW=380, plotY0=270, scaleX=60, scaleY=30; // domain x:[0,4], y up to 9
+    function toPx(x,y){ return { x: plotX+x*scaleX, y: plotY0-y*scaleY }; }
+
+    quadSvg.appendChild(el('line',{x1:plotX,y1:plotY0,x2:plotX+plotW,y2:plotY0, stroke:'#565A6E','stroke-width':1.2}));
+    quadSvg.appendChild(el('line',{x1:plotX,y1:20,x2:plotX,y2:plotY0+10, stroke:'#565A6E','stroke-width':1.2}));
+
+    const epsCapped = Math.min(eps, 3);
+    const yTop = toPx(0,4+epsCapped).y, yBot = toPx(0,4-epsCapped).y;
+    quadSvg.appendChild(el('rect',{x:plotX,y:yTop,width:plotW,height:(yBot-yTop), fill:'#D9992C','fill-opacity':0.18}));
+    const xL = toPx(2-delta,0).x, xR = toPx(2+delta,0).x;
+    quadSvg.appendChild(el('rect',{x:xL,y:20,width:(xR-xL),height:(plotY0-20), fill:'#3B3E8F','fill-opacity':0.16}));
+
+    let d = '';
+    for(let i=0;i<=100;i++){
+      const x = 4*i/100;
+      const p = toPx(x, fQuad(x));
+      d += (i===0?'M':' L') + ` ${p.x} ${p.y}`;
+    }
+    quadSvg.appendChild(el('path',{d:d, fill:'none', stroke:'#22242E', 'stroke-width':2.2}));
+
+    const cPx = toPx(2,4);
+    quadSvg.appendChild(el('circle',{cx:cPx.x,cy:cPx.y,r:5,fill:'#C0483B'}));
+    quadSvg.appendChild(txt(cPx.x,plotY0+18,'2',{'text-anchor':'middle'}));
+    quadSvg.appendChild(txt(plotX-8,cPx.y+4,'4',{'text-anchor':'end'}));
+    quadSvg.appendChild(txt(plotX+plotW-10,35,'δ = min(1, ε/5) = '+delta.toFixed(4),{'text-anchor':'end',fill:'#3B3E8F','font-family':"IBM Plex Mono, monospace"}));
+
+    const worksLeft = Math.abs(fQuad(2-delta)-4) <= eps + 1e-9;
+    const worksRight = Math.abs(fQuad(2+delta)-4) <= eps + 1e-9;
+    const ok = worksLeft && worksRight;
+    quadStatus.innerHTML = ok
+      ? '<span class="status-pill pass">✓ Formula-generated δ works for this ε</span>'
+      : '<span class="status-pill fail">✗ Something is off — check the algebra above</span>';
+  }
+  quadEps.addEventListener('input', drawQuadDemo);
+  drawQuadDemo();
+</script>
+</body>
+</html>
