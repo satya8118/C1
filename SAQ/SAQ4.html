@@ -96,6 +96,49 @@ window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]
     </p>
     <p>In the table, each row gives you a specific \(y\) and a specific \(B\) to test against that row's function. Work out <strong>domain</strong>, <strong>range</strong>, <strong>one-one?</strong>, <strong>onto ℝ?</strong>, \(f^{-1}(y)\), and \(f(B)\) for each — then click that row's button to check.</p>
   </div>
+  <!-- Example Box for f(x) = e^x sin(x) -->
+<div style="margin-top: 16px; padding: 16px; border: 1px solid var(--lime); border-radius: 8px; background: #050505;">
+  <p style="margin-top: 0; font-weight: 600; color: var(--lime);">
+    Example Walkthrough: \(f(x) = e^x \sin x\)
+  </p>
+  
+  <p style="margin: 6px 0;">
+    <strong style="color: var(--yellow);">1. Domain & Range:</strong> 
+    Exponential and sine functions are defined for all real numbers, so the domain is 
+    <span style="color: var(--lime);">\(A = \mathbb{R}\)</span>. 
+    Because \(\sin x\) oscillates between \(-1\) and \(1\) while \(e^x\) grows infinitely large as \(x \to \infty\) and approaches \(0\) as \(x \to -\infty\), the outputs span all real numbers, making the range 
+    <span style="color: var(--lime);">\(f(A) = \mathbb{R}\)</span>.
+  </p>
+
+  <p style="margin: 6px 0;">
+    <strong style="color: var(--yellow);">2. One-one & Onto:</strong> 
+    <ul style="margin: 4px 0 8px 20px; padding: 0; color: var(--ink-soft);">
+      <li>
+        <strong style="color: var(--orange);">One-one? No.</strong> 
+        The function equals zero at multiple points, e.g., \(f(0) = 0\) and \(f(\pi) = 0\). Since multiple inputs give the same output, it is not one-one.
+      </li>
+      <li>
+        <strong style="color: var(--orange);">Onto \(\mathbb{R}\)? Yes.</strong> 
+        The range matches the entire codomain \(\mathbb{R}\).
+      </li>
+    </ul>
+  </p>
+
+  <p style="margin: 6px 0;">
+    <strong style="color: var(--yellow);">3. Finding Preimage \(f^{-1}(0)\) for \(y = 0\):</strong><br>
+    Set \(e^x \sin x = 0\). Since \(e^x > 0\) for all \(x\), we must have \(\sin x = 0\). 
+    This gives an <strong>infinite set</strong> of inputs: 
+    <span style="color: var(--lime);">\(f^{-1}(0) = \{k\pi \mid k \in \mathbb{Z}\}\)</span>.
+  </p>
+
+  <p style="margin: 6px 0;">
+    <strong style="color: var(--yellow);">4. Finding Image \(f(B)\) for \(B = [0, \pi]\):</strong><br>
+    On the interval \([0, \pi]\), \(\sin x \ge 0\), reaching its maximum at \(x = \frac{\pi}{2}\). 
+    Evaluating the endpoints and critical points gives a minimum output of \(0\) and a maximum output of \(e^{\pi/2}\). 
+    Thus, the image set is 
+    <span style="color: var(--lime);">\(f(B) = \left[0, e^{\pi/2}\right]\)</span>.
+  </p>
+</div>
 
   <div class="table-wrap">
     <table class="saq" id="saqTable">
