@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAQ 3 — Functions ℝ→ℝ: Domain, Range, One-one, Onto, Preimages, Images</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --lime: #A3FF12;
+    --orange: #FF7700;
+    --yellow: #FFEA00;
+    --paper: #000000;
+    --ink: #FFFFFF;
+    --ink-soft: #D0D0D0;
+    --line: #333333;
+    --radius: 14px;
+    --card-bg: #0D0D0D;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.6; font-size:16px; }
+  h1,h2{ font-family:'Fraunces', serif; font-weight:600; color:var(--lime); letter-spacing:-0.01em; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--orange); font-weight:600; }
+  header.hero{ padding:56px 8vw 40px; background: radial-gradient(circle at 85% 15%, rgba(163,255,18,0.08), transparent 55%), var(--paper); border-bottom:2px solid var(--lime); }
+  header.hero h1{ font-size:clamp(26px, 3.6vw, 40px); margin:10px 0 14px; line-height:1.2; }
+  header.hero p.sub{ max-width:720px; color:var(--ink-soft); font-size:16.5px; }
+
+  main{ max-width:1200px; margin:0 auto; padding:40px 6vw 100px; }
+
+  .card{ background:var(--card-bg); border:1.5px solid var(--orange); border-radius:var(--radius); padding:22px 26px; margin:0 0 26px; }
+  .card .card-label{ font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.08em; font-weight:700; margin-bottom:8px; display:block; color:var(--yellow); }
+  .card p{ margin:8px 0; color:var(--ink); }
+  .card ul li { margin-bottom: 4px; }
+
+  .table-wrap{ overflow-x:auto; border:1.5px solid var(--lime); border-radius:var(--radius); background:var(--card-bg); }
+  table.saq{ border-collapse:collapse; width:100%; min-width:1180px; font-size:14px; }
+  table.saq th{
+    background:#141414; color:var(--yellow); font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    text-transform:uppercase; letter-spacing:.05em; padding:12px 10px; text-align:left; position:sticky; top:0;
+    border-bottom: 2px solid var(--lime);
+  }
+  table.saq td{ padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.saq tr.qrow{ background:var(--card-bg); }
+  table.saq tr.qrow:nth-of-type(4n+1){ background:#121212; }
+  table.saq tr.arow{ display:none; background:#1A2600; }
+  table.saq tr.arow.shown{ display:table-row; }
+  table.saq tr.arow td{ border-bottom:2px solid var(--lime); font-weight:500; color:#FFFFFF; }
+  table.saq td.fnum{ font-family:'IBM Plex Mono',monospace; color:var(--yellow); font-weight:600; }
+  table.saq td.fexpr{ font-weight:600; min-width:110px; color:var(--lime); }
+  td.blank{ color:var(--orange); font-style:italic; font-weight:500; }
+  td.given{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--yellow); white-space:nowrap; }
+  .row-input{ margin-top:4px; }
+
+  .answer-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; background:#000000; border:1.5px solid var(--orange);
+    color:var(--orange); padding:7px 12px; border-radius:8px; cursor:pointer; white-space:nowrap; transition: all 0.2s;
+    font-weight:600;
+  }
+  .answer-btn:hover{ background:var(--orange); color:#000000; }
+  .answer-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--lime); font-weight:700;
+  }
+
+  footer{ max-width:1200px; margin:0 auto; padding:24px 6vw 60px; color:var(--ink-soft); font-size:13.5px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Self-Assessment Quiz · SAQ 3</div>
+  <h1>Functions ℝ → ℝ: Domain, Range, One-one, Onto, Preimages, Images</h1>
+  <p class="sub">Fill in the blanks yourself before checking any answer. Each row has its own "Show answer" button — use it only after you've committed to your own values.</p>
+</header>
+
+<main>
+
+  <div class="card">
+    <span class="card-label">Setup — read this first</span>
+    <p>Every function below is written as \(f:A\to\mathbb R\), where \(A\subseteq\mathbb R\) is whatever the formula for \(f\) allows — finding that largest possible \(A\) is itself part of the exercise.</p>
+    <p><strong>Preimage.</strong> For \(y\in\mathbb R\), the preimage of \(y\) is \(f^{-1}(y)=\{x\in A \mid f(x)=y\}\) — the collection of every input that produces \(y\). This is always a <em>set</em>, a subset of \(A\) — and its size varies genuinely from function to function: it can be <strong>empty</strong> (if \(y\) is never produced by any \(x\in A\)), a <strong>singleton</strong> (one input), a <strong>finite set</strong> with several inputs, or an <strong>infinite set</strong>. Don't assume it's always a single point — check each case on its own merits.</p>
+    <p><strong>Image of a set.</strong> For \(B\subseteq A\), the image of \(B\) is \(f(B)=\{f(x) \mid x\in B\}\) — the collection of every output produced by some input in \(B\).</p>
+    <p><strong>Greatest Integer Function.</strong> The greatest integer function, denoted by \([x]\), outputs the largest integer that is less than or equal to \(x\). For example:
+      <ul style="color: var(--lime);">
+        <li>\([3.7] = 3\)</li>
+        <li>\([5] = 5\)</li>
+        <li>\([0.999] = 0\)</li>
+        <li>\([-2.3] = -3\) (Note: \([-2.3]\) is \(-3\), not \(-2\), because \(-3\) is the largest integer less than or equal to \(-2.3\))</li>
+        <li>\([-4] = -4\)</li>
+      </ul>
+    </p>
+    <p>In the table, each row gives you a specific \(y\) and a specific \(B\) to test against that row's function. Work out <strong>domain</strong>, <strong>range</strong>, <strong>one-one?</strong>, <strong>onto ℝ?</strong>, \(f^{-1}(y)\), and \(f(B)\) for each — then click that row's button to check.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="saq" id="saqTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>f(x)</th>
+          <th>Domain A</th>
+          <th>Range f(A)</th>
+          <th>One-one?</th>
+          <th>Onto ℝ?</th>
+          <th>Given y — find f⁻¹(y)</th>
+          <th>Given B — find f(B)</th>
+          <th>Check</th>
+        </tr>
+      </thead>
+      <tbody id="saqBody"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <p>Calculus-I (MAT1001) · Self-Assessment Quiz — A. Satyanarayana Reddy.</p>
+</footer>
+
+<script>
+  // Each entry: [ f(x) latex, y given, B given, domain, range, oneone, onto, preimage answer, image answer ]
+  const data = [
+    ["x^2", "4", "[0,3]", "\\mathbb{R}", "[0,\\infty)", "No", "No", "\\{-2,2\\}", "[0,9]"],
+    ["x^3", "8", "[-2,1]", "\\mathbb{R}", "\\mathbb{R}", "Yes", "Yes", "\\{2\\}", "[-8,1]"],
+    ["\\dfrac{1}{x}", "5", "[1,2]", "\\mathbb{R}\\setminus\\{0\\}", "\\mathbb{R}\\setminus\\{0\\}", "Yes", "No", "\\left\\{\\tfrac15\\right\\}", "\\left[\\tfrac12,1\\right]"],
+    ["\\sqrt{x}", "3", "[0,4]", "[0,\\infty)", "[0,\\infty)", "Yes", "No", "\\{9\\}", "[0,2]"],
+    ["|x|", "5", "[-3,2]", "\\mathbb{R}", "[0,\\infty)", "No", "No", "\\{-5,5\\}", "[0,3]"],
+    ["e^x", "1", "[0,2]", "\\mathbb{R}", "(0,\\infty)", "Yes", "No", "\\{0\\}", "[1,e^2]"],
+    ["\\ln x", "0", "(0,1]", "(0,\\infty)", "\\mathbb{R}", "Yes", "Yes", "\\{1\\}", "(-\\infty,0]"],
+    ["\\sin x", "1", "[0,\\pi]", "\\mathbb{R}", "[-1,1]", "No", "No", "\\{\\tfrac{\\pi}{2}+2k\\pi : k\\in\\mathbb{Z}\\}", "[0,1]"],
+    ["\\cos x", "-1", "[0,\\pi]", "\\mathbb{R}", "[-1,1]", "No", "No", "\\{\\pi+2k\\pi : k\\in\\mathbb{Z}\\}", "[-1,1]"],
+    ["\\tan x", "1", "\\left(-\\tfrac{\\pi}{2},\\tfrac{\\pi}{2}\\right)", "\\mathbb{R}\\setminus\\left\\{\\tfrac{\\pi}{2}+k\\pi\\right\\}", "\\mathbb{R}", "No", "Yes", "\\{\\tfrac{\\pi}{4}+k\\pi : k\\in\\mathbb{Z}\\}", "\\mathbb{R}"],
+    ["\\dfrac{1}{x^2+1}", "\\tfrac12", "[0,\\infty)", "\\mathbb{R}", "(0,1]", "No", "No", "\\{-1,1\\}", "(0,1]"],
+    ["\\dfrac{1}{x-3}", "2", "(3,5]", "\\mathbb{R}\\setminus\\{3\\}", "\\mathbb{R}\\setminus\\{0\\}", "Yes", "No", "\\{3.5\\}", "\\left[\\tfrac12,\\infty\\right)"],
+    ["\\sqrt{x-2}", "3", "[2,6]", "[2,\\infty)", "[0,\\infty)", "Yes", "No", "\\{11\\}", "[0,2]"],
+    ["\\dfrac{x}{|x|}", "1", "[-2,3]\\setminus\\{0\\}", "\\mathbb{R}\\setminus\\{0\\}", "\\{-1,1\\}", "No", "No", "(0,\\infty)", "\\{-1,1\\}"],
+    ["\\dfrac{x}{1+|x|}", "\\tfrac12", "[0,\\infty)", "\\mathbb{R}", "(-1,1)", "Yes", "No", "\\{1\\}", "[0,1)"],
+    ["[x]", "3", "[0,3.5]", "\\mathbb{R}", "\\mathbb{Z}", "No", "No", "[3,4)", "\\{0,1,2,3\\}"],
+    ["x-[x]", "0.5", "[0,2.5]", "\\mathbb{R}", "[0,1)", "No", "No", "\\{n+0.5 : n\\in\\mathbb{Z}\\}", "[0,1)"],
+    ["x^3-x", "0", "[1,2]", "\\mathbb{R}", "\\mathbb{R}", "No", "Yes", "\\{-1,0,1\\}", "[0,6]"],
+    ["2^x", "8", "[0,3]", "\\mathbb{R}", "(0,\\infty)", "Yes", "No", "\\{3\\}", "[1,8]"],
+    ["\\ln(x^2)", "0", "[1,e]", "\\mathbb{R}\\setminus\\{0\\}", "\\mathbb{R}", "No", "Yes", "\\{-1,1\\}", "[0,2]"],
+    ["\\sqrt{9-x^2}", "\\sqrt5", "[0,3]", "[-3,3]", "[0,3]", "No", "No", "\\{-2,2\\}", "[0,3]"]
+  ];
+
+  const tbody = document.getElementById('saqBody');
+  let html = '';
+  data.forEach((row, i) => {
+    const n = i+1;
+    const [fx, yVal, bVal, domain, range, oneone, onto, preimg, img] = row;
+    html += `
+      <tr class="qrow" id="q-${n}">
+        <td class="fnum">${n}</td>
+        <td class="fexpr">\\(f(x)=${fx}\\)</td>
+        <td class="blank">?</td>
+        <td class="blank">?</td>
+        <td class="blank">?</td>
+        <td class="blank">?</td>
+        <td class="given">y = \\(${yVal}\\)<div class="blank row-input">f⁻¹(y) = ?</div></td>
+        <td class="given">B = \\(${bVal}\\)<div class="blank row-input">f(B) = ?</div></td>
+        <td><button class="answer-btn" data-row="${n}">Show answer</button></td>
+      </tr>
+      <tr class="arow" id="a-${n}">
+        <td class="fnum">${n}</td>
+        <td class="fexpr">\\(f(x)=${fx}\\)</td>
+        <td>\\(${domain}\\)</td>
+        <td>\\(${range}\\)</td>
+        <td>${oneone}</td>
+        <td>${onto}</td>
+        <td>\\(f^{-1}(${yVal})=${preimg}\\)</td>
+        <td>\\(f(B)=${img}\\)</td>
+        <td><span class="answer-tag">✓ Answer</span></td>
+      </tr>`;
+  });
+  tbody.innerHTML = html;
+  if (window.MathJax) MathJax.typesetPromise([tbody]);
+
+  document.querySelectorAll('.answer-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const n = btn.dataset.row;
+      const arow = document.getElementById('a-'+n);
+      arow.classList.toggle('shown');
+      btn.textContent = arow.classList.contains('shown') ? 'Hide answer' : 'Show answer';
+    });
+  });
+</script>
+</body>
+</html>
