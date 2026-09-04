@@ -258,6 +258,108 @@
             \[ G(f) = \{(1, 2), (2, 5), (3, 10)\} \]
             <em>Geometry:</em> A finite set of three discrete points in the Cartesian plane rather than a continuous curve.
         </div>
+        <hr>
+
+        <h2>4. The Horizontal Line Test: One-to-One (Injective) Functions</h2>
+
+        <p>
+            A function \( f : X \to Y \) is <strong>injective</strong> (or <strong>one-to-one</strong>) if distinct elements in the domain map to distinct elements in the codomain.
+        </p>
+
+        <div class="theorem-box">
+            <strong style="color: var(--orange-neon);">Horizontal Line Test for Injectivity</strong><br>
+            A function \( f : X \subseteq \mathbb{R} \to \mathbb{R} \) is <strong>one-to-one (injective)</strong> if and only if <strong>every horizontal line</strong> in \(\mathbb{R}^2\) intersects the graph \( G(f) \) at <strong>at most one point</strong>.
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Example (One-to-One):</strong> \( f : \mathbb{R} \to \mathbb{R} \), \( f(x) = x^3 \)<br>
+            Any horizontal line \( y = c \) intersects the graph at precisely one point \( (\sqrt[3]{c}, c) \). Thus, \( f \) is injective.
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Non-Example (Not One-to-One):</strong> \( f : \mathbb{R} \to \mathbb{R} \), \( f(x) = x^2 \)<br>
+            The horizontal line \( y = 4 \) intersects the graph at two distinct points: \((-2, 4)\) and \((2, 4)\). Because \( f(-2) = f(2) = 4 \), it fails injectivity.
+        </div>
+
+        <hr>
+
+        <h2>5. The Horizontal Line Test: Onto (Surjective) Functions</h2>
+
+        <p>
+            A function \( f : X \to Y \) is <strong>surjective</strong> (or <strong>onto</strong>) if every element in the codomain \( Y \) is mapped to by at least one element in the domain \( X \) (i.e., Range = Codomain).
+        </p>
+
+        <div class="theorem-box">
+            <strong style="color: var(--orange-neon);">Horizontal Line Test for Surjectivity</strong><br>
+            A function \( f : X \subseteq \mathbb{R} \to Y \subseteq \mathbb{R} \) is <strong>onto (surjective)</strong> if and only if <strong>every horizontal line</strong> passing through any value \( y \in Y \) intersects the graph \( G(f) \) at <strong>at least one point</strong>.
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Example (Onto):</strong> \( f : \mathbb{R} \to \mathbb{R} \), \( f(x) = x^3 - x \)<br>
+            Because the polynomial extends continuously from \( -\infty \) to \( +\infty \), every horizontal line \( y = c \in \mathbb{R} \) intersects the graph at least once.
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Non-Example (Not Onto):</strong> \( f : \mathbb{R} \to \mathbb{R} \), \( f(x) = x^2 \)<br>
+            Any horizontal line below the x-axis (e.g., \( y = -1 \)) fails to intersect the graph. Since values in \( y < 0 \) are never attained, \( f \) is not onto over \( \mathbb{R} \).
+        </div>
+
+        <hr>
+
+        <h2>6. Bijective Functions (One-to-One and Onto)</h2>
+
+        <p>
+            A function \( f : X \to Y \) is <strong>bijective</strong> (a complete one-to-one correspondence) if it is <strong>both injective and surjective</strong>.
+        </p>
+
+        <div class="theorem-box">
+            <strong style="color: var(--orange-neon);">Horizontal Line Test for Bijectivity</strong><br>
+            A function \( f : X \subseteq \mathbb{R} \to Y \subseteq \mathbb{R} \) is <strong>bijective</strong> if and only if <strong>every horizontal line</strong> corresponding to \( y \in Y \) intersects the graph \( G(f) \) at <strong>exactly one point</strong>.
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Example (Bijective):</strong> \( f : \mathbb{R} \to \mathbb{R} \), \( f(x) = 2x + 3 \)<br>
+            Every horizontal line \( y = c \) intersects the line at exactly one point \( \left(\frac{c-3}{2}, c\right) \), satisfying both injectivity (at most 1) and surjectivity (at least 1).
+        </div>
+
+        <div class="example-card">
+            <strong style="color: var(--cyan-neon);">Non-Example (Not Bijective):</strong> \( f : \mathbb{R} \to \mathbb{R} \), \( f(x) = x^3 - x \)<br>
+            While surjective over \( \mathbb{R} \), the horizontal line \( y = 0 \) intersects the graph at three points (\( x = -1, 0, 1 \)), violating injectivity and preventing bijectivity.
+        </div>
+
+        <div class="diagram-container">
+            <svg width="600" height="220" viewBox="0 0 600 220">
+                <!-- Subplot 1: Bijective (y = x^3) -->
+                <g transform="translate(0,0)">
+                    <line x1="20" y1="110" x2="160" y2="110" stroke="#475569" stroke-width="1.5"/>
+                    <line x1="90" y1="20" x2="90" y2="200" stroke="#475569" stroke-width="1.5"/>
+                    <path d="M 30,190 Q 75,120 90,110 T 150,30" fill="none" stroke="#39ff14" stroke-width="2.5"/>
+                    <line x1="20" y1="70" x2="160" y2="70" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <circle cx="120" cy="70" r="4" fill="#39ff14"/>
+                    <text x="90" y="215" font-size="11" fill="#cbd5e1" text-anchor="middle">Bijective (Exactly 1 Point)</text>
+                </g>
+
+                <!-- Subplot 2: Not One-to-One (y = x^2) -->
+                <g transform="translate(200,0)">
+                    <line x1="20" y1="110" x2="160" y2="110" stroke="#475569" stroke-width="1.5"/>
+                    <line x1="90" y1="20" x2="90" y2="200" stroke="#475569" stroke-width="1.5"/>
+                    <path d="M 40,40 Q 90,170 140,40" fill="none" stroke="#00f3ff" stroke-width="2"/>
+                    <line x1="20" y1="70" x2="160" y2="70" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <circle cx="55" cy="70" r="4" fill="#ff8c00"/>
+                    <circle cx="125" cy="70" r="4" fill="#ff8c00"/>
+                    <text x="90" y="215" font-size="11" fill="#cbd5e1" text-anchor="middle">Not One-to-One (2 Points)</text>
+                </g>
+
+                <!-- Subplot 3: Not Onto (y = x^2 on R) -->
+                <g transform="translate(400,0)">
+                    <line x1="20" y1="110" x2="160" y2="110" stroke="#475569" stroke-width="1.5"/>
+                    <line x1="90" y1="20" x2="90" y2="200" stroke="#475569" stroke-width="1.5"/>
+                    <path d="M 40,40 Q 90,170 140,40" fill="none" stroke="#00f3ff" stroke-width="2"/>
+                    <line x1="20" y1="150" x2="160" y2="150" stroke="#ff8c00" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <text x="90" y="215" font-size="11" fill="#cbd5e1" text-anchor="middle">Not Onto (0 Points for y &lt; 0)</text>
+                </g>
+            </svg>
+        </div>
     </article>
 </div>
 
