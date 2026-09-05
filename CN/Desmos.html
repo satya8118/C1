@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desmos for Calculus</title>
+    <style>
+        :root {
+            --primary: #2e72d2; /* Desmos Blue */
+            --primary-dark: #1a4ba0;
+            --secondary: #2d3436;
+            --accent: #00b894; /* Green for tasks */
+            --quiz: #6c5ce7; /* Purple for Quiz */
+            --heart: #e84393; /* Pink for Love task */
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --radius: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.03);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        nav {
+            background: var(--primary-dark);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Main Layout */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 120px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            border-left: 5px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        p.intro-text {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Welcome Section */
+        .welcome-box {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-left: 5px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-box ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .welcome-box li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards */
+        .task-container, .quiz-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 4px solid transparent;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .card.demo { border-top-color: var(--primary); }
+        .card.challenge { border-top-color: var(--accent); }
+        .card.quiz-item { border-top-color: var(--quiz); }
+        .card.heart-challenge { border-top-color: var(--heart); }
+        .card.resource-check { border-top-color: #fdcb6e; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .badge.demo { background-color: var(--primary); }
+        .badge.challenge { background-color: var(--accent); }
+        .badge.quiz { background-color: var(--quiz); }
+        .badge.heart { background-color: var(--heart); }
+        .badge.resource { background-color: #fdcb6e; color: #333; }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .instruction, .question-text {
+            color: #555;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .code-snippet {
+            font-family: "Courier New", monospace;
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: #d63031;
+            display: inline-block;
+            user-select: all; /* Makes it easier to copy */
+        }
+
+        /* Hidden Solutions/Answers */
+        .solution-box {
+            background: #e8f6f3;
+            border: 1px solid #b2bec3;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none; 
+        }
+
+        .solution-box.hint-box {
+            background: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+
+        .solution-box.revealed {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background: #000; }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        .btn-outline:hover { background: var(--secondary); color: white; }
+
+        .btn-quiz { background: var(--quiz); }
+        .btn-quiz:hover { background: #5649c0; }
+
+        .btn-heart { background: var(--heart); }
+        .btn-heart:hover { background: #d63063; }
+
+        .btn-link { 
+            width: 100%; 
+            text-align: center; 
+            margin-top: 1rem;
+            background-color: var(--primary);
+            font-weight: bold;
+        }
+        .btn-link:hover { background-color: var(--primary-dark); }
+
+        /* Feedback Buttons */
+        .feedback-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 10px;
+        }
+        .btn-yes { background-color: var(--accent); flex: 1; }
+        .btn-no { background-color: #ff7675; flex: 1; }
+        .feedback-msg {
+            margin-top: 0.5rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-height: 1.5em;
+        }
+
+        /* Checklist */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .checklist-item input {
+            margin-right: 0.5rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        footer a { color: var(--accent); }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .task-container, .quiz-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Desmos for Calculus</h1>
+        <p class="subtitle">Interactive Lesson Plan: Visualizing Mathematics in 2D and 3D</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#welcome">Welcome</a></li>
+            <li><a href="#2d-basics">2D Plotting</a></li>
+            <li><a href="#3d-basics">3D Plotting</a></li>
+            <li><a href="#saq">Self Assessment</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <!-- SECTION: WELCOME & INSTRUCTIONS -->
+        <section id="welcome">
+            <h2>Welcome to the Lab</h2>
+            <div class="welcome-box">
+                <p><strong>Don't worry, Desmos is very easy to work with!</strong> You don't need to be a programmer to use it effectively. </p>
+                <ul>
+                    <li>If you face any issue, <strong>talk to your neighbour</strong>. Collaboration is encouraged.</li>
+                    <li>Do not hesitate to ask any of us (instructors/TA) for help.</li>
+                    <li>Once you complete the given exercises, feel free to <strong>explore more</strong> on your own. Try plotting equations from your current coursework!</li>
+                </ul>
+            </div>
+            
+            <p class="intro-text">Open these tools in new tabs to get started:</p>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener noreferrer" class="btn">Open Desmos 2D &rarr;</a>
+                <a href="https://www.desmos.com/3d" target="_blank" rel="noopener noreferrer" class="btn">Open Desmos 3D &rarr;</a>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 2D PLOTTING -->
+        <section id="2d-basics">
+            <h2>1. Mastering 2D Plotting</h2>
+            <p class="intro-text">
+                We will perform three tasks: one instructor demonstration followed by two student challenges. 
+                Focus on using correct mathematical syntax.
+            </p>
+
+            <div class="task-container">
+                <!-- 2D Task 1: DEMO -->
+                <article class="card demo">
+                    <div class="card-header">
+                        <span class="badge demo">Instructor Demo</span>
+                    </div>
+                    <h3>Task 1: Variables & Sliders</h3>
+                    <p class="instruction">
+                        We don't just plot static lines. We add variables. Type:
+                        <br><br>
+                        <span class="code-snippet">y = a*x + 2</span>
+                        <br><br>
+                        Desmos will ask "Add Slider?". Click <strong>a</strong>. 
+                        Now drag the slider to see the slope change in real-time.
+                    </p>
+                </article>
+
+                <!-- 2D Task 2: STUDENT DO -->
+                <article class="card challenge">
+                    <div class="card-header">
+                        <span class="badge challenge">Student Challenge</span>
+                    </div>
+                    <h3>Task 2: The Circle</h3>
+                    <p class="instruction">
+                        Plot a circle centered at (0,0) with a radius of 5.
+                        <br><br>
+                        <em>Hint: The equation of a circle is $x^2 + y^2 = r^2$.</em>
+                    </p>
+                    <button class="btn btn-outline" onclick="toggleSolution('sol-2d-2')">Show Solution</button>
+                    
+                    <div id="sol-2d-2" class="solution-box">
+                        <strong>Solution:</strong> <br>
+                        Type: <span class="code-snippet">x^2 + y^2 = 25</span>
+                        <br><small>Note: Desmos supports implicit plotting (you don't need to solve for y).</small>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="task-2d-1">
+                        <label for="task-2d-1">I plotted the circle.</label>
+                    </div>
+                </article>
+
+                <!-- 2D Task 3: STUDENT DO -->
+                <article class="card challenge">
+                    <div class="card-header">
+                        <span class="badge challenge">Student Challenge</span>
+                    </div>
+                    <h3>Task 3: Inequalities & Shading</h3>
+                    <p class="instruction">
+                        Shade the area <strong>above</strong> the parabola $y = x^2 - 2$.
+                    </p>
+                    <button class="btn btn-outline" onclick="toggleSolution('sol-2d-3')">Show Solution</button>
+                    
+                    <div id="sol-2d-3" class="solution-box">
+                        <strong>Solution:</strong> <br>
+                        Type: <span class="code-snippet">y > x^2 - 2</span>
+                        <br><small>Desmos automatically handles the shading for inequalities.</small>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="task-2d-2">
+                        <label for="task-2d-2">I shaded the region.</label>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 3D PLOTTING -->
+        <section id="3d-basics">
+            <h2>2. Exploring 3D Surfaces</h2>
+            <p class="intro-text">
+                Switch to the <strong>Desmos 3D</strong> tab. Here we graph surfaces $z = f(x, y)$.
+            </p>
+
+            <div class="task-container">
+                <!-- 3D Task 1: DEMO -->
+                <article class="card demo">
+                    <div class="card-header">
+                        <span class="badge demo">Instructor Demo</span>
+                    </div>
+                    <h3>Task 4: Basic Surface</h3>
+                    <p class="instruction">
+                        Let's plot a classic saddle shape (Hyperbolic Paraboloid).
+                        <br><br>
+                        Type: <span class="code-snippet">z = x^2 - y^2</span>
+                        <br><br>
+                        Click and drag to rotate the 3D view. Right-click and drag (or two fingers) to pan.
+                    </p>
+                </article>
+
+                <!-- 3D Task 2: STUDENT DO -->
+                <article class="card challenge">
+                    <div class="card-header">
+                        <span class="badge challenge">Student Challenge</span>
+                    </div>
+                    <h3>Task 5: The Paraboloid</h3>
+                    <p class="instruction">
+                        Plot a bowl shape (Paraboloid) opening upwards, centered at the origin.
+                    </p>
+                    <button class="btn btn-outline" onclick="toggleSolution('sol-3d-2')">Show Solution</button>
+                    
+                    <div id="sol-3d-2" class="solution-box">
+                        <strong>Solution:</strong> <br>
+                        Type: <span class="code-snippet">z = x^2 + y^2</span>
+                        <br><small>Experiment with adding a slider to change the height!</small>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="task-3d-1">
+                        <label for="task-3d-1">I plotted the 3D bowl.</label>
+                    </div>
+                </article>
+
+                <!-- 3D Task 3: STUDENT DO -->
+                <article class="card challenge">
+                    <div class="card-header">
+                        <span class="badge challenge">Student Challenge</span>
+                    </div>
+                    <h3>Task 6: Parametric Curve</h3>
+                    <p class="instruction">
+                        Plot a <strong>Helix (Spiral)</strong> in 3D space.
+                        <br><br>
+                        <em>Hint: You need to define a variable <strong>t</strong> and create an expression vector $(x, y, z)$.</em>
+                    </p>
+                    <button class="btn btn-outline" onclick="toggleSolution('sol-3d-3')">Show Solution</button>
+                    
+                    <div id="sol-3d-3" class="solution-box">
+                        <strong>Solution:</strong> <br>
+                        1. Add slider for <strong>t</strong> (let range go from 0 to 10).<br>
+                        2. Type: <span class="code-snippet">(cos(t), sin(t), t)</span>
+                        <br><small>This creates a vector with x and y circling, and z rising linearly.</small>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="task-3d-2">
+                        <label for="task-3d-2">I created the Helix.</label>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- SECTION 4: SELF ASSESSMENT QUIZ (SAQ) -->
+        <section id="saq">
+            <h2>3. Self Assessment Quiz (SAQ)</h2>
+            <p class="intro-text">
+                Test your understanding of the concepts we just covered. Try to answer without peeking first!
+            </p>
+
+            <div class="quiz-container">
+                
+                <!-- Q1 -->
+                <article class="card quiz-item">
+                    <div class="card-header">
+                        <span class="badge quiz">Question 1</span>
+                    </div>
+                    <h3>Restricting Domain</h3>
+                    <p class="question-text">
+                        In Desmos 2D, how would you plot the line <span class="code-snippet">y = 2x + 1</span> <strong>only</strong> for x-values greater than 0?
+                    </p>
+                    
+                    <button class="btn btn-quiz" onclick="toggleSolution('q1-hint')">Hint</button>
+                    <button class="btn btn-quiz" onclick="toggleSolution('q1-ans')">Show Answer</button>
+                    
+                    <div id="q1-hint" class="solution-box hint-box">
+                        Look at the syntax used for inequalities. You can append conditions to the end of an equation.
+                    </div>
+                    <div id="q1-ans" class="solution-box">
+                        Type: <span class="code-snippet">y = 2x + 1 {x > 0}</span>
+                    </div>
+                </article>
+
+                <!-- Q2 -->
+                <article class="card quiz-item">
+                    <div class="card-header">
+                        <span class="badge quiz">Question 2</span>
+                    </div>
+                    <h3>Visualizing Intersections</h3>
+                    <p class="question-text">
+                        You have plotted a parabola and a line. How do you get Desmos to calculate and label the exact coordinates where they intersect?
+                    </p>
+                    
+                    <button class="btn btn-quiz" onclick="toggleSolution('q2-hint')">Hint</button>
+                    <button class="btn btn-quiz" onclick="toggleSolution('q2-ans')">Show Answer</button>
+                    
+                    <div id="q2-hint" class="solution-box hint-box">
+                        It's not a button; it's an expression. You can type the equation for one function "equals" the equation for the other.
+                    </div>
+                    <div id="q2-ans" class="solution-box">
+                        Type: <span class="code-snippet">y = x^2 {y = 2x}</span> (Assuming your parabola is $y=x^2$ and line is $y=2x$).<br>
+                        Desmos will plot the points where $x^2 = 2x$.
+                    </div>
+                </article>
+
+                <!-- Q3 -->
+                <article class="card quiz-item">
+                    <div class="card-header">
+                        <span class="badge quiz">Question 3</span>
+                    </div>
+                    <h3>3D Cross Sections</h3>
+                    <p class="question-text">
+                        You have plotted a surface <span class="code-snippet">z = x^2 + y^2</span>. How do you visualize the cross-section of this shape at z = 4?
+                    </p>
+                    
+                    <button class="btn btn-quiz" onclick="toggleSolution('q3-hint')">Hint</button>
+                    <button class="btn btn-quiz" onclick="toggleSolution('q3-ans')">Show Answer</button>
+                    
+                    <div id="q3-hint" class="solution-box hint-box">
+                        You need a second equation that defines a plane at height 4.
+                    </div>
+                    <div id="q3-ans" class="solution-box">
+                        Type a second input: <span class="code-snippet">z = 4</span>
+                        <br>
+                        The intersection line between the surface and the flat plane shows the cross-section.
+                    </div>
+                </article>
+
+                <!-- Q4 -->
+                <article class="card quiz-item">
+                    <div class="card-header">
+                        <span class="badge quiz">Question 4</span>
+                    </div>
+                    <h3>Variables in 3D</h3>
+                    <p class="question-text">
+                        You want to plot a cylinder of radius 3. You type <span class="code-snippet">x^2 + y^2 = 9</span>, but it looks like a flat tube in 3D. What is missing?
+                    </p>
+                    
+                    <button class="btn btn-quiz" onclick="toggleSolution('q4-hint')">Hint</button>
+                    <button class="btn btn-quiz" onclick="toggleSolution('q4-ans')">Show Answer</button>
+                    
+                    <div id="q4-hint" class="solution-box hint-box">
+                        In 3D, equations must usually explicitly involve z to extend infinitely, OR you need to restrict the domain/inequality.
+                    </div>
+                    <div id="q4-ans" class="solution-box">
+                        The equation $x^2 + y^2 = 9$ is technically an infinite cylinder, but 3D graphers often render it thinly or need a range. 
+                        <br>A better way in Desmos 3D is using inequalities to give it "thickness" or extending a variable: 
+                        <br><span class="code-snippet">x^2 + y^2 < 9 { -10 < z < 10 }</span> (Solid cylinder).
+                    </div>
+                </article>
+
+                <!-- Q5: DERIVATIVES -->
+                <article class="card quiz-item">
+                    <div class="card-header">
+                        <span class="badge quiz">Question 5</span>
+                    </div>
+                    <h3>Plotting Derivatives</h3>
+                    <p class="question-text">
+                        If you type <span class="code-snippet">f(x) = x^2</span>, how do you plot the derivative $f'(x)$ immediately on the same graph?
+                    </p>
+                    
+                    <button class="btn btn-quiz" onclick="toggleSolution('q5-hint')">Hint</button>
+                    <button class="btn btn-quiz" onclick="toggleSolution('q5-ans')">Show Answer</button>
+                    
+                    <div id="q5-hint" class="solution-box hint-box">
+                        You don't need to calculate it manually (2x). You can use the prime notation in Desmos.
+                    </div>
+                    <div id="q5-ans" class="solution-box">
+                        Type: <span class="code-snippet">y = f'(x)</span>
+                    </div>
+                </article>
+
+                <!-- Q6: PIECEWISE -->
+                <article class="card quiz-item">
+                    <div class="card-header">
+                        <span class="badge quiz">Question 6</span>
+                    </div>
+                    <h3>Piecewise Functions</h3>
+                    <p class="question-text">
+                        How do you type a piecewise function where y = x when x > 0, and y = -x when x ≤ 0?
+                    </p>
+                    
+                    <button class="btn btn-quiz" onclick="toggleSolution('q6-hint')">Hint</button>
+                    <button class="btn btn-quiz" onclick="toggleSolution('q6-ans')">Show Answer</button>
+                    
+                    <div id="q6-hint" class="solution-box hint-box">
+                        You use curly braces {} to separate the condition.
+                    </div>
+                    <div id="q6-ans" class="solution-box">
+                        Type: <span class="code-snippet">y = {x > 0: x, -x}</span>
+                    </div>
+                </article>
+
+                <!-- BONUS: LOVE SYMBOL -->
+                <article class="card heart-challenge">
+                    <div class="card-header">
+                        <span class="badge heart">Fun Challenge</span>
+                    </div>
+                    <h3>💖 The Love Symbol</h3>
+                    <p class="question-text">
+                        Copy the equation below into Desmos 2D. What shape do you get?
+                        <br><br>
+                        <span class="code-snippet">(x^2 + y^2 - 1)^3 - x^2 * y^3 = 0</span>
+                    </p>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="task-heart">
+                        <label for="task-heart">I saw the heart shape!</label>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: EXTERNAL RESOURCE CHECK -->
+        <section id="resources">
+            <h2>4. External Resource Check</h2>
+            <p class="intro-text">
+                Click the buttons below to open the main calculators. Then, <strong>copy and paste</strong> the provided equation into the calculator to see the result.
+            </p>
+
+            <div class="quiz-container">
+
+                <!-- 2D Link 1 -->
+                <article class="card resource-check">
+                    <div class="card-header">
+                        <span class="badge resource">2D Calculus</span>
+                    </div>
+                    <h3>Derivative Visualization</h3>
+                    <p class="instruction">
+                        1. Click "Open 2D Calculator".<br>
+                        2. Paste this: <span class="code-snippet">f(x)=sin(x)</span><br>
+                        3. In a new line, type: <span class="code-snippet">y=f'(x)</span>
+                    </p>
+                    <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener noreferrer" class="btn btn-link">Open 2D Calculator &nearr;</a>
+                    
+                    <p style="margin-top:1rem; font-weight:bold;">Do you understand how this works?</p>
+                    <div class="feedback-actions">
+                        <button class="btn btn-yes" onclick="submitFeedback('fb1', 'yes')">Yes</button>
+                        <button class="btn btn-no" onclick="submitFeedback('fb1', 'no')">No</button>
+                    </div>
+                    <div id="fb1" class="feedback-msg"></div>
+                </article>
+
+                <!-- 2D Link 2 -->
+                <article class="card resource-check">
+                    <div class="card-header">
+                        <span class="badge resource">2D Parametric</span>
+                    </div>
+                    <h3>Polar Rose (Art)</h3>
+                    <p class="instruction">
+                        1. Click "Open 2D Calculator".<br>
+                        2. Click the wrench (settings) and change to "Polar" graph.<br>
+                        3. Paste this: <span class="code-snippet">r = 2 + 2sin(3\theta)</span>
+                    </p>
+                    <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener noreferrer" class="btn btn-link">Open 2D Calculator &nearr;</a>
+                    
+                    <p style="margin-top:1rem; font-weight:bold;">Do you understand how this works?</p>
+                    <div class="feedback-actions">
+                        <button class="btn btn-yes" onclick="submitFeedback('fb2', 'yes')">Yes</button>
+                        <button class="btn btn-no" onclick="submitFeedback('fb2', 'no')">No</button>
+                    </div>
+                    <div id="fb2" class="feedback-msg"></div>
+                </article>
+
+                <!-- 3D Link 1 -->
+                <article class="card resource-check">
+                    <div class="card-header">
+                        <span class="badge resource">3D Calculus</span>
+                    </div>
+                    <h3>Wave Interference</h3>
+                    <p class="instruction">
+                        1. Click "Open 3D Calculator".<br>
+                        2. Paste this: <span class="code-snippet">z = sin(x) + cos(y)</span>
+                    </p>
+                    <a href="https://www.desmos.com/3d" target="_blank" rel="noopener noreferrer" class="btn btn-link">Open 3D Calculator &nearr;</a>
+                    
+                    <p style="margin-top:1rem; font-weight:bold;">Do you understand how this works?</p>
+                    <div class="feedback-actions">
+                        <button class="btn btn-yes" onclick="submitFeedback('fb3', 'yes')">Yes</button>
+                        <button class="btn btn-no" onclick="submitFeedback('fb3', 'no')">No</button>
+                    </div>
+                    <div id="fb3" class="feedback-msg"></div>
+                </article>
+
+                <!-- 3D Link 2 -->
+                <article class="card resource-check">
+                    <div class="card-header">
+                        <span class="badge resource">3D Geometry</span>
+                    </div>
+                    <h3>Torus (Donut)</h3>
+                    <p class="instruction">
+                        1. Click "Open 3D Calculator".<br>
+                        2. Paste this: <span class="code-snippet">( (2+cos(v))*cos(u), (2+cos(v))*sin(u), sin(v) )</span><br>
+                        3. Add sliders for u and v (0 to 2pi).
+                    </p>
+                    <a href="https://www.desmos.com/3d" target="_blank" rel="noopener noreferrer" class="btn btn-link">Open 3D Calculator &nearr;</a>
+                    
+                    <p style="margin-top:1rem; font-weight:bold;">Do you understand how this works?</p>
+                    <div class="feedback-actions">
+                        <button class="btn btn-yes" onclick="submitFeedback('fb4', 'yes')">Yes</button>
+                        <button class="btn btn-no" onclick="submitFeedback('fb4', 'no')">No</button>
+                    </div>
+                    <div id="fb4" class="feedback-msg"></div>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Desmos Undergraduate Workshop. Keep Exploring!</p>
+    </footer>
+
+    <script>
+        // Simple function to toggle the visibility of hints and answers
+        function toggleSolution(id) {
+            const element = document.getElementById(id);
+            
+            if (element.classList.contains('revealed')) {
+                element.classList.remove('revealed');
+            } else {
+                element.classList.add('revealed');
+            }
+        }
+
+        // Function to handle the Yes/No feedback
+        function submitFeedback(id, answer) {
+            const display = document.getElementById(id);
+            if (answer === 'yes') {
+                display.style.color = 'var(--accent)';
+                display.innerText = "Great! You are making excellent progress.";
+            } else {
+                display.style.color = '#d63031';
+                display.innerText = "No problem! Please raise your hand or ask your neighbor for help.";
+            }
+        }
+    </script>
+</body>
+</html>
