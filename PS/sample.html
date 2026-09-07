@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus Exemplar Study: Analysis of f(x) = x / (1 + x²)</title>
+    
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #0d9488;
+            --accent: #d97706;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --code-bg: #0f172a;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            font-size: 1.5rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 420px;
+            border-radius: 8px;
+            background: #fafafa;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--primary-light);
+            padding: 12px 16px;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .task-card {
+            background-color: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .task-card h4 {
+            margin-top: 0;
+            color: var(--secondary);
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="badge">Calculus I/II Model Project Exemplar</span>
+            <h1>Comprehensive Analysis of $f(x) = \frac{x}{1+x^2}$</h1>
+            <p>Instructor's Sample Solution & Exploration Guide for Students</p>
+        </header>
+
+        <div class="card">
+            <h2>1. Fundamental Properties & Behavior</h2>
+            <div class="grid-2">
+                <div>
+                    <p><strong>Function Definition:</strong> $$f(x) = \frac{x}{1+x^2}$$</p>
+                    <ul>
+                        <li><strong>Domain:</strong> $\mathbb{R} = (-\infty, \infty)$ since $1+x^2 \ge 1 \neq 0$ for all real $x$.</li>
+                        <li><strong>Range:</strong> $\left[-\frac{1}{2}, \frac{1}{2}\right]$ (bounded function).</li>
+                        <li><strong>Parity / Symmetry:</strong> $$f(-x) = \frac{-x}{1+(-x)^2} = -\frac{x}{1+x^2} = -f(x)$$ $f(x)$ is an <strong>odd function</strong>, symmetric about the origin $(0,0)$.</li>
+                        <li><strong>Local Linear Behavior near $x=0$:</strong> As $x \to 0$, $1+x^2 \approx 1$, yielding $f(x) \approx x$.</li>
+                        <li><strong>Asymptotic Limits:</strong> $$\lim_{x \to \infty} \frac{x}{1+x^2} = 0 \quad \text{and} \quad \lim_{x \to -\infty} \frac{x}{1+x^2} = 0$$ The line $y = 0$ is a horizontal asymptote.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="highlight-box">
+                        <h4>Mapping Analysis (Injectivity & Surjectivity)</h4>
+                        <p><strong>Is $f$ One-to-One (Injective)?</strong><br>
+                        <em>No.</em> For example, $f(0.5) = 0.4$ and $f(2) = 0.4$. Because $f(0.5) = f(2)$ while $0.5 \neq 2$, it fails the Horizontal Line Test on $\mathbb{R}$.</p>
+                        <p><strong>Is $f$ Onto (Surjective)?</strong><br>
+                        <em>No</em> (when codomain is $\mathbb{R}$). Values outside $\left[-\frac{1}{2}, \frac{1}{2}\right]$ (such as $y=2$) have no pre-image. However, $f$ is surjective onto the restricted codomain $\left[-\frac{1}{2}, \frac{1}{2}\right]$.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>2. Differential Calculus: $f'(x)$ and $f''(x)$</h2>
+            <p><strong>First Derivative:</strong></p>
+            $$f'(x) = \frac{(1)(1+x^2) - x(2x)}{(1+x^2)^2} = \frac{1-x^2}{(1+x^2)^2}$$
+            <p><strong>Critical Points & Extrema:</strong> $f'(x) = 0 \implies 1-x^2 = 0 \implies x = \pm 1$.</p>
+            <ul>
+                <li><strong>Absolute Minimum:</strong> $\left(-1, -\frac{1}{2}\right)$</li>
+                <li><strong>Absolute Maximum:</strong> $\left(1, \frac{1}{2}\right)$</li>
+                <li><strong>Monotonicity:</strong>
+                    <ul>
+                        <li>Increasing on $(-1, 1)$ where $f'(x) > 0$.</li>
+                        <li>Decreasing on $(-\infty, -1) \cup (1, \infty)$ where $f'(x) < 0$.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p><strong>Second Derivative:</strong></p>
+            $$f''(x) = \frac{-2x(1+x^2)^2 - (1-x^2)\cdot 2(1+x^2)(2x)}{(1+x^2)^4} = \frac{2x(x^2 - 3)}{(1+x^2)^3}$$
+            <p>Setting $f''(x) = 0 \implies x = 0, \pm \sqrt{3} \approx \pm 1.732$.</p>
+            <ul>
+                <li><strong>Inflection Points:</strong> $\left(-\sqrt{3}, -\frac{\sqrt{3}}{4}\right)$, $(0, 0)$, and $\left(\sqrt{3}, \frac{\sqrt{3}}{4}\right)$.</li>
+                <li><strong>Concavity Intervals:</strong> Concave Down on $(-\infty, -\sqrt{3}) \cup (0, \sqrt{3})$; Concave Up on $(-\sqrt{3}, 0) \cup (\sqrt{3}, \infty)$.</li>
+            </ul>
+
+            <div id="plot-derivatives" class="chart-container"></div>
+        </div>
+
+        <div class="card">
+            <h2>3. Tangent Lines at Multiple Points</h2>
+            <p>The tangent line equation at $x = x_0$ is $y - f(x_0) = f'(x_0)(x - x_0)$.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Point ($x_0$)</th>
+                        <th>$f(x_0)$</th>
+                        <th>$f'(x_0)$</th>
+                        <th>Tangent Line Equation</th>
+                        <th>Geometric Feature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$x_0 = 0$</td>
+                        <td>$0$</td>
+                        <td>$1$</td>
+                        <td>$y = x$</td>
+                        <td>Inflection tangent at the origin</td>
+                    </tr>
+                    <tr>
+                        <td>$x_0 = 1$</td>
+                        <td>$0.5$</td>
+                        <td>$0$</td>
+                        <td>$y = 0.5$</td>
+                        <td>Horizontal tangent at global max</td>
+                    </tr>
+                    <tr>
+                        <td>$x_0 = 2$</td>
+                        <td>$0.4$</td>
+                        <td>$-0.12$</td>
+                        <td>$y = -0.12x + 0.64$</td>
+                        <td>Tangent along decreasing tail</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="plot-tangents" class="chart-container"></div>
+        </div>
+
+        <div class="card">
+            <h2>4. Taylor & Maclaurin Polynomial Approximations at $x=0$</h2>
+            <p>Using the geometric series $\frac{1}{1+u} = \sum_{n=0}^{\infty} (-1)^n u^n$ for $|u| < 1$, substitute $u = x^2$:</p>
+            $$f(x) = x \left( \frac{1}{1+x^2} \right) = x \left(1 - x^2 + x^4 - x^6 + \dots\right) = x - x^3 + x^5 - x^7 + \dots \quad (|x| < 1)$$
+            
+            <div class="grid-2">
+                <div>
+                    <h4>Taylor Polynomials at $x=0$:</h4>
+                    <ul>
+                        <li>$P_1(x) = x$</li>
+                        <li>$P_2(x) = x$ (even terms are $0$)</li>
+                        <li>$P_3(x) = x - x^3$</li>
+                        <li>$P_4(x) = x - x^3$</li>
+                        <li>$P_5(x) = x - x^3 + x^5$</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="highlight-box">
+                        <p><strong>Radius of Convergence:</strong> $R = 1$. The series converges for $x \in (-1, 1)$. Higher-degree Taylor polynomials rapidly converge near origin but diverge for $|x| > 1$.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="plot-taylor" class="chart-container"></div>
+        </div>
+
+        <div class="card">
+            <h2>5. Integral Calculus: Area & Arc Length</h2>
+            <p><strong>Indefinite Integral:</strong></p>
+            $$\int \frac{x}{1+x^2} dx = \frac{1}{2} \ln(1+x^2) + C$$
+
+            <div class="grid-2">
+                <div>
+                    <h4>1. Area Under the Curve ($\int_a^b f(x)dx$):</h4>
+                    <ul>
+                        <li><strong>Interval $[0, 1]$:</strong> $$\int_0^1 \frac{x}{1+x^2} dx = \left[ \frac{1}{2}\ln(1+x^2) \right]_0^1 = \frac{1}{2}\ln(2) \approx 0.34657$$</li>
+                        <li><strong>Interval $[0, 2]$:</strong> $$\int_0^2 \frac{x}{1+x^2} dx = \left[ \frac{1}{2}\ln(1+x^2) \right]_0^2 = \frac{1}{2}\ln(5) \approx 0.80472$$</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>2. Arc Length ($L = \int_a^b \sqrt{1 + [f'(x)]^2} dx$):</h4>
+                    <ul>
+                        <li><strong>Interval $[0, 1]$:</strong> $$L_1 = \int_0^1 \sqrt{1 + \left(\frac{1-x^2}{(1+x^2)^2}\right)^2} dx \approx 1.15802$$</li>
+                        <li><strong>Interval $[0, 2]$:</strong> $$L_2 = \int_0^2 \sqrt{1 + \left(\frac{1-x^2}{(1+x^2)^2}\right)^2} dx \approx 2.16356$$</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="plot-integration" class="chart-container"></div>
+        </div>
+
+        <div class="card">
+            <h2>6. Applications of Integration: Solids of Revolution</h2>
+            <p>Revolving the curve segment $y = f(x)$ on $x \in [0, 1]$ around the $x$-axis:</p>
+            <div class="grid-2">
+                <div>
+                    <h4>Volume of Revolution (Disk Method):</h4>
+                    $$V = \pi \int_0^1 [f(x)]^2 dx = \pi \int_0^1 \frac{x^2}{(1+x^2)^2} dx$$
+                    <p>Using trig substitution $x = \tan\theta$:</p>
+                    $$V = \pi \left[ \frac{1}{2}\arctan(x) - \frac{x}{2(1+x^2)} \right]_0^1 = \pi \left( \frac{\pi}{8} - \frac{1}{4} \right) \approx 0.44830$$
+                </div>
+                <div>
+                    <h4>Surface Area of Revolution:</h4>
+                    $$S = 2\pi \int_0^1 f(x)\sqrt{1 + [f'(x)]^2} dx$$
+                    $$S = 2\pi \int_0^1 \frac{x}{1+x^2} \sqrt{1 + \frac{(1-x^2)^2}{(1+x^2)^4}} dx \approx 2.38315$$
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>7. Restricted Bijective Domain & Inverse Function</h2>
+            <p>By restricting $f(x)$ to the interval $D = [-1, 1]$ (where $f$ is strictly increasing) and codomain to $C = \left[-\frac{1}{2}, \frac{1}{2}\right]$, $f$ becomes <strong>bijective</strong> and possesses an inverse.</p>
+            
+            <p><strong>Derivation of Inverse Function $f^{-1}(y)$:</strong></p>
+            $$y = \frac{x}{1+x^2} \implies y x^2 - x + y = 0$$
+            <p>Using the quadratic formula for $x$ in terms of $y$:</p>
+            $$x = \frac{1 \pm \sqrt{1 - 4y^2}}{2y}$$
+            <p>Selecting the appropriate branch so that $f^{-1}(0) = 0$ on $x \in [-1, 1]$:</p>
+            $$f^{-1}(x) = \begin{cases} \frac{1 - \sqrt{1 - 4x^2}}{2x} & \text{if } x \in \left[-\frac{1}{2}, \frac{1}{2}\right] \setminus \{0\} \\ 0 & \text{if } x = 0 \end{cases}$$
+
+            <div id="plot-inverse" class="chart-container"></div>
+        </div>
+
+        <div class="card">
+            <h2>8. Student Activities: Interactive Exploration in Desmos</h2>
+            <p>Open <a href="https://www.desmos.com/calculator" target="_blank">Desmos Graphing Calculator</a> and implement the following interactive activities for your assigned function:</p>
+            
+            <div class="task-card">
+                <h4>Exercise D1: Dynamic Secant Line to Tangent Line Transition</h4>
+                <ul>
+                    <li>Type $f(x) = x / (1 + x^2)$ in Desmos line 1.</li>
+                    <li>Choose $a = 1$. Define a slider $h$ running from $0.001$ to $2$.</li>
+                    <li>Plot point $P = (a, f(a))$ and $Q = (a+h, f(a+h))$.</li>
+                    <li>Enter the secant line equation: $y - f(a) = \frac{f(a+h) - f(a)}{h} \cdot (x - a)$.</li>
+                    <li><strong>Task:</strong> Move slider $h \to 0$ and observe how the secant line approaches the exact tangent line $y = 0.5$.</li>
+                </ul>
+            </div>
+
+            <div class="task-card">
+                <h4>Exercise D2: Dynamic Taylor Polynomial Convergence</h4>
+                <ul>
+                    <li>In line 1, enter $f(x) = x / (1 + x^2)$.</li>
+                    <li>In line 2, enter $P_5(x) = x - x^3 + x^5$.</li>
+                    <li>Add vertical lines $x = 1$ and $x = -1$ in dashed formatting.</li>
+                    <li><strong>Task:</strong> Observe why $P_5(x)$ fits $f(x)$ closely between $x \in (-1, 1)$ but diverges outside the interval of convergence $|x| > 1$.</li>
+                </ul>
+            </div>
+
+            <div class="task-card">
+                <h4>Exercise D3: Visualizing Area and Reflection Inverse</h4>
+                <ul>
+                    <li>Shade the area under the curve from $x=0$ to $x=1$ using: $0 \le y \le f(x) \{0 \le x \le 1\}$.</li>
+                    <li>Plot $y = x$ as a dashed reference line.</li>
+                    <li>Graph the restricted inverse: $g(x) = (1 - \sqrt{1 - 4x^2}) / (2x) \{-0.5 \le x \le 0.5\}$.</li>
+                    <li><strong>Task:</strong> Verify visually that $f(x)$ on $[-1, 1]$ and $g(x)$ are exact reflections across $y = x$.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>9. Student Activities: Computational Python & Matplotlib Projects</h2>
+            <p>Run these Python exercises using Jupyter Notebook, Google Colab, or VS Code to programmatically compute and plot your function's features.</p>
+
+            <div class="task-card">
+                <h4>Activity P1: Derivatives & Extremes Verification Script</h4>
+                <pre><code>import numpy as np
+import matplotlib.pyplot as plt
+
+# Define function and derivatives
+x = np.linspace(-4, 4, 500)
+f = x / (1 + x**2)
+df = (1 - x**2) / (1 + x**2)**2
+d2f = (2*x*(x**2 - 3)) / (1 + x**2)**3
+
+# Plotting
+plt.figure(figsize=(9, 5))
+plt.plot(x, f, label=r'$f(x) = \frac{x}{1+x^2}$', color='blue', lw=2)
+plt.plot(x, df, label=r"$f'(x)$", color='teal', linestyle='--')
+plt.plot(x, d2f, label=r"$f''(x)$", color='orange', linestyle=':')
+
+# Highlight Extrema
+plt.scatter([-1, 1], [-0.5, 0.5], color='red', zorder=5, label='Extrema')
+
+plt.title("Function & Derivatives Visualization")
+plt.xlabel("x")
+plt.ylabel("y")
+plt.grid(True, alpha=0.3)
+plt.legend()
+plt.show()</code></pre>
+            </div>
+
+            <div class="task-card">
+                <h4>Activity P2: Numerical Integration, Area, and Arc Length</h4>
+                <pre><code>import scipy.integrate as integrate
+
+# 1. Definite Area Integration [0, 1]
+area, _ = integrate.quad(lambda x: x / (1 + x**2), 0, 1)
+
+# 2. Arc Length Calculation [0, 1]
+arc_length, _ = integrate.quad(lambda x: np.sqrt(1 + ((1 - x**2)/(1 + x**2)**2)**2), 0, 1)
+
+# 3. Volume of Revolution around X-axis [0, 1]
+volume, _ = integrate.quad(lambda x: np.pi * (x / (1 + x**2))**2, 0, 1)
+
+print(f"Area under curve [0,1]: {area:.5f}")
+print(f"Arc length [0,1]:       {arc_length:.5f}")
+print(f"Volume of revolution:  {volume:.5f}")</code></pre>
+            </div>
+
+            <div class="task-card">
+                <h4>Activity P3: 3D Surface of Revolution Visualizer</h4>
+                <pre><code>import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate grid for 3D surface of revolution
+x_vals = np.linspace(0, 1, 100)
+theta = np.linspace(0, 2 * np.pi, 100)
+X, THETA = np.meshgrid(x_vals, theta)
+
+# Radius r(x) = f(x)
+R = X / (1 + X**2)
+Y = R * np.cos(THETA)
+Z = R * np.sin(THETA)
+
+# Create 3D plot
+fig = plt.figure(figsize=(8, 6))
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(X, Y, Z, cmap='viridis', alpha=0.85)
+
+ax.set_title("3D Solid of Revolution around X-axis (x in [0, 1])")
+ax.set_xlabel("X axis")
+ax.set_ylabel("Y axis")
+ax.set_zlabel("Z axis")
+plt.show()</code></pre>
+            </div>
+        </div>
+
+        <footer>
+            <p>Created as a Model Exemplar Assignment | Undergraduate Calculus</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data generation helpers
+        function generateData() {
+            const xVal = [], yF = [], yDf = [], yD2f = [];
+            for (let x = -4; x <= 4; x += 0.05) {
+                xVal.push(x);
+                const x2 = x * x;
+                yF.push(x / (1 + x2));
+                yDf.push((1 - x2) / Math.pow(1 + x2, 2));
+                yD2f.push((2 * x * (x2 - 3)) / Math.pow(1 + x2, 3));
+            }
+            return { xVal, yF, yDf, yD2f };
+        }
+
+        const data = generateData();
+
+        // 1. Derivatives Plot
+        Plotly.newPlot('plot-derivatives', [
+            { x: data.xVal, y: data.yF, name: 'f(x) = x / (1+x²)', line: { color: '#1e3a8a', width: 3 } },
+            { x: data.xVal, y: data.yDf, name: "f'(x) First Deriv", line: { color: '#0d9488', width: 2, dash: 'dash' } },
+            { x: data.xVal, y: data.yD2f, name: "f''(x) Second Deriv", line: { color: '#d97706', width: 2, dash: 'dot' } },
+            { x: [-1, 1], y: [-0.5, 0.5], mode: 'markers', name: 'Extrema Points', marker: { color: 'red', size: 9 } },
+            { x: [-Math.sqrt(3), 0, Math.sqrt(3)], y: [-Math.sqrt(3)/4, 0, Math.sqrt(3)/4], mode: 'markers', name: 'Inflection Points', marker: { color: 'purple', size: 8 } }
+        ], {
+            title: 'Function f(x), First Derivative f\'(x), and Second Derivative f\'\'(x)',
+            xaxis: { title: 'x' }, yaxis: { title: 'y', range: [-1, 1] },
+            margin: { t: 40, b: 40, l: 40, r: 20 }
+        });
+
+        // 2. Tangent Lines Plot
+        const xTang = data.xVal;
+        Plotly.newPlot('plot-tangents', [
+            { x: data.xVal, y: data.yF, name: 'f(x)', line: { color: '#1e3a8a', width: 3 } },
+            { x: xTang, y: xTang.map(x => x), name: 'Tangent at x=0 (y = x)', line: { color: '#e11d48', width: 1.5, dash: 'dash' } },
+            { x: xTang, y: xTang.map(() => 0.5), name: 'Tangent at x=1 (y = 0.5)', line: { color: '#16a34a', width: 1.5, dash: 'dash' } },
+            { x: xTang, y: xTang.map(x => -0.12 * x + 0.64), name: 'Tangent at x=2 (y = -0.12x + 0.64)', line: { color: '#9333ea', width: 1.5, dash: 'dash' } }
+        ], {
+            title: 'Tangents at x = 0, x = 1, and x = 2',
+            xaxis: { title: 'x', range: [-2.5, 3.5] }, yaxis: { title: 'y', range: [-0.8, 1.0] },
+            margin: { t: 40, b: 40, l: 40, r: 20 }
+        });
+
+        // 3. Taylor Polynomials Plot
+        const xTay = [], yP1 = [], yP3 = [], yP5 = [];
+        for (let x = -1.8; x <= 1.8; x += 0.02) {
+            xTay.push(x);
+            yP1.push(x);
+            yP3.push(x - Math.pow(x, 3));
+            yP5.push(x - Math.pow(x, 3) + Math.pow(x, 5));
+        }
+
+        Plotly.newPlot('plot-taylor', [
+            { x: data.xVal, y: data.yF, name: 'f(x) Exact', line: { color: '#1e3a8a', width: 3 } },
+            { x: xTay, y: yP1, name: 'P₁(x) = P₂(x) = x', line: { color: '#94a3b8', width: 2, dash: 'dot' } },
+            { x: xTay, y: yP3, name: 'P₃(x) = P₄(x) = x - x³', line: { color: '#f59e0b', width: 2 } },
+            { x: xTay, y: yP5, name: 'P₅(x) = x - x³ + x⁵', line: { color: '#10b981', width: 2 } }
+        ], {
+            title: 'Taylor Polynomial Approximations P₁(x), P₃(x), and P₅(x) at x = 0',
+            xaxis: { title: 'x', range: [-1.6, 1.6] }, yaxis: { title: 'y', range: [-1, 1] },
+            margin: { t: 40, b: 40, l: 40, r: 20 }
+        });
+
+        // 4. Definite Integration Area Plot
+        const xFill = [], yFill = [];
+        for (let x = 0; x <= 1; x += 0.02) {
+            xFill.push(x);
+            yFill.push(x / (1 + x * x));
+        }
+        xFill.push(1, 0); yFill.push(0, 0);
+
+        Plotly.newPlot('plot-integration', [
+            { x: data.xVal, y: data.yF, name: 'f(x)', line: { color: '#1e3a8a', width: 3 } },
+            { x: xFill, y: yFill, fill: 'tozeroy', fillcolor: 'rgba(59, 130, 246, 0.3)', name: 'Shaded Area [0, 1] ≈ 0.3466', type: 'scatter' }
+        ], {
+            title: 'Area under Curve f(x) from x = 0 to x = 1',
+            xaxis: { title: 'x', range: [-1, 3] }, yaxis: { title: 'y', range: [-0.2, 0.7] },
+            margin: { t: 40, b: 40, l: 40, r: 20 }
+        });
+
+        // 5. Inverse Function Plot
+        const xRest = [], yRest = [];
+        for (let x = -1; x <= 1; x += 0.02) {
+            xRest.push(x);
+            yRest.push(x / (1 + x * x));
+        }
+
+        const xInv = [], yInv = [];
+        for (let y = -0.499; y <= 0.499; y += 0.02) {
+            if (Math.abs(y) < 0.001) {
+                xInv.push(0); yInv.push(0);
+            } else {
+                xInv.push(y);
+                yInv.push((1 - Math.sqrt(1 - 4 * y * y)) / (2 * y));
+            }
+        }
+
+        Plotly.newPlot('plot-inverse', [
+            { x: xRest, y: yRest, name: 'f(x) on [-1, 1]', line: { color: '#1e3a8a', width: 3 } },
+            { x: xInv, y: yInv, name: 'f⁻¹(x) Inverse', line: { color: '#dc2626', width: 3 } },
+            { x: [-1, 1], y: [-1, 1], name: 'y = x Line', line: { color: '#94a3b8', dash: 'dash' } }
+        ], {
+            title: 'Bijective Restriction of f(x) and its Inverse Function f⁻¹(x)',
+            xaxis: { title: 'x', range: [-1.2, 1.2] }, yaxis: { title: 'y', range: [-1.2, 1.2] },
+            margin: { t: 40, b: 40, l: 40, r: 20 }
+        });
+    </script>
+</body>
+</html>
