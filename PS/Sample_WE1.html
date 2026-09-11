@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Model Questions — Real Numbers, Functions, Limits & Riemann Integration</title>
+
+<!-- MathJax configuration -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<style>
+  :root {
+    --yellow: #FFEB3B;
+    --orange: #FF9800;
+    --lime:   #BFFF00;
+    --cyan:   #00E5FF;
+  }
+
+  html, body {
+    background: #000;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    color: var(--lime);
+    font-family: "Charter", "Georgia", "Cambria", serif;
+    font-size: 17px;
+    line-height: 1.75;
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 40px 24px 120px;
+  }
+
+  h1 {
+    color: var(--yellow);
+    text-align: center;
+    font-size: 2.05em;
+    letter-spacing: 0.4px;
+    border-bottom: 3px solid var(--orange);
+    padding-bottom: 18px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 14px rgba(255, 235, 59, 0.45);
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--cyan);
+    font-size: 1.1em;
+    margin-bottom: 45px;
+    font-style: italic;
+    letter-spacing: 0.4px;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.35);
+  }
+
+  h2 {
+    color: var(--yellow);
+    font-size: 1.42em;
+    margin-top: 65px;
+    margin-bottom: 25px;
+    border-left: 6px solid var(--orange);
+    padding-left: 16px;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.35);
+  }
+
+  .instructions {
+    background: rgba(0, 229, 255, 0.06);
+    border: 1px solid rgba(0, 229, 255, 0.42);
+    border-radius: 10px;
+    padding: 20px 26px;
+    margin: 25px 0 45px;
+    color: var(--lime);
+    box-shadow: 0 0 22px rgba(0, 229, 255, 0.08) inset;
+  }
+
+  .instructions p { margin: 10px 0; }
+
+  .instructions strong { color: var(--yellow); }
+
+  /* Continuous question numbering across all four parts */
+  #all-questions { counter-reset: q; }
+
+  .q {
+    counter-increment: q;
+    position: relative;
+    padding: 14px 22px 14px 62px;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--orange);
+    background: linear-gradient(90deg,
+                  rgba(255,152,0,0.07),
+                  rgba(255,152,0,0.01));
+    border-radius: 6px;
+    color: var(--lime);
+    transition: background 0.2s ease;
+  }
+
+  .q:hover {
+    background: linear-gradient(90deg,
+                  rgba(255,152,0,0.14),
+                  rgba(255,152,0,0.03));
+  }
+
+  .q::before {
+    content: "Q" counter(q) ".";
+    position: absolute;
+    left: 12px;
+    top: 14px;
+    color: var(--orange);
+    font-weight: bold;
+    font-size: 1em;
+    letter-spacing: 0.3px;
+    text-shadow: 0 0 8px rgba(255, 152, 0, 0.75);
+  }
+
+  /* Force all MathJax output to cyan */
+  mjx-container,
+  mjx-container[jax="CHTML"],
+  mjx-container[jax="CHTML"][display="true"] {
+    color: var(--cyan) !important;
+  }
+  mjx-container * {
+    color: inherit;
+  }
+
+  strong { color: var(--yellow); }
+  em     { color: var(--cyan); font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>Model Questions</h1>
+<div class="subtitle">
+  Real Number System &middot; Functions &middot; Limits &middot; Introduction to Riemann Integration
+</div>
+
+<div class="instructions">
+  <p><strong>Instructions.</strong> Attempt all questions. Notation:</p>
+  <p>
+    \[
+      \mathbb{N}=\{1,2,3,\dots\},\qquad
+      \mathbb{Z}=\{\dots,-2,-1,0,1,2,\dots\},\qquad
+      \mathbb{Q}=\text{set of rational numbers},\qquad
+      \mathbb{R}=\text{set of real numbers}.
+    \]
+  </p>
+  <p>
+    For a set \(S\subseteq \mathbb{R}\), \(\operatorname{lub} S\), \(\operatorname{glb} S\), \(\max S\),
+    and \(\min S\) denote the least upper bound, greatest lower bound,
+    maximum, and minimum of \(S\), respectively.
+  </p>
+</div>
+
+<div id="all-questions">
+
+<!-- ============================================================ -->
+<h2>Part A: Real Number System, Field Axioms, and Order Properties</h2>
+<!-- ============================================================ -->
+
+<div class="q">State the field axioms for \(\mathbb{R}\). Which of these axioms fail for \(\mathbb{N}\)?</div>
+
+<div class="q">Prove that the additive identity \(0\) in \(\mathbb{R}\) is unique.</div>
+
+<div class="q">Prove that the additive inverse of each \(x\in\mathbb{R}\) is unique.</div>
+
+<div class="q">Prove that for every \(x\in\mathbb{R}\),
+\[
+(-1)x=-x.
+\]</div>
+
+<div class="q">Using the order axioms, prove that if \(x&gt;0\) and \(y&gt;0\), then \(xy&gt;0\).</div>
+
+<div class="q">Prove that if \(x&lt;y\) and \(z\in\mathbb{R}\), then
+\[
+x+z&lt;y+z.
+\]</div>
+
+<div class="q">Define the absolute value of a real number \(x\) by
+\[
+|x|=
+\begin{cases}
+x, &amp; x\ge 0,\\
+-x, &amp; x&lt;0.
+\end{cases}
+\]
+Prove that \(|x|\ge 0\) for all \(x\in\mathbb{R}\), and that \(|x|=0\) if and only if \(x=0\).</div>
+
+<div class="q">Prove that for all \(x,y\in\mathbb{R}\),
+\[
+|xy|=|x|\,|y|.
+\]</div>
+
+<div class="q">Prove that for \(a&gt;0\),
+\[
+|x|&lt;a \iff -a&lt;x&lt;a.
+\]
+Hence solve the inequality
+\[
+|2x-3|&lt;5.
+\]</div>
+
+<div class="q">State and prove the triangle inequality:
+\[
+|x+y|\le |x|+|y|
+\]
+for all \(x,y\in\mathbb{R}\).</div>
+
+<div class="q">Prove that every finite nonempty subset of \(\mathbb{R}\) has a maximum and a minimum.</div>
+
+<div class="q">Prove that if \(0&lt;a&lt;b\), then \(a^n&lt;b^n\) for every \(n\in\mathbb{N}\).</div>
+
+<div class="q">For the set
+\[
+S=\left\{1-\frac{1}{n}:n\in\mathbb{N}\right\},
+\]
+find \(\operatorname{lub} S\), \(\operatorname{glb} S\), \(\max S\), and \(\min S\), if they exist.</div>
+
+<div class="q">Let
+\[
+S=\{x\in\mathbb{Q}:x^2&lt;2\}.
+\]
+Show that \(S\) has no maximum in \(\mathbb{Q}\). Find \(\operatorname{lub} S\) in \(\mathbb{R}\).</div>
+
+<div class="q">For the set
+\[
+S=\left\{\frac{1}{n}:n\in\mathbb{N}\right\},
+\]
+find \(\operatorname{lub} S\), \(\operatorname{glb} S\), \(\max S\), and \(\min S\), if they exist.</div>
+
+<div class="q">For the set
+\[
+S=\{x\in\mathbb{R}:x^2&lt;5\},
+\]
+find \(\operatorname{lub} S\), \(\operatorname{glb} S\), \(\max S\), and \(\min S\), if they exist.</div>
+
+<div class="q">For the set
+\[
+S=(0,1]\cup\{2\},
+\]
+find \( \operatorname{lub} S\), \(\operatorname{glb} S\), \(\max S\), and \(\min S\), if they exist.</div>
+
+<div class="q">State the least upper bound (lub) property of \(\mathbb{R}\). Use it to prove that every nonempty subset of \(\mathbb{R}\) that is bounded below has a greatest lower bound (glb).</div>
+
+<div class="q">Show that \(\mathbb{Q}\) does not satisfy the lub property by giving an explicit example.</div>
+
+<div class="q">Let \(A,B\subseteq\mathbb{R}\) be nonempty and bounded above. Define
+\[
+A+B=\{a+b:a\in A,\ b\in B\}.
+\]
+Prove that
+\[
+\operatorname{lub}(A+B)=\operatorname{lub} A+\operatorname{lub} B.
+\]</div>
+
+<div class="q">Let \(A\subseteq\mathbb{R}\) be nonempty and bounded. Define
+\[
+-A=\{-a:a\in A\}.
+\]
+Prove that
+\[
+\operatorname{lub}(-A)=-\operatorname{glb} A.
+\]</div>
+
+<div class="q">Prove that between any two real numbers \(x&lt;y\), there exists a rational number \(r\) such that
+\[
+x&lt;r&lt;y.
+\]</div>
+
+<div class="q">Let \(x\in\mathbb{R}\) and \(\varepsilon&gt;0\). Prove that there exists \(r\in\mathbb{Q}\) such that
+\[
+|x-r|&lt;\varepsilon.
+\]
+Explain in words why this means the rational numbers are dense in \(\mathbb{R}\).</div>
+
+<div class="q">State the Archimedean property of \(\mathbb{R}\). Use it to prove that for every \(\varepsilon&gt;0\), there exists \(n\in\mathbb{N}\) such that
+\[
+\frac{1}{n}&lt;\varepsilon.
+\]</div>
+
+<div class="q">Prove that if \(a\le b+\varepsilon\) for every \(\varepsilon&gt;0\), then \(a\le b\).</div>
+
+<div class="q">For the set
+\[
+S=\{x\in\mathbb{R}:x^3&lt;8\},
+\]
+find \(\operatorname{lub} S\) and determine whether \(S\) has a maximum.</div>
+
+<div class="q">Let \(S\) be a nonempty subset of \(\mathbb{R}\) that is bounded above. Prove that if \(\operatorname{lub} S\in S\), then \(\max S=\operatorname{lub} S\).</div>
+
+<!-- ============================================================ -->
+<h2>Part B: Functions, Composition, Inverse, and Bijections</h2>
+<!-- ============================================================ -->
+
+<div class="q">Define a function \(f:A\to B\). Define its domain, codomain, and range. When are two functions equal?</div>
+
+<div class="q">Let \(f:\mathbb{R}\to\mathbb{R}\) be defined by
+\[
+f(x)=x^2.
+\]
+Find the domain, codomain, and range of \(f\). Is \(f\) injective? Is \(f\) surjective? Is \(f\) bijective?</div>
+
+<div class="q">Let \(f:[0,\infty)\to[0,\infty)\) be defined by
+\[
+f(x)=x^2.
+\]
+Show that \(f\) is bijective and find \(f^{-1}\).</div>
+
+<div class="q">Let \(f:\mathbb{R}\to[0,\infty)\) be defined by
+\[
+f(x)=x^2.
+\]
+Is \(f\) injective? Is \(f\) surjective? Justify your answer.</div>
+
+<div class="q">Let \(f:\mathbb{Z}\to\mathbb{Z}\) be defined by
+\[
+f(n)=2n.
+\]
+Is \(f\) injective? Is \(f\) surjective? Justify your answer.</div>
+
+<div class="q">Let
+\[
+f:\mathbb{R}\setminus\{2\}\to\mathbb{R}\setminus\{1\}
+\]
+be defined by
+\[
+f(x)=\frac{x+1}{x-2}.
+\]
+Show that \(f\) is bijective and find \(f^{-1}(y)\) for \(y\in\mathbb{R}\setminus\{1\}\).</div>
+
+<div class="q">Let \(f:\mathbb{R}\to\mathbb{R}\) be defined by
+\[
+f(x)=2x+3.
+\]
+Find \(f^{-1}(y)\) for \(y\in\mathbb{R}\). Verify that \(f(f^{-1}(y))=y\).</div>
+
+<div class="q">Let \(f:\mathbb{R}\to\mathbb{R}\) be defined by \(f(x)=x^2\). Find
+\[
+f^{-1}(4),\qquad f^{-1}(-1),\qquad f^{-1}([0,4]).
+\]</div>
+
+<div class="q">Let \(f:A\to B\). Prove that \(f\) is bijective if and only if \(f\) has an inverse function \(f^{-1}:B\to A\).</div>
+
+<div class="q">Let \(f:\mathbb{R}\to\mathbb{R}\) and \(g:\mathbb{R}\to\mathbb{R}\) be defined by
+\[
+f(x)=x+1,\qquad g(x)=x^2.
+\]
+Compute \(f\circ g\) and \(g\circ f\). Are they equal?</div>
+
+<div class="q">Let
+\[
+f(x)=\frac{1}{x},\qquad g(x)=\frac{x}{x+1}.
+\]
+Compute \(f\circ g\) and \(g\circ f\). Find their domains.</div>
+
+<div class="q">Let
+\[
+f(x)=\sqrt{x},\qquad g(x)=x^2.
+\]
+Compute \(f\circ g\) and \(g\circ f\). Find their domains.</div>
+
+<div class="q">Prove that if \(f\) and \(g\) are injective, then \(f\circ g\) is injective.</div>
+
+<div class="q">If \(f\circ g\) is injective, must \(f\) be injective? Must \(g\) be injective? Give a counterexample if not.</div>
+
+<div class="q">If \(f\circ g\) is surjective, must \(f\) be surjective? Must \(g\) be surjective? Give a counterexample if not.</div>
+
+<div class="q">Let \(f:A\to B\) and \(g:B\to C\) be bijections. Prove that
+\[
+(g\circ f)^{-1}=f^{-1}\circ g^{-1}.
+\]</div>
+
+<div class="q">Let
+\[
+f(x)=x^2,\qquad g(x)=2x+1.
+\]
+Solve the equation
+\[
+(f\circ g)(x)=(g\circ f)(x).
+\]</div>
+
+<div class="q">Let \(f:A\to B\). Prove that \(f\) is injective if and only if for every \(y\in B\), the set \(f^{-1}(y)\) contains at most one element.</div>
+
+<!-- ============================================================ -->
+<h2>Part C: Limits</h2>
+<!-- ============================================================ -->
+
+<div class="q">Define
+\[
+\lim_{x\to a}f(x)=L
+\]
+using the \(\varepsilon\)-\(\delta\) definition.</div>
+
+<div class="q">Prove using the \(\varepsilon\)-\(\delta\) definition that
+\[
+\lim_{x\to 2}(3x+1)=7.
+\]</div>
+
+<div class="q">Prove using the \(\varepsilon\)-\(\delta\) definition that
+\[
+\lim_{x\to 1}\frac{x^2-1}{x-1}=2.
+\]</div>
+
+<div class="q">Prove using the \(\varepsilon\)-\(\delta\) definition that
+\[
+\lim_{x\to 0}x^2=0.
+\]</div>
+
+<div class="q">Prove that for any \(a,c\in\mathbb{R}\),
+\[
+\lim_{x\to a}c=c,\qquad \lim_{x\to a}x=a.
+\]</div>
+
+<div class="q">State the sum, product, and quotient rules for limits. Give one example of each.</div>
+
+<div class="q">Compute
+\[
+\lim_{x\to 3}\frac{x^2-9}{x-3}.
+\]</div>
+
+<div class="q">Compute
+\[
+\lim_{x\to 0}\frac{\sqrt{1+x}-1}{x}.
+\]</div>
+
+<div class="q">Compute
+\[
+\lim_{x\to\infty}\frac{3x^2+2x}{5x^2-1}.
+\]</div>
+
+<div class="q">Show that
+\[
+\lim_{x\to 0}\sin\left(\frac{1}{x}\right)
+\]
+does not exist.</div>
+
+<div class="q">Use the sequential criterion for limits to show that
+\[
+\lim_{x\to 0}x\sin\left(\frac{1}{x}\right)=0.
+\]</div>
+
+<div class="q">Find the left-hand and right-hand limits of
+\[
+f(x)=\frac{|x|}{x}
+\]
+at \(x=0\). Does \(\lim_{x\to 0}f(x)\) exist?</div>
+
+<div class="q">Prove that if \(\lim_{x\to a}f(x)\) exists, then it is unique.</div>
+
+<div class="q">Use the squeeze theorem to prove that
+\[
+\lim_{x\to 0}x^2\sin\left(\frac{1}{x}\right)=0.
+\]</div>
+
+<!-- ============================================================ -->
+<h2>Part D: Introduction to Riemann Integration</h2>
+<!-- ============================================================ -->
+
+<div class="q">Define a partition \(P\) of \([a,b]\), the lower Riemann sum \(L(P,f)\), and the upper Riemann sum \(U(P,f)\).</div>
+
+<div class="q">Define what it means for a bounded function \(f:[a,b]\to\mathbb{R}\) to be Riemann integrable.</div>
+
+<div class="q">Let \(f(x)=x\) on \([0,1]\). For the uniform partition
+\[
+P_n=\left\{0,\frac{1}{n},\frac{2}{n},\dots,1\right\},
+\]
+compute \(L(P_n,f)\) and \(U(P_n,f)\).</div>
+
+<div class="q">Using the previous question, show that \(f(x)=x\) is Riemann integrable on \([0,1]\) and find
+\[
+\int_0^1 x\,dx.
+\]</div>
+
+<div class="q">Let \(f(x)=c\) be constant on \([a,b]\). For any partition \(P\) of \([a,b]\), compute \(L(P,f)\) and \(U(P,f)\). Hence find
+\[
+\int_a^b c\,dx.
+\]</div>
+
+<div class="q">Let \(f(x)=x^2\) on \([0,1]\). For the uniform partition \(P_n\), compute \(L(P_n,f)\) and \(U(P_n,f)\). Find their limits as \(n\to\infty\).</div>
+
+<div class="q">Let
+\[
+f(x)=
+\begin{cases}
+1, &amp; x\in\mathbb{Q},\\
+0, &amp; x\notin\mathbb{Q},
+\end{cases}
+\qquad x\in[0,1].
+\]
+Compute \(L(P,f)\) and \(U(P,f)\) for any partition \(P\) of \([0,1]\). Is \(f\) Riemann integrable?</div>
+
+<div class="q">Let \(f(x)=x\) on \([0,2]\) and let
+\[
+P=\{0,1,2\}.
+\]
+Compute \(L(P,f)\) and \(U(P,f)\).</div>
+
+<div class="q">Let \(P'\) be a refinement of a partition \(P\) of \([a,b]\). Prove that
+\[
+L(P,f)\le L(P',f)\le U(P',f)\le U(P,f).
+\]</div>
+
+<div class="q">State the Cauchy criterion for Riemann integrability.</div>
+
+<div class="q">Prove that if \(f:[a,b]\to\mathbb{R}\) is monotone, then \(f\) is Riemann integrable.</div>
+
+<div class="q">If \(f\) is Riemann integrable on \([a,b]\), is \(|f|\) necessarily Riemann integrable? Justify briefly.</div>
+
+<div class="q">Evaluate
+\[
+\int_0^1 (2x+1)\,dx
+\]
+directly from the definition using lower and upper sums.</div>
+
+<div class="q">Let \(f(x)=x\) on \([0,1]\), except define \(f(1/2)=100\). Show that \(f\) is still Riemann integrable and
+\[
+\int_0^1 f(x)\,dx=\frac12.
+\]</div>
+
+<div class="q">Prove that if \(f\) is Riemann integrable on \([a,b]\) and \(c\in\mathbb{R}\), then \(cf\) is Riemann integrable on \([a,b]\) and
+\[
+\int_a^b c\,f(x)\,dx = c\int_a^b f(x)\,dx.
+\]</div>
+
+<div class="q">Let \(f(x)=e^x\) on \([0,1]\). For the uniform partition \(P_n\), write \(L(P_n,f)\) and \(U(P_n,f)\) as sums.</div>
+
+<div class="q">Let \(f(x)=x^2\) on \([0,1]\) and let
+\[
+P=\left\{0,\frac14,\frac12,1\right\}.
+\]
+Compute \(L(P,f)\) and \(U(P,f)\).</div>
+
+<div class="q">Prove that if \(f\) is Riemann integrable on \([a,b]\) and \(f(x)\ge 0\) for all \(x\in[a,b]\), then
+\[
+\int_a^b f(x)\,dx\ge 0.
+\]</div>
+
+<div class="q">Give an example of a bounded function on \([0,1]\) that is not Riemann integrable. Explain why it fails.</div>
+
+<div class="q">Let \(f(x)=\lfloor x\rfloor\) on \([0,3]\). For the partition
+\[
+P=\{0,1,2,3\},
+\]
+compute \(L(P,f)\) and \(U(P,f)\). Is \(f\) Riemann integrable on \([0,3]\)? If so, find
+\[
+\int_0^3 f(x)\,dx.
+\]</div>
+
+</div><!-- /#all-questions -->
+
+</body>
+</html>
