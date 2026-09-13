@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bijective Maps, Translation & Inverses</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- MathJax Configuration & Engine -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Custom vibrant text color utilities */
+    .text-yellow-glow { color: #facc15; }
+    .text-orange-glow { color: #fb923c; }
+    .text-lime-glow   { color: #a3e635; }
+    .text-cyan-glow   { color: #22d3ee; }
+    .text-white-glow  { color: #ffffff; }
+
+    input[type=range] {
+      accent-color: #22d3ee;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-16">
+
+  <!-- Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-gradient-to-r from-cyan-500 to-lime-500 rounded-lg text-slate-950 font-bold text-xl">$f(x)$</div>
+        <div>
+          <h1 class="text-xl font-bold text-yellow-glow">
+            Bijective Maps & Function Composition
+          </h1>
+          <p class="text-xs text-cyan-glow">Stretching, Translation & Inverse Symmetries</p>
+        </div>
+      </div>
+      
+      <!-- Quick Navigation -->
+      <nav class="flex flex-wrap gap-2 text-xs">
+        <button onclick="scrollToStep('step1')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-glow transition">1: $[0,1]\to[0,2]$</button>
+        <button onclick="scrollToStep('step-trans')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-lime-glow transition">2: $[0,1]\to[1,2]$</button>
+        <button onclick="scrollToStep('step2')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-orange-glow transition">3: $[0,1]\to[4,9]$</button>
+        <button onclick="scrollToStep('step3')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-yellow-glow transition">4: Bridge Map</button>
+        <button onclick="scrollToStep('step-inv-linear')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-glow transition">5: $x+1$ Inv</button>
+        <button onclick="scrollToStep('step-inv-2x')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-lime-glow transition">6: $2x$ Inv</button>
+        <button onclick="scrollToStep('step7')" class="px-2 py-1 rounded bg-cyan-900/60 hover:bg-cyan-800 border border-cyan-500/40 text-yellow-glow transition">7: $\mathbb{R}^2$ Direct Map</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-12">
+
+    <!-- Hero / Intro Card -->
+    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-2xl space-y-3">
+      <h2 class="text-2xl font-extrabold text-yellow-glow">What is a Bijective Map?</h2>
+      <p class="text-white leading-relaxed text-sm sm:text-base">
+        A map $f: A \to B$ is <span class="text-cyan-glow font-semibold">bijective</span> (one-to-one and onto) if every input in $A$ targets a unique output in $B$, covering all of $B$ perfectly without overlaps or gaps.
+      </p>
+      <div class="flex items-center gap-2 bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs sm:text-sm">
+        <span class="font-bold text-orange-glow">Rubber Band Physical Model:</span> Think of $[0,1]$ as an elastic band. Mapping it to $[0,2]$ <span class="text-lime-glow">stretches</span> it, mapping it to $[1,2]$ <span class="text-cyan-glow">shifts (translates)</span> it without stretching, and combining both yields general interval transformations $[a,b] \to [c,d]$.
+      </div>
+    </div>
+
+    <!-- STEP 1: f:[0,1] -> [0,2] (Stretching) -->
+    <section id="step1" class="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-500 font-bold text-slate-950">1</span>
+        <h3 class="text-xl font-semibold text-cyan-glow">Bijective map $f:[0,1] \to [0,2]$</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div class="space-y-4">
+          <p class="text-white text-sm leading-relaxed">
+            How do we double the length of the interval $[0,1]$ to cover $[0,2]$ completely?
+          </p>
+
+          <button onclick="toggleSolution('sol1')" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg font-medium transition text-slate-950 font-bold shadow-lg shadow-cyan-500/20 flex items-center gap-2 text-sm">
+            <span>Show / Hide Solution</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+
+          <div id="sol1" class="hidden bg-slate-950 p-4 rounded-xl border border-cyan-500/40 space-y-3 text-xs sm:text-sm">
+            <p class="text-lime-glow font-bold">Solution: $f(x) = 2x$</p>
+            <p class="text-white leading-relaxed">
+              <strong class="text-orange-glow">Rubber Band Analogy:</strong> Pin $x = 0$ at $0$, and pull $x = 1$ to $2$. Every point $x \in [0,1]$ stretches to twice its original position.
+            </p>
+            <ul class="text-xs text-cyan-glow space-y-1 list-disc list-inside font-mono">
+              <li>Injective (one-to-one): $2x_1 = 2x_2 \implies x_1 = x_2$</li>
+              <li>Surjective (onto): For any $y \in [0,2]$, $x = y/2 \in [0,1]$</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Interactive Canvas 1 -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
+          <h4 class="text-xs font-bold text-yellow-glow mb-2 uppercase tracking-wider">Rubber Band Stretch Visualizer</h4>
+          
+          <div class="w-full space-y-4 py-2">
+            <div>
+              <label class="text-xs text-white block mb-1">Select $x \in [0,1]$: <span id="val1" class="text-cyan-glow font-bold">0.50</span></label>
+              <input type="range" id="slider1" min="0" max="1" step="0.01" value="0.50" class="w-full" oninput="updateBand1(this.value)">
+            </div>
+
+            <canvas id="canvasBand1" width="400" height="130" class="w-full border border-slate-800 rounded-lg bg-slate-900"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: Translation f:[0,1] -> [1,2] -->
+    <section id="step-trans" class="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-lime-500 font-bold text-slate-950">2</span>
+        <h3 class="text-xl font-semibold text-lime-glow">Pure Translation: Bijective Map $f:[0,1] \to [1,2]$</h3>
+      </div>
+
+      <p class="text-white text-sm leading-relaxed">
+        Notice that interval $[0,1]$ and interval $[1,2]$ have the exact same length ($1 - 0 = 1$ and $2 - 1 = 1$). No stretching is required! We simply slide or <strong class="text-cyan-glow">translate</strong> the entire interval to the right by $1$ unit.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div class="space-y-4">
+          <div class="bg-slate-950 p-4 rounded-xl border border-lime-500/40 space-y-2">
+            <h4 class="text-sm font-bold text-lime-glow">Translation Map Equation:</h4>
+            <div class="text-center font-mono text-lg text-yellow-glow py-2 bg-slate-900 rounded border border-slate-800">
+              $f(x) = x + 1$
+            </div>
+            <p class="text-xs text-white leading-relaxed">
+              • Start endpoint: $f(0) = 0 + 1 = 1$<br>
+              • End endpoint: $f(1) = 1 + 1 = 2$
+            </p>
+          </div>
+
+          <p class="text-xs text-orange-glow bg-orange-950/30 p-3 rounded-lg border border-orange-500/30">
+            <strong>Key Concept:</strong> Adding a constant $c$ shifts the interval rigidly without changing its size.
+          </p>
+        </div>
+
+        <!-- Interactive Translation Canvas -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
+          <h4 class="text-xs font-bold text-lime-glow mb-2 uppercase tracking-wider">Rigid Translation Visualizer</h4>
+          
+          <div class="w-full space-y-3 py-2">
+            <div>
+              <label class="text-xs text-white block mb-1">Move input $x \in [0,1]$: <span id="valTrans" class="text-lime-glow font-bold">0.40</span></label>
+              <input type="range" id="sliderTrans" min="0" max="1" step="0.01" value="0.40" class="w-full" oninput="updateTranslationBand(this.value)">
+            </div>
+
+            <canvas id="canvasTrans" width="400" height="130" class="w-full border border-slate-800 rounded-lg bg-slate-900"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: f:[0,1] -> [4,9] (Stretch + Translate) -->
+    <section id="step2" class="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-orange-500 font-bold text-slate-950">3</span>
+        <h3 class="text-xl font-semibold text-orange-glow">Combining Both: Map $f:[0,1] \to [4,9]$</h3>
+      </div>
+
+      <p class="text-white text-sm">
+        Now we combine <span class="text-lime-glow font-semibold">Stretching</span> and <span class="text-cyan-glow font-semibold">Translation</span> using function composition!
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm">
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+          <div class="text-xs uppercase tracking-wider text-lime-glow font-bold">1. Stretch (Length = 5)</div>
+          <p class="text-white text-xs">Stretch $[0,1]$ to $[0,5]$</p>
+          <div class="p-2 bg-slate-900 rounded font-mono text-center text-lime-glow font-bold">
+            $f(x) = 5x$
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+          <div class="text-xs uppercase tracking-wider text-cyan-glow font-bold">2. Translate (Shift +4)</div>
+          <p class="text-white text-xs">Shift $[0,5]$ to $[4,9]$</p>
+          <div class="p-2 bg-slate-900 rounded font-mono text-center text-cyan-glow font-bold">
+            $g(u) = u + 4$
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-xl border border-orange-500/40 space-y-2">
+          <div class="text-xs uppercase tracking-wider text-yellow-glow font-bold">Composition $(g \circ f)$</div>
+          <p class="text-white text-xs">Combine step 1 & 2</p>
+          <div class="p-2 bg-slate-900 rounded font-mono text-center text-orange-glow font-bold">
+            $(g \circ f)(x) = 5x + 4$
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4: Generalization [a,b] -> [c,d] via [0,1] -->
+    <section id="step3" class="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 font-bold text-slate-950">4</span>
+        <h3 class="text-xl font-semibold text-yellow-glow">General Map $f:[a,b] \to [c,d]$ via $[0,1]$ Bridge</h3>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <!-- Composition Diagram Canvas -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
+          <h4 class="text-xs font-bold text-yellow-glow mb-2 uppercase tracking-wider">Composition Mindmap Diagram</h4>
+          <canvas id="mindmapCanvas" width="450" height="260" class="w-full bg-slate-900 rounded-lg border border-slate-800"></canvas>
+        </div>
+
+        <div class="space-y-3 text-xs sm:text-sm">
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+            <h5 class="font-bold text-lime-glow text-xs uppercase">Step A: Normalize $[a,b] \to [0,1]$</h5>
+            <div class="font-mono text-lime-glow mt-1">$f(x) = \frac{x-a}{b-a}$</div>
+          </div>
+
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+            <h5 class="font-bold text-cyan-glow text-xs uppercase">Step B: Scale & Shift $[0,1] \to [c,d]$</h5>
+            <div class="font-mono text-cyan-glow mt-1">$g(t) = (d-c)t + c$</div>
+          </div>
+
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-yellow-500/40">
+            <h5 class="font-bold text-yellow-glow text-xs uppercase">Composition $(g \circ f): [a,b] \to [c,d]$</h5>
+            <div class="font-mono text-orange-glow mt-1">$(g \circ f)(x) = \left(\frac{x-a}{b-a}\right)(d-c) + c$</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5: Interactive Inverse Task f(x)=x+1 and g(x)=x-1 -->
+    <section id="step-inv-linear" class="bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 rounded-2xl p-6 border border-cyan-500/40 space-y-8">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-400 font-bold text-slate-950">5</span>
+        <div>
+          <h3 class="text-xl font-bold text-cyan-glow">Inverse Task: $f(x) = x + 1$ and $g(x) = x - 1$</h3>
+          <p class="text-xs text-lime-glow">Show that for point $(a, f(a))$, the point $(f(a), y)$ lies on $g(x)$ when $y = a$</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-3 text-xs sm:text-sm">
+          <h4 class="font-bold text-yellow-glow text-sm">Algebraic Inverse Proof</h4>
+          <p class="text-white leading-relaxed">
+            Let $f(x) = x + 1$ and $g(x) = x - 1$.
+          </p>
+          <div class="font-mono bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1 text-cyan-glow">
+            <p>• $(g \circ f)(a) = g(f(a)) = g(a+1) = (a+1) - 1 = a$</p>
+            <p>• $(f \circ g)(a) = f(g(a)) = f(a-1) = (a-1) + 1 = a$</p>
+          </div>
+          <p class="text-white">
+            For point $(a, f(a))$, substituting $x = f(a)$ into $g(x)$ gives $y = g(f(a)) = a$. Hence, $(f(a), a)$ lies on the graph of $g(x)$.
+          </p>
+        </div>
+
+        <!-- Interactive Inspector & Plot -->
+        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
+          <h4 class="font-bold text-lime-glow text-sm border-b border-slate-800 pb-2">Coordinate Inspector</h4>
+
+          <div>
+            <div class="flex justify-between text-white mb-1">
+              <span>Choose $a$:</span>
+              <span id="lblAInv" class="font-bold text-cyan-glow">2.0</span>
+            </div>
+            <input type="range" id="sliderAInv" min="-2" max="3" step="0.5" value="2.0" class="w-full" oninput="updateInverseTask()">
+          </div>
+
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 font-mono">
+            <div>
+              <span class="text-cyan-glow font-bold">Point on $f(x) = x + 1$:</span>
+              <span id="ptFText" class="text-white font-bold ml-2">(2.0, 3.0)</span>
+            </div>
+
+            <div>
+              <span class="text-orange-glow font-bold">Reflected Point on $g(x) = x - 1$:</span>
+              <span id="ptGText" class="text-yellow-glow font-bold ml-2">(3.0, 2.0)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
+        <canvas id="inverseTaskCanvas" width="480" height="300" class="w-full bg-slate-900 rounded-lg border border-slate-800"></canvas>
+      </div>
+    </section>
+
+    <!-- STEP 6: Inverse Functions Canvas & Table Logic (f(x)=2x & g(x)=x/2) -->
+    <section id="step-inv-2x" class="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-lime-400 font-bold text-slate-950">6</span>
+        <div>
+          <h3 class="text-xl font-bold text-lime-glow">Inverse Functions Symmetry: $f(x) = 2x$ and $g(x) = \frac{x}{2}$</h3>
+          <p class="text-xs text-yellow-glow">Interactive Mirror Reflection across $y = x$ line</p>
+        </div>
+      </div>
+
+      <!-- Controls & Live Data Table -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <div class="space-y-4 bg-slate-950 p-5 rounded-xl border border-slate-800">
+          <h4 class="text-sm font-bold text-yellow-glow uppercase tracking-wider">Parameter Control</h4>
+          <div>
+            <label class="text-xs text-white block mb-1">Set input parameter $a$: <span id="lblInverseA" class="text-lime-glow font-bold">1.5</span></label>
+            <input type="range" id="paramInverseA" min="-3" max="3" step="0.1" value="1.5" class="w-full" oninput="updateInversePlot()">
+          </div>
+
+          <!-- Table displaying symmetry values -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse font-mono">
+              <thead>
+                <tr class="border-b border-slate-800 text-cyan-glow">
+                  <th class="py-1">Function</th>
+                  <th class="py-1">Input</th>
+                  <th class="py-1">Point $(X, Y)$</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60 text-white">
+                <tr>
+                  <td class="py-1.5 text-lime-glow font-bold">$f(x)=2x$</td>
+                  <td id="tblAVal" class="py-1.5">a = 1.5</td>
+                  <td id="tblFPoint" class="py-1.5 text-lime-glow">(1.5, 3.0)</td>
+                </tr>
+                <tr>
+                  <td class="py-1.5 text-orange-glow font-bold">$g(x)=x/2$</td>
+                  <td id="tblBVal" class="py-1.5">b = 3.0</td>
+                  <td id="tblGPoint" class="py-1.5 text-orange-glow">(3.0, 1.5)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs text-yellow-glow font-mono text-center">
+            Symmetry Pair: <span id="symPairText">(1.5, 3.0) ↔ (3.0, 1.5)</span>
+          </div>
+        </div>
+
+        <!-- Canvas for f(x)=2x and g(x)=x/2 -->
+        <div class="lg:col-span-2 bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
+          <h4 class="text-xs font-bold text-cyan-glow mb-2 uppercase tracking-wider">Reflection Plot Canvas</h4>
+          <canvas id="inverseCanvas" width="480" height="340" class="w-full bg-slate-900 rounded-lg border border-slate-800"></canvas>
+          <div class="mt-3 flex flex-wrap justify-center gap-4 text-xs font-medium">
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> <span class="text-lime-glow">$f(x) = 2x$</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block"></span> <span class="text-orange-glow">$g(x) = x/2$</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-yellow-400 inline-block"></span> <span class="text-yellow-glow">$y = x$ Line</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 7: Direct 2D Geometry Approach using R^2 -->
+    <section id="step7" class="bg-slate-900/60 rounded-2xl p-6 border border-yellow-500/40 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-400 font-bold text-slate-950">7</span>
+        <div>
+          <h3 class="text-xl font-bold text-yellow-glow">Direct Geometric Method using $\mathbb{R}^2$ Coordinates</h3>
+          <p class="text-xs text-cyan-glow">Simplifying interval mappings using straight line equations on the Cartesian plane</p>
+        </div>
+      </div>
+
+      <!-- Informational Callout -->
+      <div class="bg-cyan-950/40 border border-cyan-500/30 p-4 rounded-xl text-xs sm:text-sm text-cyan-glow leading-relaxed">
+        <strong class="text-yellow-glow">A Simpler Perspective:</strong> Instead of mapping endpoints via step-by-step transformations or bridge intervals, there is a simple and elegant way to achieve this using 2D Coordinate Geometry in $\mathbb{R}^2$.
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <!-- Interactive Geometric Diagram Canvas replacing TikZ -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
+          <h4 class="text-xs font-bold text-yellow-glow mb-2 uppercase tracking-wider">Cartesian Diagram in $\mathbb{R}^2$</h4>
+          <canvas id="canvasR2" width="400" height="320" class="w-full bg-slate-900 rounded-lg border border-slate-800"></canvas>
+        </div>
+
+        <!-- Mathematical Derivation -->
+        <div class="space-y-4 text-xs sm:text-sm">
+          <p class="text-white leading-relaxed">
+            Suppose we want $f:[a,b] \to [c,d]$ to be a bijection with $f(a) = c$ and $f(b) = d$.
+          </p>
+          <p class="text-slate-300">
+            This requirement simply means that the graph of $f$ is a straight line segment connecting the points <strong class="text-cyan-glow font-mono">(a, c)</strong> and <strong class="text-orange-glow font-mono">(b, d)</strong> on the $\mathbb{R}^2$ Cartesian plane.
+          </p>
+
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+            <div class="text-xs font-bold text-lime-glow uppercase">1. Two-Point Line Equation:</div>
+            <div class="font-mono text-yellow-glow text-center bg-slate-900 p-2.5 rounded border border-slate-800 text-sm">
+              $$y - c = \left(\frac{d - c}{b - a}\right)(x - a)$$
+            </div>
+
+            <div class="text-xs font-bold text-lime-glow uppercase pt-1">2. Direct Explicit Function:</div>
+            <div class="font-mono text-orange-glow text-center bg-slate-900 p-2.5 rounded border border-slate-800 text-sm">
+              $$f(x) = \left(\frac{x - a}{b - a}\right)(d - c) + c$$
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    Interactive Educational Demonstration &bull; Bijective Mappings & Coordinate Inverses
+  </footer>
+
+  <!-- Script Logic -->
+  <script>
+    function scrollToStep(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleSolution(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // Canvas 1: Stretching f(x) = 2x
+    function updateBand1(xVal) {
+      document.getElementById('val1').innerText = parseFloat(xVal).toFixed(2);
+      const canvas = document.getElementById('canvasBand1');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const margin = 50, length = w - 2 * margin;
+
+      // Domain [0,1]
+      const y1 = 35;
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(margin, y1); ctx.lineTo(margin + length, y1); ctx.stroke();
+
+      ctx.fillStyle = '#ffffff'; ctx.font = '11px sans-serif';
+      ctx.fillText('0', margin - 4, y1 - 8);
+      ctx.fillText('1', margin + length - 4, y1 - 8);
+
+      const xPos = margin + xVal * length;
+      ctx.fillStyle = '#22d3ee';
+      ctx.beginPath(); ctx.arc(xPos, y1, 5, 0, Math.PI * 2); ctx.fill();
+
+      // Codomain [0,2]
+      const y2 = 95;
+      ctx.strokeStyle = '#a3e635';
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(margin, y2); ctx.lineTo(margin + length, y2); ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('0', margin - 4, y2 + 18);
+      ctx.fillText('2', margin + length - 4, y2 + 18);
+
+      const fxVal = xVal * 2;
+      const fxPos = margin + (fxVal / 2) * length;
+
+      // Dashed mapping line
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(xPos, y1 + 5); ctx.lineTo(fxPos, y2 - 5); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#a3e635';
+      ctx.beginPath(); ctx.arc(fxPos, y2, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Canvas 2: Translation f(x) = x + 1
+    function updateTranslationBand(xVal) {
+      document.getElementById('valTrans').innerText = parseFloat(xVal).toFixed(2);
+      const canvas = document.getElementById('canvasTrans');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const margin = 40;
+      const totalWidth = w - 2 * margin;
+
+      function valToPx(v) {
+        return margin + (v / 2.0) * totalWidth;
+      }
+
+      const y1 = 35;
+      ctx.strokeStyle = '#a3e635';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(valToPx(0), y1);
+      ctx.lineTo(valToPx(1), y1);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff'; ctx.font = '11px sans-serif';
+      ctx.fillText('0', valToPx(0) - 3, y1 - 8);
+      ctx.fillText('1', valToPx(1) - 3, y1 - 8);
+
+      const xPx = valToPx(xVal);
+      ctx.fillStyle = '#a3e635';
+      ctx.beginPath(); ctx.arc(xPx, y1, 5, 0, Math.PI * 2); ctx.fill();
+
+      const y2 = 95;
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(valToPx(1), y2);
+      ctx.lineTo(valToPx(2), y2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('1', valToPx(1) - 3, y2 + 18);
+      ctx.fillText('2', valToPx(2) - 3, y2 + 18);
+
+      const fxVal = parseFloat(xVal) + 1.0;
+      const fxPx = valToPx(fxVal);
+
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(xPx, y1 + 5); ctx.lineTo(fxPx, y2 - 5); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#22d3ee';
+      ctx.beginPath(); ctx.arc(fxPx, y2, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Mindmap Diagram
+    function drawMindmap() {
+      const canvas = document.getElementById('mindmapCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const center = { x: 110, y: 130, label: '[0,1]', color: '#a3e635' };
+      const topRight = { x: 320, y: 60, label: '[a,b]', color: '#22d3ee' };
+      const botRight = { x: 320, y: 200, label: '[c,d]', color: '#fb923c' };
+
+      function drawNode(node) {
+        ctx.fillStyle = node.color;
+        ctx.beginPath(); ctx.arc(node.x, node.y, 28, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+        ctx.fillStyle = '#0f172a'; ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(node.label, node.x, node.y);
+      }
+
+      function drawArrow(from, to, label, isUp) {
+        ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.lineTo(to.x, to.y); ctx.stroke();
+
+        const angle = Math.atan2(to.y - from.y, to.x - from.x);
+        const targetX = to.x - 28 * Math.cos(angle);
+        const targetY = to.y - 28 * Math.sin(angle);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.beginPath();
+        ctx.moveTo(targetX, targetY);
+        ctx.lineTo(targetX - 8 * Math.cos(angle - Math.PI / 6), targetY - 8 * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(targetX - 8 * Math.cos(angle + Math.PI / 6), targetY - 8 * Math.sin(angle + Math.PI / 6));
+        ctx.fill();
+
+        ctx.fillStyle = '#facc15'; ctx.font = '11px font-mono';
+        const midX = (from.x + to.x) / 2, midY = (from.y + to.y) / 2;
+        ctx.fillText(label, midX + (isUp ? -10 : 10), midY + (isUp ? -10 : 10));
+      }
+
+      drawArrow(topRight, center, 'f(x)', true);
+      drawArrow(center, botRight, 'g(t)', false);
+
+      drawNode(center); drawNode(topRight); drawNode(botRight);
+    }
+
+    // Step 5 Task: f(x) = x+1 & g(x) = x-1
+    function updateInverseTask() {
+      const a = parseFloat(document.getElementById('sliderAInv').value);
+      const fa = a + 1.0;
+      const xG = fa;
+      const yG = xG - 1.0;
+
+      document.getElementById('lblAInv').innerText = a.toFixed(1);
+      document.getElementById('ptFText').innerText = `(${a.toFixed(1)}, ${fa.toFixed(1)})`;
+      document.getElementById('ptGText').innerText = `(${xG.toFixed(1)}, ${yG.toFixed(1)})`;
+
+      const canvas = document.getElementById('inverseTaskCanvas');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const range = 5;
+      function toSx(val) { return w / 2 + (val / range) * (w / 2 - 25); }
+      function toSy(val) { return h / 2 - (val / range) * (h / 2 - 25); }
+
+      // Grid & Axes
+      ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+      for (let i = -4; i <= 4; i++) {
+        ctx.beginPath(); ctx.moveTo(toSx(i), toSy(-5)); ctx.lineTo(toSx(i), toSy(5)); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(toSx(-5), toSy(i)); ctx.lineTo(toSx(5), toSy(i)); ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(toSx(-5), toSy(0)); ctx.lineTo(toSx(5), toSy(0));
+      ctx.moveTo(toSx(0), toSy(-5)); ctx.lineTo(toSx(0), toSy(5));
+      ctx.stroke();
+
+      // y = x Line
+      ctx.strokeStyle = '#facc15'; ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(toSx(-4), toSy(-4)); ctx.lineTo(toSx(4), toSy(4)); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Lines
+      ctx.strokeStyle = '#22d3ee'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(toSx(-5), toSy(-4)); ctx.lineTo(toSx(3), toSy(4)); ctx.stroke();
+
+      ctx.strokeStyle = '#fb923c'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(toSx(-3), toSy(-4)); ctx.lineTo(toSx(5), toSy(4)); ctx.stroke();
+
+      // Dotted Reflection
+      const p1x = toSx(a), p1y = toSy(fa);
+      const p2x = toSx(xG), p2y = toSy(yG);
+
+      ctx.strokeStyle = '#a3e635'; ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(p1x, p1y); ctx.lineTo(p2x, p2y); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Points
+      ctx.fillStyle = '#22d3ee'; ctx.beginPath(); ctx.arc(p1x, p1y, 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fb923c'; ctx.beginPath(); ctx.arc(p2x, p2y, 6, 0, Math.PI * 2); ctx.fill();
+
+      // Labels
+      ctx.fillStyle = '#ffffff'; ctx.font = '11px sans-serif';
+      ctx.fillText(`(a, f(a)) = (${a.toFixed(1)}, ${fa.toFixed(1)})`, p1x - 70, p1y - 10);
+      ctx.fillText(`(f(a), y) = (${xG.toFixed(1)}, ${yG.toFixed(1)})`, p2x + 10, p2y + 15);
+    }
+
+    // STEP 6: Inverse Functions Canvas & Table Logic (f(x)=2x & g(x)=x/2)
+    function updateInversePlot() {
+      const a = parseFloat(document.getElementById('paramInverseA').value);
+      const fa = 2 * a; // f(a)
+      const b = fa;     // Set b = f(a)
+      const gb = b / 2; // g(b) = a
+
+      // Update UI Labels and Table
+      document.getElementById('lblInverseA').innerText = a.toFixed(1);
+      document.getElementById('tblAVal').innerText = `a = ${a.toFixed(1)}`;
+      document.getElementById('tblFPoint').innerText = `(${a.toFixed(1)}, ${fa.toFixed(1)})`;
+      document.getElementById('tblBVal').innerText = `b = ${b.toFixed(1)}`;
+      document.getElementById('tblGPoint').innerText = `(${b.toFixed(1)}, ${gb.toFixed(1)})`;
+      document.getElementById('symPairText').innerText = `(${a.toFixed(1)}, ${fa.toFixed(1)}) ↔ (${b.toFixed(1)}, ${gb.toFixed(1)})`;
+
+      const canvas = document.getElementById('inverseCanvas');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Coordinate System [-7, 7]
+      const range = 7;
+      function toSx(val) { return w / 2 + (val / range) * (w / 2 - 30); }
+      function toSy(val) { return h / 2 - (val / range) * (h / 2 - 30); }
+
+      // Grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      for (let i = -6; i <= 6; i++) {
+        ctx.beginPath();
+        ctx.moveTo(toSx(i), toSy(-7));
+        ctx.lineTo(toSx(i), toSy(7));
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(toSx(-7), toSy(i));
+        ctx.lineTo(toSx(7), toSy(i));
+        ctx.stroke();
+
+        if (i !== 0) {
+          ctx.fillStyle = '#475569';
+          ctx.font = '10px sans-serif';
+          ctx.fillText(i, toSx(i) - 4, toSy(0) + 14);
+          ctx.fillText(i, toSx(0) - 15, toSy(i) + 4);
+        }
+      }
+
+      // Main Axes
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(toSx(-7), toSy(0));
+      ctx.lineTo(toSx(7), toSy(0));
+      ctx.moveTo(toSx(0), toSy(-7));
+      ctx.lineTo(toSx(0), toSy(7));
+      ctx.stroke();
+
+      // Axis of Symmetry y = x
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(toSx(-6), toSy(-6));
+      ctx.lineTo(toSx(6), toSy(6));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Curve 1: f(x) = 2x (Emerald / Lime)
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(toSx(-3.2), toSy(-6.4));
+      ctx.lineTo(toSx(3.2), toSy(6.4));
+      ctx.stroke();
+
+      // Curve 2: g(x) = x / 2 (Purple / Orange)
+      ctx.strokeStyle = '#a855f7';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(toSx(-6.4), toSy(-3.2));
+      ctx.lineTo(toSx(6.4), toSy(3.2));
+      ctx.stroke();
+
+      // Dotted Reflection Line connecting (a, f(a)) and (b, g(b))
+      const p1x = toSx(a), p1y = toSy(fa);
+      const p2x = toSx(b), p2y = toSy(gb);
+
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(p1x, p1y);
+      ctx.lineTo(p2x, p2y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Point (a, f(a))
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.arc(p1x, p1y, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Point (b, g(b))
+      ctx.fillStyle = '#a855f7';
+      ctx.beginPath();
+      ctx.arc(p2x, p2y, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Point Labels
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '11px sans-serif';
+      ctx.fillText(`(a, f(a)) = (${a.toFixed(1)}, ${fa.toFixed(1)})`, p1x + 8, p1y - 8);
+      ctx.fillText(`(b, g(b)) = (${b.toFixed(1)}, ${gb.toFixed(1)})`, p2x + 8, p2y + 15);
+    }
+
+    // STEP 7: R^2 TikZ Canvas Renderer
+    function drawR2Diagram() {
+      const canvas = document.getElementById('canvasR2');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const ox = 50, oy = h - 50; // Origin position
+
+      // Axes
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      // Y axis
+      ctx.moveTo(ox, oy); ctx.lineTo(ox, 30);
+      // X axis
+      ctx.moveTo(ox, oy); ctx.lineTo(w - 30, oy);
+      ctx.stroke();
+
+      // Axis Arrows & Labels
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '14px sans-serif';
+      ctx.fillText('y', ox - 18, 35);
+      ctx.fillText('x', w - 25, oy + 20);
+      ctx.fillText('O', ox - 18, oy + 18);
+
+      // Points coordinates on canvas
+      const ax = 120, bx = 320;
+      const cy = oy - 80, dy = oy - 220;
+
+      // Intervals on Axes
+      // Interval [a,b] on X-axis (Violet)
+      ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.moveTo(ax, oy); ctx.lineTo(bx, oy); ctx.stroke();
+
+      // Interval [c,d] on Y-axis (Magenta)
+      ctx.strokeStyle = '#ec4899'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.moveTo(ox, cy); ctx.lineTo(ox, dy); ctx.stroke();
+
+      // Dotted Bounding Box
+      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(ax, cy); ctx.lineTo(bx, cy);
+      ctx.moveTo(ax, dy); ctx.lineTo(bx, dy);
+      ctx.moveTo(ax, cy); ctx.lineTo(ax, dy);
+      ctx.moveTo(bx, cy); ctx.lineTo(bx, dy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Main Red Bijection Line f(x)
+      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(ax, cy); ctx.lineTo(bx, dy); ctx.stroke();
+
+      // Endpoint Circles
+      function drawPoint(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
+      }
+
+      drawPoint(ax, oy, '#a855f7'); // a
+      drawPoint(bx, oy, '#a855f7'); // b
+      drawPoint(ox, cy, '#ec4899'); // c
+      drawPoint(ox, dy, '#ec4899'); // d
+
+      drawPoint(ax, cy, '#ef4444'); // (a,c)
+      drawPoint(ax, dy, '#94a3b8'); // (a,d)
+      drawPoint(bx, cy, '#94a3b8'); // (b,c)
+      drawPoint(bx, dy, '#ef4444'); // (b,d)
+
+      // Axis & Point Labels
+      ctx.font = '12px sans-serif';
+      ctx.fillStyle = '#a855f7';
+      ctx.fillText('a', ax - 4, oy + 18);
+      ctx.fillText('b', bx - 4, oy + 18);
+
+      ctx.fillStyle = '#ec4899';
+      ctx.fillText('c', ox - 18, cy + 4);
+      ctx.fillText('d', ox - 18, dy + 4);
+
+      ctx.fillStyle = '#facc15';
+      ctx.fillText('(a,c)', ax - 35, cy + 18);
+      ctx.fillText('(b,d)', bx + 8, dy - 2);
+    }
+
+    // Trigger MathJax re-render and Canvas initializations
+    window.addEventListener('load', () => {
+      updateBand1(0.50);
+      updateTranslationBand(0.40);
+      drawMindmap();
+      updateInverseTask();
+      updateInversePlot();
+      drawR2Diagram();
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    });
+  </script>
+</body>
+</html>
