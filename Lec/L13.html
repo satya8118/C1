@@ -432,7 +432,7 @@ window.MathJax = {
   <div class="card def">
     <span class="card-label">Definition — Lower and Upper Riemann Sums</span>
     Let \(f\) be bounded on \([a,b]\) and \(P=\{x_0,x_1,\dots,x_n\}\) a partition. On each subinterval \([x_{i-1},x_i]\), define:
-    \[ m_i = \inf_{x\in[x_{i-1},x_i]} f(x), \qquad M_i = \sup_{x\in[x_{i-1},x_i]} f(x). \]
+    \[ m_i = glb_{x\in[x_{i-1},x_i]} f(x), \qquad M_i = lub{x\in[x_{i-1},x_i]} f(x). \]
     Then the <strong style="color:var(--yellow)">Lower Riemann Sum</strong> \(L(f,P)\) and <strong style="color:var(--yellow)">Upper Riemann Sum</strong> \(U(f,P)\) are given by:
     \[ L(f,P) = \sum_{i=1}^n m_i\,\Delta x_i, \qquad U(f,P) = \sum_{i=1}^n M_i\,\Delta x_i. \]
   </div>
@@ -559,13 +559,13 @@ window.MathJax = {
     <p>Hint: start from \(m\le m_i\le M_i\le M\) on every subinterval, and use the telescoping sum \(\sum\Delta x_i=b-a\).</p>
     <button class="reveal-btn proof-btn" data-ans="a6proof">Show proof</button>
     <div class="answer proof" id="a6proof">
-      For every \(i\), by definition of infimum/supremum on a subinterval, \(m\le m_i\le M_i\le M\). Using \(\sum_{i=1}^n\Delta x_i=b-a\):
+      For every \(i\), by definition of glb/lub on a subinterval, \(m\le m_i\le M_i\le M\). Using \(\sum_{i=1}^n\Delta x_i=b-a\):
       \[ m(b-a)=m\sum_{i=1}^n\Delta x_i=\sum_{i=1}^n m\,\Delta x_i \le \sum_{i=1}^n m_i\,\Delta x_i=L(f,P) \]
       \[ \le \sum_{i=1}^n M_i\,\Delta x_i = U(f,P) \le \sum_{i=1}^n M\,\Delta x_i = M(b-a). \]
     </div>
   </div>
 
-  <p class="caption">This is the fact that will make lower and upper <em>integrals</em> (the sup and inf over all partitions) well-defined in Lecture II — the sets of all lower/upper sums are bounded, so their supremum/infimum exist.</p>
+  <p class="caption">This is the fact that will make lower and upper <em>integrals</em> (the lub and glb over all partitions) well-defined in Lecture II — the sets of all lower/upper sums are bounded, so their supremum/infimum exist.</p>
 
   <div class="continue-wrap"><button class="continue" data-next="a7">Continue — what refinement actually buys you ↓</button></div>
 </section>
