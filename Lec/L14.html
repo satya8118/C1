@@ -497,7 +497,7 @@ window.MathJax = {
   <section class="block">
     <div class="section-head"><h2>Sampling f on a subinterval: the extreme values</h2><span class="tag">setup</span></div>
     <p>On each subinterval \([x_{i-1}, x_i]\), since \(f(x)=x^2\) is continuous, it attains a minimum and a maximum. Define</p>
-    <p>\[ m_i = \inf_{x \in [x_{i-1},x_i]} f(x), \qquad M_i = \sup_{x \in [x_{i-1},x_i]} f(x). \]</p>
+    <p>\[ m_i = glb{x \in [x_{i-1},x_i]} f(x), \qquad M_i = lub{x \in [x_{i-1},x_i]} f(x). \]</p>
     <div class="callout sage">
       <strong>Because \(f(x) = x^2\) is strictly increasing on \([0,6]\)</strong>, the minimum on every subinterval occurs at its <em>left</em> endpoint and the maximum at its <em>right</em> endpoint:
       \[ m_i = f(x_{i-1}), \qquad M_i = f(x_i). \]
@@ -644,9 +644,9 @@ window.MathJax = {
   <section class="block">
     <div class="section-head"><h2>From sums to the integral</h2><span class="tag">definitions</span></div>
     <p>Every lower sum underestimates and every upper sum overestimates the true area, no matter the partition, so it always holds that</p>
-    <p>\[ L(f,P) \le U(f,Q) \quad \text{for \emph{any} two partitions } P, Q \text{ of } [a,b]. \]</p>
+    <p>\[ L(f,P) \le U(f,Q) \quad for any two partitions  P, Q \text{ of } [a,b]. \]</p>
     <p>This lets us define two numbers that squeeze from either side:</p>
-    <p>\[ \underline{\int_a^b} f = \sup_P L(f,P) \qquad \text{(lower integral)}, \qquad \overline{\int_a^b} f = \inf_P U(f,P) \qquad \text{(upper integral)}. \]</p>
+    <p>\[ \underline{\int_a^b} f = \lub_P L(f,P) \qquad \text{(lower integral)}, \qquad \overline{\int_a^b} f = \glb_P U(f,P) \qquad \text{(upper integral)}. \]</p>
 
     <div class="callout amber">
       <strong>Definition (Riemann integrability).</strong> \(f\) is <strong>Riemann integrable</strong> on \([a,b]\) if the lower and upper integrals agree:
