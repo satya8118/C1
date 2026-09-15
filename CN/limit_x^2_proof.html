@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epsilon-Delta Proof: Limit of x² as x → a</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-yellow: #ffd54f;
+            --accent-orange: #ff9800;
+            --accent-pink: #ff4081;
+            --accent-cyan: #00e5ff;
+            --accent-lime: #76ff03;
+            --code-bg: #2a2a2a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--accent-yellow);
+            border-bottom: 2px solid var(--accent-orange);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--accent-cyan);
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: var(--accent-pink);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        .card.highlight {
+            border-left: 4px solid var(--accent-yellow);
+        }
+
+        .card.warning {
+            border-left: 4px solid var(--accent-pink);
+        }
+
+        .math-block {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.15em;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .highlight-yellow { color: var(--accent-yellow); font-weight: bold; }
+        .highlight-orange { color: var(--accent-orange); font-weight: bold; }
+        .highlight-pink { color: var(--accent-pink); font-weight: bold; }
+        .highlight-cyan { color: var(--accent-cyan); font-weight: bold; }
+        .highlight-lime { color: var(--accent-lime); font-weight: bold; }
+
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            background-color: var(--accent-orange);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .analogy-box {
+            background-color: rgba(0, 229, 255, 0.08);
+            border: 1px dashed var(--accent-cyan);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Understanding the Limit of f(x) = x² at x = a</h1>
+        <p style="text-align: center; font-size: 1.1em;" class="highlight-lime">
+            A Step-by-Step Rigorous & Intuitive Guide to the &epsilon;-&delta; Proof
+        </p>
+
+        <!-- Section 1: Motivation & Intuition -->
+        <div class="card highlight">
+            <h2>1. Intuition & The Goal of the "Game"</h2>
+            <p>
+                We want to rigorously prove that <span class="math-block" style="display:inline; padding: 2px 6px;">lim<sub>x &rarr; a</sub> x² = a²</span> without assuming continuity.
+            </p>
+            <p>
+                <strong>The Intuition:</strong> As <span class="highlight-cyan">x</span> gets arbitrarily close to <span class="highlight-cyan">a</span>, its square <span class="highlight-yellow">x²</span> gets arbitrarily close to <span class="highlight-yellow">a²</span>.
+            </p>
+            <div class="analogy-box">
+                <span class="highlight-pink"><strong>The &epsilon;-&delta; Game Rules:</strong></span>
+                <ol>
+                    <li><strong>Challenge (&epsilon; > 0):</strong> An opponent gives us a challenge tolerance <span class="highlight-pink">&epsilon;</span>. They demand that <span class="highlight-yellow">|f(x) - f(a)| = |x² - a²| < &epsilon;</span>.</li>
+                    <li><strong>Response (&delta; > 0):</strong> We must respond with a distance radius <span class="highlight-lime">&delta;</span> such that whenever <span class="highlight-cyan">0 < |x - a| < &delta;</span>, the opponent's challenge is strictly guaranteed to hold!</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Section 2: Scaffolding / Estimation -->
+        <div class="card">
+            <h2>2. Breaking Down the Difference |x² - a²|</h2>
+            <p>To control <span class="highlight-yellow">|x² - a²|</span>, we factor it algebraically:</p>
+            <div class="math-block" style="text-align: center;">
+                |x² - a²| = |x - a| &middot; |x + a|
+            </div>
+            <p>
+                Notice two components here:
+            </p>
+            <ul>
+                <li><span class="highlight-lime">|x - a|</span> : This is direct control given by our choice of <span class="highlight-lime">&delta;</span> (since <span class="highlight-cyan">|x - a| < &delta;</span>).</li>
+                <li><span class="highlight-orange">|x + a|</span> : This factor is troublesome because it changes with <span class="highlight-cyan">x</span>! It can grow large if <span class="highlight-cyan">x</span> moves far away. We need to <strong>bound (cap)</strong> this term.</li>
+            </ul>
+        </div>
+
+        <!-- Section 3: The Big Question - Why min{1, ...}? -->
+        <div class="card warning">
+            <h2>3. The Core Mystery: Why Choose &delta; = min{1, ...}?</h2>
+            <p>
+                Students often ask: <em>"Where did 1 come from? Why do we take the minimum with 1?"</em>
+            </p>
+            <h3>The Problem:</h3>
+            <p>
+                We want <span class="highlight-orange">|x + a|</span> to be bounded by a fixed constant. But <span class="highlight-cyan">x</span> could theoretically be anywhere in the universe!
+            </p>
+            <h3>The Solution (First Preliminary Step):</h3>
+            <p>
+                Before picking our final <span class="highlight-lime">&delta;</span>, we make an initial agreement that <span class="highlight-lime">&delta;</span> will <strong>never be larger than 1</strong>. 
+                (Note: 1 is completely arbitrary! We could have picked 0.5, 2, or 0.1. 1 is just nice and clean.)
+            </p>
+            <p>
+                If we assume <span class="highlight-lime">|x - a| < 1</span>, what does that say about <span class="highlight-orange">|x + a|</span>? Let's bound it:
+            </p>
+            <div class="math-block">
+                |x + a| = |(x - a) + 2a|<br>
+                &le; |x - a| + |2a| &nbsp;&nbsp;&nbsp;&nbsp; <em>(by Triangle Inequality)</em><br>
+                < 1 + 2|a| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>(since |x - a| < 1)</em>
+            </div>
+            <p>
+                Now <span class="highlight-orange">|x + a|</span> is safely capped by the constant <span class="highlight-orange">(1 + 2|a|)</span>!
+            </p>
+        </div>
+
+        <!-- Section 4: Combining and Final Choice -->
+        <div class="card">
+            <h2>4. Putting It All Together: Finding &delta;</h2>
+            <p>Under our initial assumption that <span class="highlight-lime">|x - a| < 1</span>, we have:</p>
+            <div class="math-block" style="text-align: center;">
+                |x² - a²| = |x - a| &middot; |x + a| < |x - a| &middot; (1 + 2|a|)
+            </div>
+            <p>
+                We want this expression to be less than <span class="highlight-pink">&epsilon;</span>:
+            </p>
+            <div class="math-block" style="text-align: center;">
+                |x - a| &middot; (1 + 2|a|) < &epsilon; &nbsp;&implies;&nbsp; |x - a| < <span class="highlight-pink">&epsilon;</span> / <span class="highlight-orange">(1 + 2|a|)</span>
+            </div>
+            <p>
+                Therefore, to satisfy BOTH conditions (our initial cap of 1 AND the required bound for <span class="highlight-pink">&epsilon;</span>), we set:
+            </p>
+            <div class="math-block" style="text-align: center; font-size: 1.3em;">
+                <span class="highlight-lime">&delta; = min { 1, &epsilon; / (1 + 2|a|) }</span>
+            </div>
+        </div>
+
+        <!-- Section 5: The Formal Proof -->
+        <div class="card highlight">
+            <h2>5. The Final Formal Step-by-Step Proof</h2>
+            <ol>
+                <li>Given any <span class="highlight-pink">&epsilon; > 0</span>, choose <span class="highlight-lime">&delta; = min{ 1, &epsilon; / (1 + 2|a|) }</span>.</li>
+                <li>Assume <span class="highlight-cyan">0 < |x - a| < &delta;</span>.</li>
+                <li>Since <span class="highlight-lime">&delta; &le; 1</span>, we know <span class="highlight-cyan">|x - a| < 1</span>, which implies <span class="highlight-orange">|x + a| < 1 + 2|a|</span>.</li>
+                <li>Since <span class="highlight-lime">&delta; &le; &epsilon; / (1 + 2|a|)</span>, we know <span class="highlight-cyan">|x - a| < &epsilon; / (1 + 2|a|)</span>.</li>
+                <li>Therefore:
+                    <div class="math-block">
+                        |f(x) - f(a)| = |x² - a²| = |x - a| &middot; |x + a|<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;< <span class="highlight-pink">[&epsilon; / (1 + 2|a|)]</span> &middot; <span class="highlight-orange">(1 + 2|a|)</span> = <span class="highlight-pink">&epsilon;</span>
+                    </div>
+                </li>
+            </ol>
+            <p style="text-align: right; font-weight: bold; color: var(--accent-lime);">Q.E.D. &#9632;</p>
+        </div>
+    </div>
+</body>
+</html>
