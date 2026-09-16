@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lower &amp; Upper Riemann Sums — f(x) = x³ on [0,6]</title>
+<style>
+  :root{
+    --cyan:#00e5ff;
+    --pink:#ff5fa2;
+    --lime:#a6ff00;
+    --yellow:#ffd400;
+    --orange:#ff9f1c;
+    --white:#f2f2f2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    padding:22px 18px 70px;
+    background:#000;
+    color:var(--white);
+    font-family:"Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+  }
+  h1{
+    font-size:1.4rem;
+    color:var(--yellow);
+    margin:0 0 4px;
+    letter-spacing:.4px;
+  }
+  .sub{color:var(--lime); font-size:.92rem; margin-bottom:18px;}
+  .wrap{display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start;}
+  .col-left{flex:1 1 740px; max-width:790px; min-width:320px;}
+  .col-right{flex:1 1 420px; min-width:330px;}
+  .panel{
+    border:1px solid #232323;
+    border-radius:12px;
+    padding:14px 16px 18px;
+    background:#070707;
+    margin-bottom:20px;
+  }
+  h2{
+    font-size:1.02rem;
+    color:var(--cyan);
+    margin:0 0 12px;
+    padding-bottom:6px;
+    border-bottom:1px solid #1e1e1e;
+    letter-spacing:.5px;
+  }
+  /* ---------- controls ---------- */
+  .controls{display:flex; flex-direction:column; gap:10px; margin-bottom:12px;}
+  .nrow{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .nrow label{color:var(--orange); font-weight:700; font-size:1rem;}
+  .nrow label span{color:var(--yellow); font-family:ui-monospace,Consolas,monospace; font-size:1.15rem;}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    flex:1 1 240px; min-width:180px; height:6px; border-radius:4px;
+    background:linear-gradient(90deg,#0b3b45,#3a1430);
+    outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--cyan);
+    border:2px solid #002b33;
+    box-shadow:0 0 10px var(--cyan);
+    cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:18px; height:18px; border-radius:50%;
+    background:var(--cyan); border:2px solid #002b33;
+    box-shadow:0 0 10px var(--cyan); cursor:pointer;
+  }
+  .btnrow{display:flex; gap:8px; flex-wrap:wrap;}
+  button{
+    background:#0d0d0d;
+    color:var(--white);
+    border:1px solid #333;
+    border-radius:7px;
+    padding:6px 12px;
+    font-size:.83rem;
+    font-family:ui-monospace,Consolas,monospace;
+    cursor:pointer;
+    transition:.15s;
+  }
+  button:hover{border-color:var(--cyan); color:var(--cyan);}
+  button.active{background:#062a30; border-color:var(--cyan); color:var(--cyan); box-shadow:0 0 8px rgba(0,229,255,.35);}
+  button.mode[data-mode="upper"].active{background:#2b0b18; border-color:var(--pink); color:var(--pink); box-shadow:0 0 8px rgba(255,95,162,.35);}
+  button.mode[data-mode="both"].active{background:#241f00; border-color:var(--yellow); color:var(--yellow); box-shadow:0 0 8px rgba(255,212,0,.3);}
+  /* ---------- canvas ---------- */
+  canvas{
+    display:block;
+    max-width:100%;
+    height:auto;
+    border-radius:8px;
+    background:#000;
+  }
+  /* ---------- legend ---------- */
+  .legend{
+    display:flex; gap:18px; flex-wrap:wrap;
+    font-size:.8rem; font-family:ui-monospace,Consolas,monospace;
+    margin:10px 0 4px;
+  }
+  .legend span{display:flex; align-items:center; gap:6px;}
+  .swatch{width:14px; height:10px; border-radius:2px; display:inline-block;}
+  .sw-cyan{background:rgba(0,229,255,.28); border:1px solid var(--cyan);}
+  .sw-pink{background:rgba(255,95,162,.28); border:1px solid var(--pink);}
+  .sw-lime{background:var(--lime); height:3px; width:18px; border-radius:2px;}
+  /* ---------- stats ---------- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+    gap:8px;
+    margin-top:12px;
+  }
+  .stat{
+    border:1px solid #1c1c1c;
+    border-radius:8px;
+    padding:8px 10px;
+    background:#0b0b0b;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+  }
+  .stat .k{font-size:.72rem; color:#8a8a8a; letter-spacing:.4px;}
+  .stat .v{font-family:ui-monospace,Consolas,monospace; font-size:.98rem; font-weight:700;}
+  .cyan{color:var(--cyan);}
+  .pink{color:var(--pink);}
+  .lime{color:var(--lime);}
+  .yellow{color:var(--yellow);}
+  .orange{color:var(--orange);}
+  .white{color:var(--white);}
+  /* ---------- math / formulas ---------- */
+  .mathblock{
+    font-family:ui-monospace,Consolas,monospace;
+    font-size:.84rem;
+    line-height:1.9;
+    color:#d8d8d8;
+  }
+  .mathblock .row{
+    padding:7px 10px;
+    border-left:3px solid #222;
+    margin-bottom:8px;
+    background:#0a0a0a;
+    border-radius:0 6px 6px 0;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+  .mathblock .row.L{border-left-color:var(--cyan);}
+  .mathblock .row.U{border-left-color:var(--pink);}
+  .mathblock .row.D{border-left-color:var(--yellow);}
+  .setup li{margin-bottom:7px; font-family:ui-monospace,Consolas,monospace; font-size:.83rem; color:#d0d0d0; line-height:1.6;}
+  .setup ul{padding-left:20px; margin:0;}
+  .note{font-size:.85rem; color:var(--orange); margin:0 0 12px;}
+  .res{
+    font-family:ui-monospace,Consolas,monospace;
+    font-size:.88rem;
+    padding:8px 10px;
+    border-radius:6px;
+    background:#0a0a0a;
+    border:1px solid #1c1c1c;
+    margin-top:8px;
+  }
+  /* ---------- table ---------- */
+  .tablewrap{overflow-x:auto; margin:12px 0 6px;}
+  table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:520px;
+    font-family:ui-monospace,Consolas,monospace;
+    font-size:.76rem;
+  }
+  th{
+    color:var(--lime);
+    border-bottom:1px solid #2c2c2c;
+    padding:6px 7px;
+    text-align:right;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  td{
+    border-bottom:1px solid #141414;
+    padding:4px 7px;
+    text-align:right;
+    color:#dcdcdc;
+    white-space:nowrap;
+  }
+  th:first-child, td:first-child{text-align:left;}
+  th:nth-child(2), td:nth-child(2){text-align:left;}
+  td.c{color:var(--cyan);}
+  td.p{color:var(--pink);}
+  tr.total td{
+    border-top:1px solid #333;
+    border-bottom:none;
+    color:var(--yellow);
+    font-weight:700;
+    padding-top:8px;
+  }
+  .foot{font-size:.76rem; color:#7a7a7a; margin-top:10px; line-height:1.6;}
+</style>
+</head>
+<body>
+
+<h1>Lower &amp; Upper Riemann Sums</h1>
+<div class="sub">f(x) = x³ &nbsp;on&nbsp; [0, 6] &nbsp;— partitioned into n equal subintervals</div>
+
+<div class="wrap">
+
+  <!-- ============ LEFT COLUMN ============ -->
+  <div class="col-left">
+
+    <div class="panel">
+      <div class="controls">
+        <div class="nrow">
+          <label>n = <span id="nOut">6</span></label>
+          <input type="range" id="nSlider" min="1" max="100" value="6" step="1">
+        </div>
+        <div class="btnrow" id="quickRow">
+          <button data-n="1">n=1</button>
+          <button data-n="2">n=2</button>
+          <button data-n="4">n=4</button>
+          <button data-n="6">n=6</button>
+          <button data-n="10">n=10</button>
+          <button data-n="20">n=20</button>
+          <button data-n="50">n=50</button>
+          <button data-n="100">n=100</button>
+        </div>
+        <div class="btnrow">
+          <button class="mode active" data-mode="both">Lower + Upper</button>
+          <button class="mode" data-mode="lower">Lower only</button>
+          <button class="mode" data-mode="upper">Upper only</button>
+        </div>
+      </div>
+
+      <canvas id="plot"></canvas>
+
+      <div class="legend">
+        <span><i class="swatch sw-cyan"></i> L(f,P) — lower rectangles (height mᵢ)</span>
+        <span><i class="swatch sw-pink"></i> U(f,P) — upper rectangles (height Mᵢ)</span>
+        <span><i class="swatch sw-lime"></i> f(x) = x³</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span class="k">n (subintervals)</span><span class="v yellow" id="s-n">6</span></div>
+        <div class="stat"><span class="k">Δx = 6 / n</span><span class="v white" id="s-dx">1.000000</span></div>
+        <div class="stat"><span class="k">L(f,Pₙ) — LOWER</span><span class="v cyan" id="s-L">—</span></div>
+        <div class="stat"><span class="k">U(f,Pₙ) — UPPER</span><span class="v pink" id="s-U">—</span></div>
+        <div class="stat"><span class="k">U(f,Pₙ) − L(f,Pₙ)</span><span class="v yellow" id="s-D">—</span></div>
+        <div class="stat"><span class="k">∫₀⁶ x³ dx (exact)</span><span class="v lime">324</span></div>
+      </div>
+    </div>
+
+    <!-- ---------- static general setup ---------- -->
+    <div class="panel setup">
+      <h2>General Setup &amp; Formulas</h2>
+      <ul>
+        <li><b class="orange">Function:</b> f(x) = x³ on x ∈ [0, 6], partitioned into n equal subintervals.</li>
+        <li><b class="orange">Subinterval width:</b> Δx = (6 − 0)/n = <b class="yellow">6/n</b></li>
+        <li><b class="orange">Partition points:</b> xᵢ = i·Δx = <b class="yellow">6i/n</b>, &nbsp; i = 0, 1, …, n</li>
+        <li><b class="orange">Since f(x) = x³ is strictly increasing</b> on [0, 6]:
+          <br>&nbsp;&nbsp;&nbsp;minimum in i-th subinterval: mᵢ = f(xᵢ₋₁) = <b class="cyan">( 6(i−1)/n )³</b>
+          <br>&nbsp;&nbsp;&nbsp;maximum in i-th subinterval: Mᵢ = f(xᵢ) &nbsp;&nbsp;= <b class="pink">( 6i/n )³</b>
+        </li>
+        <li><b class="orange">Lower sum:</b> L(f,P) = Σᵢ₌₁ⁿ mᵢ Δx = <b class="cyan">Σᵢ₌₁ⁿ ( 6(i−1)/n )³ · (6/n)</b></li>
+        <li><b class="orange">Upper sum:</b> U(f,P) = Σᵢ₌₁ⁿ Mᵢ Δx = <b class="pink">Σᵢ₌₁ⁿ ( 6i/n )³ · (6/n)</b></li>
+        <li><b class="orange">Difference:</b> U − L = Σᵢ₌₁ⁿ (Mᵢ − mᵢ)Δx = ( f(6) − f(0) )·Δx = 216 · (6/n) = <b class="yellow">1296/n</b></li>
+        <li><b class="orange">Closed forms:</b> L = <b class="cyan">324(n−1)²/n²</b>, &nbsp; U = <b class="pink">324(n+1)²/n²</b>, &nbsp; both → <b class="lime">324</b> as n → ∞.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ============ RIGHT COLUMN ============ -->
+  <div class="col-right">
+    <div class="panel">
+      <h2 id="calcTitle">Calculations</h2>
+      <div id="calc"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   Canvas setup
+   ============================================================ */
+const cv  = document.getElementById('plot');
+const ctx = cv.getContext('2d');
+const W = 720, H = 540, DPR = 2;
+cv.width  = W * DPR;
+cv.height = H * DPR;
+cv.style.width = W + 'px';
+ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+const X_MAX = 6;
+const Y_MAX = 240;          // a little headroom above f(6) = 216
+const ML = 68, MR = 26, MT = 26, MB = 46;
+const PW = W - ML - MR;
+const PH = H - MT - MB;
+
+const X = x => ML + (x / X_MAX) * PW;
+const Y = y => MT + PH - (y / Y_MAX) * PH;
+
+/* ============================================================
+   Sums
+   ============================================================ */
+function lowerSum(n){
+  const dx = 6 / n;
+  let s = 0;
+  for (let i = 1; i <= n; i++){
+    const x = 6 * (i - 1) / n;
+    s += x * x * x * dx;
+  }
+  return s;
+}
+function upperSum(n){
+  const dx = 6 / n;
+  let s = 0;
+  for (let i = 1; i <= n; i++){
+    const x = 6 * i / n;
+    s += x * x * x * dx;
+  }
+  return s;
+}
+const lowerClosed = n => 324 * (n - 1) * (n - 1) / (n * n);
+const upperClosed = n => 324 * (n + 1) * (n + 1) / (n * n);
+const diffClosed  = n => 1296 / n;
+
+const fmt = (v, d = 4) => v.toFixed(d);
+
+/* ============================================================
+   Drawing
+   ============================================================ */
+function draw(n, mode){
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  /* ---- grid ---- */
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = '#161616';
+  ctx.beginPath();
+  for (let x = 0; x <= 6; x++){ ctx.moveTo(X(x), MT); ctx.lineTo(X(x), MT + PH); }
+  for (let y = 0; y <= Y_MAX; y += 40){ ctx.moveTo(ML, Y(y)); ctx.lineTo(ML + PW, Y(y)); }
+  ctx.stroke();
+
+  /* ---- axes ---- */
+  ctx.strokeStyle = '#6a6a6a';
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(ML, MT); ctx.lineTo(ML, MT + PH); ctx.lineTo(ML + PW, MT + PH);
+  ctx.stroke();
+
+  /* ---- tick labels ---- */
+  ctx.fillStyle = '#8a8a8a';
+  ctx.font = '12px ui-monospace, Consolas, monospace';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let x = 0; x <= 6; x++) ctx.fillText(x, X(x), MT + PH + 8);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let y = 0; y <= Y_MAX; y += 40) ctx.fillText(y, ML - 9, Y(y));
+
+  /* ---- rectangles ---- */
+  const dx = 6 / n;
+  const showLower = (mode === 'both' || mode === 'lower');
+  const showUpper = (mode === 'both' || mode === 'upper');
+
+  /* upper fill first (sits behind) */
+  if (showUpper){
+    ctx.fillStyle = 'rgba(255,95,162,0.14)';
+    for (let i = 1; i <= n; i++){
+      const x0 = (i - 1) * dx, x1 = i * dx;
+      const h  = x1 * x1 * x1;
+      ctx.fillRect(X(x0), Y(h), X(x1) - X(x0), Y(0) - Y(h));
+    }
+  }
+  /* lower fill */
+  if (showLower){
+    ctx.fillStyle = 'rgba(0,229,255,0.14)';
+    for (let i = 1; i <= n; i++){
+      const x0 = (i - 1) * dx, x1 = i * dx;
+      const h  = x0 * x0 * x0;
+      ctx.fillRect(X(x0), Y(h), X(x1) - X(x0), Y(0) - Y(h));
+    }
+  }
+
+  /* strokes — fade out when n is large so the picture stays readable */
+  const strokeAlpha = n <= 40 ? 1 : Math.max(0.10, 40 / n);
+
+  if (showUpper){
+    ctx.globalAlpha = strokeAlpha;
+    ctx.strokeStyle = '#ff5fa2';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 1; i <= n; i++){
+      const x0 = (i - 1) * dx, x1 = i * dx;
+      const h  = x1 * x1 * x1;
+      ctx.rect(X(x0), Y(h), X(x1) - X(x0), Y(0) - Y(h));
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  if (showLower){
+    ctx.globalAlpha = strokeAlpha;
+    ctx.strokeStyle = '#00e5ff';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 1; i <= n; i++){
+      const x0 = (i - 1) * dx, x1 = i * dx;
+      const h  = x0 * x0 * x0;
+      ctx.rect(X(x0), Y(h), X(x1) - X(x0), Y(0) - Y(h));
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  /* ---- curve ---- */
+  ctx.strokeStyle = '#a6ff00';
+  ctx.lineWidth = 2.6;
+  ctx.beginPath();
+  const STEPS = 720;
+  for (let k = 0; k <= STEPS; k++){
+    const x = X_MAX * k / STEPS;
+    const px = X(x), py = Y(x * x * x);
+    k ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+  }
+  ctx.stroke();
+
+  /* ---- curve label ---- */
+  ctx.fillStyle = '#a6ff00';
+  ctx.font = 'bold 14px ui-monospace, Consolas, monospace';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+  ctx.fillText('f(x) = x³', X(4.05), Y(4.05 ** 3) - 10);
+
+  /* ---- axis titles ---- */
+  ctx.fillStyle = '#7a7a7a';
+  ctx.font = '12px ui-monospace, Consolas, monospace';
+  ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+  ctx.fillText('x', ML + PW, MT + PH + 8);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('y', ML + 8, MT - 16);
+}
+
+/* ============================================================
+   Calculations panel
+   ============================================================ */
+function buildCalc(n){
+  const dx = 6 / n;
+  const L = lowerClosed(n);
+  const U = upperClosed(n);
+  const D = diffClosed(n);
+
+  let html = '';
+
+  if (n <= 10){
+    /* ---------- complete term-by-term computation ---------- */
+    html += `<p class="note">n = ${n} ≤ 10 → complete term-by-term computation.</p>`;
+    html += `<div class="mathblock">
+      <div class="row">Δx = 6/n = 6/${n} = <b class="yellow">${fmt(dx, 6)}</b></div>
+      <div class="row">xᵢ = 6i/n = ${fmt(6/n,6)}·i &nbsp;(i = 0 … ${n})</div>
+    </div>`;
+
+    let rows = '';
+    let sumL = 0, sumU = 0;
+    for (let i = 1; i <= n; i++){
+      const x0 = 6 * (i - 1) / n;
+      const x1 = 6 * i / n;
+      const m  = x0 * x0 * x0;
+      const M  = x1 * x1 * x1;
+      const lm = m * dx;
+      const um = M * dx;
+      sumL += lm; sumU += um;
+      rows += `<tr>
+        <td>${i}</td>
+        <td>[${fmt(x0,3)}, ${fmt(x1,3)}]</td>
+        <td class="c">${fmt(m,4)}</td>
+        <td class="p">${fmt(M,4)}</td>
+        <td class="c">${fmt(lm,4)}</td>
+        <td class="p">${fmt(um,4)}</td>
+      </tr>`;
+    }
+    rows += `<tr class="total">
+      <td colspan="4">Σ &nbsp;(totals)</td>
+      <td class="c">${fmt(sumL,4)}</td>
+      <td class="p">${fmt(sumU,4)}</td>
+    </tr>`;
+
+    html += `<div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>i</th>
+            <th>[xᵢ₋₁ , xᵢ]</th>
+            <th>mᵢ = f(xᵢ₋₁)</th>
+            <th>Mᵢ = f(xᵢ)</th>
+            <th>mᵢ·Δx</th>
+            <th>Mᵢ·Δx</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+
+    html += `<div class="res">
+      <span class="cyan">L(f,P<sub>${n}</sub>)</span> = Σ mᵢΔx = <b class="cyan">${fmt(L,6)}</b><br>
+      <span class="pink">U(f,P<sub>${n}</sub>)</span> = Σ MᵢΔx = <b class="pink">${fmt(U,6)}</b><br>
+      <span class="yellow">U − L</span> = <b class="yellow">${fmt(D,6)}</b>
+    </div>`;
+
+    html += `<div class="mathblock" style="margin-top:14px">
+      <div class="row L">L = 324(n−1)²/n² = 324·(${n-1})²/${n}² = <b class="cyan">${fmt(L,6)}</b></div>
+      <div class="row U">U = 324(n+1)²/n² = 324·(${n+1})²/${n}² = <b class="pink">${fmt(U,6)}</b></div>
+      <div class="row D">U − L = 1296/n = 1296/${n} = <b class="yellow">${fmt(D,6)}</b></div>
+    </div>`;
+
+  } else {
+    /* ---------- summation form only ---------- */
+    html += `<p class="note">n = ${n} &gt; 10 → solution given in summation (closed) form.</p>`;
+
+    html += `<div class="mathblock">
+
+      <div class="row L">
+        L(f,Pₙ) = Σᵢ₌₁ⁿ f(xᵢ₋₁)·Δx = Σᵢ₌₁ⁿ ( 6(i−1)/n )³ · (6/n)
+        = (6⁴/n⁴) Σᵢ₌₁ⁿ (i−1)³ = (1296/n⁴) Σᵢ₌₀ⁿ⁻¹ i³
+      </div>
+
+      <div class="row L">
+        = (1296/n⁴) · [ (n−1)²n² / 4 ] = <b class="cyan">324(n−1)²/n²</b>
+      </div>
+
+      <div class="row U">
+        U(f,Pₙ) = Σᵢ₌₁ⁿ f(xᵢ)·Δx = Σᵢ₌₁ⁿ ( 6i/n )³ · (6/n)
+        = (6⁴/n⁴) Σᵢ₌₁ⁿ i³ = (1296/n⁴) Σᵢ₌₁ⁿ i³
+      </div>
+
+      <div class="row U">
+        = (1296/n⁴) · [ n²(n+1)² / 4 ] = <b class="pink">324(n+1)²/n²</b>
+      </div>
+
+      <div class="row D">
+        U(f,Pₙ) − L(f,Pₙ) = Σᵢ₌₁ⁿ (Mᵢ − mᵢ)Δx = (f(6) − f(0))·Δx
+        = 216 · (6/n) = <b class="yellow">1296/n</b>
+      </div>
+
+    </div>`;
+
+    html += `<div class="res">
+      With n = <b class="yellow">${n}</b> : &nbsp; Δx = 6/${n} = <b class="white">${fmt(dx,6)}</b><br><br>
+      <span class="cyan">L(f,P<sub>${n}</sub>)</span> = (1296/${n}⁴)·Σᵢ₌₀<sup>${n-1}</sup> i³
+        = 324·(${n-1})²/${n}² = <b class="cyan">${fmt(L,6)}</b><br>
+      <span class="pink">U(f,P<sub>${n}</sub>)</span> = (1296/${n}⁴)·Σᵢ₌₁<sup>${n}</sup> i³
+        = 324·(${n+1})²/${n}² = <b class="pink">${fmt(U,6)}</b><br>
+      <span class="yellow">U − L</span> = 1296/${n} = <b class="yellow">${fmt(D,6)}</b>
+    </div>`;
+  }
+
+  document.getElementById('calc').innerHTML = html;
+  document.getElementById('calcTitle').textContent = `Calculations for n = ${n}`;
+}
+
+/* ============================================================
+   Update everything
+   ============================================================ */
+let mode = 'both';
+
+function update(){
+  const n = parseInt(document.getElementById('nSlider').value, 10);
+  document.getElementById('nOut').textContent = n;
+  document.getElementById('s-n').textContent  = n;
+  document.getElementById('s-dx').textContent = fmt(6 / n, 6);
+
+  const L = lowerClosed(n);
+  const U = upperClosed(n);
+  const D = diffClosed(n);
+
+  document.getElementById('s-L').textContent = fmt(L, 6);
+  document.getElementById('s-U').textContent = fmt(U, 6);
+  document.getElementById('s-D').textContent = fmt(D, 6);
+
+  draw(n, mode);
+  buildCalc(n);
+}
+
+/* ============================================================
+   Events
+   ============================================================ */
+document.getElementById('nSlider').addEventListener('input', update);
+
+document.querySelectorAll('#quickRow button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.getElementById('nSlider').value = b.dataset.n;
+    update();
+  });
+});
+
+document.querySelectorAll('button.mode').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('button.mode').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    mode = b.dataset.mode;
+    update();
+  });
+});
+
+/* first render */
+update();
+</script>
+</body>
+</html>
