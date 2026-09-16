@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ε–δ Definition — lim (x→4) √(2x+1) = 3</title>
+<style>
+:root{
+  --cyan:#00e5ff; --pink:#ff5fa2; --lime:#a6ff00; --yellow:#ffd400;
+  --orange:#ff9f1c; --white:#f2f2f2;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; padding:22px 18px 80px; background:#000; color:var(--white);
+  font-family:"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;
+}
+h1{font-size:1.42rem;color:var(--yellow);margin:0 0 4px;letter-spacing:.4px;}
+.sub{color:var(--lime);font-size:.95rem;margin-bottom:18px;font-family:ui-monospace,Consolas,monospace;}
+.wrap{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;}
+.col-left{flex:1 1 790px;max-width:880px;min-width:320px;}
+.col-right{flex:1 1 430px;min-width:330px;}
+.panel{
+  border:1px solid #232323;border-radius:12px;padding:14px 16px 18px;
+  background:#070707;margin-bottom:20px;
+}
+h2{
+  font-size:1.02rem;color:var(--cyan);margin:0 0 12px;padding-bottom:6px;
+  border-bottom:1px solid #1e1e1e;letter-spacing:.5px;
+}
+h3{font-size:.88rem;color:var(--orange);margin:16px 0 8px;letter-spacing:.4px;}
+
+/* ---------- controls ---------- */
+.controls{display:flex;flex-direction:column;gap:11px;margin-bottom:14px;}
+.nrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.nrow label{color:var(--orange);font-weight:700;font-size:.95rem;white-space:nowrap;}
+.nrow label span{color:var(--yellow);font-family:ui-monospace,Consolas,monospace;font-size:1.1rem;}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;
+  flex:1 1 240px;min-width:170px;height:6px;border-radius:4px;
+  background:linear-gradient(90deg,#0b3b45,#3a1430);outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--cyan);border:2px solid #002b33;box-shadow:0 0 10px var(--cyan);cursor:pointer;
+}
+input[type=range]::-moz-range-thumb{
+  width:18px;height:18px;border-radius:50%;background:var(--cyan);
+  border:2px solid #002b33;box-shadow:0 0 10px var(--cyan);cursor:pointer;
+}
+input[type=checkbox]{
+  accent-color:var(--lime);width:15px;height:15px;vertical-align:-2px;cursor:pointer;
+}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;}
+button{
+  background:#0d0d0d;color:var(--white);border:1px solid #333;border-radius:7px;
+  padding:6px 12px;font-size:.82rem;font-family:ui-monospace,Consolas,monospace;
+  cursor:pointer;transition:.15s;
+}
+button:hover{border-color:var(--cyan);color:var(--cyan);}
+button.active{background:#062a30;border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,.35);}
+button.mode[data-mode="half"].active{background:#2b0b18;border-color:var(--pink);color:var(--pink);box-shadow:0 0 8px rgba(255,95,162,.35);}
+button.mode[data-mode="sharp"].active{background:#241f00;border-color:var(--yellow);color:var(--yellow);box-shadow:0 0 8px rgba(255,212,0,.3);}
+
+/* ---------- canvas ---------- */
+canvas{display:block;width:100%;height:auto;border-radius:8px;background:#000;}
+
+/* ---------- legend ---------- */
+.legend{
+  display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;
+  font-family:ui-monospace,Consolas,monospace;margin:12px 0 4px;
+}
+.legend span{display:flex;align-items:center;gap:6px;color:#c9c9c9;}
+.swatch{width:16px;height:10px;border-radius:2px;display:inline-block;}
+.sw-lime{background:var(--lime);height:3px;width:20px;border-radius:2px;}
+.sw-pink{background:rgba(255,95,162,.28);border:1px solid var(--pink);}
+.sw-cyan{background:rgba(0,229,255,.28);border:1px solid var(--cyan);}
+.sw-orange{background:transparent;border-left:2px dotted var(--orange);border-right:2px dotted var(--orange);width:6px;height:14px;}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:8px;margin-top:12px;}
+.stat{
+  border:1px solid #1c1c1c;border-radius:8px;padding:8px 10px;background:#0b0b0b;
+  display:flex;flex-direction:column;gap:3px;
+}
+.stat .k{font-size:.71rem;color:#8a8a8a;letter-spacing:.4px;}
+.stat .v{font-family:ui-monospace,Consolas,monospace;font-size:.97rem;font-weight:700;}
+.cyan{color:var(--cyan);} .pink{color:var(--pink);} .lime{color:var(--lime);}
+.yellow{color:var(--yellow);} .orange{color:var(--orange);} .white{color:var(--white);}
+
+/* ---------- probe readout ---------- */
+.probe{
+  margin-top:12px;font-family:ui-monospace,Consolas,monospace;font-size:.84rem;
+  border:1px solid #1c1c1c;border-radius:8px;padding:10px 12px;background:#0a0a0a;
+  line-height:1.8;
+}
+.ok{color:var(--lime);font-weight:700;}
+.bad{color:var(--pink);font-weight:700;}
+.dim{color:#8a8a8a;}
+
+/* ---------- math blocks ---------- */
+.mathblock{font-family:ui-monospace,Consolas,monospace;font-size:.83rem;line-height:1.75;color:#d8d8d8;}
+.mathblock .row{
+  padding:8px 11px;border-left:3px solid #222;margin-bottom:8px;background:#0a0a0a;
+  border-radius:0 6px 6px 0;overflow-x:auto;
+}
+.mathblock .row.L{border-left-color:var(--cyan);}
+.mathblock .row.U{border-left-color:var(--pink);}
+.mathblock .row.D{border-left-color:var(--yellow);}
+.mathblock .row.G{border-left-color:var(--lime);}
+.note{font-size:.86rem;color:var(--orange);margin:0 0 12px;}
+
+/* ---------- table ---------- */
+.tablewrap{overflow-x:auto;margin:6px 0 6px;}
+table{border-collapse:collapse;width:100%;min-width:560px;font-family:ui-monospace,Consolas,monospace;font-size:.75rem;}
+th{
+  color:var(--lime);border-bottom:1px solid #2c2c2c;padding:7px 6px;text-align:right;
+  font-weight:600;white-space:nowrap;vertical-align:bottom;
+}
+th .thn{color:#6f6f6f;font-weight:400;font-size:.68rem;}
+td{border-bottom:1px solid #141414;padding:5px 6px;text-align:right;color:#dcdcdc;white-space:nowrap;}
+th:first-child,td:first-child{text-align:left;color:var(--yellow);}
+td.c{color:var(--cyan);} td.p{color:var(--pink);}
+tr.hl td{background:#101a1d;}
+tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--cyan);}
+.foot{font-size:.75rem;color:#7a7a7a;margin-top:10px;line-height:1.7;}
+
+.setup li{margin-bottom:7px;font-family:ui-monospace,Consolas,monospace;font-size:.82rem;color:#d0d0d0;line-height:1.6;}
+.setup ul{padding-left:20px;margin:0;}
+code{font-family:ui-monospace,Consolas,monospace;color:var(--yellow);}
+</style>
+</head>
+<body>
+
+<h1>The ε–δ Definition of a Limit</h1>
+<div class="sub">lim<sub>x→4</sub> √(2x+1) = 3 &nbsp;&nbsp;•&nbsp;&nbsp; interactive ε–δ explorer</div>
+
+<div class="wrap">
+
+  <!-- =================== LEFT =================== -->
+  <div class="col-left">
+
+    <div class="panel">
+      <div class="controls">
+        <div class="nrow">
+          <label>ε = <span id="epsOut">0.20</span></label>
+          <input type="range" id="epsSlider" min="0.01" max="1" step="0.01" value="0.20">
+        </div>
+
+        <div class="btnrow" id="epsQuick">
+          <button data-eps="0.5">ε = 0.5</button>
+          <button data-eps="0.3">ε = 0.3</button>
+          <button data-eps="0.2">ε = 0.2</button>
+          <button data-eps="0.1">ε = 0.1</button>
+          <button data-eps="0.05">ε = 0.05</button>
+          <button data-eps="0.02">ε = 0.02</button>
+          <button data-eps="0.01">ε = 0.01</button>
+        </div>
+
+        <div class="btnrow" id="modeRow">
+          <button class="mode active" data-mode="exact">δ = δ* &nbsp;(exact, largest)</button>
+          <button class="mode" data-mode="half">δ = ε/2 &nbsp;(board proof)</button>
+          <button class="mode" data-mode="sharp">δ = 3ε/2 &nbsp;(simple bound)</button>
+        </div>
+
+        <div class="nrow">
+          <label>
+            <input type="checkbox" id="probeChk" checked>
+            probe &nbsp;x = <span id="probeOut">—</span>
+          </label>
+          <input type="range" id="probeSlider" min="0" max="1" step="0.001" value="0.87">
+        </div>
+      </div>
+
+      <canvas id="plot"></canvas>
+
+      <div class="legend">
+        <span><i class="swatch sw-lime"></i> f(x) = √(2x+1)</span>
+        <span><i class="swatch sw-pink"></i> horizontal band L ± ε = 3 ± ε</span>
+        <span><i class="swatch sw-cyan"></i> vertical band a ± δ = 4 ± δ</span>
+        <span><i class="swatch sw-orange"></i> exact x where f(x) = 3 ± ε</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span class="k">ε (given)</span><span class="v pink" id="s-eps">—</span></div>
+        <div class="stat"><span class="k">δ (chosen)</span><span class="v cyan" id="s-delta">—</span></div>
+        <div class="stat"><span class="k">δ* exact = 3ε − ε²/2</span><span class="v yellow" id="s-dex">—</span></div>
+        <div class="stat"><span class="k">a − δ &nbsp;→&nbsp; a + δ</span><span class="v white" id="s-band">—</span></div>
+        <div class="stat"><span class="k">sup |f(x) − 3| on band</span><span class="v lime" id="s-sup">—</span></div>
+        <div class="stat"><span class="k">verdict</span><span class="v" id="s-verdict">—</span></div>
+      </div>
+
+      <div class="probe" id="probeBox"></div>
+    </div>
+
+    <!-- ---------- setup ---------- -->
+    <div class="panel setup">
+      <h2>Setup &amp; Notation</h2>
+      <ul>
+        <li><b class="orange">Function:</b> &nbsp; f(x) = √(2x+1) &nbsp; on the domain x ≥ −1/2</li>
+        <li><b class="orange">Point:</b> &nbsp; a = 4 &nbsp;•&nbsp; <b class="orange">Limit value:</b> &nbsp; L = f(4) = √9 = 3</li>
+        <li><b class="orange">We must prove:</b> &nbsp; ∀ε &gt; 0 &nbsp;∃δ &gt; 0 &nbsp;such that &nbsp; 0 &lt; |x − 4| &lt; δ &nbsp;⟹&nbsp; |√(2x+1) − 3| &lt; ε</li>
+        <li><b class="orange">Key algebra (rationalize):</b> &nbsp; √(2x+1) − 3 = [(2x+1) − 9] / [√(2x+1) + 3] = <b class="cyan">2(x − 4) / (√(2x+1) + 3)</b></li>
+        <li><b class="orange">Exact boundary:</b> &nbsp; setting √(2x+1) = 3 ± ε gives &nbsp; x = ((3 ± ε)² − 1) / 2</li>
+        <li><b class="orange">Largest valid δ:</b> &nbsp; δ*(ε) = min{ 4 − ((3−ε)²−1)/2 , &nbsp;((3+ε)²−1)/2 − 4 } = <b class="yellow">3ε − ε²/2</b></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- =================== RIGHT =================== -->
+  <div class="col-right">
+
+    <div class="panel">
+      <h2>Table of ε and δ</h2>
+      <p class="note">Click any row to load that ε into the picture.</p>
+      <div id="tableHost"></div>
+      <div class="foot">
+        δ* is the <b class="yellow">largest</b> δ that works for the given ε.
+        The last two columns verify the definition: the left edge lands exactly on
+        <b class="pink">3 − ε</b> and the right edge exactly on <b class="pink">3 + ε</b>.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>General Proof</h2>
+
+      <p class="note">Claim: &nbsp; lim<sub>x→4</sub> √(2x+1) = 3.</p>
+
+      <div class="mathblock">
+
+        <div class="row G">
+          <b>Step 1 — Rationalize.</b><br>
+          For every x in the domain,<br>
+          √(2x+1) − 3 = [(2x+1) − 9] / [√(2x+1) + 3] = 2(x − 4) / (√(2x+1) + 3)
+        </div>
+
+        <div class="row L">
+          <b>Step 2 — Bound the denominator from below.</b><br>
+          Since √(2x+1) ≥ 0, &nbsp; √(2x+1) + 3 ≥ 3, &nbsp; hence<br>
+          1 / (√(2x+1) + 3) ≤ 1/3
+        </div>
+
+        <div class="row L">
+          <b>Step 3 — Relate |f(x) − L| to |x − a|.</b><br>
+          |√(2x+1) − 3| = 2|x − 4| / (√(2x+1) + 3) ≤ (2/3)·|x − 4|
+        </div>
+
+        <div class="row D">
+          <b>Step 4 — Choose δ.</b><br>
+          Let ε &gt; 0 be given. &nbsp; Choose &nbsp; δ = 3ε/2.
+        </div>
+
+        <div class="row U">
+          <b>Step 5 — Verify.</b><br>
+          Suppose 0 &lt; |x − 4| &lt; δ. &nbsp; Then<br>
+          |√(2x+1) − 3| ≤ (2/3)|x − 4| &lt; (2/3)δ = (2/3)(3ε/2) = ε. &nbsp; ∎
+        </div>
+
+      </div>
+
+      <h3>Sharper (optimal) δ</h3>
+      <div class="mathblock">
+        <div class="row L">
+          Solve √(2x+1) = 3 ± ε &nbsp;⟹&nbsp; x = ((3 ± ε)² − 1)/2. &nbsp; Therefore<br>
+          δ*(ε) = min{ 4 − ((3−ε)²−1)/2 , ((3+ε)²−1)/2 − 4 }
+        </div>
+        <div class="row L">
+          = min{ 3ε − ε²/2 , &nbsp; 3ε + ε²/2 } = <b>3ε − ε²/2</b>
+        </div>
+        <div class="row L">
+          As ε → 0⁺, &nbsp; δ*/ε → 3. &nbsp; So δ ≈ 3ε for tiny ε — much larger than 3ε/2.
+        </div>
+      </div>
+
+      <h3>The “board” version (δ = ε/2)</h3>
+      <div class="mathblock">
+        <div class="row U">
+          Because √(2x+1) + 3 &gt; 1 we get the cruder bound<br>
+          |√(2x+1) − 3| = 2|x − 4| / (√(2x+1) + 3) &lt; 2|x − 4| &lt; 2δ
+        </div>
+        <div class="row U">
+          Choosing δ = ε/2 gives &nbsp; |√(2x+1) − 3| &lt; 2·(ε/2) = ε. &nbsp; ✓
+        </div>
+        <div class="row D">
+          Valid, but conservative: for ε = 0.2 it gives δ = 0.10 while the exact δ* = 0.58.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ==========================================================
+   Canvas
+   ========================================================== */
+const cv  = document.getElementById('plot');
+const ctx = cv.getContext('2d');
+const W = 780, H = 520, DPR = 2;
+cv.width  = W * DPR;
+cv.height = H * DPR;
+ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+/* ==========================================================
+   Constants & math
+   ========================================================== */
+const A = 4;          // a
+const L = 3;          // L
+
+const f = x => Math.sqrt(2 * x + 1);
+
+function deltaExact(e){
+  const xl = ((3 - e) * (3 - e) - 1) / 2;
+  const xr = ((3 + e) * (3 + e) - 1) / 2;
+  return Math.min(A - xl, xr - A);
+}
+
+/* ==========================================================
+   State
+   ========================================================== */
+let eps       = 0.20;
+let deltaMode = 'exact';
+let probeT    = 0.87;
+let probeOn   = true;
+let view      = {xMin: 2.9, xMax: 5.1, yMin: 2.6, yMax: 3.4, d: 0.6};
+
+function currentDelta(){
+  if (deltaMode === 'exact') return deltaExact(eps);
+  if (deltaMode === 'half')  return eps / 2;
+  return 3 * eps / 2;                 // 'sharp'
+}
+
+function computeView(){
+  const d = currentDelta();
+  const xHalf = Math.max(1.75 * d, 0.12);
+  const yHalf = Math.max(1.75 * eps, 0.12);
+  view = {
+    xMin: A - xHalf, xMax: A + xHalf,
+    yMin: L - yHalf, yMax: L + yHalf,
+    d: d
+  };
+  return view;
+}
+
+/* ==========================================================
+   Formatting
+   ========================================================== */
+function fmt(v){
+  if (v === 0) return '0';
+  const a = Math.abs(v);
+  if (a >= 1000) return v.toFixed(1);
+  if (a >= 1)    return Number(v.toPrecision(6)).toString();
+  if (a >= 0.001) return Number(v.toPrecision(5)).toString();
+  return v.toExponential(2);
+}
+
+/* ==========================================================
+   Drawing
+   ========================================================== */
+function draw(){
+  const v = view;
+  const ML = 78, MR = 30, MT = 34, MB = 52;
+  const PW = W - ML - MR, PH = H - MT - MB;
+
+  const X = x => ML + (x - v.xMin) / (v.xMax - v.xMin) * PW;
+  const Y = y => MT + PH - (y - v.yMin) / (v.yMax - v.yMin) * PH;
+
+  /* background */
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  /* ---------- clipped drawing ---------- */
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(ML, MT, PW, PH);
+  ctx.clip();
+
+  /* ε band */
+  ctx.fillStyle = 'rgba(255,95,162,0.11)';
+  ctx.fillRect(ML, Y(L + eps), PW, Y(L - eps) - Y(L + eps));
+
+  /* δ band */
+  const d = v.d;
+  ctx.fillStyle = 'rgba(0,229,255,0.11)';
+  ctx.fillRect(X(A - d), MT, X(A + d) - X(A - d), PH);
+
+  /* curve */
+  ctx.strokeStyle = '#a6ff00';
+  ctx.lineWidth = 2.6;
+  ctx.beginPath();
+  let started = false;
+  const N = 900;
+  for (let k = 0; k <= N; k++){
+    const x = v.xMin + (v.xMax - v.xMin) * k / N;
+    if (2 * x + 1 < 0){ started = false; continue; }
+    const px = X(x), py = Y(Math.sqrt(2 * x + 1));
+    if (!started){ ctx.moveTo(px, py); started = true; }
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  /* ---------- dashed guides ---------- */
+  ctx.setLineDash([7, 6]);
+  ctx.lineWidth = 1.6;
+
+  /* y = L ± ε */
+  ctx.strokeStyle = '#ff5fa2';
+  ctx.beginPath();
+  ctx.moveTo(ML, Y(L + eps)); ctx.lineTo(ML + PW, Y(L + eps));
+  ctx.moveTo(ML, Y(L - eps)); ctx.lineTo(ML + PW, Y(L - eps));
+  ctx.stroke();
+
+  /* y = L */
+  ctx.strokeStyle = 'rgba(255,212,0,0.85)';
+  ctx.beginPath();
+  ctx.moveTo(ML, Y(L)); ctx.lineTo(ML + PW, Y(L));
+  ctx.stroke();
+
+  /* x = a ± δ */
+  ctx.strokeStyle = '#00e5ff';
+  ctx.beginPath();
+  ctx.moveTo(X(A - d), MT); ctx.lineTo(X(A - d), MT + PH);
+  ctx.moveTo(X(A + d), MT); ctx.lineTo(X(A + d), MT + PH);
+  ctx.stroke();
+
+  /* x = a */
+  ctx.strokeStyle = 'rgba(255,212,0,0.85)';
+  ctx.beginPath();
+  ctx.moveTo(X(A), MT); ctx.lineTo(X(A), MT + PH);
+  ctx.stroke();
+
+  /* exact endpoints where f = 3 ± ε  (orange dotted) */
+  const xl = ((3 - eps) * (3 - eps) - 1) / 2;
+  const xr = ((3 + eps) * (3 + eps) - 1) / 2;
+  ctx.setLineDash([3, 5]);
+  ctx.strokeStyle = 'rgba(255,159,28,0.9)';
+  ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  if (xl > v.xMin && xl < v.xMax){ ctx.moveTo(X(xl), MT); ctx.lineTo(X(xl), MT + PH); }
+  if (xr > v.xMin && xr < v.xMax){ ctx.moveTo(X(xr), MT); ctx.lineTo(X(xr), MT + PH); }
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+
+  /* ---------- points ---------- */
+  /* (a ± δ , f(a ± δ)) */
+  [[A - d, '#00e5ff'], [A + d, '#ff5fa2']].forEach(([xx, col]) => {
+    if (2 * xx + 1 < 0) return;
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.arc(X(xx), Y(Math.sqrt(2 * xx + 1)), 4.6, 0, 7);
+    ctx.fill();
+  });
+
+  /* (a , L) */
+  ctx.fillStyle = '#ffd400';
+  ctx.beginPath(); ctx.arc(X(A), Y(L), 6, 0, 7); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.6; ctx.stroke();
+
+  /* ---------- probe ---------- */
+  const probeX = v.xMin + probeT * (v.xMax - v.xMin);
+  if (probeOn && 2 * probeX + 1 >= 0){
+    const py = Math.sqrt(2 * probeX + 1);
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = 'rgba(242,242,242,0.55)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(X(probeX), Y(py)); ctx.lineTo(X(probeX), MT + PH);
+    ctx.moveTo(X(probeX), Y(py)); ctx.lineTo(ML, Y(py));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#f2f2f2';
+    ctx.beginPath(); ctx.arc(X(probeX), Y(py), 5, 0, 7); ctx.fill();
+  }
+
+  ctx.restore();
+
+  /* ---------- frame ---------- */
+  ctx.strokeStyle = '#2a2a2a';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(ML, MT, PW, PH);
+
+  /* ---------- labels : y ---------- */
+  ctx.font = '12px ui-monospace, Consolas, monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+
+  ctx.fillStyle = '#ff5fa2';
+  ctx.fillText('L + ε = ' + (L + eps).toFixed(3), ML + 7, Y(L + eps) - 4);
+  ctx.fillText('L − ε = ' + (L - eps).toFixed(3), ML + 7, Y(L - eps) - 4);
+
+  ctx.fillStyle = '#ffd400';
+  ctx.fillText('L = 3', ML + 7, Y(L) - 4);
+
+  /* ---------- labels : x ---------- */
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+
+  ctx.fillStyle = '#ffd400';
+  ctx.fillText('a = 4', X(A), MT + PH + 9);
+
+  ctx.fillStyle = '#00e5ff';
+  if (X(A) - X(A - d) > 46) ctx.fillText('a − δ', X(A - d), MT + PH + 9);
+  if (X(A + d) - X(A) > 46) ctx.fillText('a + δ', X(A + d), MT + PH + 9);
+
+  /* ---------- caption ---------- */
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.font = 'bold 13px ui-monospace, Consolas, monospace';
+  ctx.fillStyle = '#00e5ff';
+  ctx.fillText('0 < |x − 4| < δ  ⟹  |√(2x+1) − 3| < ε', ML, 8);
+  ctx.fillStyle = '#ffd400';
+  ctx.textAlign = 'right';
+  ctx.fillText('ε = ' + eps.toFixed(2) + '   δ = ' + fmt(d), ML + PW, 8);
+}
+
+/* ==========================================================
+   Stats
+   ========================================================== */
+function updateStats(){
+  const d = view.d;
+  const left  = A - d;
+  const right = A + d;
+  const sup   = Math.max(Math.abs(f(left) - L), Math.abs(f(right) - L));
+
+  document.getElementById('s-eps').textContent   = eps.toFixed(2);
+  document.getElementById('s-delta').textContent = fmt(d);
+  document.getElementById('s-dex').textContent   = fmt(3 * eps - eps * eps / 2);
+  document.getElementById('s-band').textContent  = '[' + left.toFixed(3) + ', ' + right.toFixed(3) + ']';
+  document.getElementById('s-sup').textContent   = fmt(sup);
+
+  const vd = document.getElementById('s-verdict');
+  if (sup <= eps + 1e-12){
+    vd.textContent = '✓  δ works';
+    vd.className = 'v lime';
+  } else {
+    vd.textContent = '✗  δ too big';
+    vd.className = 'v pink';
+  }
+}
+
+/* ==========================================================
+   Probe readout
+   ========================================================== */
+function updateProbe(){
+  const v = view;
+  const probeX = v.xMin + probeT * (v.xMax - v.xMin);
+  document.getElementById('probeOut').textContent = probeX.toFixed(3);
+
+  const box = document.getElementById('probeBox');
+  if (!probeOn){
+    box.innerHTML = '<span class="dim">probe off</span>';
+    return;
+  }
+  if (2 * probeX + 1 < 0){
+    box.innerHTML = '<span class="dim">x is outside the domain of f.</span>';
+    return;
+  }
+
+  const dx = Math.abs(probeX - A);
+  const dy = Math.abs(f(probeX) - L);
+  const inside = dx < v.d;
+
+  let html = '';
+  html += '<span class="dim">x =</span> <b class="white">' + probeX.toFixed(4) + '</b> &nbsp; ';
+  html += '<span class="dim">f(x) =</span> <b class="white">' + f(probeX).toFixed(4) + '</b><br>';
+  html += '<span class="dim">|x − 4| =</span> <b class="cyan">' + dx.toFixed(4) + '</b> &nbsp; ';
+  html += '<span class="dim">|f(x) − 3| =</span> <b class="pink">' + dy.toFixed(4) + '</b><br>';
+
+  if (inside){
+    html += '0 &lt; |x − 4| &lt; δ  <span class="ok">✓ satisfied</span> &nbsp;→&nbsp; ';
+    html += '|f(x) − 3| &lt; ε  ' +
+            (dy < eps ? '<span class="ok">✓ satisfied</span>' : '<span class="bad">✗ FAILS</span>');
+  } else {
+    html += '<span class="dim">|x − 4| ≥ δ — the definition makes no requirement here.</span>';
+  }
+  box.innerHTML = html;
+}
+
+/* ==========================================================
+   Table
+   ========================================================== */
+const EPS_ROWS = [1.0, 0.5, 0.3, 0.2, 0.1, 0.05, 0.02, 0.01];
+
+function buildTable(){
+  let html = '<div class="tablewrap"><table><thead><tr>' +
+    '<th>ε</th>' +
+    '<th>δ* exact<br><span class="thn">3ε − ε²/2</span></th>' +
+    '<th>δ = ε/2<br><span class="thn">denominator &gt; 1</span></th>' +
+    '<th>δ = 3ε/2<br><span class="thn">denominator ≥ 3</span></th>' +
+    '<th>f(4 − δ*)<br><span class="thn">= 3 − ε</span></th>' +
+    '<th>f(4 + δ*)<br><span class="thn">= 3 + ε</span></th>' +
+    '</tr></thead><tbody>';
+
+  EPS_ROWS.forEach(e => {
+    const de = 3 * e - e * e / 2;
+    const lo = f(A - de);
+    const hi = f(A + de);
+    html += '<tr data-eps="' + e + '">' +
+      '<td>' + e.toFixed(2) + '</td>' +
+      '<td class="c">' + fmt(de) + '</td>' +
+      '<td class="p">' + fmt(e / 2) + '</td>' +
+      '<td class="p">' + fmt(3 * e / 2) + '</td>' +
+      '<td>' + lo.toFixed(4) + '</td>' +
+      '<td>' + hi.toFixed(4) + '</td>' +
+      '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  document.getElementById('tableHost').innerHTML = html;
+
+  document.querySelectorAll('#tableHost tbody tr').forEach(tr => {
+    tr.style.cursor = 'pointer';
+    tr.addEventListener('click', () => {
+      const e = parseFloat(tr.dataset.eps);
+      eps = e;
+      document.getElementById('epsSlider').value = e;
+      document.getElementById('epsOut').textContent = e.toFixed(2);
+      /* switch to exact δ so the table row is reproduced exactly */
+      deltaMode = 'exact';
+      document.querySelectorAll('#modeRow button').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === 'exact');
+      });
+      update();
+    });
+  });
+
+  highlightRow();
+}
+
+function highlightRow(){
+  document.querySelectorAll('#tableHost tbody tr').forEach(tr => {
+    const e = parseFloat(tr.dataset.eps);
+    tr.classList.toggle('hl', Math.abs(e - eps) < 0.0005);
+  });
+}
+
+/* ==========================================================
+   Update everything
+   ========================================================== */
+function update(){
+  computeView();
+  draw();
+  updateStats();
+  updateProbe();
+  highlightRow();
+}
+
+/* ==========================================================
+   Events
+   ========================================================== */
+const epsSlider = document.getElementById('epsSlider');
+epsSlider.addEventListener('input', () => {
+  eps = parseFloat(epsSlider.value);
+  document.getElementById('epsOut').textContent = eps.toFixed(2);
+  update();
+});
+
+document.querySelectorAll('#epsQuick button').forEach(b => {
+  b.addEventListener('click', () => {
+    eps = parseFloat(b.dataset.eps);
+    epsSlider.value = eps;
+    document.getElementById('epsOut').textContent = eps.toFixed(2);
+    update();
+  });
+});
+
+document.querySelectorAll('#modeRow button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#modeRow button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    deltaMode = b.dataset.mode;
+    update();
+  });
+});
+
+const probeSlider = document.getElementById('probeSlider');
+probeSlider.addEventListener('input', () => {
+  probeT = parseFloat(probeSlider.value);
+  updateProbe();
+  draw();
+});
+
+document.getElementById('probeChk').addEventListener('change', e => {
+  probeOn = e.target.checked;
+  updateProbe();
+  draw();
+});
+
+/* first render */
+buildTable();
+update();
+</script>
+</body>
+</html>
