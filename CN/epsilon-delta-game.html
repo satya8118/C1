@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The ε–δ definition: a game of tolerance</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F5FB; --surface:#FFFFFF; --ink:#1D1F45; --muted:#5A5D86; --line:#D8DAEE;
+  --indigo:#3B3FA8; --indigo-soft:#E3E4F6; --on-indigo:#FFFFFF;
+  --amber:#D48A12; --amber-ink:#8F5700;
+  --sage:#4E8F6C; --sage-ink:#2A6547;
+  --miss:#C0392B;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12132B; --surface:#1B1D3D; --ink:#E8E9FB; --muted:#A5A8D3; --line:#363963;
+    --indigo:#9296FF; --indigo-soft:#2A2D5E; --on-indigo:#12132B;
+    --amber:#F0B44C; --amber-ink:#F0B44C;
+    --sage:#7CC79C; --sage-ink:#7CC79C;
+    --miss:#FF7D6E;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12132B; --surface:#1B1D3D; --ink:#E8E9FB; --muted:#A5A8D3; --line:#363963;
+  --indigo:#9296FF; --indigo-soft:#2A2D5E; --on-indigo:#12132B;
+  --amber:#F0B44C; --amber-ink:#F0B44C;
+  --sage:#7CC79C; --sage-ink:#7CC79C;
+  --miss:#FF7D6E;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:Fraunces,Georgia,"Times New Roman",serif;font-weight:600;line-height:1.15;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,5.2vw,3.5rem)}
+h2{font-size:clamp(1.55rem,3.2vw,2.15rem)}
+h3{font-size:1.3rem}
+p{margin:0 0 1em;max-width:68ch}
+.lede{font-size:1.2rem;color:var(--muted)}
+section{padding:60px 0;border-top:1px solid var(--line)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.hero{padding:44px 0 52px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:34px;align-items:center}
+.heroplot{padding:12px 12px 14px}
+.herobar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 8px 0;flex-wrap:wrap}
+.readout{font-weight:600;font-variant-numeric:tabular-nums}
+.readout .e{color:var(--sage-ink)} .readout .d{color:var(--amber-ink)}
+.c-eps{color:var(--sage-ink);font-weight:600}
+.c-del{color:var(--amber-ink);font-weight:600}
+.c-pt{color:var(--indigo);font-weight:600}
+
+/* buttons, controls */
+.btn{font:600 .95rem "IBM Plex Sans",system-ui,sans-serif;padding:9px 18px;border-radius:999px;border:1.5px solid var(--indigo);background:transparent;color:var(--indigo);cursor:pointer;min-height:40px}
+.btn:hover{background:var(--indigo-soft)}
+.btn.primary{background:var(--indigo);color:var(--on-indigo)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.4;cursor:default}
+.btn.amber{border-color:var(--amber-ink);color:var(--amber-ink)}
+.btn.sage{border-color:var(--sage-ink);color:var(--sage-ink)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.ctls{display:grid;gap:10px;margin:14px 0}
+.row{display:grid;grid-template-columns:150px minmax(0,1fr) 64px;gap:12px;align-items:center}
+.row .lab{font-weight:500;font-size:.98rem}
+.row output{font-variant-numeric:tabular-nums;font-weight:600;text-align:right}
+.row.eps .lab{color:var(--sage-ink)} .row.eps input{accent-color:var(--sage)}
+.row.delta .lab{color:var(--amber-ink)} .row.delta input{accent-color:var(--amber)}
+.row.probe .lab,.row.L .lab{color:var(--indigo)} .row.probe input,.row.L input{accent-color:var(--indigo)}
+input[type=range]{width:100%;min-height:28px}
+@media(max-width:520px){.row{grid-template-columns:1fr 56px}.row .lab{grid-column:1/-1}}
+select,input[type=number]{font:500 1rem "IBM Plex Sans",system-ui,sans-serif;padding:7px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.checkrow{display:flex;gap:10px;align-items:center;font-weight:500}
+.checkrow input{width:20px;height:20px;accent-color:var(--miss)}
+
+/* graph */
+svg.g{width:100%;height:auto;display:block;touch-action:pan-y;cursor:ew-resize;user-select:none;-webkit-user-select:none}
+svg text{font-family:"IBM Plex Sans",system-ui,sans-serif}
+.tk{font-size:12px;fill:var(--muted)}
+.sym{font-size:15px;font-weight:600}
+.sym.i{fill:var(--indigo)} .sym.s{fill:var(--sage-ink)} .sym.a{fill:var(--amber-ink)}
+.cap{font-size:12px;fill:var(--muted)}
+.shot{min-height:1.6em;font-size:.98rem;color:var(--muted);margin:6px 2px}
+.verdict{padding:12px 14px;border-radius:10px;border-left:5px solid var(--line);background:var(--surface);border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:1rem;line-height:1.5}
+.verdict.ok{border-left-color:var(--sage)}
+.verdict.bad{border-left-color:var(--miss)}
+.verdict.neutral{border-left-color:var(--indigo)}
+
+/* labs */
+.lab2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:26px;align-items:start}
+@media(max-width:900px){.lab2{grid-template-columns:1fr}}
+.plotcard{padding:10px 10px 12px}
+.panel{padding:4px 2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:var(--muted);font:600 .95rem "IBM Plex Sans",sans-serif;cursor:pointer}
+.chip.done{border-color:var(--indigo);color:var(--indigo)}
+.chip[aria-current="step"]{background:var(--indigo);border-color:var(--indigo);color:var(--on-indigo)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+.fsel{margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.95rem;color:var(--muted)}
+.stmt{font-size:1.12rem;line-height:2.1}
+.ph{font:inherit;font-weight:600;border:0;border-bottom:3px solid;background:transparent;padding:0 2px;cursor:pointer;color:var(--ink)}
+.ph.eps{border-color:var(--sage)} .ph.del{border-color:var(--amber)} .ph.pt{border-color:var(--indigo)} .ph.imp{border-color:var(--sage)}
+.ph:hover,.ph.on{background:var(--indigo-soft)}
+.phcap{min-height:4.6em;color:var(--muted);font-size:1rem}
+
+/* warm-up */
+.warm{padding:20px 22px}
+.warm .who{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:8px 0}
+.warm input[type=range]{flex:1 1 220px;accent-color:var(--indigo)}
+.role{display:inline-block;padding:2px 12px;border-radius:999px;font-weight:600;font-size:.92rem}
+.role.ch{background:var(--sage);color:#fff}
+.role.me{background:var(--amber);color:#1D1F45}
+.big{font-variant-numeric:tabular-nums;font-weight:600}
+.tablewrap{overflow-x:auto;margin:26px 0 8px}
+table.bridge{border-collapse:collapse;min-width:560px;width:100%}
+.bridge th,.bridge td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.bridge thead th{font-family:Fraunces,Georgia,serif;font-size:1.05rem}
+.bridge tbody th{font-weight:600;color:var(--muted);width:24%}
+.note{font-size:.95rem;color:var(--muted)}
+
+/* quiz */
+.q{padding:18px 20px;margin:0 0 16px}
+.q p{margin:0 0 .6em;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{font:inherit;text-align:left;padding:10px 14px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--indigo)}
+.opt.right{border-color:var(--sage);background:color-mix(in srgb,var(--sage) 16%,transparent)}
+.opt.wrong{border-color:var(--miss);background:color-mix(in srgb,var(--miss) 14%,transparent)}
+.fb{margin-top:8px;font-size:.98rem;color:var(--muted);min-height:1.3em}
+.score{font-weight:600}
+.closing{padding:24px 26px;border-left:6px solid var(--indigo);font-family:Fraunces,Georgia,serif;font-size:1.3rem;line-height:1.5}
+footer{padding:36px 0 60px;color:var(--muted);font-size:.95rem;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <h1>The ε–δ definition, as a game of tolerance</h1>
+      <p class="lede">A challenger says how close you must land. You answer with how close you must launch. Move the sliders, fire some shots, and watch the definition happen.</p>
+      <p class="note">On the right, the challenger keeps asking for a tighter <span class="c-eps">ε</span>. Watch how the <span class="c-del">δ</span> window shrinks to keep up.</p>
+    </div>
+    <div class="card heroplot">
+      <div id="hero"></div>
+      <div class="herobar">
+        <span class="readout" id="heroRead" aria-live="off"></span>
+        <button class="btn" id="heroBtn" type="button">Pause</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="warmup">
+  <div class="wrap">
+    <h2>First, a game you already know</h2>
+    <p>Before ε and δ, take a statement everyone accepts: <b>for every real number x there is a natural number n with n &gt; x.</b> Read it as a game with two players. Try it.</p>
+    <div class="card warm">
+      <div class="who"><span class="role ch">Challenger</span><span>picks any real number x:</span>
+        <input type="range" id="wx" min="0" max="100" step="0.1" value="7.3" aria-label="Challenger's x">
+        <input type="number" id="wnum" min="0" step="any" value="7.3" aria-label="x as a number" style="width:9.5em">
+      </div>
+      <svg id="nline" class="g" style="cursor:default;touch-action:auto" viewBox="0 0 760 130" role="img" aria-label="Number line showing x and the natural number n just to its right"></svg>
+      <div class="who"><span class="role me">You</span><span>answer, after seeing x, with <span class="big" id="wform"></span></span></div>
+      <div class="acts">
+        <button class="btn sage" id="wbig" type="button">Challenge me with a huge x</button>
+        <button class="btn" id="wrand" type="button">Random x</button>
+      </div>
+    </div>
+    <p style="margin-top:18px">Notice three things. The challenger is <b>free</b>: any x at all. You answer <b>afterwards</b>, so your n is allowed to depend on x. And nobody asks for one n that beats every x at once.</p>
+    <p>The ε–δ definition has exactly the same shape:</p>
+    <div class="tablewrap"><table class="bridge">
+      <thead><tr><th></th><th>Warm-up</th><th>Limit of f at a</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Challenger chooses</th><td>any real number x</td><td class="c-eps">any tolerance ε &gt; 0</td></tr>
+        <tr><th scope="row">You respond with</th><td>a natural number n</td><td class="c-del">a window size δ &gt; 0</td></tr>
+        <tr><th scope="row">Your answer must satisfy</th><td>n &gt; x</td><td>if 0 &lt; |x − a| &lt; δ then |f(x) − L| &lt; ε</td></tr>
+        <tr><th scope="row">Your answer depends on</th><td>x</td><td>ε</td></tr>
+      </tbody></table></div>
+    <p class="note">The x inside the limit is a different x: there it is a launch position. Next, we build the picture where that condition becomes something you can see.</p>
+  </div>
+</section>
+
+<section id="story">
+  <div class="wrap">
+    <h2>The launch story</h2>
+    <p>Think of f as a launcher. Stand at position x on the ground, fire, and the shot lands on the wall at height f(x). Six short steps take you from that picture to the full definition. Use the numbered buttons, or Next.</p>
+    <div class="lab2">
+      <div>
+        <div class="card plotcard"><div id="tourPlot"></div></div>
+        <div class="shot" id="tourShot" aria-live="polite"></div>
+      </div>
+      <div class="panel">
+        <div class="chips" id="chips"></div>
+        <h3 id="stTitle"></h3>
+        <div id="stText"></div>
+        <div id="stExtra"></div>
+        <div class="ctls" id="tourCtl"></div>
+        <div class="acts">
+          <button class="btn amber" id="bFire" type="button">Fire from x</button>
+          <button class="btn sage" id="bUse" type="button" hidden>Use δ = min(a − s, t − a)</button>
+          <button class="btn sage" id="bPlay" type="button" hidden>Play: shrink ε</button>
+        </div>
+        <div class="verdict neutral" id="tourVerdict" aria-live="polite" aria-atomic="true" hidden></div>
+        <div class="nav">
+          <button class="btn" id="bPrev" type="button">Back</button>
+          <button class="btn primary" id="bNext" type="button">Next</button>
+        </div>
+        <div class="fsel"><label for="fsel">Try another function</label><select id="fsel"></select></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="game">
+  <div class="wrap">
+    <h2>Your turn: play the ε–δ game</h2>
+    <p>You are the responder. The challenger names an ε. Set the <span class="c-del">δ</span> slider, test your window by firing a few shots from inside it, then press <b>Check my δ</b>. The checker tries hundreds of launches inside your window.</p>
+    <div class="lab2">
+      <div>
+        <div class="card plotcard"><div id="gamePlot"></div></div>
+        <div class="shot" id="gameShot" aria-live="polite"></div>
+      </div>
+      <div class="panel">
+        <div class="verdict neutral" id="gameMsg" aria-live="polite" aria-atomic="true">Press <b>New challenge</b> to begin.</div>
+        <div class="ctls" id="gameCtl"></div>
+        <div class="acts">
+          <button class="btn sage" id="gNew" type="button">New challenge</button>
+          <button class="btn amber" id="gFire" type="button">Fire from x</button>
+          <button class="btn primary" id="gCheck" type="button">Check my δ</button>
+          <button class="btn" id="gHint" type="button" aria-pressed="false">Show s and t</button>
+        </div>
+        <p class="score" id="gScore">Won 0 of 0. Current streak: 0.</p>
+        <div class="fsel"><label for="gsel">Function</label><select id="gsel"></select></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="punct">
+  <div class="wrap">
+    <h2>Why does the definition say 0 &lt; |x − a|?</h2>
+    <p>Here g(x) = x + 1 for every x except x = 1, but g(1) = 5. Launches near 1 land near 2, so the limit at 1 should be 2. The odd value at x = 1 is only one launch position. Test it: keep a window that clearly works, then tick the box that makes the test include x = a.</p>
+    <div class="lab2">
+      <div>
+        <div class="card plotcard"><div id="punctPlot"></div></div>
+        <div class="shot" id="punctShot" aria-live="polite"></div>
+      </div>
+      <div class="panel">
+        <div class="ctls" id="punctCtl"></div>
+        <label class="checkrow"><input type="checkbox" id="incA"> Also test the launch from x = a itself</label>
+        <div class="acts"><button class="btn amber" id="pFire" type="button">Fire from x</button></div>
+        <div class="verdict" id="punctV" aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="nolimit">
+  <div class="wrap">
+    <h2>When no δ exists</h2>
+    <p>Now a launcher that jumps: launches left of a = 2 land at height 1, launches from 2 onward land at height 3. Someone claims the limit is L. Drag L and ε and see whether you can ever win against a small ε.</p>
+    <div class="lab2">
+      <div>
+        <div class="card plotcard"><div id="failPlot"></div></div>
+        <div class="shot" id="failShot" aria-live="polite"></div>
+      </div>
+      <div class="panel">
+        <div class="ctls" id="failCtl"></div>
+        <div class="acts"><button class="btn amber" id="fFire" type="button">Fire from x</button></div>
+        <div class="verdict" id="failV" aria-live="polite" aria-atomic="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="wrap">
+    <h2>Check yourself</h2>
+    <div id="quizHost"></div>
+    <p class="score" id="qScore"></p>
+    <div class="card closing">Whatever tolerance ε someone demands, you can find a window δ so that every launch from inside it, except from a itself, lands within ε of L.</div>
+  </div>
+</section>
+
+<footer><div class="wrap">Everything on this page runs in your browser. Function values are computed live, and the “Check my δ” test samples over a thousand launches inside your window.</div></footer>
+
+<script>
+(()=>{
+"use strict";
+const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=(s,r=document)=>r.querySelector(s);
+const el=h=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstChild;};
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const n2=(v,d=2)=>{const s=Number(v.toFixed(d)).toString();return s.replace('-','−');};
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+function niceStep(range,target){const raw=range/(target||7),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+
+/* ---------- the functions ---------- */
+const FUNCS={
+  lin:{label:'f(x) = 2x + 1',fn:x=>2*x+1,a:1,L:3,x:[-0.6,2.6],y:[-0.5,6.5],eps0:1,delta0:.3,p0:1.8,epsMax:2,deltaMax:1.2,gDelta:.8,gEps:.3,marks:null},
+  sq:{label:'f(x) = x²',fn:x=>x*x,a:2,L:4,x:[0,3.4],y:[-0.5,12],eps0:1.5,delta0:.3,p0:2.7,epsMax:3,deltaMax:1.4,gDelta:.6,gEps:.4,marks:null},
+  sqrt:{label:'f(x) = √x',fn:x=>x<0?NaN:Math.sqrt(x),a:4,L:2,x:[0,9],y:[0,4],eps0:.6,delta0:1,p0:6,epsMax:1.5,deltaMax:4,gDelta:2,gEps:.3,marks:null},
+  hole:{label:'f(x) = (x² − 1)/(x − 1)',fn:x=>Math.abs(x-1)<1e-12?NaN:(x*x-1)/(x-1),a:1,L:2,x:[-0.6,2.6],y:[-0.5,4.2],eps0:.6,delta0:.3,p0:1.7,epsMax:1.5,deltaMax:1.5,marks:[{x:1,y:2,open:true}]},
+  shifted:{label:'g(x) = x + 1 for x ≠ 1, g(1) = 5',fn:x=>x===1?5:x+1,a:1,L:2,x:[-0.6,2.6],y:[-0.5,6],eps0:.5,delta0:.4,p0:1.6,epsMax:1.5,deltaMax:1.5,marks:[{x:1,y:2,open:true},{x:1,y:5,open:false}]},
+  jump:{label:'f(x) = 1 for x < 2, 3 for x ≥ 2',fn:x=>x<2?1:3,a:2,L:2,x:[0,4],y:[-0.5,4.5],eps0:.5,delta0:.5,p0:2.9,epsMax:1.6,deltaMax:1.5,marks:[{x:2,y:1,open:true},{x:2,y:3,open:false}]}
+};
+
+/* how far from a can x go on each side before |f(x)-L| >= eps ? */
+function edges(F,eps,L){
+  const a=F.a,x0=F.x[0],x1=F.x[1],N=5000,step=(x1-x0)/N;
+  const side=dir=>{
+    let prev=a;
+    for(let k=1;k<=N;k++){
+      const x=a+dir*k*step;
+      if(x<x0-1e-9||x>x1+1e-9) return {dist:Infinity,hit:false};
+      const y=F.fn(x);
+      if(Number.isNaN(y)) return {dist:Infinity,hit:false};
+      if(!(Math.abs(y-L)<eps)){
+        if(k===1) return {dist:0,hit:true,x:a,y:L};
+        let lo=prev,hi=x;
+        for(let i=0;i<45;i++){const m=(lo+hi)/2;const ym=F.fn(m);if(Math.abs(ym-L)<eps)lo=m;else hi=m;}
+        return {dist:Math.abs(lo-a),hit:true,x:lo,y:F.fn(lo)};
+      }
+      prev=x;
+    }
+    return {dist:Infinity,hit:false};
+  };
+  return {left:side(-1),right:side(1)};
+}
+
+/* ---------- geometry of the picture ---------- */
+const W=760,H=444,PL=76,PR=660,PT=18,PB=336,WX=672,WW=48;
+
+class Graph{
+  constructor(host,o){
+    this.id='g'+(Graph.n=(Graph.n||0)+1);
+    this.fkey=o.func;this.F=FUNCS[this.fkey];
+    this.layers=Object.assign({},o.layers||{});
+    this.eps=o.eps!=null?o.eps:this.F.eps0;
+    this.delta=o.delta!=null?o.delta:this.F.delta0;
+    this.L=this.F.L;this.probe=this.F.p0;
+    this.includeA=false;this.hl=null;this.auto=false;
+    this.subs=[];this.ball=null;this.ring=null;this.tw=null;this.onshot=null;this.lastShot=null;
+    host.innerHTML='<svg class="g" viewBox="0 0 '+W+' '+H+'" role="img"></svg>';
+    this.svg=host.firstChild;
+    const mv=e=>{
+      if(!this.layers.probe)return;
+      const r=this.svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W,x0=this.F.x[0],x1=this.F.x[1];
+      this.set({probe:clamp(x0+(px-PL)/(PR-PL)*(x1-x0),x0,x1)});
+    };
+    this.svg.addEventListener('pointerdown',e=>{this.drag=true;try{this.svg.setPointerCapture(e.pointerId);}catch(_){}mv(e);});
+    this.svg.addEventListener('pointermove',e=>{if(this.drag)mv(e);});
+    const up=()=>{this.drag=false;};
+    this.svg.addEventListener('pointerup',up);this.svg.addEventListener('pointercancel',up);
+    this.render();
+  }
+  subscribe(f){this.subs.push(f);f(this,this.A);}
+  setFunc(k){
+    this.fkey=k;this.F=FUNCS[k];this.L=this.F.L;this.eps=this.F.eps0;this.delta=this.F.delta0;
+    this.probe=this.F.p0;this._ek=null;this.stopAnim();this.render();
+  }
+  bestDelta(){
+    const d=this.A?this.A.dmax:Infinity;
+    if(!isFinite(d))return this.F.deltaMax;
+    return Math.max(d,.005);
+  }
+  set(p){
+    Object.assign(this,p);
+    if(this.auto&&('eps' in p||'L' in p)){this.render(true);this.delta=this.bestDelta();}
+    this.render();
+  }
+  stopAnim(){if(this.tw){cancelAnimationFrame(this.tw);this.tw=null;}}
+  animateTo(props,ms){
+    return new Promise(res=>{
+      this.stopAnim();
+      if(reduce||!ms){Object.assign(this,props);if(this.auto)this.set({});else this.render();return res();}
+      const from={};for(const k in props)from[k]=this[k];
+      const t0=performance.now();
+      const step=now=>{
+        const t=clamp((now-t0)/ms,0,1),e=ease(t);
+        for(const k in props)this[k]=from[k]+(props[k]-from[k])*e;
+        if(this.auto){this.render(true);this.delta=this.bestDelta();}
+        this.render();
+        if(t<1)this.tw=requestAnimationFrame(step);else{this.tw=null;res();}
+      };
+      this.tw=requestAnimationFrame(step);
+    });
+  }
+  analyze(){
+    const F=this.F,a=F.a,L=this.L,eps=this.eps,d=this.delta;
+    const key=this.fkey+'|'+eps+'|'+L;
+    if(this._ek!==key){this._e=edges(F,eps,L);this._ek=key;}
+    const e=this._e,dmax=Math.min(e.left.dist,e.right.dist);
+    const bad=[],N=1200;
+    for(let j=1;j<=N;j++){
+      const dd=d*j/(N+1);
+      for(const s of [-1,1]){
+        const x=a+s*dd,y=F.fn(x);
+        if(Number.isNaN(y))continue;
+        if(!(Math.abs(y-L)<eps))bad.push(x);
+      }
+    }
+    let aBad=false;
+    if(this.includeA){const y=F.fn(a);aBad=!(Math.abs(y-L)<eps);}
+    return {e,dmax,bad,aBad,ok:bad.length===0&&!aBad};
+  }
+  fire(){
+    return new Promise(res=>{
+      const F=this.F,x=this.probe,y=F.fn(x);
+      if(x==null||!isFinite(y))return res();
+      const x0=F.x[0],x1=F.x[1],y0=F.y[0],y1=F.y[1];
+      const sx=v=>PL+(v-x0)/(x1-x0)*(PR-PL),sy=v=>PB-(v-y0)/(y1-y0)*(PB-PT);
+      const yy=clamp(y,y0,y1),P0=[sx(x),PB],P1=[sx(x),sy(yy)],P2=[WX+WW/2,sy(yy)];
+      const dur=reduce?1:1100,t0=performance.now();
+      const step=now=>{
+        const t=clamp((now-t0)/dur,0,1);let pos;
+        if(t<.5){const k=ease(t/.5);pos=[P0[0],P0[1]+(P1[1]-P0[1])*k];}
+        else{const k=ease((t-.5)/.5);pos=[P1[0]+(P2[0]-P1[0])*k,P1[1]];}
+        this.ball=pos;this.render();
+        if(t<1)requestAnimationFrame(step);
+        else{
+          this.ball=null;
+          const inb=Math.abs(y-this.L)<this.eps;
+          this.lastShot={x,y,inb};
+          const r0=performance.now();
+          const rs=n2=>{const k=clamp((n2-r0)/(reduce?1:650),0,1);this.ring={cx:P2[0],cy:P2[1],hit:inb,k};this.render();if(k<1)requestAnimationFrame(rs);else{this.ring=null;this.render();}};
+          requestAnimationFrame(rs);
+          if(this.onshot)this.onshot(this.lastShot);
+          res();
+        }
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  render(quiet){
+    const F=this.F,L=this.L,eps=this.eps,d=this.delta,a=F.a,ly=this.layers,hl=this.hl;
+    const x0=F.x[0],x1=F.x[1],y0=F.y[0],y1=F.y[1];
+    const sx=v=>PL+(v-x0)/(x1-x0)*(PR-PL),sy=v=>PB-(v-y0)/(y1-y0)*(PB-PT);
+    const A=this.analyze();this.A=A;
+    if(quiet)return;
+    const f1=v=>v.toFixed(1);
+    let s='<defs><clipPath id="'+this.id+'c"><rect x="'+PL+'" y="'+PT+'" width="'+(PR-PL)+'" height="'+(PB-PT)+'"/></clipPath></defs>';
+    s+='<rect x="'+PL+'" y="'+PT+'" width="'+(PR-PL)+'" height="'+(PB-PT)+'" style="fill:var(--surface);stroke:var(--line)"/>';
+    /* grid + numeric ticks */
+    const sxv=niceStep(x1-x0,8),syv=niceStep(y1-y0,6);
+    for(let k=Math.ceil(x0/sxv-1e-9);k*sxv<=x1+1e-9;k++){const v=k*sxv,X=sx(v);s+='<line x1="'+f1(X)+'" y1="'+PT+'" x2="'+f1(X)+'" y2="'+PB+'" style="stroke:var(--line);opacity:.5"/><text class="tk" x="'+f1(X)+'" y="'+(PB+16)+'" text-anchor="middle">'+n2(v,2)+'</text>';}
+    for(let k=Math.ceil(y0/syv-1e-9);k*syv<=y1+1e-9;k++){const v=k*syv,Y=sy(v);s+='<line x1="'+PL+'" y1="'+f1(Y)+'" x2="'+PR+'" y2="'+f1(Y)+'" style="stroke:var(--line);opacity:.5"/><text class="tk" x="'+(PL-8)+'" y="'+f1(Y+4)+'" text-anchor="end">'+n2(v,2)+'</text>';}
+    s+='<text class="cap" x="'+(PR-6)+'" y="'+(PB-8)+'" text-anchor="end">x: launch position</text>';
+    s+='<text class="cap" x="'+(PL+8)+'" y="'+(PT+16)+'">f(x): landing height</text>';
+    /* wall */
+    s+='<rect x="'+WX+'" y="'+PT+'" width="'+WW+'" height="'+(PB-PT)+'" rx="4" style="fill:var(--indigo-soft);stroke:var(--line)"/>';
+    s+='<text class="cap" x="'+(WX+WW/2)+'" y="'+(PB+16)+'" text-anchor="middle">wall</text>';
+    if(ly.band){const yt=clamp(sy(L+eps),PT,PB),yb=clamp(sy(L-eps),PT,PB);s+='<rect x="'+WX+'" y="'+f1(yt)+'" width="'+WW+'" height="'+f1(Math.max(yb-yt,0))+'" style="fill:var(--sage);opacity:.55"/>';}
+    const wy=sy(L);
+    s+='<circle cx="'+(WX+WW/2)+'" cy="'+f1(wy)+'" r="10" style="fill:none;stroke:var(--ink);stroke-width:1.5"/><circle cx="'+(WX+WW/2)+'" cy="'+f1(wy)+'" r="5" style="fill:none;stroke:var(--ink);stroke-width:1.5"/><circle cx="'+(WX+WW/2)+'" cy="'+f1(wy)+'" r="1.8" style="fill:var(--ink)"/>';
+
+    /* clipped content */
+    let g='';
+    if(ly.band){
+      const yt=sy(L+eps),yb=sy(L-eps);
+      g+='<rect x="'+PL+'" y="'+f1(yt)+'" width="'+(PR-PL)+'" height="'+f1(Math.max(yb-yt,0))+'" style="fill:var(--sage);opacity:'+(hl==='eps'||hl==='imp'?.4:.2)+'"/>';
+    }
+    if(ly.lines){
+      for(const v of [L+eps,L-eps])g+='<line x1="'+PL+'" x2="'+PR+'" y1="'+f1(sy(v))+'" y2="'+f1(sy(v))+'" style="stroke:var(--sage);stroke-width:2;stroke-dasharray:7 5"/>';
+    }
+    if(ly.guides||ly.band){
+      g+='<line x1="'+PL+'" x2="'+PR+'" y1="'+f1(sy(L))+'" y2="'+f1(sy(L))+'" style="stroke:var(--indigo);stroke-width:1.5;stroke-dasharray:2 5"/>';
+    }
+    if(ly.guides){g+='<line x1="'+f1(sx(a))+'" x2="'+f1(sx(a))+'" y1="'+PT+'" y2="'+PB+'" style="stroke:var(--indigo);stroke-width:1.5;stroke-dasharray:2 5"/>';}
+    if(ly.window){
+      const xa=sx(a-d),xb=sx(a+d),op=(hl==='del'||hl==='pt')?.42:.2;
+      g+='<rect x="'+f1(xa)+'" y="'+PT+'" width="'+f1(xb-xa)+'" height="'+(PB-PT)+'" style="fill:var(--amber);opacity:'+op+'"/>';
+      g+='<line x1="'+f1(xa)+'" x2="'+f1(xa)+'" y1="'+PT+'" y2="'+PB+'" style="stroke:var(--amber);stroke-width:'+(hl==='del'?3:2)+'"/><line x1="'+f1(xb)+'" x2="'+f1(xb)+'" y1="'+PT+'" y2="'+PB+'" style="stroke:var(--amber);stroke-width:'+(hl==='del'?3:2)+'"/>';
+    }
+    /* curve */
+    const gap=(x1-x0)*1e-4;
+    const pathOf=(xa,xb)=>{
+      if(xb<=xa)return '';
+      const n=Math.max(6,Math.round(420*(xb-xa)/(x1-x0)));let dd='',pen=false;
+      for(let i=0;i<=n;i++){
+        const x=xa+(xb-xa)*i/n,y=F.fn(x);
+        if(!isFinite(y)){pen=false;continue;}
+        dd+=(pen?'L':'M')+f1(sx(x))+' '+f1(clamp(sy(y),-4000,4000))+' ';pen=true;
+      }
+      return dd;
+    };
+    if(ly.window||hl==='imp'){
+      const wa=Math.max(x0,a-d),wb=Math.min(x1,a+d);
+      const glow=pathOf(wa,a-gap)+pathOf(a+gap,wb);
+      g+='<path d="'+glow+'" style="fill:none;stroke:var(--amber);stroke-width:'+(hl==='imp'||hl==='pt'?10:7)+';opacity:.45;stroke-linecap:round"/>';
+    }
+    g+='<path d="'+pathOf(x0,a-gap)+pathOf(a+gap,x1)+'" style="fill:none;stroke:var(--indigo);stroke-width:3;stroke-linecap:round;stroke-linejoin:round"/>';
+    /* violators */
+    if(ly.viol&&A.bad.length){
+      const st=Math.max(1,Math.floor(A.bad.length/160));
+      for(let i=0;i<A.bad.length;i+=st){const x=A.bad[i],y=F.fn(x);g+='<circle cx="'+f1(sx(x))+'" cy="'+f1(clamp(sy(y),-4000,4000))+'" r="3.4" style="fill:var(--miss)"/>';}
+    }
+    /* s and t */
+    if(ly.edges){
+      for(const [sd,nm] of [[A.e.left,'s'],[A.e.right,'t']]){
+        if(sd.hit&&sd.dist>0){
+          const X=sx(sd.x);
+          g+='<line x1="'+f1(X)+'" x2="'+f1(X)+'" y1="'+f1(sy(sd.y))+'" y2="'+PB+'" style="stroke:var(--indigo);stroke-width:1.5;stroke-dasharray:5 4"/>';
+          g+='<circle cx="'+f1(X)+'" cy="'+f1(sy(sd.y))+'" r="5.5" style="fill:var(--surface);stroke:var(--indigo);stroke-width:2.5"/>';
+        }
+      }
+    }
+    /* point(s) at a */
+    if(F.marks){
+      for(const m of F.marks)g+='<circle cx="'+f1(sx(m.x))+'" cy="'+f1(sy(m.y))+'" r="5.5" style="fill:'+(m.open?'var(--surface)':'var(--indigo)')+';stroke:var(--indigo);stroke-width:2.5"/>';
+      if(this.includeA&&A.aBad){const m=F.marks[F.marks.length-1];g+='<circle cx="'+f1(sx(m.x))+'" cy="'+f1(sy(m.y))+'" r="11" style="fill:none;stroke:var(--miss);stroke-width:3"/>';}
+    }else{
+      g+='<circle cx="'+f1(sx(a))+'" cy="'+f1(sy(F.fn(a)))+'" r="5.5" style="fill:var(--indigo);stroke:var(--surface);stroke-width:2"/>';
+    }
+    if(hl==='pt'){g+='<circle cx="'+f1(sx(a))+'" cy="'+f1(sy(L))+'" r="15" style="fill:none;stroke:var(--indigo);stroke-width:2.5;stroke-dasharray:4 4"/>';}
+    s+='<g clip-path="url(#'+this.id+'c)">'+g+'</g>';
+
+    /* probe */
+    if(ly.probe&&this.probe!=null){
+      const px=this.probe,py=F.fn(px);
+      if(isFinite(py)){
+        const X=sx(px),yc=clamp(sy(py),PT,PB);
+        const inb=Math.abs(py-L)<eps;
+        const col=ly.band?(inb?'var(--sage)':'var(--miss)'):'var(--indigo)';
+        s+='<line x1="'+f1(X)+'" x2="'+f1(X)+'" y1="'+PB+'" y2="'+f1(yc)+'" style="stroke:var(--amber);stroke-width:2;stroke-dasharray:3 4"/>';
+        s+='<line x1="'+f1(X)+'" x2="'+(WX+WW/2)+'" y1="'+f1(yc)+'" y2="'+f1(yc)+'" style="stroke:'+col+';stroke-width:2;stroke-dasharray:3 4"/>';
+        s+='<circle cx="'+f1(X)+'" cy="'+f1(yc)+'" r="5" style="fill:var(--amber)"/>';
+        s+='<circle cx="'+(WX+WW/2)+'" cy="'+f1(yc)+'" r="7" style="fill:'+col+';stroke:var(--surface);stroke-width:2"/>';
+        s+='<polygon points="'+f1(X)+','+(PB-1)+' '+f1(X-9)+','+(PB+13)+' '+f1(X+9)+','+(PB+13)+'" style="fill:var(--amber);stroke:var(--surface);stroke-width:1.5"/>';
+      }
+    }
+    if(this.ball)s+='<circle cx="'+f1(this.ball[0])+'" cy="'+f1(this.ball[1])+'" r="8" style="fill:var(--amber);stroke:var(--ink);stroke-width:2"/>';
+    if(this.ring){const k=this.ring.k;s+='<circle cx="'+this.ring.cx+'" cy="'+f1(this.ring.cy)+'" r="'+f1(8+22*k)+'" style="fill:none;stroke:'+(this.ring.hit?'var(--sage)':'var(--miss)')+';stroke-width:3;opacity:'+(1-k).toFixed(2)+'"/>';}
+
+    /* symbolic labels: x axis */
+    const R1=PB+36,R2=PB+56,R3=PB+74;
+    s+='<line x1="'+f1(sx(a))+'" x2="'+f1(sx(a))+'" y1="'+PB+'" y2="'+(PB+22)+'" style="stroke:var(--indigo);stroke-width:2"/>';
+    let closeS=false,closeT=false;
+    if(ly.edges&&A.e.left.hit&&A.e.left.dist>0)closeS=sx(a)-sx(A.e.left.x)<20;
+    if(ly.edges&&A.e.right.hit&&A.e.right.dist>0)closeT=sx(A.e.right.x)-sx(a)<20;
+    s+='<text class="sym i" x="'+f1(sx(a)+(closeS?0:0))+'" y="'+R1+'" text-anchor="middle">a</text>';
+    if(ly.edges){
+      if(A.e.left.hit&&A.e.left.dist>0){const X=sx(A.e.left.x);s+='<text class="sym i" x="'+f1(closeS?X-8:X)+'" y="'+R1+'" text-anchor="'+(closeS?'end':'middle')+'">s</text>';}
+      if(A.e.right.hit&&A.e.right.dist>0){const X=sx(A.e.right.x);s+='<text class="sym i" x="'+f1(closeT?X+8:X)+'" y="'+R1+'" text-anchor="'+(closeT?'start':'middle')+'">t</text>';}
+    }
+    if(ly.window){
+      const xa=sx(a-d),xb=sx(a+d);
+      s+='<text class="sym a" x="'+f1(xa-3)+'" y="'+R2+'" text-anchor="end">a−δ</text><text class="sym a" x="'+f1(xb+3)+'" y="'+R2+'" text-anchor="start">a+δ</text>';
+    }
+    if(ly.brackets&&ly.edges){
+      const bl=A.e.left,br=A.e.right,Y=PB+82;
+      if(bl.hit&&bl.dist>0){const X=sx(bl.x);s+='<path d="M'+f1(X)+' '+(Y-5)+' V'+Y+' H'+f1(sx(a))+' V'+(Y-5)+'" style="fill:none;stroke:var(--indigo);stroke-width:2"/><text class="tk" x="'+f1(sx(a)-6)+'" y="'+(Y+16)+'" text-anchor="end">a − s = '+n2(bl.dist,3)+'</text>';}
+      if(br.hit&&br.dist>0){const X=sx(br.x);s+='<path d="M'+f1(sx(a))+' '+(Y-5)+' V'+Y+' H'+f1(X)+' V'+(Y-5)+'" style="fill:none;stroke:var(--indigo);stroke-width:2"/><text class="tk" x="'+f1(sx(a)+6)+'" y="'+(Y+16)+'" text-anchor="start">t − a = '+n2(br.dist,3)+'</text>';}
+    }
+    /* y axis labels */
+    s+='<text class="sym i" x="'+(PL-34)+'" y="'+f1(sy(L)+5)+'" text-anchor="end">L</text>';
+    if(ly.band){
+      const yt=Math.min(sy(L+eps),sy(L)-14),yb=Math.max(sy(L-eps),sy(L)+18);
+      s+='<text class="sym s" x="'+(PL-34)+'" y="'+f1(yt+5)+'" text-anchor="end">L+ε</text><text class="sym s" x="'+(PL-34)+'" y="'+f1(yb+5)+'" text-anchor="end">L−ε</text>';
+    }
+    this.svg.innerHTML=s;
+    this.svg.setAttribute('aria-label','Graph of '+F.label+'. Point a on the x-axis, target L on the y-axis'+(ly.band?'. Tolerance band of half-width '+n2(eps,2):'')+(ly.window?'. Launch window of half-width '+n2(d,3):'')+'.');
+    this.subs.forEach(f=>f(this,A));
+  }
+}
+
+/* ---------- small UI helpers ---------- */
+function slider(host,g,o){
+  const row=el('<label class="row '+o.cls+'"><span class="lab">'+o.label+'</span><input type="range" min="'+o.min+'" step="'+o.step+'"><output></output></label>');
+  host.appendChild(row);
+  const inp=row.querySelector('input'),out=row.querySelector('output');
+  inp.addEventListener('input',()=>{g.stopAnim();g.set({[o.prop]:+inp.value});if(o.onInput)o.onInput();});
+  const sync=()=>{
+    inp.max=o.maxOf?o.maxOf(g):g.F[o.maxKey];
+    if(o.minOf)inp.min=o.minOf(g);
+    inp.value=g[o.prop];out.textContent=n2(g[o.prop],o.dec||2);
+  };
+  g.subscribe(sync);
+  return row;
+}
+function shotText(g,sh){
+  let t='Launched from x = '+n2(sh.x,2)+', landed at height '+n2(sh.y,2);
+  if(g.layers.band)t+=sh.inb?'. Inside the band ✓':'. Outside the band ✗';
+  return t+'.';
+}
+function verdictBox(box,ok,html,cls){box.className='verdict '+(cls||(ok?'ok':'bad'));box.innerHTML=html;}
+function bestTxt(A){
+  if(!isFinite(A.dmax))return 'any δ works for this ε';
+  if(A.dmax<=0)return 'no δ works for this ε';
+  return 'the widest window that works has δ = '+n2(A.dmax,3);
+}
+
+/* ---------- hero (autoplay) ---------- */
+(function(){
+  const g=new Graph($('#hero'),{func:'sq',layers:{band:1,lines:1,edges:1,window:1}});
+  g.auto=true;
+  const read=$('#heroRead');
+  g.subscribe((gg,A)=>{read.innerHTML='<span class="e">ε = '+n2(gg.eps,2)+'</span> gives <span class="d">δ = '+n2(gg.delta,3)+'</span>';});
+  let playing=!reduce,t0=performance.now(),raf=null,visible=true;
+  const frame=now=>{
+    raf=null;if(!playing||!visible||document.hidden)return;
+    const t=(now-t0)/1000,e=0.22+(2.4-0.22)*(0.5+0.5*Math.cos(2*Math.PI*t/10));
+    g.eps=e;g.render(true);g.delta=g.bestDelta();g.render();
+    raf=requestAnimationFrame(frame);
+  };
+  const go=()=>{if(!raf&&playing&&visible&&!document.hidden){t0=performance.now()-(g._t||0);raf=requestAnimationFrame(frame);}};
+  g.eps=1.4;g.render(true);g.delta=g.bestDelta();g.render();
+  const btn=$('#heroBtn');
+  btn.textContent=playing?'Pause':'Play';
+  btn.addEventListener('click',()=>{playing=!playing;btn.textContent=playing?'Pause':'Play';if(playing){t0=performance.now();go();}});
+  if('IntersectionObserver' in window)new IntersectionObserver(es=>{visible=es[0].isIntersecting;if(visible)go();}).observe($('#hero'));
+  document.addEventListener('visibilitychange',go);
+  go();
+})();
+
+/* ---------- warm-up: for every x there is a natural n ---------- */
+(function(){
+  const rng=$('#wx'),num=$('#wnum'),svg=$('#nline'),form=$('#wform');
+  const fm=v=>v.toLocaleString(undefined,{maximumFractionDigits:2});
+  function draw(x){
+    x=Math.max(0,x);
+    const n=Math.floor(x)+1,v0=x-3.5,span=10,X=v=>40+(v-v0)/span*680,Y=74;
+    let s='<line x1="30" x2="730" y1="'+Y+'" y2="'+Y+'" style="stroke:var(--muted);stroke-width:2"/>';
+    s+='<rect x="'+X(x).toFixed(1)+'" y="'+(Y-5)+'" width="'+(X(n)-X(x)).toFixed(1)+'" height="10" rx="3" style="fill:var(--amber);opacity:.45"/>';
+    for(let k=Math.ceil(v0);k<=Math.floor(v0+span);k++){const xx=X(k);if(xx<30||xx>730)continue;s+='<line x1="'+xx.toFixed(1)+'" x2="'+xx.toFixed(1)+'" y1="'+(Y-7)+'" y2="'+(Y+7)+'" style="stroke:var(--muted);stroke-width:2"/><text class="tk" x="'+xx.toFixed(1)+'" y="'+(Y+26)+'" text-anchor="middle">'+k.toLocaleString()+'</text>';}
+    s+='<line x1="'+X(x).toFixed(1)+'" x2="'+X(x).toFixed(1)+'" y1="34" y2="'+Y+'" style="stroke:var(--indigo);stroke-width:3"/><circle cx="'+X(x).toFixed(1)+'" cy="'+Y+'" r="6" style="fill:var(--indigo)"/><text class="sym i" x="'+X(x).toFixed(1)+'" y="26" text-anchor="middle">x = '+fm(x)+'</text>';
+    s+='<circle cx="'+X(n).toFixed(1)+'" cy="'+Y+'" r="8" style="fill:var(--amber);stroke:var(--surface);stroke-width:2"/><text class="sym a" x="'+X(n).toFixed(1)+'" y="118" text-anchor="middle">n = '+n.toLocaleString()+'</text>';
+    svg.innerHTML=s;
+    form.textContent='n = ⌊x⌋ + 1 = '+n.toLocaleString()+', and '+n.toLocaleString()+' > '+fm(x)+' ✓';
+  }
+  const set=(x,from)=>{x=Math.max(0,+x||0);if(from!=='r')rng.value=Math.min(100,x);if(from!=='n')num.value=x;draw(x);};
+  rng.addEventListener('input',()=>set(+rng.value,'r'));
+  num.addEventListener('input',()=>set(+num.value,'n'));
+  $('#wbig').addEventListener('click',()=>set(1234567.89));
+  $('#wrand').addEventListener('click',()=>set(Math.round(Math.random()*9000)/10+ (Math.random()<.5?0:Math.round(Math.random()*90000))));
+  set(7.3);
+})();
+
+/* ---------- the guided tour ---------- */
+(function(){
+  const g=new Graph($('#tourPlot'),{func:'sq',layers:{}});
+  const ctl=$('#tourCtl'),verdict=$('#tourVerdict');
+  const rows={
+    probe:slider(ctl,g,{cls:'probe',label:'launch position x',prop:'probe',min:'@',step:.01,maxOf:gg=>gg.F.x[1],minOf:gg=>gg.F.x[0],dec:2}),
+    eps:slider(ctl,g,{cls:'eps',label:'ε (tolerance)',prop:'eps',min:.05,step:.01,maxKey:'epsMax'}),
+    delta:slider(ctl,g,{cls:'delta',label:'δ (window)',prop:'delta',min:.005,step:.005,maxKey:'deltaMax',dec:3})
+  };
+  rows.probe.querySelector('input').min=FUNCS.sq.x[0];
+  g.onshot=sh=>{$('#tourShot').textContent=shotText(g,sh);};
+  const fsel=$('#fsel');
+  ['sq','lin','sqrt','hole'].forEach(k=>fsel.appendChild(el('<option value="'+k+'">'+FUNCS[k].label+'</option>')));
+  let cur=0,playTok=0;
+  const STEPS=[
+    {t:'A rule for landing',
+     h:'<p>Stand at position x on the ground, fire, and the shot lands on the wall at height f(x). Drag across the graph, or use the slider, to choose x. Then press <b>Fire</b>.</p><p>Now aim near <b class="c-pt">a</b>. As x gets close to a, the landings seem to settle towards the height <b class="c-pt">L</b> (dotted lines). Can we say exactly what “settle towards” means?</p>',
+     layers:{guides:1,probe:1},ctl:['probe'],acts:['bFire']},
+    {t:'The challenger names a tolerance',
+     h:'<p>Nobody lands exactly on L, so a miss is allowed. The challenger picks <b class="c-eps">any ε &gt; 0</b>. Landing inside the green band, between L − ε and L + ε, counts as a hit.</p><p>Drag ε, then fire from different places. Which launches are hits? The challenger is free here, just like x in the warm-up.</p>',
+     layers:{guides:1,probe:1,band:1},ctl:['eps','probe'],acts:['bFire'],
+     enter:()=>{g.eps=0;g.render();g.animateTo({eps:g.F.eps0},800);}},
+    {t:'Where do the band’s edges meet the curve?',
+     h:'<p>Draw the lines y = L + ε and y = L − ε. Where each line meets the curve, drop straight down to the x-axis. Call the two points <b class="c-pt">s</b> (left) and <b class="c-pt">t</b> (right).</p><p>Every launch from a point between s and t lands inside the band. Change ε and watch s and t move.</p>',
+     layers:{guides:1,probe:1,band:1,lines:1,edges:1},ctl:['eps','probe'],acts:['bFire']},
+    {t:'Your reply: a launch window δ',
+     h:'<p>Now it is your turn to answer. Choose <b class="c-del">δ &gt; 0</b> so the window from a − δ to a + δ fits inside [s, t]. Take δ to be the <b>smaller</b> of the two distances a − s and t − a.</p><p>Slide δ. Too wide, and some launches escape the band (red). Small enough, and every launch in the window is a hit.</p>',
+     layers:{guides:1,probe:1,band:1,lines:1,edges:1,brackets:1,window:1,viol:1},ctl:['delta','eps','probe'],acts:['bFire','bUse'],verdict:1,
+     enter:()=>{g.render(true);g.delta=Math.min(g.F.deltaMax,g.bestDelta()*1.7);g.render();}},
+    {t:'Smaller ε, smaller δ',
+     h:'<p>The challenger can always ask for a tighter band. Press <b>Play</b>: ε shrinks, and the widest good window shrinks with it.</p><p>For each ε there is a δ, and δ <b>depends on</b> ε, just as n depended on x in the warm-up. No single δ works for every ε.</p>',
+     layers:{guides:1,probe:1,band:1,lines:1,edges:1,window:1,viol:1},ctl:['eps','delta','probe'],acts:['bFire','bPlay'],verdict:1,auto:1,
+     enter:()=>{g.render(true);g.delta=g.bestDelta();g.render();}},
+    {t:'Now read the definition',
+     h:'<p class="stmt">lim<sub>x→a</sub> f(x) = L means: <button type="button" class="ph eps" data-h="eps">for every ε &gt; 0</button> <button type="button" class="ph del" data-h="del">there is a δ &gt; 0</button> such that whenever <button type="button" class="ph pt" data-h="pt">0 &lt; |x − a| &lt; δ</button>, we have <button type="button" class="ph imp" data-h="imp">|f(x) − L| &lt; ε</button>.</p><div class="phcap" id="phcap">Hover over, or tap, each phrase: the matching part of the picture lights up.</div>',
+     layers:{guides:1,probe:1,band:1,lines:1,edges:1,window:1,viol:1},ctl:['eps','delta','probe'],acts:['bFire'],verdict:1,
+     enter:()=>{g.render(true);g.delta=g.bestDelta()*.85;g.render();}}
+  ];
+  const CAP={
+    eps:'The challenger names any tolerance ε. That is the green band around L. You cannot choose it, and it can be as small as they like.',
+    del:'You reply with δ: the amber window around a. Your δ is allowed to depend on ε.',
+    pt:'Launch from any x inside the window, but not from a itself. The 0 < in front leaves the launch position a out.',
+    imp:'Every such launch must land inside the band: within ε of L. That is the whole requirement.'
+  };
+  const chips=$('#chips');
+  STEPS.forEach((s,i)=>{const b=el('<button type="button" class="chip" aria-label="Step '+(i+1)+': '+s.t.replace(/"/g,'')+'">'+(i+1)+'</button>');b.addEventListener('click',()=>go(i));chips.appendChild(b);});
+  function go(i){
+    cur=i;playTok++;g.stopAnim();g.hl=null;
+    if(g.eps<.05)g.eps=g.F.eps0;
+    const st=STEPS[i];
+    g.layers=Object.assign({},st.layers);g.auto=!!st.auto;
+    $('#stTitle').textContent=st.t;$('#stText').innerHTML=st.h;
+    for(const k in rows)rows[k].hidden=!st.ctl.includes(k);
+    for(const id of ['bFire','bUse','bPlay'])$('#'+id).hidden=!st.acts.includes(id);
+    verdict.hidden=!st.verdict;
+    [...chips.children].forEach((c,j)=>{c.classList.toggle('done',j<i);if(j===i)c.setAttribute('aria-current','step');else c.removeAttribute('aria-current');});
+    $('#bPrev').disabled=i===0;$('#bNext').disabled=i===STEPS.length-1;
+    $('#tourShot').textContent='';
+    if(st.enter)st.enter();else g.render();
+    if(i===5){
+      document.querySelectorAll('#stText .ph').forEach(b=>{
+        const on=()=>{g.hl=b.dataset.h;g.render();$('#phcap').textContent=CAP[b.dataset.h];document.querySelectorAll('#stText .ph').forEach(x=>x.classList.toggle('on',x===b));};
+        const off=()=>{g.hl=null;g.render();document.querySelectorAll('#stText .ph').forEach(x=>x.classList.remove('on'));};
+        b.addEventListener('mouseenter',on);b.addEventListener('focus',on);b.addEventListener('click',on);
+        b.addEventListener('mouseleave',off);b.addEventListener('blur',off);
+      });
+    }
+  }
+  g.subscribe((gg,A)=>{
+    if(verdict.hidden||!A)return;
+    if(A.ok)verdictBox(verdict,true,'<b>This δ works.</b> Every launch within '+n2(gg.delta,3)+' of a, not counting a itself, lands inside the band. For this ε, '+bestTxt(A)+'.');
+    else verdictBox(verdict,false,'<b>This δ is too wide.</b> The red launches leave the band. For this ε, '+bestTxt(A)+'.');
+  });
+  $('#bPrev').addEventListener('click',()=>go(Math.max(0,cur-1)));
+  $('#bNext').addEventListener('click',()=>go(Math.min(STEPS.length-1,cur+1)));
+  $('#bFire').addEventListener('click',()=>g.fire());
+  $('#bUse').addEventListener('click',()=>{g.animateTo({delta:g.bestDelta()},700);});
+  $('#bPlay').addEventListener('click',async()=>{
+    const tok=++playTok;g.auto=true;
+    await g.animateTo({eps:0.08},4200);if(tok!==playTok)return;
+    await g.animateTo({eps:g.F.eps0},2200);
+  });
+  fsel.addEventListener('change',()=>{g.setFunc(fsel.value);rows.probe.querySelector('input').min=g.F.x[0];go(cur);});
+  go(0);
+})();
+
+/* ---------- the game ---------- */
+(function(){
+  const g=new Graph($('#gamePlot'),{func:'sq',layers:{band:1,window:1,probe:1}});
+  const ctl=$('#gameCtl'),msg=$('#gameMsg');
+  let won=0,played=0,streak=0,fresh=false,checked=false;
+  const clearCheck=()=>{if(checked){checked=false;g.layers.viol=0;}};
+  const dRow=slider(ctl,g,{cls:'delta',label:'your δ',prop:'delta',min:.005,step:.005,maxOf:gg=>gg.F.gDelta,dec:3,onInput:()=>{clearCheck();g.render();if(fresh)msg.className='verdict neutral';}});
+  slider(ctl,g,{cls:'probe',label:'test launch x',prop:'probe',min:'@',step:.01,maxOf:gg=>gg.F.x[1],minOf:gg=>gg.F.x[0]});
+  g.onshot=sh=>{$('#gameShot').textContent=shotText(g,sh);};
+  const sel=$('#gsel');
+  ['sq','lin','sqrt'].forEach(k=>sel.appendChild(el('<option value="'+k+'">'+FUNCS[k].label+'</option>')));
+  const score=()=>{$('#gScore').textContent='Won '+won+' of '+played+'. Current streak: '+streak+'.';};
+  function newRound(){
+    clearCheck();g.layers.viol=0;
+    const F=g.F,e=Math.round((F.gEps+Math.random()*(F.epsMax-F.gEps))*100)/100;
+    g.stopAnim();g.delta=Math.min(F.gDelta,F.gDelta*.7);g.render();
+    g.animateTo({eps:e},700);
+    fresh=true;
+    verdictBox(msg,false,'<b>Challenge:</b> ε = '+n2(e,2)+'. Choose a δ so that every launch within δ of a lands within ε of L.','neutral');
+  }
+  $('#gNew').addEventListener('click',newRound);
+  $('#gFire').addEventListener('click',()=>g.fire());
+  $('#gHint').addEventListener('click',e=>{const on=!g.layers.edges;g.layers.edges=on?1:0;g.layers.brackets=on?1:0;e.currentTarget.setAttribute('aria-pressed',on);g.render();});
+  $('#gCheck').addEventListener('click',()=>{
+    if(!fresh){newRound();return;}
+    g.layers.viol=1;checked=true;g.render();
+    const A=g.A;played++;
+    if(A.ok){won++;streak++;verdictBox(msg,true,'<b>You win.</b> Every launch within '+n2(g.delta,3)+' of a lands in the band. ('+bestTxt(A).replace(/^./,c=>c.toUpperCase())+'. Any smaller δ works too.)');}
+    else{streak=0;const xs=A.bad.slice().sort((p,q)=>Math.abs(p-g.F.a)-Math.abs(q-g.F.a));verdictBox(msg,false,'<b>Not yet.</b> Launches such as x = '+n2(xs[xs.length-1],2)+' land outside the band (red dots). Make δ smaller and check again.');}
+    fresh=false;score();
+  });
+  sel.addEventListener('change',()=>{g.setFunc(sel.value);clearCheck();g.layers.edges=0;g.layers.brackets=0;$('#gHint').setAttribute('aria-pressed','false');fresh=false;g.delta=g.F.gDelta*.6;g.render();verdictBox(msg,false,'Press <b>New challenge</b> to begin.','neutral');});
+  g.eps=1;g.delta=g.F.gDelta*.6;g.render();
+  score();
+})();
+
+/* ---------- why 0 < |x-a| ---------- */
+(function(){
+  const g=new Graph($('#punctPlot'),{func:'shifted',layers:{guides:1,band:1,window:1,probe:1,viol:1}});
+  const ctl=$('#punctCtl'),box=$('#punctV');
+  slider(ctl,g,{cls:'eps',label:'ε (tolerance)',prop:'eps',min:.05,step:.01,maxKey:'epsMax'});
+  slider(ctl,g,{cls:'delta',label:'δ (window)',prop:'delta',min:.005,step:.005,maxKey:'deltaMax',dec:3});
+  slider(ctl,g,{cls:'probe',label:'launch position x',prop:'probe',min:'@',step:.01,maxOf:gg=>gg.F.x[1],minOf:gg=>gg.F.x[0]});
+  g.onshot=sh=>{$('#punctShot').textContent=shotText(g,sh);};
+  $('#pFire').addEventListener('click',()=>g.fire());
+  $('#incA').addEventListener('change',e=>{g.includeA=e.target.checked;g.render();});
+  g.subscribe((gg,A)=>{
+    if(!A)return;
+    if(gg.includeA&&A.aBad)verdictBox(box,false,'<b>With x = a included, the test fails.</b> The launch from x = 1 lands at height 5, far outside the band, so no δ could ever pass. But that one odd value says nothing about what happens near 1. This is why the definition asks for 0 &lt; |x − a|.');
+    else if(A.ok)verdictBox(box,true,'<b>This window works.</b> Every neighbour of a lands in the band, so the limit is L = 2, even though g(1) = 5. The limit is about the neighbours, not the value at a.');
+    else verdictBox(box,false,'<b>This δ is too wide</b> for this ε: some neighbours leave the band. Shrink δ.');
+  });
+  g.eps=.5;g.delta=.4;g.render();
+})();
+
+/* ---------- when no delta exists ---------- */
+(function(){
+  const g=new Graph($('#failPlot'),{func:'jump',layers:{guides:1,band:1,window:1,probe:1,viol:1}});
+  const ctl=$('#failCtl'),box=$('#failV');
+  slider(ctl,g,{cls:'L',label:'claimed limit L',prop:'L',min:0,step:.05,maxOf:()=>4});
+  slider(ctl,g,{cls:'eps',label:'ε (tolerance)',prop:'eps',min:.05,step:.01,maxKey:'epsMax'});
+  slider(ctl,g,{cls:'delta',label:'δ (window)',prop:'delta',min:.005,step:.005,maxKey:'deltaMax',dec:3});
+  slider(ctl,g,{cls:'probe',label:'launch position x',prop:'probe',min:'@',step:.01,maxOf:gg=>gg.F.x[1],minOf:gg=>gg.F.x[0]});
+  g.onshot=sh=>{$('#failShot').textContent=shotText(g,sh);};
+  $('#fFire').addEventListener('click',()=>g.fire());
+  g.subscribe((gg,A)=>{
+    if(!A)return;
+    const need=Math.max(Math.abs(1-gg.L),Math.abs(3-gg.L));
+    if(gg.eps>need)verdictBox(box,true,'<b>ε = '+n2(gg.eps,2)+' is very generous.</b> The band from '+n2(gg.L-gg.eps,2)+' to '+n2(gg.L+gg.eps,2)+' contains both landing heights, 1 and 3, so any δ works. A challenger would never pick an ε this large.');
+    else verdictBox(box,false,'<b>No δ works, however small.</b> Launches just left of a land at height 1, and launches from a onward land at height 3. A band of half-width '+n2(gg.eps,2)+' around L = '+n2(gg.L,2)+' cannot hold both. To rescue this L you would need ε &gt; '+n2(need,2)+'. Try other values of L: the best case is L = 2, where you would still need ε &gt; 1. The challenger simply chooses a smaller ε, so this L is not the limit.');
+  });
+  g.L=2;g.eps=.5;g.delta=.5;g.render();
+})();
+
+/* ---------- quiz ---------- */
+(function(){
+  const Q=[
+    {q:'In the ε–δ game, who chooses ε?',o:['You, after seeing δ','The challenger, freely, before you answer','It is fixed by the function'],a:1,f:'The challenger picks ε first. Your δ is the reply, so δ may depend on ε.'},
+    {q:'Your δ = 0.2 works for ε = 0.5. Does δ = 0.1 also work?',o:['Yes: the smaller window sits inside the one that worked','No: δ must be exactly the largest possible','Only if ε changes too'],a:0,f:'Any smaller window lies inside a working window, so its launches all land in the band as well.'},
+    {q:'The challenger halves ε. Must your old δ still work?',o:['Yes, always','Not necessarily: the band is tighter, so you may need a smaller δ','No: you must make δ larger'],a:1,f:'A tighter band can push the edges s and t closer to a. You then need a smaller window.'},
+    {q:'Why does the definition say 0 < |x − a|?',o:['To make δ positive','The limit is about the neighbours of a; f(a) itself may differ or be undefined','To avoid dividing by zero in every problem'],a:1,f:'The value at a is one launch position. The limit only asks what happens near a.'},
+    {q:'For f(x) = 1 when x < 2 and 3 when x ≥ 2, is L = 2 the limit at a = 2?',o:['Yes, it is halfway between 1 and 3','Yes, because f(2) = 3','No: for ε = 0.5 no window works, since landings sit at 1 on the left and 3 on the right'],a:2,f:'No band of half-width 0.5 around 2 holds both 1 and 3, so the challenger wins with ε = 0.5.'}
+  ];
+  const host=$('#quizHost');let right=0,done=0;
+  Q.forEach((it,i)=>{
+    const c=el('<div class="card q"><p>'+(i+1)+'. '+it.q+'</p><div class="opts"></div><div class="fb" aria-live="polite"></div></div>');
+    const opts=c.querySelector('.opts');
+    it.o.forEach((t,j)=>{
+      const b=el('<button type="button" class="opt"></button>');b.textContent=t;
+      b.addEventListener('click',()=>{
+        if(c.dataset.done)return;c.dataset.done=1;done++;
+        [...opts.children].forEach((x,k)=>{if(k===it.a)x.classList.add('right');else if(k===j)x.classList.add('wrong');});
+        if(j===it.a)right++;
+        c.querySelector('.fb').textContent=(j===it.a?'Correct. ':'Not quite. ')+it.f;
+        if(done===Q.length)$('#qScore').textContent='You got '+right+' of '+Q.length+'.';
+      });
+      opts.appendChild(b);
+    });
+    host.appendChild(c);
+  });
+})();
+})();
+</script>
+</body>
+</html>
