@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 16 – Continuity via Epsilon-Delta</title>
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        :root { 
+            --bg: #000000; 
+            --text-white: #ffffff;
+            --yellow: #ffee55;
+            --orange: #ff9900;
+            --cyan: #00e5ff;
+            --lime: #00ff66;
+            --pink: #ff007f;
+            --card-bg: #111111;
+            --box-bg: #181818;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-white);
+            background: var(--bg);
+            padding: 20px 20px 100px 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--yellow);
+            border-bottom: 2px solid var(--cyan);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--orange);
+            font-size: 1.1rem;
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--lime);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .step {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: none;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .definition-box {
+            background: var(--box-bg);
+            border-left: 5px solid var(--cyan);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .theorem-box {
+            background: var(--box-bg);
+            border-left: 5px solid var(--lime);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .proof-box {
+            background: #141414;
+            border-left: 4px dashed var(--orange);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 0.98rem;
+            color: var(--text-white);
+        }
+
+        .example-box {
+            background: var(--box-bg);
+            border-left: 4px solid var(--pink);
+            padding: 18px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .diagram-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 15px;
+            background: #080808;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .diagram-label {
+            font-size: 0.9rem;
+            color: var(--orange);
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .quiz-card {
+            background: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--yellow);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .btn-sol {
+            background: transparent;
+            border: 1px solid var(--lime);
+            color: var(--lime);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sol:hover {
+            background: var(--lime);
+            color: #000000;
+        }
+
+        .solution {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-top: 1px dashed var(--border-color);
+            color: var(--text-white);
+            background-color: #0d0d0d;
+            border-radius: 4px;
+        }
+
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #111111;
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.8);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            z-index: 1000;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-bar-bg {
+            flex-grow: 1;
+            background: #222222;
+            height: 10px;
+            border-radius: 5px;
+            margin: 0 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--cyan);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--yellow);
+            min-width: 60px;
+        }
+
+        .btn-next {
+            background: var(--cyan);
+            color: #000000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            background: var(--lime);
+        }
+
+        .btn-next:disabled {
+            background: #444444;
+            color: #888888;
+            cursor: not-allowed;
+        }
+
+        .highlight-yellow { color: var(--yellow); }
+        .highlight-orange { color: var(--orange); }
+        .highlight-cyan { color: var(--cyan); }
+        .highlight-lime { color: var(--lime); }
+        .highlight-pink { color: var(--pink); }
+
+        ul { padding-left: 20px; margin: 10px 0; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Lecture 16: Continuity via Epsilon-Delta</h1>
+            <p class="subtitle">Real Analysis &mdash; Rigorous Metric Proximity, Simple Functions, and Discontinuities</p>
+        </header>
+
+        <div class="step">
+            <h2>1. Motivation & The Strict $\epsilon$-$\delta$ Definition</h2>
+            <p>In real analysis, we define continuity directly via static metric proximity. Continuity at a given point states that output deviations can be kept inside any arbitrary tolerance window ($< \epsilon$) exclusively by restricting the local input domain radius ($< \delta$).</p>
+            
+            <div class="definition-box">
+                <strong class="highlight-cyan">Definition (Continuity at a Point):</strong> Let $A \subseteq \mathbb{R}$, $f: A \to \mathbb{R}$, and $c \in A$. The function $f$ is <span class="highlight-lime">continuous at $c$</span> if for every real tolerance $\epsilon > 0$, there exists a corresponding control radius $\delta > 0$ such that:
+                $$\forall x \in A, \quad |x - c| < \delta \implies |f(x) - f(c)| < \epsilon$$
+                If $f$ is continuous at every individual point $c \in A$, we say $f$ is <span class="highlight-yellow">continuous on $A$</span>.
+            </div>
+
+            <div class="diagram-container">
+                <svg viewBox="0 0 600 380" width="100%" height="300" style="background:#050505;">
+                    <rect x="60" y="120" width="490" height="100" fill="#00e5ff" opacity="0.15"/>
+                    <rect x="230" y="30" width="140" height="300" fill="#00ff66" opacity="0.1"/>
+                    <rect x="230" y="120" width="140" height="100" fill="#ffee55" opacity="0.2"/>
+                    
+                    <line x1="60" y1="330" x2="550" y2="330" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="60" y1="30" x2="60" y2="330" stroke="#ffffff" stroke-width="2"/>
+                    
+                    <path d="M 90 290 C 180 260, 240 210, 300 170 C 360 130, 440 90, 520 60" fill="none" stroke="#ff007f" stroke-width="3"/>
+                    
+                    <circle cx="300" cy="170" r="5" fill="#ffee55"/>
+                    <line x1="300" y1="170" x2="300" y2="330" stroke="#888888" stroke-dasharray="4,4"/>
+                    <line x1="60" y1="170" x2="300" y2="170" stroke="#888888" stroke-dasharray="4,4"/>
+                    
+                    <line x1="60" y1="120" x2="550" y2="120" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="3,3"/>
+                    <line x1="60" y1="220" x2="550" y2="220" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="3,3"/>
+                    
+                    <line x1="230" y1="30" x2="230" y2="330" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="3,3"/>
+                    <line x1="370" y1="30" x2="370" y2="330" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="3,3"/>
+                    
+                    <text x="295" y="350" font-family="sans-serif" font-size="13" fill="#ffee55" font-weight="600">c</text>
+                    <text x="215" y="350" font-family="sans-serif" font-size="11" fill="#00ff66">c - δ</text>
+                    <text x="360" y="350" font-family="sans-serif" font-size="11" fill="#00ff66">c + δ</text>
+                    
+                    <text x="20" y="175" font-family="sans-serif" font-size="13" fill="#ffee55" font-weight="600">f(c)</text>
+                    <text x="0" y="125" font-family="sans-serif" font-size="11" fill="#00e5ff">f(c) + ε</text>
+                    <text x="0" y="225" font-family="sans-serif" font-size="11" fill="#00e5ff">f(c) - ε</text>
+                    
+                    <text x="480" y="45" font-family="sans-serif" font-size="13" fill="#ff007f" font-weight="bold">y = f(x)</text>
+                </svg>
+                <div class="diagram-label">Figure 1: Visualizing the strict $\epsilon$-$\delta$ mapping window.</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>2. Foundational Linear Examples</h2>
+            <p>We verify the core metric structure by analyzing linear and affine equations.</p>
+            
+            <div class="theorem-box">
+                <strong class="highlight-lime">Example 1 (Constant Function):</strong> Let $f(x) = k$ for a fixed constant $k \in \mathbb{R}$. Prove $f$ is continuous at any $c \in \mathbb{R}$.
+            </div>
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof:</strong> Let $\epsilon > 0$. Evaluating the absolute target distance:
+                $$|f(x) - f(c)| = |k - k| = 0 < \epsilon$$
+                This holds true for all $x \in \mathbb{R}$. We may pick an arbitrary control assignment such as <span class="highlight-yellow">$\delta = 1$</span>. $\blacksquare$
+            </div>
+
+            <div class="theorem-box">
+                <strong class="highlight-lime">Example 2 (Identity & Affine Function):</strong> Let $f(x) = mx + b$ with $m \neq 0$. Prove $f$ is continuous everywhere on $\mathbb{R}$.
+            </div>
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof:</strong> Let $c \in \mathbb{R}$ and $\epsilon > 0$. We write:
+                $$|f(x) - f(c)| = |(mx + b) - (mc + b)| = |m(x - c)| = |m| |x - c|$$
+                We want $|m||x - c| < \epsilon$, which is equivalent to $|x - c| < \frac{\epsilon}{|m|}$. Choosing <span class="highlight-yellow">$\delta = \frac{\epsilon}{|m|}$</span> directly yields the result. $\blacksquare$
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>3. Non-Linear & Transcendental Continuous Functions</h2>
+
+            <div class="theorem-box">
+                <strong class="highlight-lime">Example 3 (The Hyperbola on a Positive Domain):</strong> Prove $f(x) = \frac{1}{x}$ is continuous at any point $c \in (0, \infty)$.
+            </div>
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof:</strong> Let $c > 0$ and $\epsilon > 0$. We write the distance as:
+                $$|f(x) - f(c)| = \left|\frac{1}{x} - \frac{1}{c}\right| = \frac{|x - c|}{cx}$$
+                To bound $x$ away from zero, enforce a localized domain restriction $\delta \le \frac{c}{2}$.
+                $$|x - c| < \frac{c}{2} \implies x > \frac{c}{2} \implies \frac{1}{x} < \frac{2}{c}$$
+                Substituting this bound yields $\frac{|x - c|}{cx} < \frac{2|x - c|}{c^2}$. Thus, we select:
+                $$\delta = \min\left(\frac{c}{2}, \frac{c^2 \epsilon}{2}\right)$$
+                Whenever $|x - c| < \delta$, we have $|f(x) - f(c)| < \epsilon$. $\blacksquare$
+            </div>
+
+            <div class="theorem-box">
+                <strong class="highlight-lime">Example 4 (Trigonometric Sine Wave):</strong> Prove $f(x) = \sin x$ is continuous on $\mathbb{R}$.
+            </div>
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof:</strong> Let $c \in \mathbb{R}$ and $\epsilon > 0$. Using the trigonometric identity:
+                $$|\sin x - \sin c| = \left|2 \sin\left(\frac{x - c}{2}\right) \cos\left(\frac{x + c}{2}\right)\right| \le 2 \left|\frac{x - c}{2}\right| \cdot 1 = |x - c|$$
+                Hence, choosing <span class="highlight-yellow">$\delta = \epsilon$</span> guarantees $|\sin x - \sin c| < \epsilon$. $\blacksquare$
+            </div>
+
+            <div class="theorem-box">
+                <strong class="highlight-lime">Example 5 (Natural Exponential Function):</strong> Prove $f(x) = e^x$ is continuous at any $c \in \mathbb{R}$.
+            </div>
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof:</strong> Let $\epsilon > 0$. Isolate the offset:
+                $$|e^x - e^c| = e^c|e^{x-c} - 1|$$
+                For $|x - c| < 1$, we use the inequality $|e^u - 1| \le 2|u|$ for $|u| \le 1$. Thus:
+                $$e^c|e^{x-c} - 1| \le 2e^c|x - c|$$
+                Selecting <span class="highlight-yellow">$\delta = \min\left(1, \frac{\epsilon}{2e^c}\right)$</span> completes the proof. $\blacksquare$
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>4. Discontinuous Mappings</h2>
+
+            <div class="example-box">
+                <strong class="highlight-pink">Example A (Step Discontinuity):</strong> Consider $f(x) = \begin{cases} 1 & \text{if } x > 0 \\ 0 & \text{if } x \le 0 \end{cases}$.
+                <br>Let $\epsilon = \frac{1}{2}$. For any $\delta > 0$, pick $x = \frac{\delta}{2}$. Then $|x - 0| < \delta$, but $|f(x) - f(0)| = |1 - 0| = 1 \ge \frac{1}{2}$. Thus, $f$ is discontinuous at $c = 0$.
+            </div>
+
+            <div class="example-box">
+                <strong class="highlight-pink">Example B (Dirichlet Function):</strong> $f(x) = \begin{cases} 1 & \text{if } x \in \mathbb{Q} \\ 0 & \text{if } x \notin \mathbb{Q} \end{cases}$.
+                <br>By the density of rationals and irrationals, every neighborhood $(c-\delta, c+\delta)$ contains points mapping to $1$ and points mapping to $0$. Choosing $\epsilon = \frac{1}{2}$ shows $f$ is discontinuous everywhere.
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>5. Practice Exercises on $\epsilon$-$\delta$ Continuity</h2>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Question 1:</strong> Using $\epsilon$-$\delta$, prove $f(x) = 3x + 7$ is continuous at $c = 2$.
+                <button class="btn-sol" onclick="toggleSolution('sol1')">Show/Hide Solution</button>
+                <div class="solution" id="sol1">
+                    We evaluate $|f(x) - f(2)| = |(3x + 7) - (13)| = |3x - 6| = 3|x - 2|$.
+                    To ensure $3|x - 2| < \epsilon$, we set $|x - 2| < \frac{\epsilon}{3}$.
+                    Thus, choose <span class="highlight-lime">$\delta = \frac{\epsilon}{3}$</span>.
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Question 2:</strong> Prove $f(x) = \sqrt{x}$ is continuous at $c = 4$ using $\epsilon$-$\delta$.
+                <button class="btn-sol" onclick="toggleSolution('sol2')">Show/Hide Solution</button>
+                <div class="solution" id="sol2">
+                    $|\sqrt{x} - 2| = \frac{|x - 4|}{\sqrt{x} + 2}$.
+                    Assuming $\delta \le 3$, we have $x > 1 \implies \sqrt{x} + 2 > 3 \implies \frac{1}{\sqrt{x} + 2} < \frac{1}{3}$.
+                    Thus $|\sqrt{x} - 2| < \frac{|x - 4|}{3}$. Choose <span class="highlight-lime">$\delta = \min(3, 3\epsilon)$</span>.
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Question 3:</strong> Prove $f(x) = x \sin(1/x)$ for $x \neq 0$ and $f(0) = 0$ is continuous at $c=0$.
+                <button class="btn-sol" onclick="toggleSolution('sol3')">Show/Hide Solution</button>
+                <div class="solution" id="sol3">
+                    $|f(x) - f(0)| = \left|x \sin\left(\frac{1}{x}\right) - 0\right| \le |x|$.
+                    Choosing <span class="highlight-lime">$\delta = \epsilon$</span> ensures $|f(x) - 0| < \epsilon$ whenever $|x - 0| < \delta$.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-label" id="progressLabel">0 / 0</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <button class="btn-next" id="btnNext" onclick="revealNext()">Next &#9654;</button>
+    </div>
+
+    <script>
+        const steps   = document.querySelectorAll('.step');
+        const fill    = document.getElementById('progressFill');
+        const label   = document.getElementById('progressLabel');
+        const btn     = document.getElementById('btnNext');
+        let   current = 0;
+
+        function updateUI() {
+            const pct = (current / steps.length) * 100;
+            fill.style.width  = pct + '%';
+            label.textContent = current + ' / ' + steps.length;
+            btn.disabled      = current >= steps.length;
+            btn.textContent   = current >= steps.length ? 'Done \u2713' : 'Next \u25ba';
+        }
+
+        function revealNext() {
+            if (current >= steps.length) return;
+            const el = steps[current];
+            el.classList.add('visible');
+            if (window.MathJax) MathJax.typesetPromise([el]);
+            current++;
+            updateUI();
+            setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        }
+
+        function toggleSolution(id) {
+            const sol = document.getElementById(id);
+            if (sol.style.display === 'block') {
+                sol.style.display = 'none';
+            } else {
+                sol.style.display = 'block';
+                if (window.MathJax) MathJax.typesetPromise([sol]);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+                if(e.key === ' ' && e.target.tagName === 'BUTTON') return;
+                e.preventDefault();
+                revealNext();
+            }
+        });
+
+        window.addEventListener('load', function() {
+            updateUI();
+            revealNext();
+        });
+    </script>
+
+</body>
+</html>

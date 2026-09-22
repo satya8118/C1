@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 17 – Algebra of Continuous Functions & Applications</title>
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        :root { 
+            --bg: #000000; 
+            --text-white: #ffffff;
+            --yellow: #ffee55;
+            --orange: #ff9900;
+            --cyan: #00e5ff;
+            --lime: #00ff66;
+            --pink: #ff007f;
+            --card-bg: #111111;
+            --box-bg: #181818;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-white);
+            background: var(--bg);
+            padding: 20px 20px 100px 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--yellow);
+            border-bottom: 2px solid var(--pink);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--cyan);
+            font-size: 1.1rem;
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--lime);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .step {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: none;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .tcolorbox {
+            background: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .tcolorbox-header {
+            padding: 12px 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            background: #1a1a1a;
+        }
+
+        .tcolorbox.purple .tcolorbox-header {
+            color: var(--pink);
+            border-bottom: 2px solid var(--pink);
+        }
+
+        .tcolorbox-content {
+            padding: 20px;
+        }
+
+        .proof-box {
+            background: #141414;
+            border-left: 4px dashed var(--orange);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 0.98rem;
+        }
+
+        .quiz-card {
+            background: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--yellow);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .btn-sol {
+            background: transparent;
+            border: 1px solid var(--lime);
+            color: var(--lime);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sol:hover {
+            background: var(--lime);
+            color: #000000;
+        }
+
+        .solution {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-top: 1px dashed var(--border-color);
+            color: var(--text-white);
+            background-color: #0d0d0d;
+            border-radius: 4px;
+        }
+
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #111111;
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.8);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            z-index: 1000;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-bar-bg {
+            flex-grow: 1;
+            background: #222222;
+            height: 10px;
+            border-radius: 5px;
+            margin: 0 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--pink);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--yellow);
+            min-width: 60px;
+        }
+
+        .btn-next {
+            background: var(--pink);
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            background: var(--cyan);
+            color: #000000;
+        }
+
+        .btn-next:disabled {
+            background: #444444;
+            color: #888888;
+            cursor: not-allowed;
+        }
+
+        .highlight-yellow { color: var(--yellow); }
+        .highlight-orange { color: var(--orange); }
+        .highlight-cyan { color: var(--cyan); }
+        .highlight-lime { color: var(--lime); }
+        .highlight-pink { color: var(--pink); }
+
+        ol, ul { padding-left: 20px; }
+        li { margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Lecture 17: Algebra of Continuous Functions & Applications</h1>
+            <p class="subtitle">From $f(x)=x^2$ to Polynomials and Composite Expressions</p>
+        </header>
+
+        <!-- Step 1: Base Case f(x) = x^2 and x^n -->
+        <div class="step">
+            <h2>Step 1 &mdash; Continuity Proof of $f(x) = x^2$ and $f(x) = x^n$ by Definition</h2>
+            <p>We begin by directly proving the continuity of $f(x) = x^2$ at an arbitrary point $a \in \mathbb{R}$ using the $\epsilon$-$\delta$ limit framework, before extending it to general monomials $x^n$.</p>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Example 1 &mdash; Continuity of $f(x) = x^2$</div>
+                <div class="tcolorbox-content">
+                    Prove directly from the $\epsilon$-$\delta$ definition that $f(x) = x^2$ is continuous at any point $a \in \mathbb{R}$, showing $\lim_{x \to a} x^2 = a^2$.
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof:</strong><br>
+                Let $a \in \mathbb{R}$ and $\epsilon > 0$. We want to find $\delta > 0$ such that if $|x - a| < \delta$, then $|x^2 - a^2| < \epsilon$.<br>
+                Factoring the expression:
+                $$|x^2 - a^2| = |x - a||x + a|$$
+                To control the factor $|x + a|$, we assume a preliminary restriction <span class="highlight-cyan">$\delta \le 1$</span>. Then:
+                $$|x - a| < 1 \implies |x| - |a| \le |x - a| < 1 \implies |x| < |a| + 1$$
+                By the triangle inequality:
+                $$|x + a| \le |x| + |a| < (|a| + 1) + |a| = 2|a| + 1$$
+                Therefore, under the restriction $|x - a| < 1$, we have:
+                $$|x^2 - a^2| = |x - a||x + a| < |x - a|(2|a| + 1)$$
+                To ensure this product is less than $\epsilon$, we choose:
+                $$\delta = \min\left(1, \frac{\epsilon}{2|a| + 1}\right)$$
+                Whenever $|x - a| < \delta$, both restrictions hold, yielding $|x^2 - a^2| < \epsilon$. Hence, $f(x) = x^2$ is continuous at $a$. $\blacksquare$
+            </div>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Generalization &mdash; Continuity of Monomials $f(x) = x^n$</div>
+                <div class="tcolorbox-content">
+                    Let $n \in \mathbb{N}$. The monomial function $f(x) = x^n$ is continuous at any $a \in \mathbb{R}$.
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof:</strong><br>
+                Using the algebraic identity $x^n - a^n = (x - a)\sum_{k=0}^{n-1} x^k a^{n-1-k}$:
+                $$|x^n - a^n| = |x - a| \cdot \left| \sum_{k=0}^{n-1} x^k a^{n-1-k} \right| \le |x - a| \sum_{k=0}^{n-1} |x|^k |a|^{n-1-k}$$
+                Assuming $\delta \le 1$, we have $|x| < |a| + 1$. Thus, each term is bounded by $(|a| + 1)^{n-1}$.
+                Letting $M = n(|a| + 1)^{n-1} > 0$, we get $|x^n - a^n| < M|x - a|$.
+                Choosing <span class="highlight-yellow">$\delta = \min\left(1, \frac{\epsilon}{M}\right)$</span> proves that $f(x) = x^n$ is continuous on $\mathbb{R}$. $\blacksquare$
+            </div>
+        </div>
+
+        <!-- Step 2: Theorem Statement -->
+        <div class="step">
+            <h2>Step 2 &mdash; Algebra of Continuous Functions</h2>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Theorem 3.1.5 &mdash; Algebra of Continuous Functions</div>
+                <div class="tcolorbox-content">
+                    Let $f,g:J\to\mathbb{R}$ be continuous at $a\in J,$ and let $\alpha\in\mathbb{R}.$ Then:
+                    <ol>
+                        <li>$f+g$ is continuous at $a.$</li>
+                        <li>$\alpha f$ is continuous at $a.$</li>
+                        <li>The set of functions $J\to\mathbb{R}$ continuous at $a$ is a real vector space.</li>
+                        <li>$fg$ is continuous at $a.$</li>
+                        <li>If $f(a)\ne 0,$ there exists $\delta>0$ such that $f(x)\ne 0$ for all $x\in(a-\delta,a+\delta)\cap J,$ and $1/f$ is continuous at $a.$</li>
+                        <li>$|f|$ is continuous at $a.$</li>
+                        <li>$\max\{f,g\}$ and $\min\{f,g\}$ are continuous at $a.$</li>
+                        <li>If $f_1:J_1\to\mathbb{R}$ is continuous at $a_1\in J_1,$ $f_2:J_2\to\mathbb{R}$ is continuous at $a_2:=f_1(a_1),$ and $f_1(J_1)\subseteq J_2,$ then $f_2\circ f_1$ is continuous at $a_1.$</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Elaborative Proofs -->
+        <div class="step">
+            <h2>Step 3 &mdash; Elaborative Proofs for Theorem 3.1.5</h2>
+
+            <div class="proof-box">
+                <strong class="highlight-lime">Proof of (1) $f+g$:</strong> Let $\epsilon > 0$. By continuity of $f$ and $g$ at $a$, there exist $\delta_1, \delta_2 > 0$ such that:
+                $$|x-a| < \delta_1 \implies |f(x)-f(a)| < \frac{\epsilon}{2}, \quad |x-a| < \delta_2 \implies |g(x)-g(a)| < \frac{\epsilon}{2}$$
+                Set $\delta = \min(\delta_1, \delta_2)$. If $|x-a| < \delta$:
+                $$|(f+g)(x) - (f+g)(a)| \le |f(x)-f(a)| + |g(x)-g(a)| < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon \quad \blacksquare$$
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-lime">Proof of (2) & (3) $\alpha f$ & Vector Space:</strong> If $\alpha = 0$, $\alpha f = 0$, which is trivially continuous. If $\alpha \neq 0$, choose $\delta > 0$ such that $|x-a| < \delta \implies |f(x)-f(a)| < \frac{\epsilon}{|\alpha|}$. Then $|\alpha f(x) - \alpha f(a)| = |\alpha||f(x)-f(a)| < \epsilon$.
+                Because continuous functions are closed under addition and scalar multiplication, they form a <span class="highlight-cyan">real vector space</span>. $\blacksquare$
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-lime">Proof of (4) $fg$:</strong> We express $|f(x)g(x) - f(a)g(a)| \le |g(x)||f(x)-f(a)| + |f(a)||g(x)-g(a)|$.
+                Since $g$ is continuous at $a$, choosing $\epsilon = 1$ yields a $\delta_1 > 0$ such that $|x-a| < \delta_1 \implies |g(x)| < |g(a)| + 1$.
+                Next, pick $\delta_2$ so $|f(x)-f(a)| < \frac{\epsilon}{2(|g(a)|+1)}$ and $\delta_3$ so $|g(x)-g(a)| < \frac{\epsilon}{2(|f(a)|+1)}$.
+                Setting $\delta = \min(\delta_1, \delta_2, \delta_3)$ proves $|(fg)(x) - (fg)(a)| < \epsilon$. $\blacksquare$
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-lime">Proof of (5) $1/f$:</strong> Let $\epsilon_0 = \frac{|f(a)|}{2} > 0$. There exists $\delta_1 > 0$ such that $|x-a| < \delta_1 \implies |f(x) - f(a)| < \frac{|f(a)|}{2}$.
+                By reverse triangle inequality, $|f(x)| > \frac{|f(a)|}{2} > 0$.
+                Now, for any $\epsilon > 0$, choose $\delta_2 > 0$ such that $|f(x)-f(a)| < \frac{|f(a)|^2 \epsilon}{2}$.
+                Choosing $\delta = \min(\delta_1, \delta_2)$ gives:
+                $$\left|\frac{1}{f(x)} - \frac{1}{f(a)}\right| = \frac{|f(x)-f(a)|}{|f(x)||f(a)|} < \frac{|f(x)-f(a)|}{\frac{|f(a)|^2}{2}} < \epsilon \quad \blacksquare$$
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-lime">Proof of (6) $|f|$:</strong> By the reverse triangle inequality, $||f(x)| - |f(a)|| \le |f(x) - f(a)|$. Given $\epsilon > 0$, choose $\delta > 0$ from the continuity of $f$. Then $||f(x)| - |f(a)|| < \epsilon$. $\blacksquare$
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-lime">Proof of (7) $\max\{f,g\}$ and $\min\{f,g\}$:</strong> Use the algebraic identities:
+                $$\max\{f,g\} = \frac{f + g + |f - g|}{2}, \quad \min\{f,g\} = \frac{f + g - |f - g|}{2}$$
+                Since sums, differences, absolute values, and scalar multiplications of continuous functions are continuous (by parts 1, 2, and 6), both max and min are continuous. $\blacksquare$
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-lime">Proof of (8) $f_2 \circ f_1$:</strong> Let $\epsilon > 0$. By continuity of $f_2$ at $a_2 = f_1(a_1)$, $\exists \eta > 0$ such that $|y - a_2| < \eta \implies |f_2(y) - f_2(a_2)| < \epsilon$.
+                By continuity of $f_1$ at $a_1$, using $\eta$ as tolerance, $\exists \delta > 0$ such that $|x - a_1| < \delta \implies |f_1(x) - f_1(a_1)| < \eta$.
+                Thus, $|x - a_1| < \delta \implies |(f_2 \circ f_1)(x) - (f_2 \circ f_1)(a_1)| < \epsilon$. $\blacksquare$
+            </div>
+        </div>
+
+        <!-- Step 4: Applications & Problems -->
+        <div class="step">
+            <h2>Step 4 &mdash; Applications of Algebra of Continuous Functions</h2>
+            <p>We now solve problems establishing the continuity of complex functions purely using the algebra of limits/continuous functions without resorting to manual $\epsilon$-$\delta$ arguments.</p>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 1:</strong> Prove that $f(x) = \frac{1}{1 + x^2}$ is continuous on all of $\mathbb{R}$ using the algebra of continuous functions.
+                <button class="btn-sol" onclick="toggleSolution('sol1')">Show Solution</button>
+                <div class="solution" id="sol1">
+                    <strong class="highlight-orange">Solution:</strong>
+                    <ol>
+                        <li>Let $g(x) = x^2$. As proved in Step 1, $g(x)$ is continuous on $\mathbb{R}$.</li>
+                        <li>Let $h(x) = 1$ (the constant function), which is continuous on $\mathbb{R}$.</li>
+                        <li>By Theorem 3.1.5(1) [Sum Rule], $k(x) = h(x) + g(x) = 1 + x^2$ is continuous on $\mathbb{R}$.</li>
+                        <li>Since $1 + x^2 \ge 1 > 0$ for all $x \in \mathbb{R}$, $k(x) \neq 0$ everywhere.</li>
+                        <li>By Theorem 3.1.5(5) [Reciprocal Rule], $f(x) = \frac{1}{k(x)} = \frac{1}{1 + x^2}$ is continuous on $\mathbb{R}$. $\blacksquare$</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 2:</strong> Prove that every rational function $R(x) = \frac{P(x)}{Q(x)}$ is continuous at every point $a$ where $Q(a) \neq 0$.
+                <button class="btn-sol" onclick="toggleSolution('sol2')">Show Solution</button>
+                <div class="solution" id="sol2">
+                    <strong class="highlight-orange">Solution:</strong>
+                    <ol>
+                        <li>Any polynomial $P(x) = \sum_{k=0}^n a_k x^k$ and $Q(x) = \sum_{j=0}^m b_j x^j$ are continuous on $\mathbb{R}$ by the sum, constant scalar, and product rules of continuous functions (Theorem 3.1.5(1,2,4)).</li>
+                        <li>At any point $a$ where $Q(a) \neq 0$, the reciprocal function $\frac{1}{Q(x)}$ is continuous at $a$ by Theorem 3.1.5(5).</li>
+                        <li>By Theorem 3.1.5(4) [Product Rule], $R(x) = P(x) \cdot \frac{1}{Q(x)} = \frac{P(x)}{Q(x)}$ is continuous at $a$. $\blacksquare$</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 3:</strong> Prove that $f(x) = \frac{x^3 + 2x + 1}{x^2 - 4}$ is continuous on $\mathbb{R} \setminus \{-2, 2\}$.
+                <button class="btn-sol" onclick="toggleSolution('sol3')">Show Solution</button>
+                <div class="solution" id="sol3">
+                    <strong class="highlight-orange">Solution:</strong>
+                    <ol>
+                        <li>The numerator $P(x) = x^3 + 2x + 1$ is continuous on $\mathbb{R}$ as a polynomial.</li>
+                        <li>The denominator $Q(x) = x^2 - 4$ is continuous on $\mathbb{R}$ as a polynomial.</li>
+                        <li>$Q(x) = 0 \iff x^2 - 4 = 0 \iff x = \pm 2$.</li>
+                        <li>For any $a \in \mathbb{R} \setminus \{-2, 2\}$, $Q(a) \neq 0$. Thus, by Quotient/Algebra rules, $f(x) = \frac{P(x)}{Q(x)}$ is continuous on $\mathbb{R} \setminus \{-2, 2\}$. $\blacksquare$</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 4:</strong> Prove that $f(x) = \sqrt{x^2 + 5}$ is continuous on $\mathbb{R}$.
+                <button class="btn-sol" onclick="toggleSolution('sol4')">Show Solution</button>
+                <div class="solution" id="sol4">
+                    <strong class="highlight-orange">Solution:</strong>
+                    <ol>
+                        <li>Let $g(x) = x^2 + 5$. As a polynomial, $g(x)$ is continuous on $\mathbb{R}$. Furthermore, $g(x) \ge 5 > 0$ for all $x \in \mathbb{R}$.</li>
+                        <li>Let $h(y) = \sqrt{y}$ for $y \in (0, \infty)$, which is known to be continuous on its positive domain.</li>
+                        <li>Since $g(\mathbb{R}) \subseteq [5, \infty) \subset (0, \infty)$, we apply Theorem 3.1.5(8) [Composition Rule].</li>
+                        <li>Thus, $f(x) = (h \circ g)(x) = \sqrt{x^2 + 5}$ is continuous on $\mathbb{R}$. $\blacksquare$</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 5:</strong> Prove that $f(x) = |\sin x + x^3|$ is continuous on $\mathbb{R}$.
+                <button class="btn-sol" onclick="toggleSolution('sol5')">Show Solution</button>
+                <div class="solution" id="sol5">
+                    <strong class="highlight-orange">Solution:</strong>
+                    <ol>
+                        <li>$g(x) = \sin x$ is continuous on $\mathbb{R}$ (proved in Lecture 16).</li>
+                        <li>$h(x) = x^3$ is continuous on $\mathbb{R}$ as a monomial (proved in Step 1).</li>
+                        <li>By Theorem 3.1.5(1) [Sum Rule], $k(x) = \sin x + x^3$ is continuous on $\mathbb{R}$.</li>
+                        <li>By Theorem 3.1.5(6) [Absolute Value Rule], $f(x) = |k(x)| = |\sin x + x^3|$ is continuous on $\mathbb{R}$. $\blacksquare$</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 6:</strong> Prove that $f(x) = \max\{x, x^2\}$ is continuous on $\mathbb{R}$.
+                <button class="btn-sol" onclick="toggleSolution('sol6')">Show Solution</button>
+                <div class="solution" id="sol6">
+                    <strong class="highlight-orange">Solution:</strong>
+                    <ol>
+                        <li>Let $g(x) = x$ (identity function, continuous on $\mathbb{R}$).</li>
+                        <li>Let $h(x) = x^2$ (square function, continuous on $\mathbb{R}$).</li>
+                        <li>By Theorem 3.1.5(7) [Max Rule], $f(x) = \max\{g(x), h(x)\} = \max\{x, x^2\}$ is continuous on $\mathbb{R}$. $\blacksquare$</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-label" id="progressLabel">0 / 0</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <button class="btn-next" id="btnNext" onclick="revealNext()">Next &#9654;</button>
+    </div>
+
+    <script>
+        const steps   = document.querySelectorAll('.step');
+        const fill    = document.getElementById('progressFill');
+        const label   = document.getElementById('progressLabel');
+        const btn     = document.getElementById('btnNext');
+        let   current = 0;
+
+        function updateUI() {
+            const pct = (current / steps.length) * 100;
+            fill.style.width  = pct + '%';
+            label.textContent = current + ' / ' + steps.length;
+            btn.disabled      = current >= steps.length;
+            btn.textContent   = current >= steps.length ? 'Done \u2713' : 'Next \u25ba';
+        }
+
+        function revealNext() {
+            if (current >= steps.length) return;
+            const el = steps[current];
+            el.classList.add('visible');
+            if (window.MathJax) MathJax.typesetPromise([el]);
+            current++;
+            updateUI();
+            setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        }
+
+        function toggleSolution(id) {
+            const sol = document.getElementById(id);
+            if (sol.style.display === 'block') {
+                sol.style.display = 'none';
+            } else {
+                sol.style.display = 'block';
+                if (window.MathJax) MathJax.typesetPromise([sol]);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+                if(e.key === ' ' && e.target.tagName === 'BUTTON') return;
+                e.preventDefault();
+                revealNext();
+            }
+        });
+
+        window.addEventListener('load', function() {
+            updateUI();
+            revealNext();
+        });
+    </script>
+
+</body>
+</html>
