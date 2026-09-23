@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Analysis Problem Set</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --card-bg: #0a0a0a;
+    --border: #222222;
+    --yellow: #ffd700;
+    --orange: #ff8c00;
+    --cyan: #00e5ff;
+    --lime: #76ff03;
+    --pink: #ff4081;
+    --white: #ffffff;
+  }
+
+  * { 
+    box-sizing: border-box; 
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--white);
+    font-family: "IBM Plex Sans", sans-serif;
+    line-height: 1.7;
+    padding-bottom: 5rem;
+  }
+
+  header {
+    background: #050505;
+    border-bottom: 2px solid var(--border);
+    padding: 3rem 1.5rem 2rem;
+    text-align: center;
+  }
+
+  header h1 {
+    color: var(--yellow);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  header p {
+    color: var(--cyan);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+    margin: 1.8rem auto 0;
+    max-width: 800px;
+  }
+
+  nav a {
+    background: #111;
+    color: var(--lime);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid #333;
+    transition: all 0.2s ease;
+  }
+
+  nav a:hover { 
+    background: var(--lime);
+    color: #000;
+  }
+
+  .page {
+    max-width: 850px;
+    margin: 2.5rem auto 0;
+    padding: 0 1.2rem;
+  }
+
+  section.question {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2.2rem 2.4rem;
+    margin-bottom: 3rem;
+  }
+
+  .qtag {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--pink);
+    background: #180008;
+    border: 1px solid var(--pink);
+    padding: 0.2rem 0.7rem;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+  }
+
+  h2.qtitle {
+    font-size: 1.5rem;
+    margin: 0 0 1.2rem;
+    color: var(--orange);
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.5rem;
+  }
+
+  .claim-box {
+    background: #111;
+    border-left: 4px solid var(--cyan);
+    padding: 1.2rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1.05rem;
+    margin-bottom: 1.8rem;
+    color: var(--white);
+  }
+
+  .claim-box strong {
+    color: var(--cyan);
+  }
+
+  h3.sub {
+    font-size: 1.2rem;
+    color: var(--yellow);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.3rem;
+  }
+
+  ul, ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  li {
+    margin-bottom: 0.8rem;
+  }
+
+  .item-title {
+    color: var(--lime);
+    font-weight: 600;
+  }
+
+  .highlight-yellow { color: var(--yellow); }
+  .highlight-orange { color: var(--orange); }
+  .highlight-cyan   { color: var(--cyan); }
+  .highlight-lime   { color: var(--lime); }
+  .highlight-pink   { color: var(--pink); }
+
+  .qed { 
+    display: inline-block;
+    color: var(--pink); 
+    font-size: 1.2rem; 
+    margin-left: 0.5rem;
+  }
+
+  .note {
+    font-size: 0.95rem;
+    color: var(--white);
+    background: #051305;
+    border: 1px dashed var(--lime);
+    padding: 1rem 1.2rem;
+    border-radius: 6px;
+    margin-top: 1.5rem;
+  }
+
+  figure { 
+    margin: 2rem 0; 
+    text-align: center; 
+  }
+
+  figcaption { 
+    font-size: 0.9rem; 
+    color: var(--cyan); 
+    margin-top: 0.8rem; 
+  }
+
+  svg { 
+    max-width: 100%; 
+    height: auto; 
+    background: #000000; 
+    border: 1px solid #333; 
+    border-radius: 6px; 
+  }
+
+  a.extlink {
+    color: var(--cyan);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  a.extlink:hover {
+    color: var(--yellow);
+  }
+
+  .badge-false {
+    display: inline-block; 
+    background: #33000d; 
+    color: var(--pink); 
+    border: 1px solid var(--pink);
+    font-weight: 600;
+    padding: 0.15rem 0.55rem; 
+    border-radius: 4px; 
+    font-size: 0.85rem; 
+    margin-left: 0.4rem;
+  }
+
+  .badge-true {
+    display: inline-block; 
+    background: #051d00; 
+    color: var(--lime); 
+    border: 1px solid var(--lime);
+    font-weight: 600;
+    padding: 0.15rem 0.55rem; 
+    border-radius: 4px; 
+    font-size: 0.85rem; 
+    margin-left: 0.4rem;
+  }
+
+  /* MathJax color overrides for high contrast dark theme */
+  .mjx-chtml {
+    color: var(--white) !important;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Real Analysis — Problem Set</h1>
+  <p>Elaborated Worked Solutions with Detailed Itemization</p>
+  <nav>
+    <a href="#q1">Q1 · Closure of [0,1]</a>
+    <a href="#q2">Q2 · Dirichlet Discontinuity</a>
+    <a href="#q3">Q3 · Continuity of $x^2$</a>
+    <a href="#q4">Q4 · $n$th Roots via IVT</a>
+    <a href="#q5">Q5 · Bounded vs. Increasing</a>
+  </nav>
+</header>
+
+<div class="page">
+
+  <!-- QUESTION 1 -->
+  <section class="question" id="q1">
+    <span class="qtag">QUESTION 1</span>
+    <h2 class="qtitle">Closure of the Unit Interval under Multiplication</h2>
+    <div class="claim-box">
+      <strong>Theorem:</strong> If $a, b \in [0,1]$, then their product satisfies $a \cdot b \in [0,1]$.
+    </div>
+
+    <h3 class="sub">Part 1: Auxiliary Result (Squaring Lemma)</h3>
+    <p>We first establish that squaring any element keeps it inside the unit interval $[0,1]$:</p>
+    <ul>
+      <li>
+        <span class="item-title">Boundary Case $a = 0$:</span> 
+        Evaluating directly gives $a^2 = 0^2 = 0 \in [0,1]$.
+      </li>
+      <li>
+        <span class="item-title">Boundary Case $a = 1$:</span> 
+        Evaluating directly gives $a^2 = 1^2 = 1 \in [0,1]$.
+      </li>
+      <li>
+        <span class="item-title">Interior Case $0 < a < 1$:</span>
+        <ul>
+          <li>Multiplying the strict inequality $a < 1$ by the positive quantity $a > 0$ yields:
+            $$a \cdot a < 1 \cdot a \implies a^2 < a$$
+          </li>
+          <li>Chaining this result with the initial bounds $0 < a$ and $a < 1$ gives:
+            $$0 < a^2 < a < 1$$
+          </li>
+          <li>Hence, $a^2 \in (0,1) \subset [0,1]$.</li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Lemma Conclusion:</span> In every possible configuration, $a^2 \in [0,1]$. <span class="qed">$\blacksquare$</span>
+      </li>
+    </ul>
+
+    <h3 class="sub">Part 2: Complete Proof of the Theorem</h3>
+    <p>Let $a, b \in [0,1]$. We exhaustively analyze all positional relationship cases for $a$ and $b$:</p>
+    <ol>
+      <li>
+        <span class="item-title">Zero Boundary Cases:</span> 
+        If either $a = 0$ or $b = 0$, then $a \cdot b = 0 \in [0,1]$.
+      </li>
+      <li>
+        <span class="item-title">Identity Boundary Cases:</span>
+        <ul>
+          <li>If $a = 1$, then $a \cdot b = 1 \cdot b = b \in [0,1]$.</li>
+          <li>If $b = 1$, then $a \cdot b = a \cdot 1 = a \in [0,1]$.</li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Equal Elements Case ($a = b \in (0,1)$):</span> 
+        Reduces to $a \cdot b = a^2$, which belongs to $[0,1]$ by the Squaring Lemma.
+      </li>
+      <li>
+        <span class="item-title">Strict Ordering Case ($0 < a < b < 1$):</span>
+        <ul>
+          <li>Since $b > 0$, multiplying $a < 1$ by $b$ gives:
+            $$a \cdot b < 1 \cdot b \implies a b < b < 1$$
+          </li>
+          <li>Since $a > 0$ and $b > 0$, we also have $a b > 0$.</li>
+          <li>Combining these inequalities yields the explicit chain:
+            $$0 < a b < b < 1$$
+          </li>
+          <li>Thus, $a b \in (0,1) \subset [0,1]$.</li>
+        </ul>
+      </li>
+    </ol>
+    <p>Because all possible cases exhaust the domain $[0,1] \times [0,1]$, we conclude that $a b \in [0,1]$. <span class="qed">$\blacksquare$</span></p>
+  </section>
+
+  <!-- QUESTION 2 -->
+  <section class="question" id="q2">
+    <span class="qtag">QUESTION 2</span>
+    <h2 class="qtitle">Discontinuity of the Dirichlet Function</h2>
+    <div class="claim-box">
+      <strong>Definition:</strong> The Dirichlet function $D: \mathbb{R} \to \mathbb{R}$ is defined by:
+      $$D(x) = \begin{cases} 1 & \text{if } x \in \mathbb{Q} \\ 0 & \text{if } x \in \mathbb{R} \setminus \mathbb{Q} \end{cases}$$
+      This function is discontinuous at every point $a \in \mathbb{R}$.
+    </div>
+
+    <h3 class="sub">Part 1: The Negated $\varepsilon$–$\delta$ Discontinuity Criterion</h3>
+    <ul>
+      <li>
+        <span class="item-title">Continuity at $a$:</span> 
+        $\forall \varepsilon > 0, \exists \delta > 0$ such that $\forall x \in \mathbb{R}$, $|x - a| < \delta \implies |D(x) - D(a)| < \varepsilon$.
+      </li>
+      <li>
+        <span class="item-title">Discontinuity at $a$ (Logical Negation):</span> 
+        $\exists \varepsilon > 0$ such that $\forall \delta > 0$, $\exists x \in \mathbb{R}$ satisfying $|x - a| < \delta$ and $|D(x) - D(a)| \ge \varepsilon$.
+      </li>
+    </ul>
+
+    <h3 class="sub">Part 2: Concrete Demonstration at $x = 0$</h3>
+    <ol>
+      <li>
+        <span class="item-title">Evaluation at $0$:</span> Since $0 \in \mathbb{Q}$, we have $D(0) = 1$.
+      </li>
+      <li>
+        <span class="item-title">Fixing Error Threshold:</span> Set $\varepsilon = \frac{1}{2}$.
+      </li>
+      <li>
+        <span class="item-title">Testing Arbitrary $\delta > 0$:</span>
+        <ul>
+          <li>Choose $n \in \mathbb{N}$ large enough such that $n > \frac{\sqrt{2}}{\delta}$ (guaranteed by the Archimedean Property).</li>
+          <li>Construct $x = \frac{\sqrt{2}}{n}$. Observe that $x$ is irrational and satisfies $0 < x < \delta$.</li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Evaluating Function Jump:</span>
+        $$D(x) = 0 \implies |D(x) - D(0)| = |0 - 1| = 1 \ge \frac{1}{2} = \varepsilon$$
+      </li>
+      <li>
+        <span class="item-title">Deduction:</span> No $\delta > 0$ can constrain $D(x)$ within $\varepsilon = \frac{1}{2}$ of $D(0)$, so $D$ is discontinuous at $x = 0$.
+      </li>
+    </ol>
+
+    <figure>
+      <svg viewBox="0 0 620 220" xmlns="http://www.w3.org/2000/svg">
+        <line x1="60" y1="170" x2="580" y2="170" stroke="#ff8c00" stroke-width="1.5"/>
+        <text x="585" y="175" font-size="13" fill="#ff8c00">x</text>
+        <line x1="70" y1="190" x2="70" y2="30" stroke="#ff8c00" stroke-width="1.5"/>
+        <text x="35" y="30" font-size="13" fill="#ff8c00">D(x)</text>
+        <line x1="70" y1="60" x2="580" y2="60" stroke="#ffd700" stroke-dasharray="4 4" stroke-width="1.2"/>
+        <text x="585" y="64" font-size="12" fill="#ffd700">y = 1 (Rationals)</text>
+        <line x1="70" y1="170" x2="580" y2="170" stroke="#76ff03" stroke-dasharray="4 4" stroke-width="1.2"/>
+        <text x="440" y="190" font-size="12" fill="#76ff03">y = 0 (Irrationals)</text>
+        
+        <circle cx="300" cy="60" r="4" fill="#00e5ff"/>
+        <text x="300" y="205" font-size="12" text-anchor="middle" fill="#00e5ff">x = 0</text>
+        
+        <!-- Rational Points -->
+        <circle cx="480" cy="60" r="4" fill="#ffd700"/>
+        <circle cx="420" cy="60" r="4" fill="#ffd700"/>
+        <circle cx="380" cy="60" r="4" fill="#ffd700"/>
+        <circle cx="350" cy="60" r="4" fill="#ffd700"/>
+        
+        <!-- Irrational Points -->
+        <circle cx="120" cy="170" r="4" fill="#76ff03"/>
+        <circle cx="180" cy="170" r="4" fill="#76ff03"/>
+        <circle cx="220" cy="170" r="4" fill="#76ff03"/>
+        <circle cx="250" cy="170" r="4" fill="#76ff03"/>
+        <circle cx="280" cy="170" r="4" fill="#76ff03"/>
+        
+        <line x1="300" y1="60" x2="300" y2="170" stroke="#ff4081" stroke-dasharray="3 3" stroke-width="1.5"/>
+        <text x="310" y="115" font-size="12" fill="#ff4081">Jump = 1 ≥ ε</text>
+      </svg>
+      <figcaption>Illustration of the dense jumping behavior of $D(x)$ around $x=0$.</figcaption>
+    </figure>
+
+    <h3 class="sub">Part 3: General Proof for Arbitrary $a \in \mathbb{R}$</h3>
+    <p>We leverage the density of both $\mathbb{Q}$ and $\mathbb{R} \setminus \mathbb{Q}$ in $\mathbb{R}$:</p>
+    <ul>
+      <li>
+        <span class="item-title">Density Properties:</span> 
+        Every open interval $(a - \delta, a + \delta)$ contains at least one rational number and at least one irrational number.
+      </li>
+      <li>
+        <span class="item-title">Fixed Challenge Parameter:</span> Choose $\varepsilon = \frac{1}{2}$.
+      </li>
+      <li>
+        <span class="item-title">Case A ($a \in \mathbb{Q}$):</span>
+        <ul>
+          <li>Here $D(a) = 1$.</li>
+          <li>For any $\delta > 0$, pick an irrational point $x^* \in (a - \delta, a + \delta)$.</li>
+          <li>Then $D(x^*) = 0$, yielding $|D(x^*) - D(a)| = |0 - 1| = 1 \ge \varepsilon$.</li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Case B ($a \in \mathbb{R} \setminus \mathbb{Q}$):</span>
+        <ul>
+          <li>Here $D(a) = 0$.</li>
+          <li>For any $\delta > 0$, pick a rational point $x^* \in (a - \delta, a + \delta)$.</li>
+          <li>Then $D(x^*) = 1$, yielding $|D(x^*) - D(a)| = |1 - 0| = 1 \ge \varepsilon$.</li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Conclusion:</span> $D(x)$ is everywhere discontinuous on $\mathbb{R}$. <span class="qed">$\blacksquare$</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- QUESTION 3 -->
+  <section class="question" id="q3">
+    <span class="qtag">QUESTION 3</span>
+    <h2 class="qtitle">Continuity of $f(x) = x^2$ via $\varepsilon$–$\delta$ Definition</h2>
+    <div class="claim-box">
+      <strong>Theorem:</strong> For every $a \in \mathbb{R}$, $\displaystyle\lim_{x \to a} x^2 = a^2$.
+    </div>
+
+    <p>
+      For interactive visuals, visit: 
+      <a class="extlink" href="https://satya8118.github.io/C1/CN/limit_x%5E2_proof.html" target="_blank" rel="noopener">Limit of $x^2$ Interactive Proof</a>
+    </p>
+
+    <h3 class="sub">Detailed Proof Breakdown</h3>
+    <ol>
+      <li>
+        <span class="item-title">Algebraic Factorization:</span>
+        Our goal is to bound the error term:
+        $$|f(x) - f(a)| = |x^2 - a^2| = |x - a| \cdot |x + a|$$
+      </li>
+      <li>
+        <span class="item-title">Bounding the Uncontrolled Term $|x + a|$:</span>
+        <ul>
+          <li>Impose an initial constraint on $\delta$: require $\delta \le 1$.</li>
+          <li>If $|x - a| < \delta \le 1$, apply the Triangle Inequality:
+            $$|x + a| = |(x - a) + 2a| \le |x - a| + 2|a| < 1 + 2|a|$$
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Forcing Product Inequality:</span>
+        <ul>
+          <li>Using the bound $|x + a| < 1 + 2|a|$, we write:
+            $$|x^2 - a^2| = |x - a| \cdot |x + a| < |x - a|(1 + 2|a|)$$
+          </li>
+          <li>To guarantee $|x^2 - a^2| < \varepsilon$, it suffices to enforce:
+            $$|x - a|(1 + 2|a|) \le \varepsilon \iff |x - a| < \frac{\varepsilon}{1 + 2|a|}$$
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Final Delta Selection:</span>
+        To satisfy both conditions ($\delta \le 1$ and $\delta \le \frac{\varepsilon}{1 + 2|a|}$), define:
+        $$\delta = \min\left\{1, \frac{\varepsilon}{1 + 2|a|}\right\}$$
+      </li>
+      <li>
+        <span class="item-title">Verification:</span>
+        If $0 < |x - a| < \delta$, then simultaneously $|x - a| < 1$ and $|x - a| < \frac{\varepsilon}{1 + 2|a|}$. Therefore:
+        $$|x^2 - a^2| = |x - a| \cdot |x + a| < \left(\frac{\varepsilon}{1 + 2|a|}\right) (1 + 2|a|) = \varepsilon$$
+      </li>
+    </ol>
+    <p>This proves $f(x) = x^2$ is continuous everywhere on $\mathbb{R}$. <span class="qed">$\blacksquare$</span></p>
+  </section>
+
+  <!-- QUESTION 4 -->
+  <section class="question" id="q4">
+    <span class="qtag">QUESTION 4</span>
+    <h2 class="qtitle">Existence of $n$th Roots via Intermediate Value Theorem</h2>
+    <div class="claim-box">
+      <strong>Theorem:</strong> Given $a \ge 0$ and integer $n \ge 1$, there exists a unique real number $c \ge 0$ such that $c^n = a$.
+    </div>
+
+    <h3 class="sub">Elaborate Step-by-Step Proof</h3>
+    <ol>
+      <li>
+        <span class="item-title">Trivial Boundary Case:</span> 
+        If $a = 0$, choosing $c = 0$ yields $0^n = 0 = a$.
+      </li>
+      <li>
+        <span class="item-title">Constructing Continuous Auxiliary Function:</span>
+        Assume $a > 0$. Define $g: [0, \infty) \to \mathbb{R}$ by $g(x) = x^n - a$. As a polynomial function, $g$ is continuous on all of $\mathbb{R}$.
+      </li>
+      <li>
+        <span class="item-title">Establishing Interval Endpoints:</span>
+        <ul>
+          <li>Set $M = \max\{1, a\}$.</li>
+          <li><span class="highlight-lime">Lower Bound Evaluation:</span> $g(0) = 0^n - a = -a < 0$.</li>
+          <li><span class="highlight-lime">Upper Bound Evaluation:</span> Since $M \ge 1$, we have $M^n \ge M$. Furthermore, $M \ge a$. Thus:
+            $$M^n \ge a \implies g(M) = M^n - a \ge 0$$
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Applying Intermediate Value Theorem (IVT):</span>
+        <ul>
+          <li>The function $g$ is continuous on the closed interval $[0, M]$.</li>
+          <li>The target value $0$ lies between $g(0) < 0$ and $g(M) \ge 0$.</li>
+          <li>By the IVT, there exists at least one $c \in [0, M]$ such that:
+            $$g(c) = 0 \implies c^n - a = 0 \implies c^n = a$$
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Uniqueness Proof:</span>
+        <ul>
+          <li>Let $0 \le c_1 < c_2$.</li>
+          <li>Multiplying strict positive inequalities confirms $c_1^n < c_2^n$, meaning $g(x)$ is strictly increasing on $[0, \infty)$.</li>
+          <li>A strictly increasing function can cross zero at most once. Hence, $c = a^{1/n}$ is unique. <span class="qed">$\blacksquare$</span></li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="note">
+      <strong>Note:</strong> IVT is a pure non-constructive existence theorem—it proves $c$ exists without explicit algorithmic representation.
+    </div>
+  </section>
+
+  <!-- QUESTION 5 -->
+  <section class="question" id="q5">
+    <span class="qtag">QUESTION 5</span>
+    <h2 class="qtitle">Bounded Functions and Riemann Integrability</h2>
+    <div class="claim-box">
+      <strong>Core Analysis:</strong>
+      <ul>
+        <li><strong>Part A:</strong> Is every bounded function on $[a,b]$ Riemann integrable? <span class="badge-false">FALSE</span></li>
+        <li><strong>Part B:</strong> Is every bounded, increasing function on $[a,b]$ Riemann integrable? <span class="badge-true">TRUE</span></li>
+      </ul>
+    </div>
+
+    <h3 class="sub">Part A: Counterexample for Bounded-Only Functions</h3>
+    <ul>
+      <li>
+        <span class="item-title">Counterexample Construction:</span> Consider the Dirichlet function $D(x)$ restricted to $[a,b]$ with $a < b$.
+      </li>
+      <li>
+        <span class="item-title">Boundedness Verification:</span> $0 \le D(x) \le 1$ for all $x \in [a,b]$, so $D$ is bounded.
+      </li>
+      <li>
+        <span class="item-title">Partition Analysis:</span>
+        <ul>
+          <li>Let $P = \{a = x_0 < x_1 < \dots < x_k = b\}$ be any partition of $[a,b]$.</li>
+          <li>By density, every subinterval $[x_{i-1}, x_i]$ contains both rationals and irrationals.</li>
+          <li>Subinterval Supremum: $M_i = \sup_{x \in [x_{i-1}, x_i]} D(x) = 1$.</li>
+          <li>Subinterval Infimum: $m_i = \inf_{x \in [x_{i-1}, x_i]} D(x) = 0$.</li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Darboux Sum Calculations:</span>
+        <ul>
+          <li>Upper Sum: $U(D,P) = \sum_{i=1}^k 1 \cdot (x_i - x_{i-1}) = b - a$.</li>
+          <li>Lower Sum: $L(D,P) = \sum_{i=1}^k 0 \cdot (x_i - x_{i-1}) = 0$.</li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Integrability Failure:</span>
+        $$\overline{\int_a^b} D(x) dx = b - a \quad \neq \quad \underline{\int_a^b} D(x) dx = 0$$
+        Because upper and lower integrals do not coincide, $D(x)$ is not Riemann integrable. <span class="qed">$\blacksquare$</span>
+      </li>
+    </ul>
+
+    <h3 class="sub">Part B: Proof for Bounded & Increasing Functions</h3>
+    <ol>
+      <li>
+        <span class="item-title">Automatic Bounding:</span>
+        For any $x \in [a,b]$, monotonicity implies $f(a) \le f(x) \le f(b)$. If $f(a) = f(b)$, $f$ is constant and integrable. Assume $f(a) < f(b)$.
+      </li>
+      <li>
+        <span class="item-title">Setting Up Uniform Partition:</span>
+        <ul>
+          <li>Fix $\varepsilon > 0$. Divide $[a,b]$ into $n$ equal subintervals.</li>
+          <li>Width of each subinterval: $\Delta x = \frac{b - a}{n}$.</li>
+        </ul>
+      </li>
+      <li>
+        <span class="item-title">Evaluating Endpoint Extremes:</span>
+        Since $f$ is increasing on $[x_{i-1}, x_i]$:
+        $$M_i = f(x_i) \quad \text{and} \quad m_i = f(x_{i-1})$$
+      </li>
+      <li>
+        <span class="item-title">Telescoping the Darboux Difference:</span>
+        $$U(f,P) - L(f,P) = \sum_{i=1}^n \big[f(x_i) - f(x_{i-1})\big] \Delta x = \Delta x \sum_{i=1}^n \big[f(x_i) - f(x_{i-1})\big]$$
+        Expanding the sum reveals a telescoping structure:
+        $$\sum_{i=1}^n \big[f(x_i) - f(x_{i-1})\big] = f(x_n) - f(x_0) = f(b) - f(a)$$
+      </li>
+      <li>
+        <span class="item-title">Epsilon Bound Choice:</span>
+        $$U(f,P) - L(f,P) = \frac{(b - a)[f(b) - f(a)]}{n}$$
+        By choosing $n > \frac{(b - a)[f(b) - f(a)]}{\varepsilon}$, we guarantee $U(f,P) - L(f,P) < \varepsilon$.
+      </li>
+      <li>
+        <span class="item-title">Conclusion:</span>
+        By Riemann's Criterion, $f$ is Riemann integrable on $[a,b]$. <span class="qed">$\blacksquare$</span>
+      </li>
+    </ol>
+
+    <h3 class="sub">Theoretical Context</h3>
+    <ul>
+      <li>
+        <span class="item-title">Lebesgue's Criterion for Integrability:</span> A bounded function on $[a,b]$ is Riemann integrable if and only if its set of discontinuities has Lebesgue measure zero.
+      </li>
+      <li>
+        <span class="item-title">Monotone Functions:</span> Monotone functions have at most countably many discontinuities (measure zero), making them integrable.
+      </li>
+      <li>
+        <span class="item-title">Dirichlet Function:</span> Discontinuous everywhere on $[a,b]$, yielding a discontinuity set of measure $b - a > 0$, explaining integrability failure.
+      </li>
+    </ul>
+  </section>
+
+</div>
+</body>
+</html>
