@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus-1 Epsilon-Delta Continuity Self-Assessment & Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .font-mono-code {
+            font-family: 'Fira Code', monospace;
+        }
+        
+        /* Neon Colors & Glows */
+        .neon-border-cyan { box-shadow: 0 0 15px rgba(0, 229, 255, 0.45); border-color: #00E5FF; }
+        .neon-border-pink { box-shadow: 0 0 15px rgba(255, 46, 147, 0.45); border-color: #FF2E93; }
+        .neon-border-lime { box-shadow: 0 0 15px rgba(57, 255, 20, 0.45); border-color: #39FF14; }
+        .neon-border-yellow { box-shadow: 0 0 15px rgba(255, 230, 0, 0.45); border-color: #FFE600; }
+        .neon-border-orange { box-shadow: 0 0 15px rgba(255, 140, 0, 0.45); border-color: #FF8C00; }
+        
+        .glow-text-cyan { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+        .glow-text-pink { text-shadow: 0 0 10px rgba(255, 46, 147, 0.7); }
+        .glow-text-lime { text-shadow: 0 0 10px rgba(57, 255, 20, 0.7); }
+        .glow-text-yellow { text-shadow: 0 0 10px rgba(255, 230, 0, 0.7); }
+        
+        /* Modern Glassmorphism Styling */
+        .glass-card {
+            background: rgba(12, 12, 20, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Interactive Option Hover and Focus States */
+        .quiz-option {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00E5FF; }
+
+        .animate-fade-in {
+            animation: fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: #1a1a24;
+            border-radius: 8px;
+            height: 6px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #00E5FF;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00E5FF;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white">
+
+    <!-- Sticky Header -->
+    <header class="w-full border-b border-gray-800 bg-black/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3 sm:px-8">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-pink-500 to-yellow-400 p-0.5 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                    <div class="w-full h-full bg-black rounded-[10px] flex items-center justify-center font-extrabold text-cyan-400 text-xl font-mono">ε-δ</div>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-400 to-yellow-300">
+                        CALCULUS 1 <span class="text-xs font-mono tracking-normal text-gray-400 border border-gray-700 px-2 py-0.5 rounded ml-1.5 bg-gray-900">UNIVERSITY QUIZ & VISUALIZER</span>
+                    </h1>
+                    <p class="text-xs text-gray-400 hidden sm:block">Mastering $\epsilon$-$\delta$ Continuity & Geometric Intuition</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
+                <!-- Score Counter -->
+                <div class="flex items-center space-x-2 bg-gray-900/90 border border-gray-800 px-3.5 py-1.5 rounded-full">
+                    <span class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Score:</span>
+                    <span id="score-display" class="font-mono text-lime-400 font-bold text-base">0 / 90</span>
+                </div>
+
+                <!-- Slide Counter -->
+                <div class="flex items-center space-x-2 bg-gray-900/90 border border-gray-800 px-3.5 py-1.5 rounded-full">
+                    <span class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Slide:</span>
+                    <span id="slide-num-display" class="font-mono text-cyan-400 font-bold text-base">1 / 10</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-900 h-1.5 mt-3 rounded-full overflow-hidden max-w-6xl mx-auto">
+            <div id="progress-bar" class="bg-gradient-to-r from-cyan-400 via-pink-500 to-lime-400 h-full transition-all duration-500 ease-out" style="width: 10%;"></div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-5xl w-full mx-auto p-4 sm:p-6 flex-grow flex flex-col justify-center my-2">
+        
+        <!-- Quiz Interactive Card (Slides 1 to 9) -->
+        <div id="quiz-container" class="glass-card rounded-2xl p-6 sm:p-8 relative shadow-2xl transition-all duration-300">
+            
+            <!-- Slide Category Badge & Topic Tag -->
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4 border-b border-gray-800/80 pb-3">
+                <span id="topic-tag" class="px-3 py-1 rounded-md text-xs font-mono tracking-wider font-semibold bg-cyan-950/80 text-cyan-300 border border-cyan-700/50">
+                    <!-- Dynamic Topic -->
+                </span>
+                <span id="difficulty-tag" class="text-xs text-yellow-400 font-mono flex items-center gap-1.5 bg-yellow-950/40 px-2.5 py-1 rounded-md border border-yellow-700/40">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400 inline-block animate-pulse"></span> Calculus-1 Rigor
+                </span>
+            </div>
+
+            <!-- Question Area -->
+            <div class="mb-6">
+                <h2 id="question-title" class="text-xl sm:text-2xl font-bold leading-relaxed text-gray-100">
+                    <!-- Dynamic Question -->
+                </h2>
+                <div id="question-body" class="mt-3 text-gray-300 text-sm sm:text-base leading-relaxed space-y-2">
+                    <!-- Dynamic Context Body -->
+                </div>
+            </div>
+
+            <!-- Options Container -->
+            <div id="options-container" class="space-y-3 my-6">
+                <!-- Dynamically Inserted Option Buttons -->
+            </div>
+
+            <!-- Action Triggers (Hint & Solution) -->
+            <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-800/80">
+                <button id="hint-btn" onclick="toggleHint()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-cyan-950/50 text-cyan-300 border border-cyan-700/60 hover:bg-cyan-900/60 transition-all duration-200">
+                    <span>💡 Toggle Hint</span>
+                </button>
+                <button id="solution-btn" onclick="toggleSolution()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-pink-950/50 text-pink-300 border border-pink-700/60 hover:bg-pink-900/60 transition-all duration-200">
+                    <span>📖 Calculus-1 Solution Breakdown</span>
+                </button>
+            </div>
+
+            <!-- Hint Box -->
+            <div id="hint-box" class="hidden mt-4 p-4 rounded-xl bg-cyan-950/30 border border-cyan-500/40 text-cyan-200 text-sm leading-relaxed animate-fade-in">
+                <div class="flex items-center gap-2 text-cyan-400 font-bold mb-1.5 text-xs uppercase tracking-wider font-mono">
+                    <span>💡 Intuition Hint</span>
+                </div>
+                <div id="hint-text"></div>
+            </div>
+
+            <!-- Solution Box -->
+            <div id="solution-box" class="hidden mt-4 p-4 rounded-xl bg-lime-950/30 border border-lime-500/40 text-lime-200 text-sm leading-relaxed animate-fade-in">
+                <div class="flex items-center gap-2 text-lime-400 font-bold mb-1.5 text-xs uppercase tracking-wider font-mono">
+                    <span>🧠 Step-by-Step Proof & Math Breakdown</span>
+                </div>
+                <div id="solution-text"></div>
+            </div>
+
+        </div>
+
+        <!-- Summary & Transition Dashboard (Slide 10) -->
+        <div id="summary-container" class="hidden glass-card rounded-2xl p-6 sm:p-10 shadow-2xl space-y-10 animate-fade-in">
+            
+            <!-- Header Banner -->
+            <div class="text-center space-y-4 border-b border-gray-800 pb-8">
+                <div class="inline-block p-4 rounded-full bg-gradient-to-tr from-cyan-500/20 via-pink-500/20 to-lime-500/20 border border-gray-700 mb-1">
+                    <span class="text-5xl">🎓</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-400 to-lime-300">
+                    Slide 10: University Continuity & Transition Masterclass
+                </h2>
+                <p class="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                    Welcome to university mathematics! Moving from high school calculus to university analysis is a shift from <em>procedural computation</em> to <em>rigorous definition-based logic</em>.
+                </p>
+
+                <!-- Final Score Breakdown Card -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto pt-4">
+                    <div class="p-4 rounded-xl bg-gray-900/90 border border-cyan-500/40 text-center">
+                        <div class="text-xs text-gray-400 font-mono uppercase tracking-wider">Quiz Score</div>
+                        <div id="final-score" class="text-2xl font-bold text-cyan-400 mt-1">0 / 90</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900/90 border border-pink-500/40 text-center">
+                        <div class="text-xs text-gray-400 font-mono uppercase tracking-wider">Accuracy</div>
+                        <div id="final-accuracy" class="text-2xl font-bold text-pink-400 mt-1">0%</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900/90 border border-lime-500/40 text-center">
+                        <div class="text-xs text-gray-400 font-mono uppercase tracking-wider">Calculus Rank</div>
+                        <div id="final-badge" class="text-base font-bold text-lime-400 mt-1">Calculus Scholar</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 1: Interactive Epsilon-Delta Visualizer Tool -->
+            <div class="bg-black/80 rounded-2xl p-5 sm:p-7 border border-cyan-500/40 shadow-xl space-y-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-gray-800 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-cyan-300 flex items-center gap-2">
+                            <span>🎮 Interactive $\epsilon$-$\delta$ Neighborhood Sandbox</span>
+                        </h3>
+                        <p class="text-xs text-gray-400">Test if your chosen $\delta$ traps all function outputs inside the $\epsilon$ error window!</p>
+                    </div>
+                    <div id="sim-status-badge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-lime-950 text-lime-300 border border-lime-500/50">
+                        STATUS: SUCCESS
+                    </div>
+                </div>
+
+                <!-- Canvas Display & Controls -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                    
+                    <!-- Graph Canvas -->
+                    <div class="lg:col-span-2 relative bg-gray-950 rounded-xl overflow-hidden border border-gray-800 shadow-inner flex items-center justify-center p-2">
+                        <canvas id="sim-canvas" width="550" height="350" class="w-full h-auto max-w-full block rounded-lg"></canvas>
+                    </div>
+
+                    <!-- Sandbox Sliders & Controls -->
+                    <div class="space-y-4 text-xs sm:text-sm bg-gray-900/80 p-4 rounded-xl border border-gray-800">
+                        <div>
+                            <label class="block text-gray-300 font-bold mb-1.5 font-mono">Select Function $f(x)$:</label>
+                            <select id="sim-func" onchange="updateSim()" class="w-full bg-black border border-gray-700 text-cyan-300 p-2 rounded-lg font-mono focus:border-cyan-400 outline-none">
+                                <option value="signum">Signum: sgn(x) [1 if x≥0, -1 if x<0]</option>
+                                <option value="floor">Floor: ⌊x⌋</option>
+                                <option value="identity">Identity: f(x) = x</option>
+                                <option value="constant">Constant: f(x) = 2</option>
+                                <option value="quadratic">Quadratic: f(x) = x²</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-mono mb-1">
+                                <span class="text-gray-300 font-semibold">Evaluation Point ($c$):</span>
+                                <span id="sim-c-val" class="text-yellow-400 font-bold">0.00</span>
+                            </div>
+                            <input type="range" id="sim-c" min="-2.0" max="2.0" step="0.1" value="0.0" oninput="updateSim()" class="w-full">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-mono mb-1">
+                                <span class="text-pink-400 font-semibold">Epsilon Tolerance ($\epsilon$):</span>
+                                <span id="sim-eps-val" class="text-pink-400 font-bold">0.80</span>
+                            </div>
+                            <input type="range" id="sim-eps" min="0.1" max="2.5" step="0.05" value="0.8" oninput="updateSim()" class="w-full">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-mono mb-1">
+                                <span class="text-cyan-400 font-semibold">Delta Window ($\delta$):</span>
+                                <span id="sim-del-val" class="text-cyan-400 font-bold">0.50</span>
+                            </div>
+                            <input type="range" id="sim-del" min="0.05" max="2.0" step="0.05" value="0.5" oninput="updateSim()" class="w-full">
+                        </div>
+
+                        <div id="sim-explanation" class="p-2.5 rounded-lg bg-black/60 border border-gray-800 text-xs text-gray-300 leading-relaxed font-mono">
+                            <!-- Dynamic feedback narrative -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: School vs University Mindset Shift Table -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-yellow-300 flex items-center gap-2">
+                    <span>⚔️ High School Intuition vs. University Rigor</span>
+                </h3>
+
+                <div class="overflow-x-auto rounded-xl border border-gray-800 bg-black/60">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-800 bg-gray-900/80 font-mono text-gray-300">
+                                <th class="p-3.5 sm:p-4 text-cyan-400">Concept</th>
+                                <th class="p-3.5 sm:p-4 text-yellow-400">High School View (Intuitive)</th>
+                                <th class="p-3.5 sm:p-4 text-pink-400">University View ($\epsilon$-$\delta$ Rigor)</th>
+                            </th>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800/60 text-gray-300">
+                            <tr>
+                                <td class="p-3.5 sm:p-4 font-bold text-gray-200">Continuity Definition</td>
+                                <td class="p-3.5 sm:p-4 text-gray-400">"You can draw the graph without lifting your pencil."</td>
+                                <td class="p-3.5 sm:p-4 text-cyan-300">For every $\epsilon > 0$, $\exists \delta > 0$ such that $|x-c| < \delta \implies |f(x)-f(c)| < \epsilon$.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 sm:p-4 font-bold text-gray-200">Discrete Domains ($\mathbb{N}$ or $\{1,2,3\}$)</td>
+                                <td class="p-3.5 sm:p-4 text-gray-400">"Not continuous because it consists of separate floating dots."</td>
+                                <td class="p-3.5 sm:p-4 text-lime-300"><strong>EVERYWHERE CONTINUOUS!</strong> Shrinking $\delta < 1$ isolates $x=c$, making condition vacuously true.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 sm:p-4 font-bold text-gray-200">Role of $\epsilon$ & $\delta$</td>
+                                <td class="p-3.5 sm:p-4 text-gray-400">"Plug in numbers close to $c$ and see if answers are close."</td>
+                                <td class="p-3.5 sm:p-4 text-pink-300">$\epsilon$ is an external challenge. $\delta$ is your defensive buffer size. $\delta$ depends on $\epsilon$ and point $c$.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 sm:p-4 font-bold text-gray-200">Jump Discontinuities</td>
+                                <td class="p-3.5 sm:p-4 text-gray-400">"Left limit doesn't equal right limit."</td>
+                                <td class="p-3.5 sm:p-4 text-yellow-300">If $\epsilon < \text{jump height}$, no single $\delta > 0$ can keep all values inside the $\epsilon$ target band.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 3: The Epsilon-Delta Game Framework -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Game Mental Model -->
+                <div class="p-5 rounded-2xl bg-gray-900/70 border border-cyan-500/40 space-y-3">
+                    <h4 class="text-base font-bold text-cyan-300 font-mono flex items-center gap-2">
+                        <span>🎯 The $\epsilon$-$\delta$ Game Framework</span>
+                    </h4>
+                    <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                        Think of $\epsilon$-$\delta$ proofs as a 2-player adversarial game:
+                    </p>
+                    <ul class="text-xs sm:text-sm text-gray-300 space-y-2 list-disc list-inside leading-relaxed">
+                        <li><strong class="text-pink-400">Player 1 (Challenger):</strong> Picks an arbitrarily small vertical tolerance $\epsilon > 0$. They demand: <em>"Keep $f(x)$ within $\epsilon$ of $f(c)$!"</em></li>
+                        <li><strong class="text-cyan-400">Player 2 (Defender / You):</strong> Must respond with a horizontal tolerance $\delta > 0$ buffer around $c$.</li>
+                        <li><strong class="text-lime-400">Winning Rule:</strong> If you can ALWAYS produce a valid $\delta > 0$ no matter how tiny $\epsilon$ is, the function is <strong>continuous</strong> at $c$!</li>
+                    </ul>
+                </div>
+
+                <!-- 6 Key Function Cheat Sheet -->
+                <div class="p-5 rounded-2xl bg-gray-900/70 border border-pink-500/40 space-y-3">
+                    <h4 class="text-base font-bold text-pink-300 font-mono flex items-center gap-2">
+                        <span>⚡ 6 Key Function Cheat Sheet</span>
+                    </h4>
+                    <div class="text-xs text-gray-300 space-y-2 font-mono">
+                        <div class="p-2 rounded bg-black/60 border border-gray-800">
+                            <strong class="text-cyan-300">Constant $f(x)=k$:</strong> Any $\delta > 0$ works for all $\epsilon$.
+                        </div>
+                        <div class="p-2 rounded bg-black/60 border border-gray-800">
+                            <strong class="text-pink-300">Identity $f(x)=x$:</strong> Choose $\delta = \epsilon$.
+                        </div>
+                        <div class="p-2 rounded bg-black/60 border border-gray-800">
+                            <strong class="text-lime-300">Linear $f(x)=mx+b$:</strong> Choose $\delta = \epsilon / |m|$.
+                        </div>
+                        <div class="p-2 rounded bg-black/60 border border-gray-800">
+                            <strong class="text-yellow-300">Floor $\lfloor x \rfloor$:</strong> At non-integers, $\delta = \min(c-\lfloor c\rfloor, \lceil c\rceil-c)$.
+                        </div>
+                        <div class="p-2 rounded bg-black/60 border border-gray-800">
+                            <strong class="text-orange-300">Discrete $\mathbb{N}$:</strong> Pick $\delta = 0.5$ (isolates point $c$).
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION 4: Study Tips for First Year Students -->
+            <div class="p-5 rounded-2xl bg-gradient-to-r from-gray-900 via-gray-900/90 to-black border border-yellow-500/40 space-y-3">
+                <h4 class="text-base font-bold text-yellow-300 font-mono flex items-center gap-2">
+                    <span>💡 4 Study Tips for First-Year Proof Writing</span>
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-gray-300">
+                    <div class="p-3 rounded-xl bg-black/60 border border-gray-800">
+                        <strong class="text-cyan-300 block mb-1">1. Work Backwards on Scratch Paper</strong>
+                        Start with $|f(x) - L| < \epsilon$, factor and simplify until you isolate $|x - c| < \text{expression}$. That expression is your candidate $\delta$!
+                    </div>
+                    <div class="p-3 rounded-xl bg-black/60 border border-gray-800">
+                        <strong class="text-pink-300 block mb-1">2. Always Start Proofs Formally</strong>
+                        Begin every writeup with: <em>"Let $\epsilon > 0$ be given. Choose $\delta = \dots$"</em> Never start with the conclusion!
+                    </div>
+                    <div class="p-3 rounded-xl bg-black/60 border border-gray-800">
+                        <strong class="text-lime-300 block mb-1">3. Don't Rely Solely on Graphs</strong>
+                        Visual graphs are wonderful for building intuition, but a mathematical proof requires exact algebraic inequalities.
+                    </div>
+                    <div class="p-3 rounded-xl bg-black/60 border border-gray-800">
+                        <strong class="text-yellow-300 block mb-1">4. Remember Domain Restrictions</strong>
+                        Continuity is defined strictly on points $x \in \text{Domain}(f)$. Out-of-domain points do not count against continuity!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Retake Button -->
+            <div class="text-center pt-4">
+                <button onclick="restartQuiz()" class="px-8 py-3 rounded-xl font-bold text-black bg-gradient-to-r from-cyan-400 via-lime-400 to-yellow-400 hover:scale-105 transition-all duration-200 shadow-xl shadow-cyan-500/20">
+                    🔄 Retake Self-Assessment Quiz
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div id="nav-controls" class="flex items-center justify-between mt-6 px-2">
+            <button id="prev-btn" onclick="changeSlide(-1)" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-300 bg-gray-900 border border-gray-800 hover:border-cyan-500 hover:text-cyan-400 transition-all duration-200 disabled:opacity-30 disabled:pointer-events-none">
+                ← Previous
+            </button>
+            <button id="next-btn" onclick="changeSlide(1)" class="px-6 py-2.5 rounded-xl text-sm font-bold text-black bg-gradient-to-r from-cyan-400 to-lime-400 hover:opacity-90 transition-all duration-200 shadow-md shadow-cyan-500/10">
+                Next Slide →
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-gray-900 bg-black/80 py-3 text-center text-xs text-gray-500 font-mono">
+        Calculus-1 Interactive Module • Epsilon-Delta Definition of Continuity & University Transition
+    </footer>
+
+    <script>
+        // Quiz Data array covering all requested conceptual slides
+        const quizData = [
+            {
+                topic: "SLIDE 1 • SIGNUM AT ORIGIN (SMALL EPSILON)",
+                question: "Consider $f(x) = 1$ for $x \\ge 0$ and $f(x) = -1$ for $x < 0$. Why is $f$ DISCONTINUOUS at $c = 0$ when challenged with vertical tolerance $\\epsilon = 1.5$?",
+                body: "Definition: $f$ is continuous at $c$ if $\\forall \\epsilon > 0, \\exists \\delta > 0$ such that $|x - c| < \\delta \\implies |f(x) - f(c)| < \\epsilon$. Note $f(0) = 1$.",
+                options: [
+                    { text: "For ANY $\\delta > 0$, picking negative $x = -\\delta/2$ gives $f(x) = -1$, so $|f(x) - f(0)| = |-1 - 1| = 2 \\not< 1.5$.", correct: true },
+                    { text: "Because $f(0)$ is undefined.", correct: false },
+                    { text: "Because as $x \\to 0$, $f(x)$ approaches infinity.", correct: false },
+                    { text: "Because $\\delta$ must always equal $\\epsilon$, making $\\delta = 1.5$ invalid.", correct: false }
+                ],
+                hint: "At $c = 0$, $f(0) = 1$. Look at what happens just to the left of $0$ inside any interval $(-\\delta, \\delta)$. The jump size is $2$ units!",
+                solution: "At $c = 0$, $f(0) = 1$. For any proposed horizontal neighborhood $\\delta > 0$, the interval $(-\\delta, \\delta)$ contains negative numbers like $x = -\\delta/2$. At this point, $f(x) = -1$. The vertical gap is $|f(x) - f(0)| = |-1 - 1| = 2$. Since $2 \\not< 1.5$, NO horizontal delta can trap all outputs within $\\epsilon = 1.5$!"
+            },
+            {
+                topic: "SLIDE 2 • SIGNUM AT ORIGIN (LARGE EPSILON NUANCE)",
+                question: "SURPRISING TWIST! For the same signum function $f(x)$, what happens if a challenger tests $c = 0$ with a giant tolerance of $\\epsilon = 2.5$?",
+                body: "We test if there exists a $\\delta > 0$ such that $|x - 0| < \\delta \\implies |f(x) - f(0)| < 2.5$.",
+                options: [
+                    { text: "ANY $\\delta > 0$ works! The maximum possible vertical difference across the entire function is $2$, which is strictly less than $2.5$.", correct: true },
+                    { text: "No $\\delta > 0$ works, because discontinuous functions fail for every $\\epsilon$.", correct: false },
+                    { text: "Only $\\delta = 0.5$ works because $\\delta$ must be smaller than 1.", correct: false },
+                    { text: "$\\delta = 2.5$ is the only valid choice.", correct: false }
+                ],
+                hint: "The function only outputs $1$ or $-1$. What is the largest possible gap $|f(x) - f(0)|$ anywhere on the real line? Compare that gap to $\\epsilon = 2.5$.",
+                solution: "Since $f(x)$ takes only values $1$ and $-1$, the maximum gap $|f(x) - f(0)|$ anywhere on $\\mathbb{R}$ is $|-1 - 1| = 2$. Because $2 < 2.5$, the condition $|f(x) - f(0)| < 2.5$ holds for ALL $x \\in \\mathbb{R}$! Therefore, literally ANY $\\delta > 0$ works for $\\epsilon = 2.5$. This illustrates why continuity requires a $\\delta$ to exist for **EVERY** $\\epsilon > 0$!"
+            },
+            {
+                topic: "SLIDE 3 • CONTINUITY AWAY FROM ORIGIN",
+                question: "Evaluate $f(x)$ away from the jump, at $c = 1$ where $f(1) = 1$. If $\\epsilon = 0.5$, what is the MAXIMUM valid $\\delta$ choice?",
+                body: "We need $x \\in (1 - \\delta, 1 + \\delta)$ to keep $f(x)$ within $0.5$ of $f(1) = 1$.",
+                options: [
+                    { text: "Maximum $\\delta = 1$, because keeping $x \\in (0, 2)$ ensures $x > 0$, so $f(x) = 1$ constantly and $|1 - 1| = 0 < 0.5$.", correct: true },
+                    { text: "Maximum $\\delta = 0.5$, because $\\delta$ cannot exceed $\\epsilon$.", correct: false },
+                    { text: "No $\\delta$ works because the function has a jump at $x = 0$.", correct: false },
+                    { text: "Maximum $\\delta = \\infty$, because the function is constant.", correct: false }
+                ],
+                hint: "How far to the left of $c = 1$ can you step before crossing $x = 0$ and falling off the cliff to $f(x) = -1$?",
+                solution: "At $c = 1$, $f(1) = 1$. As long as $x > 0$, $f(x) = 1$, which gives $|f(x) - f(1)| = |1 - 1| = 0 < 0.5$. The jump discontinuity is at $x = 0$, which is at a distance of $1$ unit from $c = 1$. Thus, choosing $\\delta = 1$ keeps $x \\in (0, 2)$ where $f(x) = 1$ constantly!"
+            },
+            {
+                topic: "SLIDE 4 • CONSTANT FUNCTION f(x) = k",
+                question: "For a constant function $f(x) = k$, why does ANY choice of $\\delta > 0$ (e.g., $\\delta = 100$) work for ALL $\\epsilon > 0$ simultaneously?",
+                body: "Evaluate $|f(x) - f(c)|$ when $f(x) = k$ for all $x \\in \\mathbb{R}$.",
+                options: [
+                    { text: "Because $|f(x) - f(c)| = |k - k| = 0$, and $0 < \\epsilon$ is ALWAYS true for any positive $\\epsilon$, regardless of $x$.", correct: true },
+                    { text: "Because constant functions have derivative equal to $1$.", correct: false },
+                    { text: "Because $\\delta$ is defined as $\\delta = k / \\epsilon$.", correct: false },
+                    { text: "Because constant functions are exempt from the $\\epsilon$-$\\delta$ rule.", correct: false }
+                ],
+                hint: "What is $f(x) - f(c)$ if $f(x) = 7$ for every single $x$?",
+                solution: "For $f(x) = k$, we have $f(x) - f(c) = k - k = 0$. Since $0 < \\epsilon$ is universally true for any $\\epsilon > 0$, the inequality $|f(x) - f(c)| < \\epsilon$ holds for EVERY $x \\in \\mathbb{R}$. Hence, ANY $\\delta > 0$ works!"
+            },
+            {
+                topic: "SLIDE 5 • IDENTITY FUNCTION f(x) = x",
+                question: "For the identity function $f(x) = x$, what is the exact formula for $\\delta$ in terms of $\\epsilon$ to guarantee continuity at any point $c$?",
+                body: "Goal: Find $\\delta$ such that $|x - c| < \\delta \\implies |f(x) - f(c)| < \\epsilon$.",
+                options: [
+                    { text: "$\\delta = \\epsilon$, because $|f(x) - f(c)| = |x - c|$, making the two inequalities identical!", correct: true },
+                    { text: "$\\delta = \\epsilon^2$, because linear functions require quadratic bounds.", correct: false },
+                    { text: "$\\delta = 1 / \\epsilon$, because $\\delta$ and $\\epsilon$ are inversely proportional.", correct: false },
+                    { text: "$\\delta$ depends on point $c$ and equals $c \\cdot \\epsilon$.", correct: false }
+                ],
+                hint: "Substitute $f(x) = x$ and $f(c) = c$ into $|f(x) - f(c)| < \\epsilon$. What do you get?",
+                solution: "For $f(x) = x$, $|f(x) - f(c)| = |x - c|$. Thus, setting $\\delta = \\epsilon$ directly yields: if $|x - c| < \\delta = \\epsilon$, then $|f(x) - f(c)| < \\epsilon$. Simple and exact!"
+            },
+            {
+                topic: "SLIDE 6 • GREATEST INTEGER / FLOOR FUNCTION ⌊x⌋",
+                question: "For $f(x) = \\lfloor x \\rfloor$ at non-integer $c = 2.4$ with $\\epsilon = 0.2$, why does choosing $\\delta = \\min(c - \\lfloor c \\rfloor, \\lceil c \\rceil - c)$ guarantee continuity?",
+                body: "Here $c = 2.4$, $\\lfloor c \\rfloor = 2$, $\\lceil c \\rceil = 3$. So $\\delta = \\min(0.4, 0.6) = 0.4$.",
+                options: [
+                    { text: "Because this $\\delta$ confines $x$ strictly inside $(2, 3)$, where $f(x) = 2$ constantly, forcing $|f(x) - f(2.4)| = 0 < \\epsilon$!", correct: true },
+                    { text: "Because $\\delta = 0.4$ makes the derivative equal to $1$.", correct: false },
+                    { text: "Because $\\epsilon = 0.2$ requires $\\delta$ to be twice as large.", correct: false },
+                    { text: "This formula only works if $\\epsilon > 1$.", correct: false }
+                ],
+                hint: "What happens to the output of $\\lfloor x \\rfloor$ when $x$ stays strictly between $2.0$ and $3.0$?",
+                solution: "At non-integer $c$, the formula $\\delta = \\min(c - \\lfloor c \\rfloor, \\lceil c \\rceil - c)$ finds the exact distance to the nearest integer boundary. Setting $\\delta = 0.4$ traps $x \\in (2.0, 2.8) \\subset (2, 3)$. Inside this interval, $f(x) = 2 = f(2.4)$ constantly! Thus $|f(x) - f(c)| = 0 < \\epsilon$ for ANY $\\epsilon > 0$!"
+            },
+            {
+                topic: "SLIDE 7 • FINITE DOMAIN FUNCTION",
+                question: "Suppose $f$ is defined on finite domain $D = \\{1, 2, 3, 4\\}$ with $f(x) = x^2$. Is $f$ continuous at $c = 2$ under the formal $\\epsilon$-$\\delta$ definition?",
+                body: "Definition: $f: D \\to \\mathbb{R}$ is continuous at $c \\in D$ if $\\forall \\epsilon > 0, \\exists \\delta > 0$ such that $\\forall x \\in D$, $|x - c| < \\delta \\implies |f(x) - f(c)| < \\epsilon$.",
+                options: [
+                    { text: "YES! Choosing $\\delta = 0.5$ leaves $x = 2$ as the ONLY point in $D$ satisfying $|x - 2| < 0.5$, making $|f(2) - f(2)| = 0 < \\epsilon$ vacuously true!", correct: true },
+                    { text: "NO, because you have to lift your pencil to draw separate dots.", correct: false },
+                    { text: "NO, because finite domains do not have limits.", correct: false },
+                    { text: "YES, but only if $\\epsilon > 4$.", correct: false }
+                ],
+                hint: "Look closely at domain $D = \\{1, 2, 3, 4\\}$. If $c = 2$ and you choose $\\delta = 0.5$, which points $x \\in D$ satisfy $|x - 2| < 0.5$?",
+                solution: "In calculus and topology, continuity is evaluated relative to the domain $D$! Choosing $\\delta = 0.5$ isolates $c = 2$. The ONLY element $x \\in D$ satisfying $|x - 2| < 0.5$ is $x = 2$ itself! For $x = 2$, $|f(2) - f(2)| = 0 < \\epsilon$ for ANY $\\epsilon > 0$. Thus every function defined on a finite set is continuous everywhere!"
+            },
+            {
+                topic: "SLIDE 8 • NATURAL NUMBERS DOMAIN (f: N → R)",
+                question: "Let $f: \\mathbb{N} \\to \\mathbb{R}$ be defined by $f(n) = n^3$. Why is $f$ continuous at EVERY $n \\in \\mathbb{N}$, debunking the 'drawing without lifting pencil' rule?",
+                body: "Domain $\\mathbb{N} = \\{1, 2, 3, 4, \\dots\\}$.",
+                options: [
+                    { text: "Because for any $n \\in \\mathbb{N}$, choosing $\\delta = 0.5$ ensures no other integer enters $(n - 0.5, n + 0.5)$, so $x = n$ is the only input evaluated!", correct: true },
+                    { text: "Because polynomials are always continuous across all number systems.", correct: false },
+                    { text: "It is NOT continuous because the points are separated by gaps of size 1.", correct: false },
+                    { text: "Because $n^3$ grows continuously toward infinity.", correct: false }
+                ],
+                hint: "How far apart are integers in $\\mathbb{N}$? If you pick $\\delta = 0.5$ around integer $n$, can any other natural number sneak into the interval?",
+                solution: "In $\\mathbb{N}$, all points are isolated with minimum distance $1$. Choosing $\\delta = 0.5$ guarantees that if $x \\in \\mathbb{N}$ and $|x - n| < 0.5$, then $x$ MUST equal $n$. Then $|f(x) - f(n)| = |n^3 - n^3| = 0 < \\epsilon$ for ALL $\\epsilon > 0$. Thus, $f$ is continuous on $\\mathbb{N}$!"
+            },
+            {
+                topic: "SLIDE 9 • DIRICHLET FUNCTION (NOWHERE CONTINUOUS)",
+                question: "The Dirichlet function $D(x) = 1$ if $x \\in \\mathbb{Q}$ (rational), $0$ if $x \\notin \\mathbb{Q}$ (irrational). Why does NO $\\epsilon$-$\\delta$ pair work anywhere for $\\epsilon = 0.5$?",
+                body: "Density property: Between any two real numbers, there exist both rational and irrational numbers.",
+                options: [
+                    { text: "Because every interval $(c - \\delta, c + \\delta)$ contains both rationals and irrationals, forcing $D(x)$ to jump between $0$ and $1$, so $|D(x) - D(c)| = 1 \\not< 0.5$.", correct: true },
+                    { text: "Because rational numbers cannot be plotted on a coordinate plane.", correct: false },
+                    { text: "Because $\\epsilon = 0.5$ is too small for real numbers.", correct: false },
+                    { text: "Because $D(x)$ is infinite at rational points.", correct: false }
+                ],
+                hint: "No matter how small you shrink $\\delta > 0$, will you always find both rational and irrational numbers inside $(c - \\delta, c + \\delta)$?",
+                solution: "By the density of rationals and irrationals in $\\mathbb{R}$, inside EVERY interval $(c - \\delta, c + \\delta)$ there exist points $x$ where $D(x) = 1$ and points where $D(x) = 0$. Thus, $|D(x) - D(c)|$ will equal $1$ for some $x$ in the interval. Since $1 \\not< 0.5$, NO $\\delta > 0$ can work!"
+            }
+        ];
+
+        let currentSlide = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let score = 0;
+
+        // DOM Elements
+        const slideNumDisplay = document.getElementById('slide-num-display');
+        const scoreDisplay = document.getElementById('score-display');
+        const progressBar = document.getElementById('progress-bar');
+        const topicTag = document.getElementById('topic-tag');
+        const questionTitle = document.getElementById('question-title');
+        const questionBody = document.getElementById('question-body');
+        const optionsContainer = document.getElementById('options-container');
+        const hintBox = document.getElementById('hint-box');
+        const hintText = document.getElementById('hint-text');
+        const solutionBox = document.getElementById('solution-box');
+        const solutionText = document.getElementById('solution-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const summaryContainer = document.getElementById('summary-container');
+        const navControls = document.getElementById('nav-controls');
+
+        function renderSlide(index) {
+            // Slide 10 corresponds to Summary Dashboard
+            if (index === quizData.length) {
+                showSummary();
+                return;
+            }
+
+            quizContainer.classList.remove('hidden');
+            summaryContainer.classList.add('hidden');
+            navControls.classList.remove('hidden');
+
+            const data = quizData[index];
+            
+            // Reset hint & solution visibility
+            hintBox.classList.add('hidden');
+            solutionBox.classList.add('hidden');
+
+            // Header stats update
+            slideNumDisplay.textContent = `${index + 1} / 10`;
+            progressBar.style.width = `${((index + 1) / 10) * 100}%`;
+            topicTag.textContent = data.topic;
+
+            // Question content
+            questionTitle.innerHTML = data.question;
+            questionBody.innerHTML = data.body || '';
+
+            // Hint & Solution Content
+            hintText.innerHTML = data.hint;
+            solutionText.innerHTML = data.solution;
+
+            // Render Options
+            optionsContainer.innerHTML = '';
+            data.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `quiz-option w-full text-left p-4 rounded-xl border font-mono-code text-xs sm:text-sm flex items-start gap-3 transition-all duration-200 `;
+                
+                // Answer State Styles
+                if (userAnswers[index] !== null) {
+                    if (opt.correct) {
+                        btn.classList.add('bg-lime-950/40', 'border-lime-500', 'text-lime-200', 'neon-border-lime');
+                    } else if (userAnswers[index] === idx) {
+                        btn.classList.add('bg-pink-950/40', 'border-pink-500', 'text-pink-200', 'neon-border-pink');
+                    } else {
+                        btn.classList.add('bg-gray-900/40', 'border-gray-800', 'text-gray-500', 'opacity-40');
+                    }
+                } else {
+                    btn.classList.add('bg-gray-900/60', 'border-gray-800', 'text-gray-200', 'hover:border-cyan-500/60');
+                }
+
+                const letter = String.fromCharCode(65 + idx);
+                btn.innerHTML = `
+                    <span class="px-2 py-0.5 rounded bg-black/80 border border-gray-700 font-bold text-cyan-400 text-xs shrink-0">${letter}</span>
+                    <span class="leading-relaxed flex-grow">${opt.text}</span>
+                `;
+
+                btn.onclick = () => selectOption(index, idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Update Navigation Button Labels
+            prevBtn.disabled = index === 0;
+            if (index === quizData.length - 1) {
+                nextBtn.textContent = 'Go to Slide 10 (Summary & Visualizer) 🎓';
+                nextBtn.className = "px-6 py-2.5 rounded-xl text-sm font-bold text-black bg-gradient-to-r from-yellow-400 to-lime-400 hover:opacity-90 transition-all duration-200 shadow-lg shadow-yellow-500/20";
+            } else {
+                nextBtn.textContent = 'Next Slide →';
+                nextBtn.className = "px-6 py-2.5 rounded-xl text-sm font-bold text-black bg-gradient-to-r from-cyan-400 to-lime-400 hover:opacity-90 transition-all duration-200 shadow-md shadow-cyan-500/10";
+            }
+
+            // MathJax re-render
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function selectOption(slideIdx, optionIdx) {
+            if (userAnswers[slideIdx] !== null) return; // Prevent changing choice
+
+            userAnswers[slideIdx] = optionIdx;
+            const isCorrect = quizData[slideIdx].options[optionIdx].correct;
+
+            if (isCorrect) {
+                score += 10;
+                scoreDisplay.textContent = `${score} / ${quizData.length * 10}`;
+            }
+
+            renderSlide(slideIdx);
+
+            // Automatically open solution on answer
+            solutionBox.classList.remove('hidden');
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function toggleHint() {
+            hintBox.classList.toggle('hidden');
+            if (!hintBox.classList.contains('hidden') && window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function toggleSolution() {
+            solutionBox.classList.toggle('hidden');
+            if (!solutionBox.classList.contains('hidden') && window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+
+            if (newSlide >= 0 && newSlide <= quizData.length) {
+                currentSlide = newSlide;
+                renderSlide(currentSlide);
+            }
+        }
+
+        function showSummary() {
+            currentSlide = quizData.length;
+            slideNumDisplay.textContent = `10 / 10`;
+            progressBar.style.width = `100%`;
+
+            quizContainer.classList.add('hidden');
+            summaryContainer.classList.remove('hidden');
+
+            const totalPossible = quizData.length * 10;
+            const accuracy = Math.round((score / totalPossible) * 100);
+
+            document.getElementById('final-score').textContent = `${score} / ${totalPossible}`;
+            document.getElementById('final-accuracy').textContent = `${accuracy}%`;
+
+            const badgeElem = document.getElementById('final-badge');
+            if (accuracy >= 90) {
+                badgeElem.textContent = "Calculus Master 👑";
+                badgeElem.className = "text-base font-bold text-yellow-400 mt-1 glow-text-yellow";
+            } else if (accuracy >= 70) {
+                badgeElem.textContent = "Delta Virtuoso ⚡";
+                badgeElem.className = "text-base font-bold text-cyan-400 mt-1 glow-text-cyan";
+            } else if (accuracy >= 50) {
+                badgeElem.textContent = "Epsilon Scholar 📐";
+                badgeElem.className = "text-base font-bold text-pink-400 mt-1";
+            } else {
+                badgeElem.textContent = "Calculus Apprentice 📘";
+                badgeElem.className = "text-base font-bold text-gray-400 mt-1";
+            }
+
+            prevBtn.disabled = false;
+            nextBtn.textContent = 'Slide 10 Active';
+            nextBtn.className = "px-6 py-2.5 rounded-xl text-sm font-bold text-gray-400 bg-gray-900 border border-gray-800 opacity-50 cursor-default";
+
+            // Initialize simulation canvas
+            setTimeout(() => {
+                updateSim();
+            }, 100);
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function restartQuiz() {
+            currentSlide = 0;
+            score = 0;
+            userAnswers.fill(null);
+            scoreDisplay.textContent = `0 / ${quizData.length * 10}`;
+            renderSlide(currentSlide);
+        }
+
+        // -------------------------------------------------------------
+        // Interactive Epsilon-Delta HTML5 Canvas Sandbox Engine
+        // -------------------------------------------------------------
+        function updateSim() {
+            const canvas = document.getElementById('sim-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            const funcType = document.getElementById('sim-func').value;
+            const c = parseFloat(document.getElementById('sim-c').value);
+            const eps = parseFloat(document.getElementById('sim-eps').value);
+            const del = parseFloat(document.getElementById('sim-del').value);
+
+            document.getElementById('sim-c-val').textContent = c.toFixed(2);
+            document.getElementById('sim-eps-val').textContent = eps.toFixed(2);
+            document.getElementById('sim-del-val').textContent = del.toFixed(2);
+
+            // Function evaluator
+            function f(x) {
+                switch(funcType) {
+                    case 'signum': return x >= 0 ? 1 : -1;
+                    case 'floor': return Math.floor(x);
+                    case 'identity': return x;
+                    case 'constant': return 2;
+                    case 'quadratic': return x * x;
+                    default: return x;
+                }
+            }
+
+            const fc = f(c);
+
+            // Check if delta is valid for chosen epsilon
+            let isSuccess = true;
+            const samples = 200;
+            for (let i = 0; i <= samples; i++) {
+                const testX = (c - del) + (i / samples) * (2 * del);
+                const val = f(testX);
+                if (Math.abs(val - fc) > eps + 1e-7) {
+                    isSuccess = false;
+                    break;
+                }
+            }
+
+            // Update status badge & text
+            const statusBadge = document.getElementById('sim-status-badge');
+            const explanation = document.getElementById('sim-explanation');
+
+            if (isSuccess) {
+                statusBadge.textContent = "STATUS: SUCCESS ✅";
+                statusBadge.className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-lime-950 text-lime-300 border border-lime-500/50 glow-text-lime";
+                explanation.innerHTML = `<span class="text-lime-400 font-bold">SUCCESS:</span> All outputs $f(x)$ for $x \\in (${(c-del).toFixed(2)}, ${(c+del).toFixed(2)})$ stay strictly inside $f(c) \\pm \\epsilon = (${(fc-eps).toFixed(2)}, ${(fc+eps).toFixed(2)})$.`;
+            } else {
+                statusBadge.textContent = "STATUS: FAILED ❌";
+                statusBadge.className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-pink-950 text-pink-300 border border-pink-500/50 glow-text-pink";
+                explanation.innerHTML = `<span class="text-pink-400 font-bold">FAILED:</span> Some outputs inside the $\\delta$-neighborhood escape outside $f(c) \\pm \\epsilon$. Shrink $\\delta$ or select a different point.`;
+            }
+
+            // Canvas Dimensions & Scaling
+            const W = canvas.width;
+            const H = canvas.height;
+            ctx.clearRect(0, 0, W, H);
+
+            // Coordinate Bounds
+            const xMin = -3.0, xMax = 3.0;
+            const yMin = -3.0, yMax = 3.0;
+
+            function toScreenX(x) { return ((x - xMin) / (xMax - xMin)) * W; }
+            function toScreenY(y) { return H - ((y - yMin) / (yMax - yMin)) * H; }
+
+            // Grid Background
+            ctx.strokeStyle = '#1e1e2d';
+            ctx.lineWidth = 1;
+            for (let x = -3; x <= 3; x += 0.5) {
+                ctx.beginPath(); ctx.moveTo(toScreenX(x), 0); ctx.lineTo(toScreenX(x), H); ctx.stroke();
+            }
+            for (let y = -3; y <= 3; y += 0.5) {
+                ctx.beginPath(); ctx.moveTo(0, toScreenY(y)); ctx.lineTo(W, toScreenY(y)); ctx.stroke();
+            }
+
+            // Main Axes
+            ctx.strokeStyle = '#4a4a6a';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(toScreenX(0), 0); ctx.lineTo(toScreenX(0), H); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, toScreenY(0)); ctx.lineTo(W, toScreenY(0)); ctx.stroke();
+
+            // Epsilon Horizontal Band [f(c) - eps, f(c) + eps]
+            const yEpsTop = toScreenY(fc + eps);
+            const yEpsBot = toScreenY(fc - eps);
+            ctx.fillStyle = 'rgba(255, 46, 147, 0.15)';
+            ctx.fillRect(0, yEpsTop, W, yEpsBot - yEpsTop);
+
+            ctx.strokeStyle = '#FF2E93';
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath(); ctx.moveTo(0, yEpsTop); ctx.lineTo(W, yEpsTop); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, yEpsBot); ctx.lineTo(W, yEpsBot); ctx.stroke();
+
+            // Delta Vertical Band [c - del, c + del]
+            const xDelLeft = toScreenX(c - del);
+            const xDelRight = toScreenX(c + del);
+            ctx.fillStyle = isSuccess ? 'rgba(57, 255, 20, 0.12)' : 'rgba(255, 46, 147, 0.25)';
+            ctx.fillRect(xDelLeft, 0, xDelRight - xDelLeft, H);
+
+            ctx.strokeStyle = isSuccess ? '#39FF14' : '#FF2E93';
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath(); ctx.moveTo(xDelLeft, 0); ctx.lineTo(xDelLeft, H); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(xDelRight, 0); ctx.lineTo(xDelRight, H); ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Function Plotting
+            ctx.strokeStyle = '#00E5FF';
+            ctx.lineWidth = 3;
+
+            if (funcType === 'signum') {
+                ctx.beginPath(); ctx.moveTo(toScreenX(-3), toScreenY(-1)); ctx.lineTo(toScreenX(0), toScreenY(-1)); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(toScreenX(0), toScreenY(1)); ctx.lineTo(toScreenX(3), toScreenY(1)); ctx.stroke();
+                // Hollow circle at (0, -1), solid at (0, 1)
+                ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(toScreenX(0), toScreenY(-1), 4, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                ctx.fillStyle = '#00E5FF'; ctx.beginPath(); ctx.arc(toScreenX(0), toScreenY(1), 5, 0, Math.PI*2); ctx.fill();
+            } else if (funcType === 'floor') {
+                for (let k = -3; k <= 2; k++) {
+                    ctx.beginPath(); ctx.moveTo(toScreenX(k), toScreenY(k)); ctx.lineTo(toScreenX(k+1), toScreenY(k)); ctx.stroke();
+                    ctx.fillStyle = '#00E5FF'; ctx.beginPath(); ctx.arc(toScreenX(k), toScreenY(k), 4, 0, Math.PI*2); ctx.fill();
+                }
+            } else {
+                ctx.beginPath();
+                for (let px = 0; px <= W; px += 2) {
+                    const xVal = xMin + (px / W) * (xMax - xMin);
+                    const yVal = f(xVal);
+                    const py = toScreenY(yVal);
+                    if (px === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+            }
+
+            // Target Point (c, f(c)) Highlight
+            ctx.fillStyle = '#FFE600';
+            ctx.beginPath();
+            ctx.arc(toScreenX(c), toScreenY(fc), 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Labels on Canvas
+            ctx.font = '11px Fira Code, monospace';
+            ctx.fillStyle = '#FFE600';
+            ctx.fillText(`(c, f(c)) = (${c.toFixed(1)}, ${fc.toFixed(1)})`, toScreenX(c) + 10, toScreenY(fc) - 10);
+
+            ctx.fillStyle = '#FF2E93';
+            ctx.fillText(`f(c)+ε`, 10, yEpsTop - 5);
+            ctx.fillText(`f(c)-ε`, 10, yEpsBot + 12);
+
+            ctx.fillStyle = isSuccess ? '#39FF14' : '#FF2E93';
+            ctx.fillText(`c-δ`, xDelLeft - 25, H - 10);
+            ctx.fillText(`c+δ`, xDelRight + 5, H - 10);
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Initialize on window load
+        window.onload = function() {
+            renderSlide(currentSlide);
+        };
+    </script>
+</body>
+</html>
