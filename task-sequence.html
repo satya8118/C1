@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculus I — Full Task Sequence (Semester Function Project)</title>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#2f3b6b; --indigo-deep:#1e2648; --amber:#c08a3e; --sage:#6f8f6a;
+    --paper:#faf8f3; --card:#ffffff; --ink:#232323; --ink-soft:#5b5b5b;
+    --line:#e3dfd4; --stripe:#f4f1e8;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.55; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; color:var(--indigo-deep); margin:0; }
+  a{ color:var(--indigo); }
+
+  header.hero{
+    background:linear-gradient(155deg, var(--indigo-deep), var(--indigo) 65%);
+    color:#f4f1e8; padding:52px 24px 40px; text-align:center;
+  }
+  header.hero .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--amber); margin-bottom:14px;
+  }
+  header.hero h1{ color:#fdfbf6; font-size:clamp(1.6rem, 4vw, 2.4rem); max-width:820px; margin:0 auto 12px; }
+  header.hero p.tag{ max-width:640px; margin:0 auto; color:#d8d5c8; font-size:1.02rem; }
+  header.hero .badge{
+    display:inline-block; margin-top:20px; padding:6px 18px;
+    border:1px solid rgba(244,241,232,0.35); border-radius:999px;
+    font-family:'IBM Plex Mono', monospace; font-size:0.85rem;
+  }
+
+  nav.toc{
+    position:sticky; top:0; z-index:20; background:rgba(250,248,243,0.96);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    overflow-x:auto; white-space:nowrap; padding:10px 18px;
+  }
+  nav.toc a{
+    color:var(--ink-soft); text-decoration:none; font-size:0.82rem; font-weight:500;
+    margin-right:16px; padding-bottom:3px; border-bottom:2px solid transparent;
+  }
+  nav.toc a:hover{ color:var(--indigo); border-bottom-color:var(--amber); }
+
+  main{ max-width:880px; margin:0 auto; padding:8px 22px 80px; }
+
+  .lead{
+    background:var(--card); border:1px solid var(--line); border-radius:8px;
+    padding:20px 24px; margin:26px 0 10px; font-size:0.98rem;
+  }
+  .lead strong{ color:var(--indigo-deep); }
+
+  section.tier{ padding-top:38px; scroll-margin-top:56px; }
+  section.tier h2{
+    font-size:1.28rem; display:flex; align-items:baseline; gap:10px;
+    border-bottom:2px solid var(--line); padding-bottom:9px; margin-bottom:6px;
+  }
+  section.tier h2 .num{
+    font-family:'IBM Plex Mono', monospace; font-size:0.9rem; color:var(--amber); font-weight:600;
+  }
+  section.tier p.tier-note{ color:var(--ink-soft); font-size:0.9rem; margin:0 0 14px; }
+
+  ol.item-list{ list-style:none; margin:0; padding:0; counter-reset:none; }
+  ol.item-list li{
+    display:flex; gap:14px; align-items:flex-start;
+    background:var(--card); border:1px solid var(--line); border-radius:6px;
+    padding:13px 16px; margin-bottom:8px;
+  }
+  ol.item-list li .n{
+    font-family:'IBM Plex Mono', monospace; font-weight:600; color:#fff;
+    background:var(--indigo); border-radius:5px; min-width:30px; text-align:center;
+    padding:3px 0; font-size:0.85rem; flex-shrink:0;
+  }
+  ol.item-list li .txt{ font-size:0.96rem; }
+
+  footer{
+    text-align:center; padding:30px 20px 46px; color:var(--ink-soft); font-size:0.85rem;
+    border-top:1px solid var(--line); margin-top:36px;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Calculus I · Semester Function Project</div>
+  <h1>Full task sequence — 63 items, simple to complex</h1>
+  <p class="tag">Every item listed below is to be applied to your own assigned function, throughout the semester—from the first week to the last.
+<br>
+Try to complete as many items as possible. Not every item is compulsory. We have added more items so that you have more opportunities to demonstrate your understanding and earn marks. Your TA may also add new items, depending on the function assigned to you.
+<br>
+Do not worry about the submission procedure right now. Please talk to your TA. You can meet the TA during the tutorial or personally and explain what you have done. The TA will assess your work and assign marks accordingly.
+<br>
+If you understand the concepts clearly and can explain what you have done, you can earn the full 25 out of 25 marks.
+<br>
+Please make good use of this assignment. It is not just about completing tasks—it is an opportunity to explore your function throughout the semester and strengthen your understanding of the concepts.  </p>
+  <div class="badge">145 students · 3 TAs · Shiv Nadar Institution of Eminence</div>
+</header>
+
+<nav class="toc">
+  <a href="#t1">1 Sets &amp; mappings</a>
+  <a href="#t2">2 Injective/surjective</a>
+  <a href="#t3">3 Inverse</a>
+  <a href="#t4">4 Algebra of f</a>
+  <a href="#t5">5 Composition</a>
+  <a href="#t6">6 Limits</a>
+  <a href="#t7">7 Continuity, ε–δ</a>
+  <a href="#t8">8 Classical theorems</a>
+  <a href="#t9">9 Differentiability</a>
+  <a href="#t10">10 MVTs</a>
+  <a href="#t11">11 Curve tracing</a>
+  <a href="#t12">12 Indeterminate forms</a>
+  <a href="#t13">13 Riemann integration</a>
+  <a href="#t14">14 Length, volume, surface</a>
+  <a href="#t15">15 More staples</a>
+</nav>
+
+<main>
+
+  <div class="lead">
+    Work through these items in order — each tier builds on the ones before it. There is no separate "extra" category: every item on this list is a real part of the project, and you are encouraged to get as far through the full sequence as you can over the semester. Talk to your TA regularly about where you've reached and what you're working on next.
+  </div>
+
+  <section class="tier" id="t1">
+    <h2><span class="num">Tier 1</span> Sets and mappings — basics</h2>
+    <ol class="item-list">
+      <li><span class="n">1</span><span class="txt">State the domain of \(f\).</span></li>
+      <li><span class="n">2</span><span class="txt">Propose a natural co-domain (usually \(\mathbb{R}\)), then compute the range (image) of \(f\).</span></li>
+      <li><span class="n">3</span><span class="txt">Compare the range to the co-domain directly — is \(f\) onto its stated co-domain?</span></li>
+      <li><span class="n">4</span><span class="txt">For a given subset \(A\) of the domain (an interval or finite set of points), compute \(f(A)\), the image of \(A\).</span></li>
+      <li><span class="n">5</span><span class="txt">For a given \(y\) in the co-domain, find \(f^{-1}(\{y\})\) — how many pre-images does it have? (Zero, one, or several.)</span></li>
+      <li><span class="n">6</span><span class="txt">For a subset \(B\) of the co-domain, find \(f^{-1}(B)\).</span></li>
+      <li><span class="n">7</span><span class="txt">Verify \(f(f^{-1}(B)) \subseteq B\); find an example (if any) where the containment is strict.</span></li>
+      <li><span class="n">8</span><span class="txt">Verify \(A \subseteq f^{-1}(f(A))\); explain why equality here is closely tied to injectivity.</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t2">
+    <h2><span class="num">Tier 2</span> Injective, surjective, bijective</h2>
+    <ol class="item-list">
+      <li><span class="n">9</span><span class="txt">Determine whether \(f\) is one-one on its full domain (algebraic test: \(f(x_1)=f(x_2)\Rightarrow x_1=x_2\)).</span></li>
+      <li><span class="n">10</span><span class="txt">If not, find the largest interval containing a given point on which \(f\) is one-one.</span></li>
+      <li><span class="n">11</span><span class="txt">Determine whether \(f\) is onto its co-domain.</span></li>
+      <li><span class="n">12</span><span class="txt">State whether \(f\) is a bijection on its full domain; if not, state the restricted domain/co-domain pair on which it becomes one.</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t3">
+    <h2><span class="num">Tier 3</span> Inverse</h2>
+    <ol class="item-list">
+      <li><span class="n">13</span><span class="txt">On the interval from Item 10, find a formula for \(f^{-1}\); state its domain and range.</span></li>
+      <li><span class="n">14</span><span class="txt">Verify \(f(f^{-1}(x))=x\) and \(f^{-1}(f(x))=x\) on the appropriate domains.</span></li>
+      <li><span class="n">15</span><span class="txt">Graph \(f\) and \(f^{-1}\) together with the line \(y=x\).</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t4">
+    <h2><span class="num">Tier 4</span> Algebra of \(f\) with itself</h2>
+    <ol class="item-list">
+      <li><span class="n">16</span><span class="txt">Compute \((f+f)(x) = 2f(x)\).</span></li>
+      <li><span class="n">17</span><span class="txt">Compute \((f+f+f)(x) = 3f(x)\); generalize to \(nf(x)\).</span></li>
+      <li><span class="n">18</span><span class="txt">Compute \((f-f)(x)\) (trivially 0) versus \(f(x)-f(-x)\) — explain why these are different.</span></li>
+      <li><span class="n">19</span><span class="txt">Compute \((f\cdot f)(x)=f(x)^2\) and \((f\cdot f\cdot f)(x) = f(x)^3\).</span></li>
+      <li><span class="n">20</span><span class="txt">Compute \(f(x)+f^{-1}(x)\) and \(f(x)\cdot f^{-1}(x)\) wherever both are defined (on the restricted domain from Items 10/13).</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t5">
+    <h2><span class="num">Tier 5</span> Composition</h2>
+    <ol class="item-list">
+      <li><span class="n">21</span><span class="txt">Compute \((f\circ f)(x)=f(f(x))\); state its domain carefully — it may shrink relative to \(f\)'s own domain.</span></li>
+      <li><span class="n">22</span><span class="txt">Compute \((f\circ f\circ f)(x)\); note how the domain shrinks further.</span></li>
+      <li><span class="n">23</span><span class="txt">Compute \((f\circ f^{-1})(x)\) and \((f^{-1}\circ f)(x)\) explicitly and reconcile with Item 14.</span></li>
+      <li><span class="n">24</span><span class="txt">Find all fixed points: solve \(f(x)=x\). Interpret graphically as intersections with \(y=x\).</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t6">
+    <h2><span class="num">Tier 6</span> Limits</h2>
+    <ol class="item-list">
+      <li><span class="n">25</span><span class="txt">Compute \(\lim_{x\to x_0} f(x)\) at a specified interior point \(x_0\), using limit laws.</span></li>
+      <li><span class="n">26</span><span class="txt">Compute one-sided limits at any boundary or singular point of the domain, and state whether the two-sided limit exists there.</span></li>
+      <li><span class="n">27</span><span class="txt">Compute \(\lim_{x\to\infty}f(x)\) and \(\lim_{x\to-\infty}f(x)\) where the domain permits; identify horizontal asymptotes.</span></li>
+      <li><span class="n">28</span><span class="txt">If \(f\) has a vertical asymptote, compute the one-sided limits (\(\pm\infty\)) there.</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t7">
+    <h2><span class="num">Tier 7</span> Continuity and \(\varepsilon\text{–}\delta\)</h2>
+    <ol class="item-list">
+      <li><span class="n">29</span><span class="txt">For the point \(x_0\) in Item 25 and a specific \(\varepsilon\) (e.g. \(\varepsilon=0.1\)), find a \(\delta\) that works in the \(\varepsilon\text{–}\delta\) definition.</span></li>
+      <li><span class="n">30</span><span class="txt">Find the maximum possible \(\delta\) for that \(\varepsilon\) — solve the resulting inequality exactly rather than settling for a workable but non-optimal bound.</span></li>
+      <li><span class="n">31</span><span class="txt">Write out the full \(\varepsilon\text{–}\delta\) proof that \(f\) is continuous at \(x_0\), using the exact \(\delta(\varepsilon)\) relationship found in Item 30.</span></li>
+      <li><span class="n">32</span><span class="txt">Discuss continuity at any special/singular point in the domain (removable, jump, or none, depending on the function).</span></li>
+      <li><span class="n">33</span><span class="txt">State the full set of points where \(f\) is continuous.</span></li>
+      <li><span class="n">34</span><span class="txt">If applicable, discuss whether \(f\) can be continuously extended to a point outside its stated domain (a removable-discontinuity case).</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t8">
+    <h2><span class="num">Tier 8</span> Uniform continuity and classical existence theorems</h2>
+    <ol class="item-list">
+      <li><span class="n">35</span><span class="txt">Discuss uniform continuity of \(f\) on a specified closed, bounded sub-interval of its domain.</span></li>
+      <li><span class="n">36</span><span class="txt">Verify the Intermediate Value Theorem numerically: pick \(a,b\) with \(f(a),f(b)\) straddling a target value, and locate the guaranteed point.</span></li>
+      <li><span class="n">37</span><span class="txt">Verify the Extreme Value Theorem on a closed interval: does \(f\) attain a max and min there, and where?</span></li>
+      <li><span class="n">38</span><span class="txt">Discuss Lipschitz continuity: is there an \(L\) with \(|f(x)-f(y)|\le L|x-y|\) on a given interval?</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t9">
+    <h2><span class="num">Tier 9</span> Differentiability, deeper</h2>
+    <ol class="item-list">
+      <li><span class="n">39</span><span class="txt">Compute \(f'(x)\) directly from the first-principles limit definition at a specified point (not just by differentiation rules).</span></li>
+      <li><span class="n">40</span><span class="txt">At any corner/cusp point identified earlier, compute the left-hand and right-hand derivatives separately and confirm they disagree.</span></li>
+      <li><span class="n">41</span><span class="txt">Compute \(f''(x)\) and \(f'''(x)\); where a pattern exists (exponential, trig, log families), conjecture and prove a formula for \(f^{(n)}(x)\).</span></li>
+      <li><span class="n">42</span><span class="txt">If the assigned function is of the oscillatory type (e.g. \(x^2\sin(a/x)\)), show \(f\) is differentiable at the special point but \(f'\) is discontinuous there.</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t10">
+    <h2><span class="num">Tier 10</span> Mean Value Theorems</h2>
+    <ol class="item-list">
+      <li><span class="n">43</span><span class="txt">Verify Rolle's Theorem on an interval \([a,b]\) with \(f(a)=f(b)\); find the guaranteed point \(c\) with \(f'(c)=0\).</span></li>
+      <li><span class="n">44</span><span class="txt">Verify the Lagrange Mean Value Theorem on \([a,b]\); find \(c\) with \(f'(c)=\dfrac{f(b)-f(a)}{b-a}\), and interpret it as "tangent parallel to chord."</span></li>
+      <li><span class="n">45</span><span class="txt">Apply Cauchy's Mean Value Theorem to \(f\) and a second function \(g(x)=x^2\) (or another convenient \(g\)) on an interval.</span></li>
+      <li><span class="n">46</span><span class="txt">Use the Mean Value Theorem to prove a bound: if \(|f'(x)|\le M\) on an interval, show \(|f(x_1)-f(x_2)|\le M|x_1-x_2|\) there.</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t11">
+    <h2><span class="num">Tier 11</span> Curve tracing (synthesis)</h2>
+    <ol class="item-list">
+      <li><span class="n">47</span><span class="txt">Classify symmetry: even, odd, or neither; periodic or not.</span></li>
+      <li><span class="n">48</span><span class="txt">Find all asymptotes precisely — vertical, horizontal, and oblique/slant (via polynomial division where \(f\) is rational).</span></li>
+      <li><span class="n">49</span><span class="txt">Assemble a complete curve-tracing summary combining domain, intercepts, symmetry, asymptotes, monotonicity, concavity, and inflection points into one final annotated sketch.</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t12">
+    <h2><span class="num">Tier 12</span> Indeterminate forms</h2>
+    <ol class="item-list">
+      <li><span class="n">50</span><span class="txt">Identify any indeterminate limit arising from \(f\) (e.g. \(f(x)/x\) as \(x\to0\), or \(f(x)^{1/x}\) as \(x\to\infty\)) and evaluate it with L'Hôpital's Rule, checking the hypotheses first.</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t13">
+    <h2><span class="num">Tier 13</span> Riemann integration</h2>
+    <ol class="item-list">
+      <li><span class="n">51</span><span class="txt">Partition an interval \([a,b]\) into \(n\) equal subintervals; compute the upper sum \(U(f,P)\) and lower sum \(L(f,P)\) for a specific small \(n\) (e.g. \(n=4\)).</span></li>
+      <li><span class="n">52</span><span class="txt">Show \(U(f,P)-L(f,P)\to 0\) as \(n\to\infty\), and use this to argue \(f\) is Riemann integrable on \([a,b]\).</span></li>
+      <li><span class="n">53</span><span class="txt">Compute the Riemann sum using left endpoints, right endpoints, and midpoints for a chosen \(n\); compare all three to the exact value of \(\int_a^b f(x)\,dx\).</span></li>
+      <li><span class="n">54</span><span class="txt">Evaluate \(\int_a^b f(x)\,dx\) via the Fundamental Theorem of Calculus (or numerically, stating why, if \(f\) has no elementary antiderivative).</span></li>
+      <li><span class="n">55</span><span class="txt">Compute the average value of \(f\) on \([a,b]\), \(\frac{1}{b-a}\int_a^b f(x)\,dx\), and find a point where \(f\) equals that average (Mean Value Theorem for integrals).</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t14">
+    <h2><span class="num">Tier 14</span> Length, volume, and surface of revolution</h2>
+    <ol class="item-list">
+      <li><span class="n">56</span><span class="txt">Set up and evaluate the arc length \(\int_a^b\sqrt{1+f'(x)^2}\,dx\) over a chosen interval.</span></li>
+      <li><span class="n">57</span><span class="txt">Volume by disks/washers: rotate the region under \(y=f(x)\) about the \(x\)-axis and evaluate \(V=\pi\int_a^b f(x)^2\,dx\).</span></li>
+      <li><span class="n">58</span><span class="txt">Volume by shells: rotate the same region about the \(y\)-axis (restrict to \(x\ge0\) if needed) and evaluate \(V=2\pi\int_a^b x\,f(x)\,dx\).</span></li>
+      <li><span class="n">59</span><span class="txt">Surface area of revolution about the \(x\)-axis: \(S=2\pi\int_a^b f(x)\sqrt{1+f'(x)^2}\,dx\).</span></li>
+      <li><span class="n">60</span><span class="txt">Repeat the volume or surface computation rotating about a shifted axis (e.g. \(y=c\) or \(x=c\)) instead of the coordinate axis.</span></li>
+    </ol>
+  </section>
+
+  <section class="tier" id="t15">
+    <h2><span class="num">Tier 15</span> A few more single-variable staples</h2>
+    <ol class="item-list">
+      <li><span class="n">61</span><span class="txt">Find the degree-2 (or 3) Taylor polynomial of \(f\) at a point \(x_0\); estimate the error using the Lagrange remainder.</span></li>
+      <li><span class="n">62</span><span class="txt">Apply one or two iterations of Newton's Method to approximate a zero of \(f\) starting from a given \(x_0\).</span></li>
+      <li><span class="n">63</span><span class="txt">If the natural interval of integration is infinite or \(f\) is singular at an endpoint, discuss convergence/divergence of the resulting improper integral.</span></li>
+    </ol>
+  </section>
+
+</main>
+
+<footer>
+  Calculus I · Semester Function Project · Institute of Chemical Technology, Mumbai
+</footer>
+
+</body>
+</html>
