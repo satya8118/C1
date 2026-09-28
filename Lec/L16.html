@@ -356,7 +356,7 @@
             <div class="proof-box">
                 <strong class="highlight-orange">Proof:</strong> Let $\epsilon > 0$. Isolate the offset:
                 $$|e^x - e^c| = e^c|e^{x-c} - 1|$$
-                For $|x - c| < 1$, we use the inequality $|e^u - 1| \le 2|u|$ for $|u| \le 1$. Thus:
+                For $|x - c| < 1$, we use the inequality $|e^u - 1| \le 2|u|$ for $|u| < 1$. Thus:
                 $$e^c|e^{x-c} - 1| \le 2e^c|x - c|$$
                 Selecting <span class="highlight-yellow">$\delta = \min\left(1, \frac{\epsilon}{2e^c}\right)$</span> completes the proof. $\blacksquare$
             </div>
