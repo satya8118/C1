@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continuity of eˣ — a rigorous ε–δ proof</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      tags: 'none'
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+  :root{
+    --ink:#1a1f36;
+    --muted:#5a6478;
+    --accent:#1e5fd8;
+    --accent-soft:#eef4ff;
+    --line:#e2e8f4;
+    --bg:#eef2f9;
+    --warm:#e07b39;
+    --green:#12855f;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    padding:36px 16px 70px;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #ffffff 0%, transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                "Helvetica Neue", Arial, sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:0 18px 50px -22px rgba(20,40,90,.28);
+    overflow:hidden;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    padding:40px 40px 30px;
+    background:linear-gradient(150deg,#132a5c 0%, #1e5fd8 55%, #3f86f5 100%);
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute; inset:auto -60px -120px auto;
+    width:340px; height:340px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,.22), transparent 65%);
+  }
+  header .kicker{
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    font-size:.72rem;
+    font-weight:700;
+    opacity:.85;
+    margin:0 0 10px;
+  }
+  header h1{
+    margin:0 0 10px;
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:clamp(1.55rem, 4vw, 2.15rem);
+    line-height:1.25;
+    font-weight:700;
+  }
+  header p{
+    margin:0;
+    max-width:56ch;
+    color:rgba(255,255,255,.88);
+    font-size:.97rem;
+  }
+
+  /* ---------- content ---------- */
+  main{ padding:34px 40px 44px; }
+
+  @media (max-width:620px){
+    header{ padding:30px 22px 24px; }
+    main{ padding:26px 20px 34px; }
+    body{ padding:14px 8px 40px; font-size:16px; }
+  }
+
+  h2{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:44px 0 14px;
+    font-size:1.12rem;
+    letter-spacing:.01em;
+    font-weight:700;
+    color:#132a5c;
+  }
+  h2:first-child{ margin-top:0; }
+
+  .badge{
+    flex:0 0 auto;
+    display:inline-grid;
+    place-items:center;
+    width:28px; height:28px;
+    border-radius:9px;
+    background:var(--accent-soft);
+    border:1px solid #c9dcff;
+    color:var(--accent);
+    font-size:.82rem;
+    font-weight:800;
+  }
+
+  p{ margin:0 0 14px; }
+
+  .lede{
+    font-size:1.03rem;
+    color:#2b3550;
+    border-left:3px solid var(--accent);
+    padding:2px 0 2px 16px;
+    margin:0 0 22px;
+  }
+
+  /* ---------- math display blocks ---------- */
+  .mathblock{
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:6px 2px;
+    margin:14px 0 18px;
+    text-align:center;
+  }
+
+  /* ---------- lemma / tcolorbox style ---------- */
+  .lemma{
+    position:relative;
+    margin:30px 0;
+    padding:34px 22px 20px;
+    background:linear-gradient(180deg,#f7faff, #eef4ff);
+    border:1.5px solid var(--accent);
+    border-radius:12px;
+    box-shadow:0 10px 24px -18px rgba(30,95,216,.75);
+  }
+  .lemma > .tag{
+    position:absolute;
+    top:-14px; left:16px;
+    background:var(--accent);
+    color:#fff;
+    font-size:.75rem;
+    font-weight:800;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    padding:5px 13px;
+    border-radius:7px;
+    box-shadow:0 6px 14px -6px rgba(30,95,216,.9);
+  }
+  .lemma .caption{
+    display:block;
+    margin-top:14px;
+    font-size:.86rem;
+    color:var(--muted);
+    text-align:center;
+    font-style:italic;
+  }
+
+  /* ---------- result / qed ---------- */
+  .result{
+    margin:30px 0 10px;
+    padding:20px 22px;
+    border-radius:12px;
+    background:#f2fbf7;
+    border:1.5px solid var(--green);
+  }
+  .result .tag{
+    display:inline-block;
+    background:var(--green);
+    color:#fff;
+    font-size:.72rem;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    padding:4px 11px;
+    border-radius:6px;
+    margin-bottom:10px;
+  }
+
+  .qed{
+    text-align:right;
+    font-weight:700;
+    color:var(--green);
+    margin:6px 0 0;
+  }
+
+  /* ---------- plot ---------- */
+  .plotcard{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 14px 6px;
+    background:#fcfdff;
+    margin:22px 0 8px;
+  }
+  .plotcard canvas{
+    width:100%;
+    display:block;
+    border-radius:10px;
+  }
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    justify-content:center;
+    padding:10px 4px 8px;
+    font-size:.85rem;
+    color:var(--muted);
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:8px; }
+  .swatch{ width:22px; height:0; border-top:3px solid; border-radius:2px; }
+  .swatch.blue{ border-color:var(--accent); }
+  .swatch.warm{ border-color:var(--warm); border-top-style:dashed; }
+
+  /* ---------- widget ---------- */
+  .widget{
+    margin:26px 0 8px;
+    padding:18px 20px;
+    border:1px dashed #c9dcff;
+    border-radius:12px;
+    background:#f8fbff;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px 22px;
+    align-items:center;
+    font-size:.92rem;
+  }
+  .widget label{ display:inline-flex; align-items:center; gap:8px; color:var(--muted); }
+  .widget input{
+    width:92px;
+    padding:7px 10px;
+    border:1px solid #c9dcff;
+    border-radius:8px;
+    font:inherit;
+    font-size:.92rem;
+    color:var(--ink);
+    background:#fff;
+  }
+  .widget input:focus{ outline:2px solid #a9c8ff; outline-offset:1px; }
+  .widget button{
+    padding:8px 18px;
+    border:none;
+    border-radius:9px;
+    background:var(--accent);
+    color:#fff;
+    font:inherit;
+    font-weight:700;
+    font-size:.88rem;
+    cursor:pointer;
+    transition:transform .12s ease, background .15s ease;
+  }
+  .widget button:hover{ background:#1749ad; }
+  .widget button:active{ transform:translateY(1px); }
+  #deltaOut{
+    font-family:ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size:.92rem;
+    color:#132a5c;
+    background:#fff;
+    border:1px solid #c9dcff;
+    border-radius:8px;
+    padding:7px 12px;
+    min-width:230px;
+  }
+
+  /* ---------- misc ---------- */
+  .case{
+    border-left:3px solid var(--accent);
+    padding:4px 0 4px 16px;
+    margin:18px 0;
+  }
+  .case h4{
+    margin:0 0 6px;
+    font-size:.95rem;
+    color:var(--accent);
+    letter-spacing:.01em;
+  }
+  .case.cool{ border-left-color:var(--warm); }
+  .case.cool h4{ color:var(--warm); }
+
+  .note{
+    font-size:.88rem;
+    color:var(--muted);
+    background:#fafbfe;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 16px;
+    margin:18px 0;
+  }
+
+  footer{
+    text-align:center;
+    font-size:.82rem;
+    color:var(--muted);
+    padding:0 40px 34px;
+  }
+
+  /* keep MathJax display from overflowing on mobile */
+  mjx-container[display="true"]{ overflow-x:auto; overflow-y:hidden; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <p class="kicker">Mathematical Proof Series</p>
+    <h1>Rigorous Analysis: Continuity of $e^{x}$ via $\varepsilon$–$\delta$</h1>
+    <p>Every step of the standard proof — plus a self-contained proof of the key lemma
+       using only Bernoulli’s inequality, with no Taylor series in sight.</p>
+  </header>
+
+  <main>
+
+    <!-- ============================================================ -->
+    <h2><span class="badge">0</span> What we must prove</h2>
+
+    <p class="lede">
+      $f(x)=e^{x}$ is continuous at $c\in\mathbb{R}$ if for every $\varepsilon>0$
+      there is a $\delta>0$ such that
+    </p>
+
+    <div class="mathblock">
+      \[ |x-c| \lt \delta \;\Longrightarrow\; |e^{x}-e^{c}| \lt \varepsilon . \]
+    </div>
+
+    <p>Since $c$ is arbitrary, proving this for a general $c$ proves continuity on all of
+       $\mathbb{R}$. The whole difficulty is packed into one question: <em>how big can
+       $|e^{x}-e^{c}|$ be when $x$ is close to $c$?</em></p>
+
+    <!-- ============================================================ -->
+    <h2><span class="badge">1</span> Factor out the constant</h2>
+
+    <p>Apply the exponent law $e^{a+b}=e^{a}e^{b}$ to separate the fixed point $c$ from the
+       moving variable $x$:</p>
+
+    <div class="mathblock">
+      \[ |e^{x}-e^{c}| \;=\; |e^{c}e^{x-c}-e^{c}| \;=\; e^{c}\,|e^{x-c}-1| . \]
+    </div>
+
+    <p>Writing $h=x-c$, the problem collapses to a single quantity:</p>
+
+    <div class="mathblock">
+      \[ \boxed{\;|e^{x}-e^{c}| = e^{c}\,|e^{h}-1|,\qquad h=x-c.\;} \]
+    </div>
+
+    <p>The factor $e^{c}$ is a harmless constant. Everything now hinges on how
+       $|e^{h}-1|$ behaves for <strong>small</strong> $h$.</p>
+
+    <!-- ============================================================ -->
+    <h2><span class="badge">2</span> The key lemma: a local linear bound</h2>
+
+    <p>Because $e^{h}$ grows faster than any line, no single linear bound
+       $|e^{h}-1|\le K|h|$ can hold for <em>all</em> $h$. But we do not need one — we only
+       need a local window around $0$. Restricting to $|h|\lt 1$ is enough.</p>
+
+    <div class="lemma">
+      <span class="tag">Crucial Lemma</span>
+      <p style="margin-top:2px">If $|h|\lt 1$, then</p>
+      <div class="mathblock">
+        \[ |e^{h}-1| \;\le\; e\,|h| . \]
+      </div>
+      <span class="caption">Inside the unit window the exponential curve stays underneath
+        a straight ceiling of slope $e$.</span>
+    </div>
+
+    <div class="plotcard">
+      <canvas id="plot" height="300"></canvas>
+      <div class="legend">
+        <span><i class="swatch blue"></i> $|e^{h}-1|$</span>
+        <span><i class="swatch warm"></i> $e\,|h|$</span>
+        <span>shaded: the unit window $|h|\lt 1$</span>
+      </div>
+    </div>
+
+    <p>Substituting $h=x-c$ into the lemma gives the working inequality:</p>
+
+    <div class="mathblock">
+      \[ |e^{x}-e^{c}| \;=\; e^{c}\,|e^{x-c}-1| \;\le\; e^{c}\cdot e\,|x-c|
+         \;=\; e^{\,c+1}\,|x-c| . \]
+    </div>
+
+    <!-- ============================================================ -->
+    <h2><span class="badge">3</span> Choosing $\delta$</h2>
+
+    <p>We want the bound to land strictly below the error tolerance $\varepsilon$:</p>
+
+    <div class="mathblock">
+      \[ e^{\,c+1}|x-c| \lt \varepsilon
+         \quad\Longleftrightarrow\quad
+         |x-c| \lt \frac{\varepsilon}{e^{\,c+1}} = \varepsilon\,e^{-(c+1)} . \]
+    </div>
+
+    <p>But that is only legal if we also respect the unit window $|x-c|\lt 1$ required by
+       the lemma. Imposing both constraints at once:</p>
+
+    <div class="mathblock">
+      \[ \boxed{\;\delta \;=\; \min\!\left(1,\; \frac{\varepsilon}{e^{\,c+1}}\right)
+                \;=\; \min\!\left(1,\; \varepsilon\,e^{-(c+1)}\right).\;} \]
+    </div>
+
+    <!-- ============================================================ -->
+    <h2><span class="badge">4</span> Formal synthesis</h2>
+
+    <p>Let $\varepsilon>0$ be arbitrary and set
+       $\delta=\min\!\left(1,\ \varepsilon e^{-(c+1)}\right)$. Suppose $|x-c|\lt\delta$.
+       Then <em>both</em> constraints hold simultaneously:</p>
+
+    <div class="case">
+      <h4>(i) Geometric constraint</h4>
+      <p style="margin:0">$|x-c| \lt \delta \le 1$, so the lemma applies with $h=x-c$.</p>
+    </div>
+
+    <div class="case cool">
+      <h4>(ii) Metric constraint</h4>
+      <p style="margin:0">$|x-c| \lt \delta \le \dfrac{\varepsilon}{e^{\,c+1}}$.</p>
+    </div>
+
+    <p>Chaining everything together:</p>
+
+    <div class="mathblock">
+      \[
+      \begin{aligned}
+        |e^{x}-e^{c}|
+          &= e^{c}\,|e^{x-c}-1| \\[2pt]
+          &\le e^{c}\cdot e\,|x-c| && \text{(Lemma, valid by (i))} \\[2pt]
+          &\lt e^{\,c+1}\cdot \frac{\varepsilon}{e^{\,c+1}} = \varepsilon
+             && \text{(by (ii))}.
+      \end{aligned}
+      \]
+    </div>
+
+    <div class="result">
+      <span class="tag">Conclusion</span>
+      <p style="margin:0">For every $\varepsilon>0$ the choice
+         $\delta=\min\!\left(1,\ \varepsilon e^{-(c+1)}\right)$ satisfies the
+         $\varepsilon$–$\delta$ condition at $c$. Hence $f(x)=e^{x}$ is continuous at $c$;
+         since $c$ was arbitrary, $e^{x}$ is continuous on all of $\mathbb{R}$.</p>
+      <p class="qed">■</p>
+    </div>
+
+    <div class="widget">
+      <label>$c$ = <input id="cval" type="number" value="1" step="0.5"></label>
+      <label>$\varepsilon$ = <input id="eps" type="number" value="0.1" step="0.01" min="0.000001"></label>
+      <button id="calcBtn" type="button">Compute δ</button>
+      <output id="deltaOut">δ = 0.0367879</output>
+    </div>
+
+    <!-- ============================================================ -->
+    <h2><span class="badge">A</span> Appendix — the lemma without Taylor series</h2>
+
+    <p>The usual derivation of $|e^{h}-1|\le e|h|$ quotes the series
+       $e^{h}=\sum h^{n}/n!$. That is convenient but not necessary. Everything the lemma
+       needs follows from <strong>Bernoulli’s inequality</strong> together with the limit
+       definition of the exponential.</p>
+
+    <div class="lemma" style="border-color:var(--warm); background:linear-gradient(180deg,#fffaf5,#fdf2e8);">
+      <span class="tag" style="background:var(--warm); box-shadow:0 6px 14px -6px rgba(224,123,57,.9);">
+        Tool: Bernoulli
+      </span>
+      <p style="margin-top:2px">For $u\ge -1$ and every integer $n\ge 1$,</p>
+      <div class="mathblock">
+        \[ (1+u)^{n} \;\ge\; 1+nu . \]
+      </div>
+    </div>
+
+    <h2 style="margin-top:34px; font-size:1rem;">
+      <span class="badge" style="background:#fdf2e8; border-color:#f3d3b4; color:var(--warm);">A1</span>
+      A consequence: $e^{t}\ge 1+t$
+    </h2>
+
+    <p>Fix $t\gt -1$ and put $u=t/n$ in Bernoulli’s inequality. Since $t\gt -1$ we have
+       $u\ge -1$ for every $n\ge 1$, so</p>
+
+    <div class="mathblock">
+      \[ \left(1+\frac{t}{n}\right)^{n} \;\ge\; 1+t
+         \qquad\text{for all } n\ge 1 . \]
+    </div>
+
+    <p>Using the standard limit definition $e^{t}=\lim_{n\to\infty}\left(1+\frac{t}{n}\right)^{n}$
+       and passing to the limit (the left side converges to $e^{t}$, the right side is
+       constant):</p>
+
+    <div class="mathblock">
+      \[ \boxed{\;e^{t}\;\ge\;1+t \qquad \text{for every } t\gt -1.\;} \tag{B} \]
+    </div>
+
+    <p>This single inequality is the whole engine of the argument. Notice it is
+       <em>free</em> of derivatives and of infinite series.</p>
+
+    <h2 style="margin-top:34px; font-size:1rem;">
+      <span class="badge" style="background:#fdf2e8; border-color:#f3d3b4; color:var(--warm);">A2</span>
+      The negative half: $-1\lt h\le 0$
+    </h2>
+
+    <p>Apply (B) directly with $t=h$ (legal because $h\gt -1$):</p>
+
+    <div class="mathblock">
+      \[ e^{h}\;\ge\;1+h
+         \quad\Longrightarrow\quad
+         0 \;\le\; 1-e^{h} \;\le\; -h \;=\; |h| \;\le\; e\,|h| . \]
+    </div>
+
+    <p>Since $h\le 0$ we have $|e^{h}-1| = 1-e^{h}$, so
+       $|e^{h}-1|\le e|h|$ in this case. Done.</p>
+
+    <h2 style="margin-top:34px; font-size:1rem;">
+      <span class="badge" style="background:#fdf2e8; border-color:#f3d3b4; color:var(--warm);">A3</span>
+      The positive half: $0\le h\lt 1$
+    </h2>
+
+    <p>Here is the trick — factor the difference by pulling out $e^{h}$:</p>
+
+    <div class="mathblock">
+      \[ e^{h}-1 \;=\; e^{h}\left(1-e^{-h}\right). \]
+    </div>
+
+    <p>Now bound the two factors separately.</p>
+
+    <div class="case">
+      <h4>Factor 1: $e^{h}\le e$</h4>
+      <p style="margin:0">Because $h\le 1$, we have $1-h\ge 0$, so by (B)
+         $e^{\,1-h}\ge 1+(1-h)=2-h\ge 1$. Hence
+         $e - e^{h} = e^{h}\left(e^{\,1-h}-1\right)\ge 0$, i.e. $e^{h}\le e$.
+         (Equivalently: $t\mapsto e^{t}$ is increasing.)</p>
+    </div>
+
+    <div class="case cool">
+      <h4>Factor 2: $1-e^{-h}\le h$</h4>
+      <p style="margin:0">Apply (B) with $t=-h$. This is legal precisely because
+         $h\lt 1$ gives $-h\gt -1$. We get $e^{-h}\ge 1-h$, i.e.
+         $1-e^{-h}\le h$.</p>
+    </div>
+
+    <p>Multiplying the two bounds (both sides are non-negative):</p>
+
+    <div class="mathblock">
+      \[ e^{h}-1 \;=\; e^{h}\left(1-e^{-h}\right) \;\le\; e\cdot h \;=\; e\,|h| . \]
+    </div>
+
+    <p>So $|e^{h}-1|\le e|h|$ in this case too.</p>
+
+    <h2 style="margin-top:34px; font-size:1rem;">
+      <span class="badge" style="background:#fdf2e8; border-color:#f3d3b4; color:var(--warm);">A4</span>
+      Wrap-up
+    </h2>
+
+    <p>Combining the two cases:</p>
+
+    <div class="mathblock">
+      \[ |h|\lt 1 \;\Longrightarrow\; |e^{h}-1|\;\le\;e\,|h| . \qquad \blacksquare \]
+    </div>
+
+    <div class="note">
+      <strong>What was used, and what was not.</strong><br>
+      Used: Bernoulli’s inequality $(1+u)^{n}\ge 1+nu$ for $u\ge -1$, the limit
+      definition $e^{t}=\lim_{n\to\infty}(1+t/n)^{n}$, and monotonicity of $t\mapsto e^{t}$
+      (itself a consequence of Bernoulli).<br>
+      Not used: Taylor expansions, power series, derivatives, L’Hôpital’s rule, or the mean
+      value theorem. The proof is elementary in the strict sense.
+    </div>
+
+    <div class="note">
+      <strong>Why the case split is unavoidable.</strong> A tempting one-line bound is
+      $e^{h}\le \dfrac{1}{1-h}$, obtained from Bernoulli applied to $e^{-h}$. That gives
+      $e^{h}-1\le \dfrac{h}{1-h}$, which is only $\le eh$ while $h\le 1-\tfrac1e\approx0.632$
+      — it blows up as $h\to1^{-}$. The factorization $e^{h}-1=e^{h}(1-e^{-h})$ avoids this
+      entirely by recycling the small quantity $h$ instead of $1/(1-h)$.
+    </div>
+
+  </main>
+
+  <footer>
+    Rigorous Analysis · Continuity of $e^{x}$ via $\varepsilon$–$\delta$
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ */
+/*  Plot: |e^h - 1|  vs  e|h|  on the window (-1, 1)                   */
+/* ------------------------------------------------------------------ */
+(function () {
+  const cv  = document.getElementById('plot');
+  const ctx = cv.getContext('2d');
+
+  function draw() {
+    const dpr = window.devicePixelRatio || 1;
+    const w   = cv.clientWidth || 600;
+    const h   = 300;
+
+    cv.width  = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+    cv.style.height = h + 'px';
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const pad  = { l: 56, r: 20, t: 18, b: 40 };
+    const xmin = -1, xmax = 1, ymin = 0, ymax = 3;
+
+    const X = x => pad.l + (x - xmin) / (xmax - xmin) * (w - pad.l - pad.r);
+    const Y = y => (h - pad.b) - (y - ymin) / (ymax - ymin) * ((h - pad.b) - pad.t);
+
+    /* shaded unit window */
+    ctx.fillStyle = '#eef4ff';
+    ctx.fillRect(X(-1), Y(3), X(1) - X(-1), Y(0) - Y(3));
+
+    /* grid */
+    ctx.strokeStyle = '#e6ecf7';
+    ctx.lineWidth = 1;
+    for (let x = -1; x <= 1.0001; x += 0.25) {
+      ctx.beginPath(); ctx.moveTo(X(x), Y(0)); ctx.lineTo(X(x), Y(3)); ctx.stroke();
+    }
+    for (let y = 0; y <= 3.0001; y += 0.5) {
+      ctx.beginPath(); ctx.moveTo(X(-1), Y(y)); ctx.lineTo(X(1), Y(y)); ctx.stroke();
+    }
+
+    /* axes */
+    ctx.strokeStyle = '#9aa8c0';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(X(-1), Y(0)); ctx.lineTo(X(1), Y(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(0),  Y(0)); ctx.lineTo(X(0), Y(3)); ctx.stroke();
+
+    /* ticks + labels */
+    ctx.fillStyle = '#5a6478';
+    ctx.font = '12px -apple-system, Segoe UI, Roboto, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    [-1, -0.5, 0, 0.5, 1].forEach(x => ctx.fillText(String(x), X(x), Y(0) + 7));
+
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    [0, 1, 2, 3].forEach(y => ctx.fillText(String(y), X(-1) - 9, Y(y)));
+
+    ctx.textAlign = 'left';
+    ctx.fillText('h', X(1) - 10, Y(0) + 7);
+    ctx.fillText('y', X(0) + 8, Y(3) + 2);
+
+    const N = 600;
+
+    /* e|h|  (dashed warm) */
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const x  = xmin + (xmax - xmin) * i / N;
+      const px = X(x), py = Y(Math.E * Math.abs(x));
+      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    }
+    ctx.strokeStyle = '#e07b39';
+    ctx.lineWidth = 2.6;
+    ctx.setLineDash([8, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    /* |e^h - 1|  (solid blue) */
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const x  = xmin + (xmax - xmin) * i / N;
+      const px = X(x), py = Y(Math.abs(Math.exp(x) - 1));
+      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    }
+    ctx.strokeStyle = '#1e5fd8';
+    ctx.lineWidth = 2.6;
+    ctx.stroke();
+
+    /* marker at h = 1 */
+    ctx.fillStyle = '#1e5fd8';
+    ctx.beginPath();
+    ctx.arc(X(1), Y(Math.E - 1), 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '12px -apple-system, Segoe UI, Roboto, sans-serif';
+    ctx.fillStyle = '#1e5fd8';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('e − 1', X(1) - 6, Y(Math.E - 1) - 4);
+  }
+
+  draw();
+  window.addEventListener('resize', draw);
+})();
+
+/* ------------------------------------------------------------------ */
+/*  Mini δ-calculator                                                  */
+/* ------------------------------------------------------------------ */
+(function () {
+  const cIn  = document.getElementById('cval');
+  const eIn  = document.getElementById('eps');
+  const out  = document.getElementById('deltaOut');
+  const btn  = document.getElementById('calcBtn');
+
+  function compute() {
+    const c   = parseFloat(cIn.value);
+    const eps = parseFloat(eIn.value);
+
+    if (!isFinite(c) || !isFinite(eps) || eps <= 0) {
+      out.textContent = 'δ = — (need ε > 0)';
+      return;
+    }
+    const d = Math.min(1, eps * Math.exp(-(c + 1)));
+    out.textContent = 'δ = ' + d.toPrecision(8).replace(/\.?0+$/, '');
+  }
+
+  btn.addEventListener('click', compute);
+  cIn.addEventListener('input', compute);
+  eIn.addEventListener('input', compute);
+  compute();
+})();
+</script>
+
+</body>
+</html>
