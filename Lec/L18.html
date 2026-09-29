@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 18 – Local Properties & Functional Equations by Epsilon-Delta Definition</title>
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        :root { 
+            --bg: #000000; 
+            --text-white: #ffffff;
+            --yellow: #ffee55;
+            --orange: #ff9900;
+            --cyan: #00e5ff;
+            --lime: #00ff66;
+            --pink: #ff007f;
+            --card-bg: #111111;
+            --box-bg: #181818;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-white);
+            background: var(--bg);
+            padding: 20px 20px 100px 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--yellow);
+            border-bottom: 2px solid var(--pink);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--cyan);
+            font-size: 1.1rem;
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--lime);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .step {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: none;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .tcolorbox {
+            background: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .tcolorbox-header {
+            padding: 12px 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            background: #1a1a1a;
+        }
+
+        .tcolorbox.purple .tcolorbox-header {
+            color: var(--pink);
+            border-bottom: 2px solid var(--pink);
+        }
+
+        .tcolorbox-content {
+            padding: 20px;
+        }
+
+        .proof-box {
+            background: #141414;
+            border-left: 4px dashed var(--orange);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 0.98rem;
+        }
+
+        .quiz-card {
+            background: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--yellow);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .btn-sol {
+            background: transparent;
+            border: 1px solid var(--lime);
+            color: var(--lime);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sol:hover {
+            background: var(--lime);
+            color: #000000;
+        }
+
+        .solution {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-top: 1px dashed var(--border-color);
+            color: var(--text-white);
+            background-color: #0d0d0d;
+            border-radius: 4px;
+        }
+
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #111111;
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.8);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            z-index: 1000;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-bar-bg {
+            flex-grow: 1;
+            background: #222222;
+            height: 10px;
+            border-radius: 5px;
+            margin: 0 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--pink);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--yellow);
+            min-width: 60px;
+        }
+
+        .btn-next {
+            background: var(--pink);
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            background: var(--cyan);
+            color: #000000;
+        }
+
+        .btn-next:disabled {
+            background: #444444;
+            color: #888888;
+            cursor: not-allowed;
+        }
+
+        .highlight-yellow { color: var(--yellow); }
+        .highlight-orange { color: var(--orange); }
+        .highlight-cyan { color: var(--cyan); }
+        .highlight-lime { color: var(--lime); }
+        .highlight-pink { color: var(--pink); }
+
+        ol, ul { padding-left: 20px; }
+        li { margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Lecture 18: Local Properties & Functional Equations</h1>
+            <p class="subtitle">Rigorous $\epsilon$-$\delta$ Foundations Before the Intermediate Value Theorem</p>
+        </header>
+
+        <!-- Step 1: Core Local Properties -->
+        <div class="step">
+            <h2>Step 1 &mdash; Fundamental Local Properties of Continuous Functions</h2>
+            <p>A property of a continuous function is called <span class="highlight-cyan">local</span> if it holds within an open neighborhood $(a - \delta, a + \delta)$ of a given point $a$. Here we prove two fundamental local properties purely using the $\epsilon$-$\delta$ definition.</p>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Property 1 &mdash; Local Boundedness</div>
+                <div class="tcolorbox-content">
+                    If $f: A \to \mathbb{R}$ is continuous at $a \in A$, then $f$ is locally bounded at $a$. That is, there exist constants $M > 0$ and $\delta > 0$ such that $|f(x)| \le M$ for all $x \in A \cap (a - \delta, a + \delta)$.
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof ($\epsilon$-$\delta$ definition):</strong><br>
+                By definition of continuity at $a$, for any chosen $\epsilon > 0$, there exists a $\delta > 0$ such that:
+                $$x \in A \text{ and } |x - a| < \delta \implies |f(x) - f(a)| < \epsilon$$
+                Choose <span class="highlight-yellow">$\epsilon = 1$</span>. Then there exists $\delta > 0$ such that for all $x \in A \cap (a - \delta, a + \delta)$:
+                $$|f(x) - f(a)| < 1$$
+                By the reverse triangle inequality:
+                $$|f(x)| - |f(a)| \le |f(x) - f(a)| < 1 \implies |f(x)| < |f(a)| + 1$$
+                Setting $M = |f(a)| + 1 > 0$, we have $|f(x)| < M$ for all $x \in A \cap (a - \delta, a + \delta)$. Hence, $f$ is locally bounded at $a$. $\blacksquare$
+            </div>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Property 2 &mdash; Sign-Preserving Property (Local Strict Positivity / Negativity)</div>
+                <div class="tcolorbox-content">
+                    If $f: A \to \mathbb{R}$ is continuous at $a \in A$ and $f(a) \neq 0$, then there exists $\delta > 0$ such that $f(x)$ has the same sign as $f(a)$ for all $x \in A \cap (a - \delta, a + \delta)$. Specifically, $f(x) > \frac{f(a)}{2}$ if $f(a) > 0$, and $f(x) < \frac{f(a)}{2}$ if $f(a) < 0$.
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof ($\epsilon$-$\delta$ definition):</strong><br>
+                <strong class="highlight-lime">Case 1: $f(a) > 0$.</strong><br>
+                Choose <span class="highlight-yellow">$\epsilon = \frac{f(a)}{2} > 0$</span>. By continuity at $a$, there exists $\delta > 0$ such that:
+                $$|x - a| < \delta \implies |f(x) - f(a)| < \frac{f(a)}{2}$$
+                Expanding the absolute value inequality:
+                $$-\frac{f(a)}{2} < f(x) - f(a) < \frac{f(a)}{2} \implies f(a) - \frac{f(a)}{2} < f(x) < f(a) + \frac{f(a)}{2}$$
+                $$f(x) > \frac{f(a)}{2} > 0$$
+                <strong class="highlight-lime">Case 2: $f(a) < 0$.</strong><br>
+                Choose <span class="highlight-yellow">$\epsilon = \frac{|f(a)|}{2} = -\frac{f(a)}{2} > 0$</span>. By continuity at $a$, there exists $\delta > 0$ such that:
+                $$|x - a| < \delta \implies |f(x) - f(a)| < -\frac{f(a)}{2}$$
+                This gives:
+                $$f(x) - f(a) < -\frac{f(a)}{2} \implies f(x) < f(a) - \frac{f(a)}{2} = \frac{f(a)}{2} < 0$$
+                In both cases, $f(x)$ maintains the sign of $f(a)$ on $A \cap (a - \delta, a + \delta)$. $\blacksquare$
+            </div>
+        </div>
+
+        <!-- Step 2: Advanced Local & Global Order-Preserving Results -->
+        <div class="step">
+            <h2>Step 2 &mdash; Local Comparison Results via $\epsilon$-$\delta$ Definitions</h2>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Theorem 18.1 &mdash; Local Dominance Theorem</div>
+                <div class="tcolorbox-content">
+                    Let $f, g: A \to \mathbb{R}$ be continuous at $a \in A$. If $f(a) > g(a)$, then there exists $\delta > 0$ such that $f(x) > g(x)$ for all $x \in A \cap (a - \delta, a + \delta)$.
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof ($\epsilon$-$\delta$ definition):</strong><br>
+                Define $h(x) = f(x) - g(x)$. Since $f$ and $g$ are continuous at $a$, $h$ is continuous at $a$ with $h(a) = f(a) - g(a) > 0$.<br>
+                Let $\epsilon = \frac{h(a)}{2} = \frac{f(a) - g(a)}{2} > 0$.<br>
+                By continuity of $f$ and $g$ at $a$, choose $\delta_1, \delta_2 > 0$ such that for $|x - a| < \delta_1$, $|f(x) - f(a)| < \frac{\epsilon}{2}$, and for $|x - a| < \delta_2$, $|g(x) - g(a)| < \frac{\epsilon}{2}$.<br>
+                Set $\delta = \min(\delta_1, \delta_2)$. For $|x - a| < \delta$:
+                $$|(f(x) - g(x)) - (f(a) - g(a))| \le |f(x) - f(a)| + |g(x) - g(a)| < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon$$
+                Hence, $h(x) > h(a) - \epsilon = h(a) - \frac{h(a)}{2} = \frac{f(a) - g(a)}{2} > 0$, implying $f(x) > g(x)$. $\blacksquare$
+            </div>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Theorem 18.2 &mdash; Preservation of Non-Strict Inequalities</div>
+                <div class="tcolorbox-content">
+                    Let $f: A \to \mathbb{R}$ be continuous at $a$. If there exists $\delta_0 > 0$ such that $f(x) \ge 0$ for all $x \in A \cap (a - \delta_0, a + \delta_0) \setminus \{a\}$, then $f(a) \ge 0$.
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof ($\epsilon$-$\delta$ definition by contradiction):</strong><br>
+                Assume $f(a) < 0$. By the sign-preserving property (Property 2), choosing $\epsilon = -\frac{f(a)}{2} > 0$, there exists $\delta_1 > 0$ such that for all $x \in A \cap (a - \delta_1, a + \delta_1)$:
+                $$f(x) < \frac{f(a)}{2} < 0$$
+                Setting $\delta = \min(\delta_0, \delta_1)$, pick $x \in A \cap (a - \delta, a + \delta) \setminus \{a\}$. Then $f(x) \ge 0$ (from hypothesis) and $f(x) < 0$ (from continuity), a contradiction! Thus $f(a) \ge 0$. $\blacksquare$
+            </div>
+        </div>
+
+        <!-- Step 3: Complete Functional Equation Proof -->
+        <div class="step">
+            <h2>Step 3 &mdash; Continuous Functional Equation Problem</h2>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Problem &mdash; Cauchy-like Ring Homomorphism Functional Equation</div>
+                <div class="tcolorbox-content">
+                    Find all continuous functions $f: \mathbb{R} \to \mathbb{R}$ satisfying both:
+                    $$\text{(1) } f(x+y) = f(x) + f(y) \quad \text{for all } x, y \in \mathbb{R}$$
+                    $$\text{(2) } f(xy) = f(x)f(y) \quad \text{for all } x, y \in \mathbb{R}$$
+                    Solve strictly using the $\epsilon$-$\delta$ definition of continuity.
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Complete Rigorous Proof:</strong><br>
+                
+                <strong class="highlight-lime">Part A: Additive Relations for Rational Numbers ($\mathbb{Q}$)</strong>
+                <ol>
+                    <li>Setting $x = y = 0$ in (1): $f(0 + 0) = f(0) + f(0) \implies f(0) = 0$.</li>
+                    <li>For any $x \in \mathbb{R}$, $f(0) = f(x + (-x)) = f(x) + f(-x) = 0 \implies f(-x) = -f(x)$.</li>
+                    <li>By induction on (1), for any $n \in \mathbb{N}$ and $x \in \mathbb{R}$: $f(nx) = nf(x)$.</li>
+                    <li>For $q = \frac{p}{q} \cdot q$ ($p \in \mathbb{Z}, q \in \mathbb{N}$): $f(p) = f\left(q \cdot \frac{p}{q}\right) = q f\left(\frac{p}{q}\right) \implies f\left(\frac{p}{q}\right) = \frac{p}{q} f(1)$.</li>
+                    <li>Hence, for all $r \in \mathbb{Q}$, <span class="highlight-yellow">$f(r) = c \cdot r$</span> where $c = f(1)$.</li>
+                </ol>
+
+                <strong class="highlight-lime">Part B: Determining $c = f(1)$ via Multiplicative Property</strong><br>
+                From (2), $f(1) = f(1 \cdot 1) = [f(1)]^2 \implies c = c^2 \implies c(c-1) = 0$.<br>
+                Thus, either <span class="highlight-pink">$c = 0$</span> or <span class="highlight-pink">$c = 1$</span>.
+
+                <br><br>
+                <strong class="highlight-lime">Part C: Extension from $\mathbb{Q}$ to $\mathbb{R}$ via $\epsilon$-$\delta$ Definition</strong><br>
+                Let $x_0 \in \mathbb{R}$ be an arbitrary real number. Since $f$ is continuous at $x_0$, for any $\epsilon > 0$, there exists $\delta > 0$ such that:
+                $$|x - x_0| < \delta \implies |f(x) - f(x_0)| < \frac{\epsilon}{2}$$
+                By the density of rational numbers in $\mathbb{R}$, there exists $r \in \mathbb{Q}$ inside the interval $(x_0 - \delta, x_0 + \delta)$, meaning $|r - x_0| < \delta$.<br>
+                Therefore, $|f(r) - f(x_0)| < \frac{\epsilon}{2}$. Since $r \in \mathbb{Q}$, $f(r) = c \cdot r$, so:
+                $$|c \cdot r - f(x_0)| < \frac{\epsilon}{2}$$
+                Now, consider $|c \cdot x_0 - f(x_0)|$:
+                $$|c \cdot x_0 - f(x_0)| \le |c \cdot x_0 - c \cdot r| + |c \cdot r - f(x_0)| = |c||x_0 - r| + |f(r) - f(x_0)|$$
+                Since $|x_0 - r| < \delta$, choose $\delta$ so small that $|c||x_0 - r| < \frac{\epsilon}{2}$. Then:
+                $$|c \cdot x_0 - f(x_0)| < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon$$
+                Since $|c \cdot x_0 - f(x_0)| < \epsilon$ for **every** $\epsilon > 0$, we must have:
+                $$|c \cdot x_0 - f(x_0)| = 0 \implies f(x_0) = c \cdot x_0 \quad \text{for all } x_0 \in \mathbb{R}$$
+
+                <strong class="highlight-lime">Conclusion:</strong>
+                Substituting $c = 0$ and $c = 1$ gives the only two continuous solutions:
+                $$\bbox[5px,border:2px solid var(--lime)]{\mathbf{f(x) = 0 \quad \text{or} \quad f(x) = x \quad \text{for all } x \in \mathbb{R}}} \quad \blacksquare$$
+            </div>
+        </div>
+
+        <!-- Step 4: Additional Results Prior to IVT -->
+        <div class="step">
+            <h2>Step 4 &mdash; Additional Results & Applications Prior to IVT</h2>
+            <p>Below are crucial foundational results proven strictly with $\epsilon$-$\delta$ arguments to build complete tools before studying the Intermediate Value Theorem.</p>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 1: Density Property of Vanishing Continuous Functions</strong><br>
+                Let $f: \mathbb{R} \to \mathbb{R}$ be continuous. If $f(r) = 0$ for all $r \in \mathbb{Q}$, prove using $\epsilon$-$\delta$ that $f(x) = 0$ for all $x \in \mathbb{R}$.
+                <button class="btn-sol" onclick="toggleSolution('sol1')">Show Solution</button>
+                <div class="solution" id="sol1">
+                    <strong class="highlight-orange">Proof ($\epsilon$-$\delta$):</strong>
+                    Let $x \in \mathbb{R}$ and let $\epsilon > 0$. By continuity of $f$ at $x$, there exists $\delta > 0$ such that:
+                    $$|y - x| < \delta \implies |f(y) - f(x)| < \epsilon$$
+                    By density of $\mathbb{Q}$, choose $r \in \mathbb{Q} \cap (x - \delta, x + \delta)$. Then $|r - x| < \delta$, so:
+                    $$|f(r) - f(x)| < \epsilon$$
+                    Since $r \in \mathbb{Q}$, $f(r) = 0$. Thus $|0 - f(x)| < \epsilon \implies |f(x)| < \epsilon$.<br>
+                    Since $|f(x)| < \epsilon$ holds for all $\epsilon > 0$, we conclude $f(x) = 0$. $\blacksquare$
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 2: Uniqueness of Extension from Dense Subsets</strong><br>
+                If $f, g: \mathbb{R} \to \mathbb{R}$ are continuous functions such that $f(r) = g(r)$ for all $r \in \mathbb{Q}$, prove that $f(x) = g(x)$ for all $x \in \mathbb{R}$.
+                <button class="btn-sol" onclick="toggleSolution('sol2')">Show Solution</button>
+                <div class="solution" id="sol2">
+                    <strong class="highlight-orange">Proof ($\epsilon$-$\delta$):</strong>
+                    Define $h(x) = f(x) - g(x)$. By the difference rule for continuous functions, $h$ is continuous on $\mathbb{R}$.<br>
+                    For any $r \in \mathbb{Q}$, $h(r) = f(r) - g(r) = 0$.<br>
+                    Applying Problem 1 to $h(x)$, we obtain $h(x) = 0$ for all $x \in \mathbb{R}$, which implies $f(x) = g(x)$ for all $x \in \mathbb{R}$. $\blacksquare$
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 3: Local Glueing / Paste Lemma</strong><br>
+                Let $f: [a, b] \to \mathbb{R}$ and $g: [b, c] \to \mathbb{R}$ be continuous with $f(b) = g(b)$. Define $h: [a, c] \to \mathbb{R}$ by:
+                $$h(x) = \begin{cases} f(x) & \text{if } x \in [a, b] \\ g(x) & \text{if } x \in (b, c] \end{cases}$$
+                Prove by $\epsilon$-$\delta$ definition that $h$ is continuous at $x = b$.
+                <button class="btn-sol" onclick="toggleSolution('sol3')">Show Solution</button>
+                <div class="solution" id="sol3">
+                    <strong class="highlight-orange">Proof ($\epsilon$-$\delta$):</strong>
+                    Let $\epsilon > 0$.<br>
+                    1. Since $f$ is continuous at $b$, $\exists \delta_1 > 0$ such that for $x \in [a, b]$, $|x - b| < \delta_1 \implies |f(x) - f(b)| < \epsilon$.<br>
+                    2. Since $g$ is continuous at $b$, $\exists \delta_2 > 0$ such that for $x \in [b, c]$, $|x - b| < \delta_2 \implies |g(x) - g(b)| < \epsilon$.<br>
+                    Set $\delta = \min(\delta_1, \delta_2)$. For any $x \in [a, c]$ with $|x - b| < \delta$:
+                    <ul>
+                        <li>If $x \in [a, b]$, $|h(x) - h(b)| = |f(x) - f(b)| < \epsilon$.</li>
+                        <li>If $x \in (b, c]$, $|h(x) - h(b)| = |g(x) - g(b)| = |g(x) - f(b)| < \epsilon$.</li>
+                    </ul>
+                    In both cases, $|h(x) - h(b)| < \epsilon$. Hence $h$ is continuous at $b$. $\blacksquare$
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 4: Cauchy's Additive Functional Equation</strong><br>
+                Let $f: \mathbb{R} \to \mathbb{R}$ be continuous such that $f(x+y) = f(x) + f(y)$ for all $x, y \in \mathbb{R}$. Prove using $\epsilon$-$\delta$ that $f(x) = cx$ for all $x \in \mathbb{R}$, where $c = f(1)$.
+                <button class="btn-sol" onclick="toggleSolution('sol4')">Show Solution</button>
+                <div class="solution" id="sol4">
+                    <strong class="highlight-orange">Proof ($\epsilon$-$\delta$):</strong>
+                    By induction and algebraic property, $f(r) = cr$ for all $r \in \mathbb{Q}$, where $c = f(1)$.<br>
+                    Define $g(x) = cx$. Then $g$ is continuous on $\mathbb{R}$.<br>
+                    Since $f(r) = g(r)$ for all $r \in \mathbb{Q}$, and both $f$ and $g$ are continuous, by Problem 2, $f(x) = g(x) = cx$ for all $x \in \mathbb{R}$. $\blacksquare$
+                </div>
+            </div>
+            
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 5: Open Complement of the Zero-Set</strong><br>
+                Let $f: \mathbb{R} \to \mathbb{R}$ be continuous and let $Z(f) = \{x \in \mathbb{R} : f(x) = 0\}$ be its set of zeros. Show using the $\epsilon$-$\delta$ definition that if $x_0 \notin Z(f)$, there exists an open interval $(x_0-\delta, x_0+\delta)$ entirely contained in $\mathbb{R} \setminus Z(f)$ (i.e., $f(x) \neq 0$ for all $x \in (x_0-\delta, x_0+\delta)$).
+                <button class="btn-sol" onclick="toggleSolution('sol5')">Show Solution</button>
+                <div class="solution" id="sol5">
+                    <strong class="highlight-orange">Proof ($\epsilon$-$\delta$):</strong>
+                    Suppose $x_0 \notin Z(f)$. Then $f(x_0) \neq 0$, which implies $|f(x_0)| > 0$.<br>
+                    Choose <span class="highlight-yellow">$\epsilon = \frac{|f(x_0)|}{2} > 0$</span>.<br>
+                    By continuity of $f$ at $x_0$, there exists $\delta > 0$ such that for all $|x - x_0| < \delta$:
+                    $$|f(x) - f(x_0)| < \frac{|f(x_0)|}{2}$$
+                    By the reverse triangle inequality, $|f(x_0)| - |f(x)| \le |f(x) - f(x_0)| < \frac{|f(x_0)|}{2}$, which yields:
+                    $$|f(x)| > \frac{|f(x_0)|}{2} > 0$$
+                    Thus $f(x) \neq 0$ for all $x \in (x_0 - \delta, x_0 + \delta)$. This proves that around every point $x_0 \notin Z(f)$, there is an entire interval free of zeros, showing that the complement set $\mathbb{R} \setminus Z(f)$ is open. $\blacksquare$
+                </div>
+            </div>
+
+             </div>
+
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-label" id="progressLabel">0 / 0</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <button class="btn-next" id="btnNext" onclick="revealNext()">Next &#9654;</button>
+    </div>
+
+    <script>
+        const steps   = document.querySelectorAll('.step');
+        const fill    = document.getElementById('progressFill');
+        const label   = document.getElementById('progressLabel');
+        const btn     = document.getElementById('btnNext');
+        let   current = 0;
+
+        function updateUI() {
+            const pct = (current / steps.length) * 100;
+            fill.style.width  = pct + '%';
+            label.textContent = current + ' / ' + steps.length;
+            btn.disabled      = current >= steps.length;
+            btn.textContent   = current >= steps.length ? 'Done \u2713' : 'Next \u25ba';
+        }
+
+        function revealNext() {
+            if (current >= steps.length) return;
+            const el = steps[current];
+            el.classList.add('visible');
+            if (window.MathJax) MathJax.typesetPromise([el]);
+            current++;
+            updateUI();
+            setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        }
+
+        function toggleSolution(id) {
+            const sol = document.getElementById(id);
+            if (sol.style.display === 'block') {
+                sol.style.display = 'none';
+            } else {
+                sol.style.display = 'block';
+                if (window.MathJax) MathJax.typesetPromise([sol]);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+                if(e.key === ' ' && e.target.tagName === 'BUTTON') return;
+                e.preventDefault();
+                revealNext();
+            }
+        });
+
+        window.addEventListener('load', function() {
+            updateUI();
+            revealNext();
+        });
+    </script>
+
+</body>
+</html>
