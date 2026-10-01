@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus - Short Answer Practice Questions</title>
+    <!-- MathJax Library for Rendering Mathematical Formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #121212;
+            --border-color: #2a2a2a;
+            --text-main: #ffffff;
+            --yellow: #ffd700;
+            --orange: #ff8c00;
+            --pink: #ff69b4;
+            --green: #32cd32;
+            --cyan: #00ffff;
+            --lime: #00ff00;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 24px 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 920px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--cyan);
+            text-align: center;
+            border-bottom: 2px solid var(--pink);
+            padding-bottom: 14px;
+            margin-bottom: 35px;
+            font-size: 2.2em;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+        }
+
+        .saq-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+        }
+
+        .question-number {
+            color: var(--orange);
+            font-weight: bold;
+            font-size: 1.25em;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            color: var(--yellow);
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .sub-question {
+            color: var(--lime);
+            margin-top: 8px;
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 9px 20px;
+            font-size: 0.95em;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.15s ease, filter 0.2s ease;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .btn-hint {
+            background-color: var(--orange);
+            color: #000000;
+        }
+
+        .btn-hint:hover {
+            filter: brightness(1.25);
+        }
+
+        .btn-solution {
+            background-color: var(--green);
+            color: #000000;
+        }
+
+        .btn-solution:hover {
+            filter: brightness(1.25);
+        }
+
+        .content-box {
+            display: none;
+            margin-top: 16px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .hint-box {
+            background-color: #221b08;
+            border-left: 4px solid var(--orange);
+            color: var(--yellow);
+        }
+
+        .solution-box {
+            background-color: #0d2114;
+            border-left: 4px solid var(--lime);
+            color: var(--pink);
+        }
+
+        .solution-box p, .solution-box div, .solution-box li {
+            color: var(--text-main);
+        }
+
+        .highlight-cyan {
+            color: var(--cyan);
+        }
+
+        .highlight-lime {
+            color: var(--lime);
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Calculus - Short Answer Practice Questions</h1>
+
+    <!-- Question 1 -->
+    <div class="saq-card">
+        <div class="question-number">Question 1</div>
+        <div class="question-text">
+            Create a function \( g: \mathbb{R} \to \mathbb{R} \) which is continuous <strong>only</strong> at \( x = 0 \) and \( x = 1 \).
+        </div>
+        <div class="button-group">
+            <button class="btn-hint" onclick="toggleVisibility('hint-1')">Show Hint</button>
+            <button class="btn-solution" onclick="toggleVisibility('sol-1')">Show Solution</button>
+        </div>
+        <div id="hint-1" class="content-box hint-box">
+            <strong>Hint:</strong> Modify Dirichlet's function using a continuous polynomial multiplier \( p(x) \) whose real roots are precisely at \( x = 0 \) and \( x = 1 \).
+        </div>
+        <div id="sol-1" class="content-box solution-box">
+            <strong class="highlight-lime">Solution:</strong>
+            <p>Define \( g(x) \) as follows:</p>
+            \[
+            g(x) = \begin{cases} 
+            x(x - 1), & \text{if } x \in \mathbb{Q} \\
+            0, & \text{if } x \in \mathbb{R} \setminus \mathbb{Q}
+            \end{cases}
+            \]
+            <p><strong>Continuity Check:</strong></p>
+            <ul>
+                <li>At \( x \in \{0, 1\} \), \(\lim_{x \to 0} x(x-1) = 0\) and \(\lim_{x \to 0} 0 = 0\). By the Squeeze Theorem, \( g \) is continuous at \( x = 0 \) and \( x = 1 \).</li>
+                <li>At any point \( x_0 \notin \{0, 1\} \), the limit along rational points is \( x_0(x_0 - 1) \neq 0 \), while the limit along irrational points is \( 0 \). Since the limits along different sequences differ, \( g \) is discontinuous everywhere else.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="saq-card">
+        <div class="question-number">Question 2</div>
+        <div class="question-text">
+            Suppose \( g \) is an even function and let \( h = f \circ g \). Is \( h \) always an even function? Justify your answer.
+        </div>
+        <div class="button-group">
+            <button class="btn-hint" onclick="toggleVisibility('hint-2')">Show Hint</button>
+            <button class="btn-solution" onclick="toggleVisibility('sol-2')">Show Solution</button>
+        </div>
+        <div id="hint-2" class="content-box hint-box">
+            <strong>Hint:</strong> Evaluate \( h(-x) \) directly using the definition of composite functions and the given symmetry property \( g(-x) = g(x) \).
+        </div>
+        <div id="sol-2" class="content-box solution-box">
+            <strong class="highlight-lime">Solution:</strong>
+            <p><strong>Yes</strong>, \( h \) is always an even function.</p>
+            <p><strong>Proof:</strong> By definition, \( g \) is an even function, which means \( g(-x) = g(x) \) for all \( x \in \mathbb{R} \).</p>
+            <p>Now evaluate \( h(-x) \):</p>
+            \[
+            h(-x) = (f \circ g)(-x) = f(g(-x)) = f(g(x)) = h(x)
+            \]
+            <p>Since \( h(-x) = h(x) \) for all \( x \in \mathbb{R} \), \( h \) is always an even function, regardless of whether \( f \) is even, odd, or neither.</p>
+        </div>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="saq-card">
+        <div class="question-number">Question 3</div>
+        <div class="question-text">
+            Suppose \( g \) is an odd function and let \( h = f \circ g \). Is \( h \) always an odd function? What if \( f \) is odd? What if \( f \) is even? Justify your answer.
+        </div>
+        <div class="button-group">
+            <button class="btn-hint" onclick="toggleVisibility('hint-3')">Show Hint</button>
+            <button class="btn-solution" onclick="toggleVisibility('sol-3')">Show Solution</button>
+        </div>
+        <div id="hint-3" class="content-box hint-box">
+            <strong>Hint:</strong> Express \( h(-x) = f(g(-x)) = f(-g(x)) \). Consider what happens when \( f \) is odd, when \( f \) is even, and when \( f \) has no specific symmetry.
+        </div>
+        <div id="sol-3" class="content-box solution-box">
+            <strong class="highlight-lime">Solution:</strong>
+            <p><strong>1. Is \( h \) ALWAYS an odd function?</strong><br>
+            <strong>No.</strong> In general, \( h \) is not guaranteed to be odd unless \( f \) itself satisfies a specific symmetry.</p>
+
+            <p><strong>2. What if \( f \) is ODD?</strong><br>
+            If \( f \) is odd, then \( f(-u) = -f(u) \). Evaluating \( h(-x) \):</p>
+            \[
+            h(-x) = f(g(-x)) = f(-g(x)) = -f(g(x)) = -h(x)
+            \]
+            <p>Thus, if both \( f \) and \( g \) are odd, <strong class="highlight-cyan">\( h = f \circ g \) is ALWAYS an ODD function.</strong></p>
+
+            <p><strong>3. What if \( f \) is EVEN?</strong><br>
+            If \( f \) is even, then \( f(-u) = f(u) \). Evaluating \( h(-x) \):</p>
+            \[
+            h(-x) = f(g(-x)) = f(-g(x)) = f(g(x)) = h(x)
+            \]
+            <p>Thus, if \( g \) is odd and \( f \) is even, <strong class="highlight-cyan">\( h = f \circ g \) is ALWAYS an EVEN function</strong> (not odd!).</p>
+        </div>
+    </div>
+
+    <!-- Question 4 -->
+    <div class="saq-card">
+        <div class="question-number">Question 4</div>
+        <div class="question-text">
+            Prove or give a counter-example for each of the following statements:
+            <div class="sub-question">(a) If \( f, g \) are increasing, so is their sum \( f + g \).</div>
+            <div class="sub-question">(b) If \( f, g \) are increasing, so is their product \( fg \).</div>
+        </div>
+        <div class="button-group">
+            <button class="btn-hint" onclick="toggleVisibility('hint-4')">Show Hint</button>
+            <button class="btn-solution" onclick="toggleVisibility('sol-4')">Show Solution</button>
+        </div>
+        <div id="hint-4" class="content-box hint-box">
+            <strong>Hint:</strong> For (a), sum basic inequalities. For (b), test negative function values.
+        </div>
+        <div id="sol-4" class="content-box solution-box">
+            <strong class="highlight-lime">Solution:</strong>
+            <p><strong>(a) True.</strong></p>
+            <p>Let \( x_1 < x_2 \). Since \( f \) and \( g \) are increasing, \( f(x_1) \le f(x_2) \) and \( g(x_1) \le g(x_2) \).</p>
+            <p>Adding these inequalities yields: \( f(x_1) + g(x_1) \le f(x_2) + g(x_2) \implies (f+g)(x_1) \le (f+g)(x_2) \).</p>
+            
+            <p><strong>(b) False.</strong></p>
+            <p><strong>Counter-example:</strong> Let \( f(x) = x \) and \( g(x) = x \). Both functions are strictly increasing on \( \mathbb{R} \).</p>
+            <p>However, their product is \( (fg)(x) = x^2 \), which is strictly decreasing on \( (-\infty, 0) \). Thus, \( fg \) is not an increasing function on \( \mathbb{R} \).</p>
+        </div>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="saq-card">
+        <div class="question-number">Question 5</div>
+        <div class="question-text">
+            Let \( f : [a, b] \to \mathbb{R} \) be continuous and \( c_1, \dots, c_n \in [a, b] \). Show that there is a point \( c \in [a, b] \) such that:
+            \[
+            f(c) = \frac{f(c_1) + \dots + f(c_n)}{n}
+            \]
+        </div>
+        <div class="button-group">
+            <button class="btn-hint" onclick="toggleVisibility('hint-5')">Show Hint</button>
+            <button class="btn-solution" onclick="toggleVisibility('sol-5')">Show Solution</button>
+        </div>
+        <div id="hint-5" class="content-box hint-box">
+            <strong>Hint:</strong> Bound the average between the absolute minimum \( m \) and absolute maximum \( M \) of \( f \) on \( [a, b] \), then apply the Intermediate Value Theorem (IVT).
+        </div>
+        <div id="sol-5" class="content-box solution-box">
+            <strong class="highlight-lime">Solution:</strong>
+            <p>Since \( f \) is continuous on the compact interval \( [a, b] \), by the Extreme Value Theorem, \( f \) attains its absolute minimum \( m \) and maximum \( M \) on \( [a, b] \).</p>
+            <p>Thus, for each \( i \in \{1, \dots, n\} \): \( m \le f(c_i) \le M \).</p>
+            <p>Summing these inequalities over all \( i \):</p>
+            \[
+            n \cdot m \le \sum_{i=1}^n f(c_i) \le n \cdot M \implies m \le \frac{1}{n} \sum_{i=1}^n f(c_i) \le M
+            \]
+            <p>Let \( A = \frac{1}{n} \sum_{i=1}^n f(c_i) \). Since \( m \le A \le M \), by the <strong>Intermediate Value Theorem</strong>, there exists some \( c \in [a, b] \) such that \( f(c) = A \).</p>
+        </div>
+    </div>
+
+    <!-- Question 6 -->
+    <div class="saq-card">
+        <div class="question-number">Question 6</div>
+        <div class="question-text">
+            Suppose \( f, g : [a, b] \to \mathbb{R} \) are continuous functions such that \( f(a) > g(a) \) and \( f(b) < g(b) \). Show that there is a \( c \in (a, b) \) such that \( f(c) = g(c) \).
+        </div>
+        <div class="button-group">
+            <button class="btn-hint" onclick="toggleVisibility('hint-6')">Show Hint</button>
+            <button class="btn-solution" onclick="toggleVisibility('sol-6')">Show Solution</button>
+        </div>
+        <div id="hint-6" class="content-box hint-box">
+            <strong>Hint:</strong> Define an auxiliary function \( h(x) = f(x) - g(x) \) and evaluate \( h(a) \) and \( h(b) \).
+        </div>
+        <div id="sol-6" class="content-box solution-box">
+            <strong class="highlight-lime">Solution:</strong>
+            <p>Define a function \( h : [a, b] \to \mathbb{R} \) by \( h(x) = f(x) - g(x) \).</p>
+            <ul>
+                <li>Since \( f \) and \( g \) are continuous on \( [a, b] \), \( h \) is also continuous on \( [a, b] \).</li>
+                <li>At the endpoints:
+                    \[
+                    h(a) = f(a) - g(a) > 0
+                    \]
+                    \[
+                    h(b) = f(b) - g(b) < 0
+                    \]
+                </li>
+            </ul>
+            <p>Since \( h(a) > 0 \) and \( h(b) < 0 \), 0 lies strictly between \( h(a) \) and \( h(b) \). By the <strong>Intermediate Value Theorem</strong>, there exists a \( c \in (a, b) \) such that \( h(c) = 0 \), which implies \( f(c) = g(c) \).</p>
+        </div>
+    </div>
+
+    <!-- Question 7 -->
+<div class="saq-card">
+    <div class="question-number">Question 7</div>
+    <div class="question-text">
+        The following tasks will establish that a cubic polynomial 
+        \( p(x) = x^3 + ax^2 + bx + c \) (where \( a, b, c \in \mathbb{R} \)) has at least one real root.
+        <div class="sub-question">
+            <strong>(a)</strong> Show that for \( x \ge 1 \), 
+            \( p(x) \ge x^3 \left( 1 - \frac{|a| + |b| + |c|}{x} \right) \). 
+            Hence, deduce that there exists a point \( x_1 \) such that \( p(x_1) > 0 \).
+        </div>
+        <div class="sub-question">
+            <strong>(b)</strong> Show that for \( x \le -1 \), 
+            \( p(x) \le x^3 \left( 1 + \frac{|a| + |b| + |c|}{x} \right) \). 
+            Hence, deduce that there exists a point \( x_2 \) such that \( p(x_2) < 0 \).
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn-hint" onclick="toggleVisibility('hint-7')">Show Hint</button>
+        <button class="btn-solution" onclick="toggleVisibility('sol-7')">Show Solution</button>
+    </div>
+
+    <!-- Hint Box -->
+    <div id="hint-7" class="content-box hint-box">
+        <strong>Hint:</strong>
+        <p>1. Factor out \( x^3 \) from \( p(x) \) to separate the leading dominant term from the remaining tail terms.</p>
+        <p>2. Apply the <strong>Triangle Inequality</strong> \( |u + v + w| \le |u| + |v| + |w| \) together with \( |u| \ge -u \).</p>
+        <p>3. Use the restriction \( |x| \ge 1 \) to simplify powers of \( x \) in denominators: \( |x|^k \ge |x| \) for all \( k \ge 1 \).</p>
+        <p>4. Choose \( x \) sufficiently large so that the expression inside the parentheses becomes strictly positive.</p>
+    </div>
+
+    <!-- Solution Box -->
+    <div id="sol-7" class="content-box solution-box">
+        <strong>Detailed Step-by-Step Solution:</strong>
+
+        <!-- Part A -->
+        <h3 style="color: var(--cyan); margin-top: 15px;">Part (a): Analysis for \( x \ge 1 \)</h3>
+        
+        <p><strong>Step 1: Express \( p(x) \) by factoring out \( x^3 \)</strong></p>
+        <p>For any \( x \neq 0 \), we can factor out the dominant term \( x^3 \):</p>
+        \[
+        p(x) = x^3 + ax^2 + bx + c = x^3 \left( 1 + \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right)
+        \]
+
+        <p><strong>Step 2: Apply absolute value bounds to the tail terms</strong></p>
+        <p>By the Triangle Inequality, the absolute value of the sum of the lower-order terms satisfies:</p>
+        \[
+        \left| \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right| \le \left| \frac{a}{x} \right| + \left| \frac{b}{x^2} \right| + \left| \frac{c}{x^3} \right| = \frac{|a|}{|x|} + \frac{|b|}{|x|^2} + \frac{|c|}{|x|^3}
+        \]
+
+        <p><strong>Step 3: Simplify using the condition \( x \ge 1 \)</strong></p>
+        <p>Since \( x \ge 1 \), we have \( x = |x| \ge 1 \). This implies:</p>
+        \[
+        x^2 \ge x \implies \frac{1}{x^2} \le \frac{1}{x} \quad \text{and} \quad x^3 \ge x \implies \frac{1}{x^3} \le \frac{1}{x}
+        \]
+        <p>Substituting these bounds back into our absolute value inequality gives:</p>
+        \[
+        \left| \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right| \le \frac{|a|}{x} + \frac{|b|}{x} + \frac{|c|}{x} = \frac{|a| + |b| + |c|}{x}
+        \]
+
+        <p><strong>Step 4: Derive lower bound for \( p(x) \)</strong></p>
+        <p>For any real number \( y \), we know that \( y \ge -|y| \). Letting \( y = \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \), we obtain:</p>
+        \[
+        1 + \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \ge 1 - \left| \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right| \ge 1 - \frac{|a| + |b| + |c|}{x}
+        \]
+        <p>Since \( x \ge 1 \), \( x^3 > 0 \). Multiplying the entire inequality by \( x^3 \) preserves the inequality direction:</p>
+        \[
+        p(x) = x^3 \left( 1 + \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right) \ge x^3 \left( 1 - \frac{|a| + |b| + |c|}{x} \right) \quad \blacksquare
+        \]
+
+        <p><strong>Step 5: Existence of \( x_1 \) such that \( p(x_1) > 0 \)</strong></p>
+        <p>To guarantee \( p(x_1) > 0 \), we need the factor \( 1 - \frac{|a| + |b| + |c|}{x} \) to be strictly positive.</p>
+        <p>Set \( 1 - \frac{|a| + |b| + |c|}{x} > 0 \implies x > |a| + |b| + |c| \).</p>
+        <p>Therefore, we explicitly choose:</p>
+        \[
+        x_1 = \max\Big(1, \, |a| + |b| + |c| + 1\Big)
+        \]
+        <p>With this choice, \( x_1 \ge 1 \) and \( x_1 > |a| + |b| + |c| \), so:</p>
+        \[
+        \frac{|a| + |b| + |c|}{x_1} < 1 \implies 1 - \frac{|a| + |b| + |c|}{x_1} > 0
+        \]
+        <p>Since both \( x_1^3 > 0 \) and \( \left( 1 - \frac{|a| + |b| + |c|}{x_1} \right) > 0 \), we conclude:</p>
+        \[
+        p(x_1) \ge x_1^3 \left( 1 - \frac{|a| + |b| + |c|}{x_1} \right) > 0
+        \]
+
+        <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+        <!-- Part B -->
+        <h3 style="color: var(--cyan);">Part (b): Analysis for \( x \le -1 \)</h3>
+
+        <p><strong>Step 1: Express \( p(x) \) for negative values of \( x \)</strong></p>
+        <p>Again, factor out \( x^3 \):</p>
+        \[
+        p(x) = x^3 \left( 1 + \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right)
+        \]
+
+        <p><strong>Step 2: Simplify absolute value bounds for \( x \le -1 \)</strong></p>
+        <p>When \( x \le -1 \), we have \( |x| = -x \ge 1 \). Thus \( |x|^2 = x^2 \ge |x| \) and \( |x|^3 = -x^3 \ge |x| \), which means:</p>
+        \[
+        \frac{1}{x^2} \le \frac{1}{|x|} = -\frac{1}{x} \quad \text{and} \quad \frac{1}{|x|^3} \le \frac{1}{|x|} = -\frac{1}{x}
+        \]
+        <p>Applying the Triangle Inequality as before:</p>
+        \[
+        \left| \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right| \le \frac{|a|}{|x|} + \frac{|b|}{|x|^2} + \frac{|c|}{|x|^3} \le \frac{|a| + |b| + |c|}{|x|} = \frac{|a| + |b| + |c|}{-x}
+        \]
+
+        <p><strong>Step 3: Derive upper bound for \( p(x) \)</strong></p>
+        <p>Using the property \( y \le |y| \):</p>
+        \[
+        1 + \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \le 1 + \left| \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right| \le 1 + \frac{|a| + |b| + |c|}{-x} = 1 - \frac{|a| + |b| + |c|}{x}
+        \]
+        <p>Now, because \( x \le -1 \), the factor \( x^3 \) is <strong>negative</strong> (\( x^3 < 0 \)).</p>
+        <p>When multiplying an inequality by a negative number, the <strong>direction of the inequality reverses</strong>:</p>
+        \[
+        p(x) = x^3 \left( 1 + \frac{a}{x} + \frac{b}{x^2} + \frac{c}{x^3} \right) \le x^3 \left( 1 + \frac{|a| + |b| + |c|}{x} \right) \quad \blacksquare
+        \]
+
+        <p><strong>Step 4: Existence of \( x_2 \) such that \( p(x_2) < 0 \)</strong></p>
+        <p>We want the upper bound to be strictly negative. Since \( x^3 < 0 \), we need the factor inside brackets to be strictly positive:</p>
+        \[
+        1 + \frac{|a| + |b| + |c|}{x} > 0 \implies \frac{|a| + |b| + |c|}{-x} < 1 \implies -x > |a| + |b| + |c|
+        \]
+        <p>Therefore, we explicitly choose:</p>
+        \[
+        x_2 = \min\Big(-1, \, -(|a| + |b| + |c| + 1)\Big)
+        \]
+        <p>With this choice, \( x_2 \le -1 \) and \( -x_2 = |x_2| > |a| + |b| + |c| \). Thus:</p>
+        \[
+        \frac{|a| + |b| + |c|}{-x_2} < 1 \implies 1 + \frac{|a| + |b| + |c|}{x_2} > 0
+        \]
+        <p>Because \( x_2^3 < 0 \) and \( \left( 1 + \frac{|a| + |b| + |c|}{x_2} \right) > 0 \), their product is strictly negative:</p>
+        \[
+        p(x_2) \le x_2^3 \left( 1 + \frac{|a| + |b| + |c|}{x_2} \right) < 0
+        \]
+
+        <p><strong>Conclusion (Existence of a Real Root):</strong></p>
+        <p>Since \( p(x) \) is a polynomial, it is continuous everywhere on \( [x_2, x_1] \). Since \( p(x_2) < 0 \) and \( p(x_1) > 0 \), by the <strong>Intermediate Value Theorem (IVT)</strong>, there must exist at least one real root \( x_0 \in (x_2, x_1) \) such that \( p(x_0) = 0 \).</p>
+    </div>
+</div>
+    <!-- Question 8 -->
+    <div class="saq-card">
+        <div class="question-number">Question 8</div>
+        <div class="question-text">
+            Show that the equation \( \cos x = x^3 \) has at least one solution.
+        </div>
+        <div class="button-group">
+            <button class="btn-hint" onclick="toggleVisibility('hint-8')">Show Hint</button>
+            <button class="btn-solution" onclick="toggleVisibility('sol-8')">Show Solution</button>
+        </div>
+        <div id="hint-8" class="content-box hint-box">
+            <strong>Hint:</strong> Define \( f(x) = \cos x - x^3 \) and test values at \( x = 0 \) and \( x = 1 \).
+        </div>
+        <div id="sol-8" class="content-box solution-box">
+            <strong class="highlight-lime">Solution:</strong>
+            <p>Let \( f(x) = \cos x - x^3 \). Note that \( f(x) \) is continuous on \( \mathbb{R} \).</p>
+            <p>Evaluate \( f \) at key test points:</p>
+            <ul>
+                <li>\( f(0) = \cos(0) - 0^3 = 1 - 0 = 1 > 0 \)</li>
+                <li>\( f(1) = \cos(1) - 1^3 = \cos(1) - 1 < 0 \) (since \( \cos(1) < 1 \))</li>
+            </ul>
+            <p>Since \( f(0) > 0 \) and \( f(1) < 0 \), by the <strong>Intermediate Value Theorem</strong>, there exists at least one solution \( c \in (0, 1) \) such that \( f(c) = 0 \), which implies \( \cos c = c^3 \).</p>
+        </div>
+    </div>
+
+    <!-- Question 9 -->
+    <div class="saq-card">
+        <div class="question-number">Question 9</div>
+        <div class="question-text">
+            Let \( [x] \) be the greatest integer function. Prove the following Riemann integration identities:
+            <div class="sub-question">(a) \( \int_{0}^{n} [x] \, dx = \frac{n(n - 1)}{2} \) for each \( n \in \mathbb{N} \).</div>
+            <div class="sub-question">(b) \( \int_{0}^{n^2} [\sqrt{x}] \, dx = \frac{n(n - 1)(4n + 1)}{6} \) for each \( n \in \mathbb{N} \).</div>
+        </div>
+        <div class="button-group">
+            <button class="btn-hint" onclick="toggleVisibility('hint-9')">Show Hint</button>
+            <button class="btn-solution" onclick="toggleVisibility('sol-9')">Show Solution</button>
+        </div>
+        <div id="hint-9" class="content-box hint-box">
+            <strong>Hint:</strong> Partition the domain into sub-intervals where the integrand is constant. For (b), split over intervals \( [k^2, (k+1)^2) \).
+        </div>
+        <div id="sol-9" class="content-box solution-box">
+            <strong class="highlight-lime">Solution:</strong>
+            <p><strong>(a)</strong> Split the integral into unit length intervals \( [k, k+1) \), where \( [x] = k \):</p>
+            \[
+            \int_{0}^{n} [x] \, dx = \sum_{k=0}^{n-1} \int_{k}^{k+1} k \, dx = \sum_{k=0}^{n-1} k (1) = \frac{n(n-1)}{2}
+            \]
+
+            <p><strong>(b)</strong> Split the integral over intervals \( [k^2, (k+1)^2) \) where \( [\sqrt{x}] = k \):</p>
+            \[
+            \int_{0}^{n^2} [\sqrt{x}] \, dx = \sum_{k=0}^{n-1} \int_{k^2}^{(k+1)^2} k \, dx 
+            \]
+            <p>The length of each interval is \( (k+1)^2 - k^2 = 2k + 1 \). Thus:</p>
+            \[
+            = \sum_{k=0}^{n-1} k(2k + 1) = \sum_{k=0}^{n-1} (2k^2 + k) = 2\sum_{k=0}^{n-1} k^2 + \sum_{k=0}^{n-1} k
+            \]
+            <p>Applying standard summation formulas:</p>
+            \[
+            = 2 \left[ \frac{(n-1)n(2n-1)}{6} \right] + \frac{(n-1)n}{2} = \frac{n(n-1)(4n + 1)}{6}
+            \]
+        </div>
+    </div>
+    <!-- Question 10 -->
+<div class="saq-card">
+    <div class="question-number">Question 10</div>
+    <div class="question-text">
+        Let \( H(x) \) denote the Heaviside (unit step) function. Compute the following definite integrals:
+        <div class="sub-question">
+            <strong>(a)</strong> \( \int_{-1}^{2} \big(H(x) + 2H(x - 1)\big) \, dx \)
+        </div>
+        <div class="sub-question">
+            <strong>(b)</strong> \( \int_{-1}^{2} \big(H(1 - x) - H(x - 1)\big) \, dx \)
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn-hint" onclick="toggleVisibility('hint-10')">Show Hint</button>
+        <button class="btn-solution" onclick="toggleVisibility('sol-10')">Show Solution</button>
+    </div>
+
+    <!-- Hint Box -->
+    <div id="hint-10" class="content-box hint-box">
+        <strong>Hint:</strong>
+        <p>1. Recall that the Heaviside step function is defined as \( H(u) = 1 \) for \( u \ge 0 \) and \( H(u) = 0 \) for \( u < 0 \).</p>
+        <p>2. Break the interval of integration \( [-1, 2] \) at the transition points (where the arguments of \( H \) change sign, i.e., \( x = 0 \) and \( x = 1 \)).</p>
+        <p>3. Evaluate the constant values of the integrands on each piece-wise sub-interval before computing the integral using area or antiderivatives.</p>
+    </div>
+
+    <!-- Solution Box -->
+    <div id="sol-10" class="content-box solution-box">
+        <strong>Detailed Step-by-Step Solution:</strong>
+
+        <!-- Section 1: Definition and Graph -->
+        <h3 style="color: var(--cyan); margin-top: 15px;">1. Definition and Graph of the Heaviside Function</h3>
+        
+        <p>The <strong>Heaviside function</strong> (or unit step function), denoted by \( H(x) \), is defined as:</p>
+        \[
+        H(x) = \begin{cases} 
+        1, & \text{if } x \ge 0 \\ 
+        0, & \text{if } x < 0 
+        \end{cases}
+        \]
+
+        <p><strong>Graph of \( H(x) \):</strong></p>
+        <ul>
+            <li>For \( x \in (-\infty, 0) \), the function value is constant at \( y = 0 \).</li>
+            <li>At \( x = 0 \), there is a jump discontinuity from \( 0 \) to \( 1 \).</li>
+            <li>For \( x \in [0, \infty) \), the function value is constant at \( y = 1 \).</li>
+        </ul>
+
+        <p><strong>Shifted and Reflected Heaviside Functions:</strong></p>
+        <ul>
+            <li>\( H(x - 1) = \begin{cases} 1, & \text{if } x - 1 \ge 0 \implies x \ge 1 \\ 0, & \text{if } x - 1 < 0 \implies x < 1 \end{cases} \)</li>
+            <li>\( H(1 - x) = \begin{cases} 1, & \text{if } 1 - x \ge 0 \implies x \le 1 \\ 0, & \text{if } 1 - x < 0 \implies x > 1 \end{cases} \)</li>
+        </ul>
+
+        <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+        <!-- Section 2: Part A -->
+        <h3 style="color: var(--cyan);">Part (a): Evaluate \( \int_{-1}^{2} \big(H(x) + 2H(x - 1)\big) \, dx \)</h3>
+
+        <p><strong>Step 1: Identify key transition points</strong></p>
+        <p>The integrands \( H(x) \) and \( H(x-1) \) change values at \( x = 0 \) and \( x = 1 \). Thus, we split the domain \( [-1, 2] \) into three sub-intervals:</p>
+        \[
+        [-1, 2] = [-1, 0) \cup [0, 1) \cup [1, 2]
+        \]
+
+        <p><strong>Step 2: Determine integrand values on each sub-interval</strong></p>
+        <ul>
+            <li><strong>On \( [-1, 0) \):</strong> \( x < 0 \) and \( x < 1 \).
+                \[
+                H(x) = 0, \quad H(x-1) = 0 \implies H(x) + 2H(x-1) = 0 + 2(0) = 0
+                \]
+            </li>
+            <li><strong>On \( [0, 1) \):</strong> \( x \ge 0 \) and \( x < 1 \).
+                \[
+                H(x) = 1, \quad H(x-1) = 0 \implies H(x) + 2H(x-1) = 1 + 2(0) = 1
+                \]
+            </li>
+            <li><strong>On \( [1, 2] \):</strong> \( x \ge 0 \) and \( x \ge 1 \).
+                \[
+                H(x) = 1, \quad H(x-1) = 1 \implies H(x) + 2H(x-1) = 1 + 2(1) = 3
+                \]
+            </li>
+        </ul>
+
+        <p><strong>Step 3: Split and compute the integral</strong></p>
+        \[
+        \int_{-1}^{2} \big(H(x) + 2H(x - 1)\big) \, dx = \int_{-1}^{0} 0 \, dx + \int_{0}^{1} 1 \, dx + \int_{1}^{2} 3 \, dx
+        \]
+        \[
+        = 0 + 1 \cdot (1 - 0) + 3 \cdot (2 - 1) = 1 + 3 = 4 \quad \blacksquare
+        \]
+
+        <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+        <!-- Section 3: Part B -->
+        <h3 style="color: var(--cyan);">Part (b): Evaluate \( \int_{-1}^{2} \big(H(1 - x) - H(x - 1)\big) \, dx \)</h3>
+
+        <p><strong>Step 1: Identify key transition points</strong></p>
+        <p>Both \( H(1-x) \) and \( H(x-1) \) switch states at \( x = 1 \). Therefore, we split the interval \( [-1, 2] \) at \( x = 1 \):</p>
+        \[
+        [-1, 2] = [-1, 1) \cup [1, 2]
+        \]
+
+        <p><strong>Step 2: Determine integrand values on each sub-interval</strong></p>
+        <ul>
+            <li><strong>On \( [-1, 1) \):</strong> \( x < 1 \).
+                \[
+                H(1-x) = 1, \quad H(x-1) = 0 \implies H(1-x) - H(x-1) = 1 - 0 = 1
+                \]
+            </li>
+            <li><strong>On \( [1, 2] \):</strong> \( x \ge 1 \).
+                \[
+                H(1-x) = 0 \quad (\text{since } 1-x \le 0), \quad H(x-1) = 1 \implies H(1-x) - H(x-1) = 0 - 1 = -1
+                \]
+            </li>
+        </ul>
+
+        <p><strong>Step 3: Split and compute the integral</strong></p>
+        \[
+        \int_{-1}^{2} \big(H(1 - x) - H(x - 1)\big) \, dx = \int_{-1}^{1} 1 \, dx + \int_{1}^{2} (-1) \, dx
+        \]
+        \[
+        = 1 \cdot (1 - (-1)) + (-1) \cdot (2 - 1) = 1 \cdot 2 + (-1) \cdot 1 = 2 - 1 = 1 \quad \blacksquare
+        \]
+    </div>
+</div>
+</div>
+
+<script>
+    function toggleVisibility(id) {
+        const element = document.getElementById(id);
+        if (element.style.display === "block") {
+            element.style.display = "none";
+        } else {
+            element.style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>
