@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz-3 — Calculus (with TikZ-style figures)</title>
+
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      ignoreHtmlClass: 'no-mathjax',
+      processHtmlClass: 'math'
+    },
+    startup: { typeset: true }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+  :root{
+    --yellow:#ffd400;
+    --orange:#ff8c00;
+    --white:#ffffff;
+    --lime:#39ff14;
+    --cyan:#00e5ff;
+    --pink:#ff69b4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:#000000;
+    color:var(--white);
+    font-family: Georgia, "Times New Roman", serif;
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 2rem 1.2rem 4rem;
+    line-height: 1.75;
+  }
+  h1{
+    color:var(--yellow);
+    text-align:center;
+    letter-spacing:1.5px;
+    margin-bottom:0.2rem;
+    font-size:1.9rem;
+  }
+  .subtitle{
+    color:var(--orange);
+    text-align:center;
+    font-style:italic;
+    margin-top:0;
+    font-size:1rem;
+  }
+  .toolbar{ text-align:center; margin:1.5rem 0 2rem; }
+  button{
+    background:#0a0a0a;
+    color:var(--cyan);
+    border:2px solid var(--cyan);
+    padding:0.55rem 1.1rem;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:0.95rem;
+    font-family: Georgia, serif;
+    letter-spacing:0.5px;
+    transition: all 0.18s ease;
+    margin: 0.2rem;
+  }
+  button:hover{
+    background:var(--cyan);
+    color:#000;
+    box-shadow:0 0 12px rgba(0,229,255,0.7);
+  }
+  button.open{ background:var(--cyan); color:#000; }
+  .q{
+    border-left:5px solid var(--yellow);
+    background:#0b0b0b;
+    padding:1.1rem 1.3rem 0.6rem;
+    margin:1.8rem 0;
+    border-radius:10px;
+    box-shadow:0 0 18px rgba(255,212,0,0.07);
+  }
+  .q h2{
+    color:var(--yellow);
+    font-size:1.15rem;
+    margin:0 0 0.4rem;
+    letter-spacing:0.5px;
+  }
+  .marks{
+    color:var(--pink);
+    font-weight:bold;
+    font-size:0.9rem;
+    letter-spacing:0.5px;
+  }
+  .q p{ color:var(--white); }
+  .sol{
+    display:none;
+    border-left:5px solid var(--lime);
+    background:#060a06;
+    padding:0.9rem 1.3rem 1rem;
+    margin:0.9rem 0 1.6rem;
+    border-radius:10px;
+    box-shadow:0 0 20px rgba(57,255,20,0.08);
+  }
+  .sol h3{
+    color:var(--lime);
+    font-size:1.05rem;
+    margin:1.1rem 0 0.4rem;
+    letter-spacing:0.5px;
+  }
+  .sol h3:first-child{ margin-top:0.2rem; }
+  .key{ color:var(--cyan); }
+  .ans{ color:var(--lime); font-weight:bold; }
+  .hl{ color:var(--yellow); }
+  .note{ color:var(--pink); font-size:0.92rem; font-style:italic; }
+  .graphwrap{
+    background:#050505;
+    border:1px solid #222;
+    border-radius:10px;
+    padding:0.6rem;
+    margin:1rem 0;
+  }
+  .figcap{
+    color:var(--cyan);
+    font-size:0.88rem;
+    text-align:center;
+    margin-top:0.3rem;
+    font-style:italic;
+  }
+  svg{ width:100%; height:auto; display:block; }
+  footer{
+    text-align:center;
+    color:#666;
+    font-size:0.85rem;
+    margin-top:3rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Quiz-3 — Calculus</h1>
+<p class="subtitle">Riemann Integrability · Area · Arc Length · Volume/Surface · FTC · Polynomials</p>
+
+<div class="toolbar">
+  <button onclick="toggleAll()" id="allBtn">Show All Solutions</button>
+</div>
+
+<!-- ============================ PROBLEM 1 ============================ -->
+<div class="q">
+  <h2>Problem 1 — Riemann Integrability of a Non-Polynomial Function</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Define \(f:[0,1]\to\mathbb{R}\) by
+    \[
+      f(x)=\begin{cases}1, &amp; x=\dfrac{1}{n}\ \text{for some } n\in\{1,2,3,\dots\},\\[6pt]
+      0, &amp; \text{otherwise.}\end{cases}
+    \]
+  </p>
+  <p>
+    <span class="hl">(a)</span> Show directly from the definition (using upper and lower
+    sums) that \(f\) is Riemann integrable on \([0,1]\).<br>
+    <span class="hl">(b)</span> Compute \(\displaystyle\int_0^1 f(x)\,dx.\)
+  </p>
+  <button onclick="toggle('s1', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s1">
+  <h3>Step 1 — Why this function is interesting</h3>
+  <p>
+    \(f\) is <span class="key">not a polynomial</span>, not continuous, and has
+    <span class="key">infinitely many discontinuities</span> — at
+    \(1,\tfrac12,\tfrac13,\dots\) and also at \(0\). Yet it is bounded and (as shown)
+    Riemann integrable.
+  </p>
+
+  <h3>Step 2 — Riemann criterion</h3>
+  <p>
+    A bounded function \(f\) on \([a,b]\) is Riemann integrable if and only if for every
+    \(\varepsilon&gt;0\) there is a partition \(P\) with
+    \[
+      U(P,f)-L(P,f)&lt;\varepsilon .
+    \]
+  </p>
+
+  <h3>Step 3 — Partition construction (Part (a))</h3>
+  <p>
+    Fix \(\varepsilon&gt;0\). Choose \(N\) with \(\tfrac1N&lt;\tfrac{\varepsilon}{2}\).
+    On \(\left[\tfrac1N,1\right]\) there are exactly \(N\) spikes:
+    \[
+      \frac1N,\ \frac{1}{N-1},\ \dots,\ \frac12,\ 1 .
+    \]
+    Enclose each in a tiny interval of length \(\tfrac{\varepsilon}{2N}\). Total length
+    of these \(N\) intervals is \(\tfrac{\varepsilon}{2}\).
+    Take the partition \(P\) consisting of the endpoint \(\tfrac1N\) and the endpoints of
+    all these tiny intervals.
+  </p>
+
+  <div class="graphwrap">
+    <svg id="riemannGraph" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="figcap">
+      Spikes at \(x=1,\tfrac12,\tfrac13,\dots\); pink strips enclose each spike with
+      arbitrarily small total length.
+    </div>
+  </div>
+
+  <h3>Step 4 — Bound \(U(P,f)-L(P,f)\)</h3>
+  <p>
+    Split \([0,1]\) into three kinds of pieces:
+  </p>
+  <ul>
+    <li>
+      <span class="key">On \([0,\tfrac1N]\):</span> \(0\le f\le 1\), so contribution
+      \(\le 1\cdot\tfrac1N&lt;\tfrac{\varepsilon}{2}\).
+    </li>
+    <li>
+      <span class="key">On the \(N\) tiny intervals:</span> total contribution
+      \(\le N\cdot\tfrac{\varepsilon}{2N}=\tfrac{\varepsilon}{2}\).
+    </li>
+    <li>
+      <span class="key">On the remaining subintervals:</span> \(f\equiv 0\), so no
+      contribution.
+    </li>
+  </ul>
+  <p>
+    Hence \(U(P,f)-L(P,f)&lt;\varepsilon\). Since \(\varepsilon&gt;0\) is arbitrary,
+    <span class="ans">\(f\) is Riemann integrable on \([0,1]\)</span>.
+  </p>
+
+  <h3>Step 5 — Value of the integral (Part (b))</h3>
+  <p>
+    Every subinterval of every partition contains points where \(f=0\), so \(m_i=0\) on
+    every subinterval and \(L(P,f)=0\) for every partition \(P\). Therefore
+    \[
+      \int_0^1 f(x)\,dx=\sup_P L(P,f)=0 .
+    \]
+  </p>
+  <p class="ans">
+    Answer: \(f\) is Riemann integrable on \([0,1]\), and
+    \(\displaystyle\int_0^1 f(x)\,dx=0\).
+  </p>
+</div>
+
+<!-- ============================ PROBLEM 2 ============================ -->
+<div class="q">
+  <h2>Problem 2 — Area Between Two Curves</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Find the area of the region enclosed between the graphs of
+    \[
+      y=x^{3}\qquad\text{and}\qquad y=3x^{2}-2x,
+    \]
+    between \(x=0\) and \(x=2\).
+  </p>
+  <button onclick="toggle('s2', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s2">
+  <h3>Step 1 — Intersections</h3>
+  <p>
+    \[
+      x^{3}=3x^{2}-2x
+      \;\Longrightarrow\;
+      x^{3}-3x^{2}+2x=0
+      \;\Longrightarrow\;
+      x(x-1)(x-2)=0 .
+    \]
+    So the curves meet at \(x=0,1,2\). These split \([0,2]\) into \([0,1]\) and \([1,2]\).
+  </p>
+
+  <div class="graphwrap">
+    <svg id="twoCurvesGraph" viewBox="0 0 560 400" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="figcap">
+      Cyan: \(y=x^{3}\). Pink: \(y=3x^{2}-2x\). Green shading: two enclosed regions.
+    </div>
+  </div>
+
+  <h3>Step 2 — Which curve is on top?</h3>
+  <p>
+    <span class="key">On \((0,1)\):</span> at \(x=0.5\), \(x^{3}=0.125\) vs
+    \(3x^{2}-2x=-0.25\). So \(x^{3}\) is on top.<br>
+    <span class="key">On \((1,2)\):</span> at \(x=1.5\), \(x^{3}=3.375\) vs
+    \(3x^{2}-2x=3.75\). So \(3x^{2}-2x\) is on top.
+  </p>
+
+  <h3>Step 3 — Set up the area</h3>
+  <p>
+    \[
+      A=\int_0^1\bigl(x^{3}-3x^{2}+2x\bigr)dx
+        +\int_1^2\bigl(-x^{3}+3x^{2}-2x\bigr)dx .
+    \]
+  </p>
+
+  <h3>Step 4 — Evaluate</h3>
+  <p>
+    \[
+      \int_0^1\bigl(x^{3}-3x^{2}+2x\bigr)dx
+      =\Bigl[\tfrac{x^{4}}{4}-x^{3}+x^{2}\Bigr]_0^1
+      =\tfrac14-1+1=\tfrac14 .
+    \]
+    \[
+      \int_1^2\bigl(-x^{3}+3x^{2}-2x\bigr)dx
+      =\Bigl[-\tfrac{x^{4}}{4}+x^{3}-x^{2}\Bigr]_1^2
+      =0-\Bigl(-\tfrac14\Bigr)=\tfrac14 .
+    \]
+  </p>
+
+  <h3>Step 5 — Add</h3>
+  <p>
+    \[
+      A=\tfrac14+\tfrac14=\tfrac12 .
+    \]
+  </p>
+  <p class="ans">Answer: \(\displaystyle A=\frac12\) square units.</p>
+</div>
+
+<!-- ============================ PROBLEM 3 ============================ -->
+<div class="q">
+  <h2>Problem 3 — Arc Length, Volume and Surface of Revolution</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Consider the curve \(y=x^{2}\) on \(0\le x\le 1\).
+  </p>
+  <p>
+    <span class="hl">(a)</span> Find the arc length of the curve.<br>
+    <span class="hl">(b)</span> Find the volume obtained by revolving the region under
+    the curve about the \(x\)-axis.<br>
+    <span class="hl">(c)</span> Find the surface area obtained by revolving the curve
+    itself about the \(x\)-axis.
+  </p>
+  <button onclick="toggle('s3', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s3">
+  <h3>Step 0 — The three formulas</h3>
+  <p>
+    For \(y=f(x)\) on \([a,b]\):
+    \[
+      L=\int_a^b\!\sqrt{1+(f')^{2}}\,dx,\quad
+      V=\pi\!\int_a^b\! f^{2}\,dx,\quad
+      S=2\pi\!\int_a^b\! f\sqrt{1+(f')^{2}}\,dx .
+    \]
+  </p>
+
+  <div class="graphwrap">
+    <svg id="parabolaGraph" viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="figcap">
+      Region under \(y=x^{2}\) on \([0,1]\); the yellow strip at \(x=0.7\) is a
+      representative element for the volume/surface integrals.
+    </div>
+  </div>
+
+  <h3>Step 1 — Derivatives</h3>
+  <p>
+    \(f(x)=x^{2}\), so \(f'(x)=2x\) and
+    \[
+      1+(f')^{2}=1+4x^{2}.
+    \]
+  </p>
+
+  <h3>Part (a) — Arc length</h3>
+  <p>
+    The arc length element is
+    \[
+      ds=\sqrt{dx^{2}+dy^{2}}=\sqrt{1+(f'(x))^{2}}\,dx
+         =\sqrt{1+4x^{2}}\,dx .
+    \]
+  </p>
+
+  <div class="graphwrap">
+    <svg id="arcLengthGraph" viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="figcap">
+      The tiny segment \(ds\) on the curve is the hypotenuse of a right triangle with
+      sides \(dx\) and \(dy\). Adding many such segments gives the arc length.
+    </div>
+  </div>
+
+  <p>
+    Therefore
+    \[
+      L=\int_0^1\sqrt{1+4x^{2}}\,dx .
+    \]
+    Substitute \(2x=\sinh t\), so \(dx=\tfrac12\cosh t\,dt\),
+    \(\sqrt{1+4x^{2}}=\cosh t\), limits \(t=0\) to \(T=\ln(2+\sqrt5)\):
+    \[
+      L=\tfrac12\!\int_0^{T}\!\cosh^{2}t\,dt
+        =\tfrac14\Bigl[t+\tfrac{\sinh 2t}{2}\Bigr]_0^{T}.
+    \]
+    Now \(\sinh T=2,\ \cosh T=\sqrt5\), so \(\sinh 2T=4\sqrt5\). Hence
+    \[
+      L=\frac{2\sqrt5+\ln(2+\sqrt5)}{4}\approx 1.4789 .
+    \]
+  </p>
+  <p class="ans">
+    Answer (a): \(\displaystyle L=\frac{2\sqrt5+\ln(2+\sqrt5)}{4}\approx 1.4789\).
+  </p>
+
+  <h3>Part (b) — Volume of revolution</h3>
+  <p>
+    Rotating the region under \(y=x^{2}\) about the \(x\)-axis produces a solid whose
+    cross-section at position \(x\) is a disk of radius \(y=x^{2}\) and thickness \(dx\):
+    \[
+      dV=\pi y^{2}\,dx=\pi x^{4}\,dx .
+    \]
+  </p>
+
+  <div class="graphwrap">
+    <svg id="volumeGraph" viewBox="0 0 540 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="figcap">
+      Revolving the region under \(y=x^{2}\) about the \(x\)-axis produces a horn-shaped
+      solid. Each cross-section perpendicular to the axis is a disk; the highlighted one
+      shows the representative element \(dV=\pi y^{2}\,dx\).
+    </div>
+  </div>
+
+  <p>
+    Integrate over the interval:
+    \[
+      V=\pi\!\int_0^1\!x^{4}\,dx
+        =\pi\Bigl[\tfrac{x^{5}}{5}\Bigr]_0^1
+        =\frac{\pi}{5}\approx 0.6283 .
+    \]
+  </p>
+  <p class="ans">Answer (b): \(V=\pi/5\approx 0.6283\).</p>
+
+  <h3>Part (c) — Surface area of revolution</h3>
+  <p>
+    When the curve itself is rotated, the small surface element is the lateral surface
+    of a frustum of slant length \(ds\) and mean radius \(y\):
+    \[
+      dS=2\pi y\,ds=2\pi y\sqrt{1+(y')^{2}}\,dx
+         =2\pi x^{2}\sqrt{1+4x^{2}}\,dx .
+    \]
+  </p>
+
+  <div class="graphwrap">
+    <svg id="surfaceGraph" viewBox="0 0 540 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="figcap">
+      The surface of revolution. The highlighted frustum element has slant length
+      \(ds\) and its lateral area is \(2\pi y\,ds\) — this is the surface element.
+    </div>
+  </div>
+
+  <p>
+    Integrate:
+    \[
+      S=2\pi\!\int_0^1\!x^{2}\sqrt{1+4x^{2}}\,dx .
+    \]
+    With the same substitution,
+    \[
+      S=\frac{\pi}{4}\!\int_0^{T}\!\sinh^{2}t\cosh^{2}t\,dt
+        =\frac{\pi}{32}\Bigl[\tfrac{\sinh 4t}{4}-t\Bigr]_0^{T}.
+    \]
+    Since \(\sinh 2T=4\sqrt5\) and \(\cosh 2T=9\),
+    \(\sinh 4T=72\sqrt5\). Therefore
+    \[
+      S=\frac{\pi}{32}\Bigl[18\sqrt5-\ln(2+\sqrt5)\Bigr]\approx 3.8098 .
+    \]
+  </p>
+  <p class="ans">
+    Answer (c): \(\displaystyle S=\frac{\pi}{32}\bigl[18\sqrt5-\ln(2+\sqrt5)\bigr]
+    \approx 3.8098\).
+  </p>
+
+  <p class="note">
+    Compare the three elements: \(ds=\sqrt{1+4x^{2}}\,dx\) (length),
+    \(dV=\pi x^{4}\,dx\) (volume), \(dS=2\pi x^{2}\sqrt{1+4x^{2}}\,dx\) (surface).
+    All come from the same curve but with different geometric "weights".
+  </p>
+</div>
+
+<!-- ============================ PROBLEM 4 ============================ -->
+<div class="q">
+  <h2>Problem 4 — Fundamental Theorem of Calculus in Action</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Let \(f(t)=1\) for \(t\in[0,1]\) and \(f(t)=2\) for \(t\in(1,2]\). For
+    \(x\in[0,2]\) define
+    \[
+      F(x)=\int_0^x f(t)\,dt .
+    \]
+  </p>
+  <p>
+    <span class="hl">(a)</span> Find an explicit formula for \(F(x)\).<br>
+    <span class="hl">(b)</span> Sketch the graph of \(F\).<br>
+    <span class="hl">(c)</span> Where is \(F\) continuous? Where differentiable?<br>
+    <span class="hl">(d)</span> How does this illustrate the FTC?
+  </p>
+  <button onclick="toggle('s4', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s4">
+  <h3>Part (a) — Compute \(F(x)\)</h3>
+  <p>
+    <span class="key">For \(0\le x\le 1\):</span> \(F(x)=\int_0^x 1\,dt=x\).<br>
+    <span class="key">For \(1&lt;x\le 2\):</span>
+    \(F(x)=\int_0^1 1\,dt+\int_1^x 2\,dt=1+2(x-1)=2x-1\).
+  </p>
+  <p>
+    \[
+      F(x)=\begin{cases} x, &amp; 0\le x\le 1,\\ 2x-1, &amp; 1&lt;x\le 2.\end{cases}
+    \]
+  </p>
+
+  <h3>Part (b) — Graph of \(F\)</h3>
+  <div class="graphwrap">
+    <svg id="ftcGraph" viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="figcap">
+      \(F\) is piecewise linear — slope 1 on \([0,1]\), slope 2 on \([1,2]\).
+      The corner at \((1,1)\) is where \(F\) fails to be differentiable.
+    </div>
+  </div>
+
+  <h3>Part (c) — Continuity and differentiability</h3>
+  <p>
+    At \(x=1\):
+    \[
+      \lim_{x\to 1^-}F=1,\quad
+      \lim_{x\to 1^+}F=1,\quad
+      F(1)=1,
+    \]
+    so \(F\) is continuous at \(1\) (and hence on all of \([0,2]\)).
+  </p>
+  <p>
+    Left derivative at \(1\): \(1\). Right derivative at \(1\): \(2\). Since
+    \(1\neq 2\), \(F\) is <span class="ans">not differentiable at \(x=1\)</span>.
+    Elsewhere \(F'(x)=f(x)\).
+  </p>
+
+  <h3>Part (d) — Connection with the FTC</h3>
+  <p>
+    <span class="key">FTC Part 1:</span> if \(f\) is continuous at \(c\), then
+    \(F'(c)=f(c)\). Here \(f\) has a jump at \(x=1\), and precisely there \(F\) fails
+    to be differentiable. Everywhere \(f\) is continuous, \(F'(x)=f(x)\).
+  </p>
+  <p>
+    <span class="key">FTC Part 2:</span>
+    \[
+      \int_0^2 f(t)\,dt=1\cdot 1+2\cdot 1=3
+      =F(2)-F(0).
+    \]
+    Both parts agree, even though \(f\) is only piecewise continuous.
+  </p>
+  <p class="note">
+    Key point: continuity of \(f\) at a point is <em>only</em> needed for
+    differentiability of \(F\) at that point; \(F\) remains continuous regardless.
+  </p>
+</div>
+
+<!-- ============================ PROBLEM 5 ============================ -->
+<div class="q">
+  <h2>Problem 5 — A Quadratic Polynomial from Integral Conditions</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Find \(P(x)=ax^{2}+bx+c\) such that
+    \[
+      P(0)=P(1)=0
+      \qquad\text{and}\qquad
+      \int_0^1 P(x)\,dx=1 .
+    \]
+    Verify by direct substitution.
+  </p>
+  <button onclick="toggle('s5', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s5">
+  <h3>Step 1 — Apply \(P(0)=0\)</h3>
+  <p>\(P(0)=c=0\), so \(P(x)=ax^{2}+bx\).</p>
+
+  <h3>Step 2 — Apply \(P(1)=0\)</h3>
+  <p>\(a+b=0\Rightarrow b=-a\), so \(P(x)=a(x^{2}-x)\).</p>
+
+  <h3>Step 3 — Apply the integral condition</h3>
+  <p>
+    \[
+      \int_0^1 a(x^{2}-x)\,dx
+      =a\Bigl[\tfrac{x^{3}}{3}-\tfrac{x^{2}}{2}\Bigr]_0^1
+      =a\Bigl(\tfrac13-\tfrac12\Bigr)
+      =-\frac{a}{6}=1 .
+    \]
+    Hence \(a=-6\), \(b=6\), \(c=0\).
+  </p>
+
+  <div class="graphwrap">
+    <svg id="polyGraph" viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="figcap">
+      \(P(x)=6x(1-x)\); the shaded area (with sign) equals \(1\).
+    </div>
+  </div>
+
+  <p class="ans">
+    Answer: \(\displaystyle P(x)=6x(1-x)=-6x^{2}+6x\).
+  </p>
+
+  <h3>Step 4 — Verification</h3>
+  <p>
+    \(P(0)=0\), \(P(1)=0\), and
+    \[
+      \int_0^1 6x(1-x)\,dx
+      =6\Bigl[\tfrac{x^{2}}{2}-\tfrac{x^{3}}{3}\Bigr]_0^1
+      =6\cdot\tfrac16=1 . \checkmark
+    \]
+  </p>
+</div>
+
+<footer>Quiz-3 · First-year undergraduate calculus</footer>
+
+<!-- ============================ SCRIPTS ============================ -->
+<script>
+  /* -------- small helpers -------- */
+  function mkNS(n, a){
+    var e = document.createElementNS('http://www.w3.org/2000/svg', n);
+    for(var k in a) e.setAttribute(k, a[k]);
+    return e;
+  }
+  function addLabel(svg, x, y, txt, color, size, anchor){
+    var t = mkNS('text', {
+      x:x, y:y, fill:color, 'font-size':(size||13),
+      'font-family':'Georgia, serif', 'text-anchor':anchor||'middle'
+    });
+    t.textContent = txt;
+    svg.appendChild(t);
+  }
+
+  /* ============================================================
+     FIGURE 1 — Riemann spikes on [0,1]
+     ============================================================ */
+  function drawRiemann(){
+    var svg = document.getElementById('riemannGraph');
+    if(!svg) return;
+
+    var L=55, R=490, T=40, B=235;
+    var x0=-0.05, x1=1.12, y0=0, y1=1.35;
+    function X(x){ return L + (x - x0)/(x1 - x0) * (R - L); }
+    function Y(y){ return B - (y - y0)/(y1 - y0) * (B - T); }
+
+    for(var gx = 0; gx <= 1; gx += 0.1){
+      svg.appendChild(mkNS('line', {x1:X(gx), y1:T, x2:X(gx), y2:B,
+        stroke:'#131313', 'stroke-width':1}));
+    }
+    for(var gy = 0; gy <= 1; gy += 0.25){
+      svg.appendChild(mkNS('line', {x1:L, y1:Y(gy), x2:R, y2:Y(gy),
+        stroke:'#131313', 'stroke-width':1}));
+    }
+
+    svg.appendChild(mkNS('line', {x1:L-15, y1:Y(0), x2:R+15, y2:Y(0),
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      (R+15)+','+Y(0)+' '+(R+7)+','+(Y(0)-5)+' '+(R+7)+','+(Y(0)+5),
+      fill:'#aaaaaa'}));
+    svg.appendChild(mkNS('line', {x1:X(0), y1:B+15, x2:X(0), y2:T-15,
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      X(0)+','+(T-15)+' '+(X(0)-5)+','+(T-7)+' '+(X(0)+5)+','+(T-7),
+      fill:'#aaaaaa'}));
+
+    var bigEnd = 1/5;
+    svg.appendChild(mkNS('rect', {
+      x: X(0), y: Y(1), width: X(bigEnd)-X(0), height: Y(0)-Y(1),
+      fill:'#ff69b4', 'fill-opacity':0.10
+    }));
+
+    var spikes = [1, 1/2, 1/3, 1/4, 1/5];
+    var halfw = 0.012;
+    spikes.forEach(function(xs){
+      svg.appendChild(mkNS('rect', {
+        x: X(xs-halfw), y: Y(1),
+        width: X(xs+halfw)-X(xs-halfw), height: Y(0)-Y(1),
+        fill:'#ff69b4', 'fill-opacity':0.30
+      }));
+      svg.appendChild(mkNS('line', {
+        x1:X(xs), y1:Y(0), x2:X(xs), y2:Y(1),
+        stroke:'#ffd400', 'stroke-width':2.4
+      }));
+      svg.appendChild(mkNS('circle', {cx:X(xs), cy:Y(1), r:3.2, fill:'#ffd400'}));
+    });
+
+    addLabel(svg, X(0), Y(0)+22, '0', '#cccccc', 13);
+    addLabel(svg, X(1/5), Y(0)+22, '1/5', '#cccccc', 12);
+    addLabel(svg, X(1/4), Y(0)+22, '1/4', '#cccccc', 12);
+    addLabel(svg, X(1/3), Y(0)+22, '1/3', '#cccccc', 12);
+    addLabel(svg, X(1/2), Y(0)+22, '1/2', '#cccccc', 12);
+    addLabel(svg, X(1),   Y(0)+22, '1',   '#cccccc', 12);
+    addLabel(svg, X(0)-22, Y(1)+5, '1',   '#cccccc', 13);
+    addLabel(svg, X(1.06), Y(0)+22, 'x', '#ffffff', 14);
+    addLabel(svg, X(0)+12, T-4, 'f(x)',   '#ffffff', 14);
+
+    addLabel(svg, (L+R)/2, 22, 'spikes at x = 1, 1/2, 1/3, ...  (not to scale)', '#00e5ff', 13);
+  }
+
+  /* ============================================================
+     FIGURE 2 — Two curves y = x^3 and y = 3x^2 - 2x
+     ============================================================ */
+  function drawTwoCurves(){
+    var svg = document.getElementById('twoCurvesGraph');
+    if(!svg) return;
+
+    var L=55, R=525, T=45, B=340;
+    var x0=-0.15, x1=2.2, y0=-0.8, y1=9.0;
+    function X(x){ return L + (x - x0)/(x1 - x0) * (R - L); }
+    function Y(y){ return B - (y - y0)/(y1 - y0) * (B - T); }
+
+    function f1(x){ return x*x*x; }
+    function f2(x){ return 3*x*x - 2*x; }
+
+    for(var gx = 0; gx <= 2; gx += 0.5){
+      svg.appendChild(mkNS('line', {x1:X(gx), y1:T, x2:X(gx), y2:B,
+        stroke:'#141414', 'stroke-width':1}));
+    }
+    for(var gy = 0; gy <= 8; gy += 1){
+      svg.appendChild(mkNS('line', {x1:L, y1:Y(gy), x2:R, y2:Y(gy),
+        stroke:'#141414', 'stroke-width':1}));
+    }
+
+    svg.appendChild(mkNS('line', {x1:L-15, y1:Y(0), x2:R+15, y2:Y(0),
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      (R+15)+','+Y(0)+' '+(R+7)+','+(Y(0)-5)+' '+(R+7)+','+(Y(0)+5),
+      fill:'#aaaaaa'}));
+    svg.appendChild(mkNS('line', {x1:X(0), y1:B+15, x2:X(0), y2:T-15,
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      X(0)+','+(T-15)+' '+(X(0)-5)+','+(T-7)+' '+(X(0)+5)+','+(T-7),
+      fill:'#aaaaaa'}));
+
+    function path(f, xa, xb, n){
+      var d = '';
+      for(var i = 0; i <= n; i++){
+        var x = xa + (xb - xa) * i / n;
+        d += (i===0?'M':'L') + X(x).toFixed(2) + ' ' + Y(f(x)).toFixed(2) + ' ';
+      }
+      return d;
+    }
+
+    (function(){
+      var d = '', n = 80;
+      for(var i = 0; i <= n; i++){
+        var x = i/n;
+        d += (i===0?'M':'L') + X(x).toFixed(2) + ' ' + Y(f1(x)).toFixed(2) + ' ';
+      }
+      for(var i = n; i >= 0; i--){
+        var x = i/n;
+        d += 'L' + X(x).toFixed(2) + ' ' + Y(f2(x)).toFixed(2) + ' ';
+      }
+      d += 'Z';
+      svg.appendChild(mkNS('path', {d:d, fill:'#39ff14',
+        'fill-opacity':0.28, stroke:'none'}));
+    })();
+    (function(){
+      var d = '', n = 80;
+      for(var i = 0; i <= n; i++){
+        var x = 1 + i/n;
+        d += (i===0?'M':'L') + X(x).toFixed(2) + ' ' + Y(f2(x)).toFixed(2) + ' ';
+      }
+      for(var i = n; i >= 0; i--){
+        var x = 1 + i/n;
+        d += 'L' + X(x).toFixed(2) + ' ' + Y(f1(x)).toFixed(2) + ' ';
+      }
+      d += 'Z';
+      svg.appendChild(mkNS('path', {d:d, fill:'#39ff14',
+        'fill-opacity':0.28, stroke:'none'}));
+    })();
+
+    svg.appendChild(mkNS('path', {d: path(f1, 0, 2, 240), fill:'none',
+      stroke:'#00e5ff', 'stroke-width':2.6, 'stroke-linejoin':'round'}));
+    svg.appendChild(mkNS('path', {d: path(f2, 0, 2, 240), fill:'none',
+      stroke:'#ff69b4', 'stroke-width':2.6, 'stroke-linejoin':'round'}));
+
+    [[0,0],[1,1],[2,8]].forEach(function(p){
+      svg.appendChild(mkNS('circle', {cx:X(p[0]), cy:Y(p[1]), r:5,
+        fill:'#ffd400', stroke:'#000000', 'stroke-width':1.2}));
+    });
+
+    addLabel(svg, X(1), Y(0)+22, '1', '#cccccc', 12);
+    addLabel(svg, X(2), Y(0)+22, '2', '#cccccc', 12);
+    for(var i = 2; i <= 8; i += 2){
+      addLabel(svg, X(0)-15, Y(i)+5, ''+i, '#cccccc', 11);
+    }
+    addLabel(svg, X(0)-12, Y(0)+22, '0', '#cccccc', 12);
+
+    addLabel(svg, X(1)+22, Y(1)+5, '(1,1)', '#ffd400', 13, 'start');
+    addLabel(svg, X(2)-18, Y(8)-14, '(2,8)', '#ffd400', 13, 'end');
+    addLabel(svg, X(0)-18, Y(0)-10, '(0,0)', '#ffd400', 13, 'end');
+
+    var lx = L + 15, ly = T + 10;
+    svg.appendChild(mkNS('line', {x1:lx, y1:ly, x2:lx+28, y2:ly,
+      stroke:'#00e5ff', 'stroke-width':3}));
+    addLabel(svg, lx+35, ly+5, 'y = x³', '#00e5ff', 13, 'start');
+    svg.appendChild(mkNS('line', {x1:lx, y1:ly+24, x2:lx+28, y2:ly+24,
+      stroke:'#ff69b4', 'stroke-width':3}));
+    addLabel(svg, lx+35, ly+29, 'y = 3x² − 2x', '#ff69b4', 13, 'start');
+    svg.appendChild(mkNS('rect', {x:lx, y:ly+42, width:28, height:12,
+      fill:'#39ff14', 'fill-opacity':0.28}));
+    addLabel(svg, lx+35, ly+53, 'enclosed region', '#39ff14', 13, 'start');
+
+    addLabel(svg, R+18, Y(0)+22, 'x', '#ffffff', 14);
+    addLabel(svg, X(0)+14, T-22, 'y', '#ffffff', 14);
+  }
+
+  /* ============================================================
+     FIGURE 3 — Parabola y = x^2 with a representative strip
+     ============================================================ */
+  function drawParabola(){
+    var svg = document.getElementById('parabolaGraph');
+    if(!svg) return;
+
+    var L=60, R=490, T=45, B=280;
+    var x0=-0.05, x1=1.08, y0=-0.05, y1=1.18;
+    function X(x){ return L + (x - x0)/(x1 - x0) * (R - L); }
+    function Y(y){ return B - (y - y0)/(y1 - y0) * (B - T); }
+    function f(x){ return x*x; }
+
+    for(var gx = 0; gx <= 1; gx += 0.25){
+      svg.appendChild(mkNS('line', {x1:X(gx), y1:T, x2:X(gx), y2:B,
+        stroke:'#141414', 'stroke-width':1}));
+    }
+    for(var gy = 0; gy <= 1; gy += 0.25){
+      svg.appendChild(mkNS('line', {x1:L, y1:Y(gy), x2:R, y2:Y(gy),
+        stroke:'#141414', 'stroke-width':1}));
+    }
+
+    svg.appendChild(mkNS('line', {x1:L-15, y1:Y(0), x2:R+15, y2:Y(0),
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      (R+15)+','+Y(0)+' '+(R+7)+','+(Y(0)-5)+' '+(R+7)+','+(Y(0)+5),
+      fill:'#aaaaaa'}));
+    svg.appendChild(mkNS('line', {x1:X(0), y1:B+15, x2:X(0), y2:T-15,
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      X(0)+','+(T-15)+' '+(X(0)-5)+','+(T-7)+' '+(X(0)+5)+','+(T-7),
+      fill:'#aaaaaa'}));
+
+    (function(){
+      var d = 'M' + X(0) + ' ' + Y(0) + ' ';
+      var n = 120;
+      for(var i = 0; i <= n; i++){
+        var x = i/n;
+        d += 'L' + X(x).toFixed(2) + ' ' + Y(f(x)).toFixed(2) + ' ';
+      }
+      d += 'L' + X(1) + ' ' + Y(0) + ' Z';
+      svg.appendChild(mkNS('path', {d:d, fill:'#ff8c00',
+        'fill-opacity':0.18, stroke:'none'}));
+    })();
+
+    var d = '';
+    var n = 200;
+    for(var i = 0; i <= n; i++){
+      var x = i/n;
+      d += (i===0?'M':'L') + X(x).toFixed(2) + ' ' + Y(f(x)).toFixed(2) + ' ';
+    }
+    svg.appendChild(mkNS('path', {d:d, fill:'none',
+      stroke:'#00e5ff', 'stroke-width':2.6, 'stroke-linejoin':'round'}));
+
+    var xs = 0.7, hw = 0.02;
+    svg.appendChild(mkNS('rect', {
+      x: X(xs-hw), y: Y(f(xs)),
+      width: X(xs+hw)-X(xs-hw), height: Y(0)-Y(f(xs)),
+      fill:'#ffd400', 'fill-opacity':0.55, stroke:'#ffd400', 'stroke-width':1
+    }));
+    addLabel(svg, X(xs)+38, Y(f(xs)/2)+4, 'typical strip', '#ffd400', 12, 'start');
+
+    addLabel(svg, X(0)-14, Y(0)+22, '0', '#cccccc', 12);
+    addLabel(svg, X(0.5), Y(0)+22, '0.5', '#cccccc', 12);
+    addLabel(svg, X(1), Y(0)+22, '1', '#cccccc', 12);
+    addLabel(svg, X(0)-18, Y(1)+5, '1', '#cccccc', 12);
+    addLabel(svg, X(0)-18, Y(0.5)+5, '0.5', '#cccccc', 11);
+
+    addLabel(svg, X(0.82), Y(f(0.82))+22, 'y = x²', '#00e5ff', 14, 'start');
+    addLabel(svg, R+18, Y(0)+22, 'x', '#ffffff', 14);
+    addLabel(svg, X(0)+12, T-4, 'y', '#ffffff', 14);
+  }
+
+  /* ============================================================
+     FIGURE 3a — Arc length element
+     ============================================================ */
+  function drawArcLength(){
+    var svg = document.getElementById('arcLengthGraph');
+    if(!svg) return;
+
+    var L=60, R=480, T=55, B=280;
+    var x0=-0.05, x1=1.15, y0=-0.08, y1=1.28;
+    function X(x){ return L + (x - x0)/(x1 - x0) * (R - L); }
+    function Y(y){ return B - (y - y0)/(y1 - y0) * (B - T); }
+    function f(x){ return x*x; }
+
+    for(var gx = 0; gx <= 1; gx += 0.25){
+      svg.appendChild(mkNS('line', {x1:X(gx), y1:T, x2:X(gx), y2:B,
+        stroke:'#141414', 'stroke-width':1}));
+    }
+    for(var gy = 0; gy <= 1.25; gy += 0.25){
+      svg.appendChild(mkNS('line', {x1:L, y1:Y(gy), x2:R, y2:Y(gy),
+        stroke:'#141414', 'stroke-width':1}));
+    }
+
+    svg.appendChild(mkNS('line', {x1:L-15, y1:Y(0), x2:R+15, y2:Y(0),
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      (R+15)+','+Y(0)+' '+(R+7)+','+(Y(0)-5)+' '+(R+7)+','+(Y(0)+5),
+      fill:'#aaaaaa'}));
+    svg.appendChild(mkNS('line', {x1:X(0), y1:B+15, x2:X(0), y2:T-15,
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      X(0)+','+(T-15)+' '+(X(0)-5)+','+(T-7)+' '+(X(0)+5)+','+(T-7),
+      fill:'#aaaaaa'}));
+
+    /* main curve */
+    var d = '';
+    var n = 220;
+    for(var i = 0; i <= n; i++){
+      var x = i/n;
+      d += (i===0?'M':'L') + X(x).toFixed(2) + ' ' + Y(f(x)).toFixed(2) + ' ';
+    }
+    svg.appendChild(mkNS('path', {d:d, fill:'none',
+      stroke:'#00e5ff', 'stroke-width':2.6, 'stroke-linejoin':'round'}));
+
+    /* polygonal approximation */
+    var pts = [];
+    for(var i = 0; i <= 6; i++) pts.push([i/6, f(i/6)]);
+    var dp = 'M' + X(pts[0][0]) + ' ' + Y(pts[0][1]);
+    for(var i = 1; i < pts.length; i++){
+      dp += ' L' + X(pts[i][0]).toFixed(2) + ' ' + Y(pts[i][1]).toFixed(2);
+    }
+    svg.appendChild(mkNS('path', {d:dp, fill:'none',
+      stroke:'#39ff14', 'stroke-width':1.5, 'stroke-dasharray':'5 4',
+      'stroke-opacity':0.9}));
+
+    /* slope triangle at x = 0.55 to 0.72 */
+    var xa = 0.55, xb = 0.72;
+    var ya = f(xa), yb = f(xb);
+    /* dx horizontal */
+    svg.appendChild(mkNS('line', {x1:X(xa), y1:Y(ya), x2:X(xb), y2:Y(ya),
+      stroke:'#ff8c00', 'stroke-width':2.4}));
+    /* dy vertical */
+    svg.appendChild(mkNS('line', {x1:X(xb), y1:Y(ya), x2:X(xb), y2:Y(yb),
+      stroke:'#ff8c00', 'stroke-width':2.4}));
+    /* ds hypotenuse */
+    svg.appendChild(mkNS('line', {x1:X(xa), y1:Y(ya), x2:X(xb), y2:Y(yb),
+      stroke:'#ff69b4', 'stroke-width':3}));
+
+    /* dots at the ends */
+    svg.appendChild(mkNS('circle', {cx:X(xa), cy:Y(ya), r:5,
+      fill:'#ffd400', stroke:'#000', 'stroke-width':1.2}));
+    svg.appendChild(mkNS('circle', {cx:X(xb), cy:Y(yb), r:5,
+      fill:'#ffd400', stroke:'#000', 'stroke-width':1.2}));
+
+    /* labels */
+    addLabel(svg, (X(xa)+X(xb))/2, Y(ya)+22, 'dx', '#ff8c00', 16);
+    addLabel(svg, X(xb)+16, (Y(ya)+Y(yb))/2+5, 'dy', '#ff8c00', 16, 'start');
+    addLabel(svg, (X(xa)+X(xb))/2 - 22, (Y(ya)+Y(yb))/2 - 4, 'ds', '#ff69b4', 16, 'end');
+
+    /* caption */
+    addLabel(svg, (L+R)/2, 25,
+      'Arc length element:  ds = √(dx² + dy²) = √(1 + (2x)²) dx',
+      '#00e5ff', 13);
+
+    /* tick labels */
+    addLabel(svg, X(0)-14, Y(0)+22, '0', '#cccccc', 12);
+    addLabel(svg, X(1), Y(0)+22, '1', '#cccccc', 12);
+    addLabel(svg, X(0)-18, Y(1)+5, '1', '#cccccc', 12);
+    addLabel(svg, X(0.88), Y(f(0.88))-12, 'y = x²', '#00e5ff', 14, 'start');
+    addLabel(svg, R+18, Y(0)+22, 'x', '#ffffff', 14);
+    addLabel(svg, X(0)+12, T-4, 'y', '#ffffff', 14);
+  }
+
+  /* ============================================================
+     FIGURE 3b — Volume of revolution (with representative disk)
+     ============================================================ */
+  function drawVolume(){
+    var svg = document.getElementById('volumeGraph');
+    if(!svg) return;
+
+    var axisY = 195;
+    var startX = 80, endX = 470;
+    var radiusScale = 85;
+    var persp = 0.30;
+
+    function px(t){ return startX + t*(endX - startX); }
+    function rad(t){ return t*t * radiusScale; }
+
+    var n = 140;
+
+    /* solid silhouette fill (very light) */
+    var fillD = 'M' + startX + ' ' + axisY;
+    for(var i = 1; i <= n; i++){
+      var t = i/n;
+      fillD += ' L' + px(t).toFixed(2) + ' ' + (axisY - rad(t)).toFixed(2);
+    }
+    for(var i = n; i >= 0; i--){
+      var t = i/n;
+      fillD += ' L' + px(t).toFixed(2) + ' ' + (axisY + rad(t)).toFixed(2);
+    }
+    fillD += ' Z';
+    svg.appendChild(mkNS('path', {d:fillD, fill:'#00e5ff',
+      'fill-opacity':0.10, stroke:'none'}));
+
+    /* upper and lower silhouette curves */
+    var upD = '', loD = '';
+    for(var i = 0; i <= n; i++){
+      var t = i/n;
+      upD += (i===0?'M':'L') + px(t).toFixed(2) + ' ' + (axisY - rad(t)).toFixed(2) + ' ';
+      loD += (i===0?'M':'L') + px(t).toFixed(2) + ' ' + (axisY + rad(t)).toFixed(2) + ' ';
+    }
+    svg.appendChild(mkNS('path', {d:upD, fill:'none', stroke:'#00e5ff', 'stroke-width':2.2}));
+    svg.appendChild(mkNS('path', {d:loD, fill:'none', stroke:'#00e5ff', 'stroke-width':2.2}));
+
+    /* axis of revolution */
+    svg.appendChild(mkNS('line', {x1:startX-15, y1:axisY, x2:endX+35, y2:axisY,
+      stroke:'#555555', 'stroke-width':1.3, 'stroke-dasharray':'6 5'}));
+    addLabel(svg, endX+40, axisY+5, 'x', '#888888', 14, 'start');
+
+    /* wireframe ellipses */
+    var tVals = [0.4, 0.6, 0.85, 1.0];
+    tVals.forEach(function(t){
+      var cx = px(t);
+      var ry = rad(t);
+      var rx = ry * persp;
+      /* back arc (upper half) dashed */
+      svg.appendChild(mkNS('path', {
+        d:'M '+(cx-rx).toFixed(2)+' '+axisY+' A '+rx.toFixed(2)+' '+ry.toFixed(2)+' 0 0 1 '+(cx+rx).toFixed(2)+' '+axisY,
+        fill:'none', stroke:'#39ff14', 'stroke-width':1.4,
+        'stroke-dasharray':'4 4', 'stroke-opacity':0.9
+      }));
+      /* front arc (lower half) solid */
+      svg.appendChild(mkNS('path', {
+        d:'M '+(cx-rx).toFixed(2)+' '+axisY+' A '+rx.toFixed(2)+' '+ry.toFixed(2)+' 0 0 0 '+(cx+rx).toFixed(2)+' '+axisY,
+        fill:'none', stroke:'#39ff14', 'stroke-width':1.8
+      }));
+    });
+
+    /* highlighted representative disk at t = 0.72 */
+    var tA = 0.66, tB = 0.72;
+    var cA = px(tA), cB = px(tB);
+    var rA = rad(tA), rB = rad(tB);
+    var rxA = rA*persp, rxB = rB*persp;
+
+    /* thin cylinder side lines */
+    svg.appendChild(mkNS('line', {x1:cA-rxA, y1:axisY, x2:cB-rxB, y2:axisY,
+      stroke:'#ffd400', 'stroke-width':1.8}));
+    svg.appendChild(mkNS('line', {x1:cA+rxA, y1:axisY, x2:cB+rxB, y2:axisY,
+      stroke:'#ffd400', 'stroke-width':1.8}));
+    /* front arc at tA (disk front face) */
+    svg.appendChild(mkNS('path', {
+      d:'M '+(cA-rxA).toFixed(2)+' '+axisY+' A '+rxA.toFixed(2)+' '+rA.toFixed(2)+' 0 0 0 '+(cA+rxA).toFixed(2)+' '+axisY,
+      fill:'#ffd400', 'fill-opacity':0.45, stroke:'#ffd400', 'stroke-width':2.2
+    }));
+    /* back arc at tB dashed */
+    svg.appendChild(mkNS('path', {
+      d:'M '+(cB-rxB).toFixed(2)+' '+axisY+' A '+rxB.toFixed(2)+' '+rB.toFixed(2)+' 0 0 1 '+(cB+rxB).toFixed(2)+' '+axisY,
+      fill:'none', stroke:'#ffd400', 'stroke-width':1.6, 'stroke-dasharray':'3 3'
+    }));
+
+    /* label the disk */
+    addLabel(svg, cA + rxA + 12, axisY - 18, 'radius = y', '#ffd400', 12, 'start');
+    addLabel(svg, cA + rxA + 12, axisY - 2, 'thickness dx', '#ffd400', 12, 'start');
+    addLabel(svg, cA + rxA + 12, axisY + 14, 'dV = πy² dx', '#39ff14', 13, 'start');
+
+    /* captions at top */
+    addLabel(svg, 270, 22,
+      'Volume of revolution:  region under y = x² rotated about the x-axis',
+      '#00e5ff', 12);
+    addLabel(svg, 270, 42,
+      'Each cross-section perpendicular to the axis is a disk of radius y',
+      '#39ff14', 12);
+  }
+
+  /* ============================================================
+     FIGURE 3c — Surface of revolution (with frustum element)
+     ============================================================ */
+  function drawSurface(){
+    var svg = document.getElementById('surfaceGraph');
+    if(!svg) return;
+
+    var axisY = 195;
+    var startX = 80, endX = 470;
+    var radiusScale = 85;
+    var persp = 0.30;
+
+    function px(t){ return startX + t*(endX - startX); }
+    function rad(t){ return t*t * radiusScale; }
+
+    var n = 140;
+
+    /* upper and lower silhouette curves (only outline, no fill) */
+    var upD = '', loD = '';
+    for(var i = 0; i <= n; i++){
+      var t = i/n;
+      upD += (i===0?'M':'L') + px(t).toFixed(2) + ' ' + (axisY - rad(t)).toFixed(2) + ' ';
+      loD += (i===0?'M':'L') + px(t).toFixed(2) + ' ' + (axisY + rad(t)).toFixed(2) + ' ';
+    }
+    svg.appendChild(mkNS('path', {d:upD, fill:'none', stroke:'#00e5ff', 'stroke-width':2.2}));
+    svg.appendChild(mkNS('path', {d:loD, fill:'none', stroke:'#00e5ff', 'stroke-width':2.2}));
+
+    /* axis */
+    svg.appendChild(mkNS('line', {x1:startX-15, y1:axisY, x2:endX+35, y2:axisY,
+      stroke:'#555555', 'stroke-width':1.3, 'stroke-dasharray':'6 5'}));
+    addLabel(svg, endX+40, axisY+5, 'x', '#888888', 14, 'start');
+
+    /* wireframe ellipses (show the shell surface) */
+    var tVals = [0.3, 0.55, 0.8, 1.0];
+    tVals.forEach(function(t){
+      var cx = px(t);
+      var ry = rad(t);
+      var rx = ry * persp;
+      svg.appendChild(mkNS('path', {
+        d:'M '+(cx-rx).toFixed(2)+' '+axisY+' A '+rx.toFixed(2)+' '+ry.toFixed(2)+' 0 0 1 '+(cx+rx).toFixed(2)+' '+axisY,
+        fill:'none', stroke:'#39ff14', 'stroke-width':1.3,
+        'stroke-dasharray':'4 4', 'stroke-opacity':0.85
+      }));
+      svg.appendChild(mkNS('path', {
+        d:'M '+(cx-rx).toFixed(2)+' '+axisY+' A '+rx.toFixed(2)+' '+ry.toFixed(2)+' 0 0 0 '+(cx+rx).toFixed(2)+' '+axisY,
+        fill:'none', stroke:'#39ff14', 'stroke-width':1.7
+      }));
+    });
+
+    /* representative frustum at t = 0.62 to 0.74 */
+    var tA = 0.60, tB = 0.74;
+    var cA = px(tA), cB = px(tB);
+    var rA = rad(tA), rB = rad(tB);
+    var rxA = rA*persp, rxB = rB*persp;
+
+    /* upper silhouette side of frustum */
+    svg.appendChild(mkNS('line', {
+      x1:cA, y1:axisY - rA, x2:cB, y2:axisY - rB,
+      stroke:'#ffd400', 'stroke-width':2.6
+    }));
+    /* lower silhouette side of frustum */
+    svg.appendChild(mkNS('line', {
+      x1:cA, y1:axisY + rA, x2:cB, y2:axisY + rB,
+      stroke:'#ffd400', 'stroke-width':2.6
+    }));
+
+    /* front arc at tA solid */
+    svg.appendChild(mkNS('path', {
+      d:'M '+(cA-rxA).toFixed(2)+' '+axisY+' A '+rxA.toFixed(2)+' '+rA.toFixed(2)+' 0 0 0 '+(cA+rxA).toFixed(2)+' '+axisY,
+      fill:'none', stroke:'#ffd400', 'stroke-width':2.2
+    }));
+    /* back arc at tA dashed */
+    svg.appendChild(mkNS('path', {
+      d:'M '+(cA-rxA).toFixed(2)+' '+axisY+' A '+rxA.toFixed(2)+' '+rA.toFixed(2)+' 0 0 1 '+(cA+rxA).toFixed(2)+' '+axisY,
+      fill:'none', stroke:'#ffd400', 'stroke-width':1.4, 'stroke-dasharray':'3 3'
+    }));
+    /* front arc at tB */
+    svg.appendChild(mkNS('path', {
+      d:'M '+(cB-rxB).toFixed(2)+' '+axisY+' A '+rxB.toFixed(2)+' '+rB.toFixed(2)+' 0 0 0 '+(cB+rxB).toFixed(2)+' '+axisY,
+      fill:'none', stroke:'#ffd400', 'stroke-width':1.6
+    }));
+    /* back arc at tB dashed */
+    svg.appendChild(mkNS('path', {
+      d:'M '+(cB-rxB).toFixed(2)+' '+axisY+' A '+rxB.toFixed(2)+' '+rB.toFixed(2)+' 0 0 1 '+(cB+rxB).toFixed(2)+' '+axisY,
+      fill:'none', stroke:'#ffd400', 'stroke-width':1.4, 'stroke-dasharray':'3 3'
+    }));
+
+    /* dashes vertically to the axis at tA (for radius y) */
+    svg.appendChild(mkNS('line', {
+      x1:cA, y1:axisY, x2:cA, y2:axisY - rA,
+      stroke:'#ff69b4', 'stroke-width':1.4, 'stroke-dasharray':'4 4'
+    }));
+    addLabel(svg, cA - 6, axisY - rA/2, 'y', '#ff69b4', 14, 'end');
+
+    /* label ds along the upper slant edge */
+    var dsMidX = (cA + cB)/2, dsMidY = axisY - (rA + rB)/2;
+    addLabel(svg, dsMidX + 14, dsMidY - 6, 'ds', '#ffd400', 16, 'start');
+
+    /* captions at top */
+    addLabel(svg, 270, 22,
+      'Surface of revolution:  the curved shell swept by y = x² about the x-axis',
+      '#00e5ff', 12);
+    addLabel(svg, 270, 42,
+      'Area element:  dS = 2πy ds = 2πy √(1 + (2x)²) dx',
+      '#39ff14', 12);
+
+    /* labels */
+    addLabel(svg, cA + 14, axisY - rA - 12, 'frustum element', '#ffd400', 12, 'start');
+  }
+
+  /* ============================================================
+     FIGURE 4 — Graph of F(x) (FTC example)
+     ============================================================ */
+  function drawFTCGraph(){
+    var svg = document.getElementById('ftcGraph');
+    if(!svg) return;
+
+    var L=60, R=490, T=45, B=355;
+    var x0=-0.05, x1=2.25, y0=-0.2, y1=3.6;
+    function X(x){ return L + (x - x0)/(x1 - x0) * (R - L); }
+    function Y(y){ return B - (y - y0)/(y1 - y0) * (B - T); }
+
+    for(var gx = 0; gx <= 2; gx += 0.5){
+      svg.appendChild(mkNS('line', {x1:X(gx), y1:T, x2:X(gx), y2:B,
+        stroke:'#141414', 'stroke-width':1}));
+    }
+    for(var gy = 0; gy <= 3; gy += 0.5){
+      svg.appendChild(mkNS('line', {x1:L, y1:Y(gy), x2:R, y2:Y(gy),
+        stroke:'#141414', 'stroke-width':1}));
+    }
+
+    svg.appendChild(mkNS('line', {x1:L-15, y1:Y(0), x2:R+15, y2:Y(0),
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      (R+15)+','+Y(0)+' '+(R+7)+','+(Y(0)-5)+' '+(R+7)+','+(Y(0)+5),
+      fill:'#aaaaaa'}));
+    svg.appendChild(mkNS('line', {x1:X(0), y1:B+15, x2:X(0), y2:T-15,
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      X(0)+','+(T-15)+' '+(X(0)-5)+','+(T-7)+' '+(X(0)+5)+','+(T-7),
+      fill:'#aaaaaa'}));
+
+    svg.appendChild(mkNS('line', {x1:X(1), y1:Y(1), x2:X(1), y2:Y(0),
+      stroke:'#444444', 'stroke-dasharray':'4 4', 'stroke-width':1}));
+    svg.appendChild(mkNS('line', {x1:X(1), y1:Y(1), x2:X(0), y2:Y(1),
+      stroke:'#444444', 'stroke-dasharray':'4 4', 'stroke-width':1}));
+
+    svg.appendChild(mkNS('line', {x1:X(0), y1:Y(0), x2:X(1), y2:Y(1),
+      stroke:'#00e5ff', 'stroke-width':3.2, 'stroke-linecap':'round'}));
+    svg.appendChild(mkNS('line', {x1:X(1), y1:Y(1), x2:X(2), y2:Y(3),
+      stroke:'#ff8c00', 'stroke-width':3.2, 'stroke-linecap':'round'}));
+
+    svg.appendChild(mkNS('circle', {cx:X(0), cy:Y(0), r:5.5,
+      fill:'#ffd400', stroke:'#000', 'stroke-width':1.2}));
+    svg.appendChild(mkNS('circle', {cx:X(1), cy:Y(1), r:5.5,
+      fill:'#39ff14', stroke:'#000', 'stroke-width':1.2}));
+    svg.appendChild(mkNS('circle', {cx:X(2), cy:Y(3), r:5.5,
+      fill:'#39ff14', stroke:'#000', 'stroke-width':1.2}));
+
+    addLabel(svg, X(0)-14, Y(0)+22, '0', '#cccccc', 12);
+    addLabel(svg, X(1), Y(0)+22, '1', '#cccccc', 12);
+    addLabel(svg, X(2), Y(0)+22, '2', '#cccccc', 12);
+    addLabel(svg, X(0)-18, Y(1)+5, '1', '#cccccc', 12);
+    addLabel(svg, X(0)-18, Y(2)+5, '2', '#cccccc', 12);
+    addLabel(svg, X(0)-18, Y(3)+5, '3', '#cccccc', 12);
+    addLabel(svg, X(0.35), Y(0.35)+22, 'slope 1', '#00e5ff', 12);
+    addLabel(svg, X(1.5), Y(2.5)-14, 'slope 2', '#ff8c00', 12);
+    addLabel(svg, X(1)+20, Y(1)+5, '(1,1)', '#39ff14', 12, 'start');
+    addLabel(svg, X(2)-12, Y(3)-14, '(2,3)', '#39ff14', 12, 'end');
+    addLabel(svg, R+18, Y(0)+22, 'x', '#ffffff', 14);
+    addLabel(svg, X(0)+16, T-4, 'F(x)', '#ffffff', 14);
+
+    addLabel(svg, X(1)+8, Y(1)-34, 'corner', '#ff69b4', 12, 'start');
+    addLabel(svg, X(1)+8, Y(1)-20, 'F not diff.', '#ff69b4', 12, 'start');
+  }
+
+  /* ============================================================
+     FIGURE 5 — P(x) = 6x(1-x), shaded area = 1
+     ============================================================ */
+  function drawPoly(){
+    var svg = document.getElementById('polyGraph');
+    if(!svg) return;
+
+    var L=60, R=490, T=45, B=280;
+    var x0=-0.05, x1=1.08, y0=-0.05, y1=1.75;
+    function X(x){ return L + (x - x0)/(x1 - x0) * (R - L); }
+    function Y(y){ return B - (y - y0)/(y1 - y0) * (B - T); }
+    function f(x){ return 6*x*(1-x); }
+
+    for(var gx = 0; gx <= 1; gx += 0.25){
+      svg.appendChild(mkNS('line', {x1:X(gx), y1:T, x2:X(gx), y2:B,
+        stroke:'#141414', 'stroke-width':1}));
+    }
+    for(var gy = 0; gy <= 1.5; gy += 0.5){
+      svg.appendChild(mkNS('line', {x1:L, y1:Y(gy), x2:R, y2:Y(gy),
+        stroke:'#141414', 'stroke-width':1}));
+    }
+
+    svg.appendChild(mkNS('line', {x1:L-15, y1:Y(0), x2:R+15, y2:Y(0),
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      (R+15)+','+Y(0)+' '+(R+7)+','+(Y(0)-5)+' '+(R+7)+','+(Y(0)+5),
+      fill:'#aaaaaa'}));
+    svg.appendChild(mkNS('line', {x1:X(0), y1:B+15, x2:X(0), y2:T-15,
+      stroke:'#aaaaaa', 'stroke-width':1.6}));
+    svg.appendChild(mkNS('polygon', {points:
+      X(0)+','+(T-15)+' '+(X(0)-5)+','+(T-7)+' '+(X(0)+5)+','+(T-7),
+      fill:'#aaaaaa'}));
+
+    (function(){
+      var d = 'M' + X(0) + ' ' + Y(0) + ' ';
+      var n = 120;
+      for(var i = 0; i <= n; i++){
+        var x = i/n;
+        d += 'L' + X(x).toFixed(2) + ' ' + Y(f(x)).toFixed(2) + ' ';
+      }
+      d += 'L' + X(1) + ' ' + Y(0) + ' Z';
+      svg.appendChild(mkNS('path', {d:d, fill:'#39ff14',
+        'fill-opacity':0.22, stroke:'none'}));
+    })();
+
+    var d = '';
+    var n = 200;
+    for(var i = 0; i <= n; i++){
+      var x = i/n;
+      d += (i===0?'M':'L') + X(x).toFixed(2) + ' ' + Y(f(x)).toFixed(2) + ' ';
+    }
+    svg.appendChild(mkNS('path', {d:d, fill:'none',
+      stroke:'#00e5ff', 'stroke-width':2.6, 'stroke-linejoin':'round'}));
+
+    svg.appendChild(mkNS('circle', {cx:X(0), cy:Y(0), r:5.5,
+      fill:'#ffd400', stroke:'#000', 'stroke-width':1.2}));
+    svg.appendChild(mkNS('circle', {cx:X(1), cy:Y(0), r:5.5,
+      fill:'#ffd400', stroke:'#000', 'stroke-width':1.2}));
+    svg.appendChild(mkNS('circle', {cx:X(0.5), cy:Y(1.5), r:4.5,
+      fill:'#ff69b4', stroke:'#000', 'stroke-width':1.2}));
+
+    addLabel(svg, X(0)-14, Y(0)+22, '0', '#cccccc', 12);
+    addLabel(svg, X(0.5), Y(0)+22, '0.5', '#cccccc', 12);
+    addLabel(svg, X(1), Y(0)+22, '1', '#cccccc', 12);
+    addLabel(svg, X(0)-18, Y(1.5)+5, '1.5', '#cccccc', 12);
+    addLabel(svg, X(0)-18, Y(1)+5, '1', '#cccccc', 12);
+
+    addLabel(svg, X(0.5)+6, Y(0.65), 'area = 1', '#39ff14', 14, 'start');
+    addLabel(svg, X(0.5)+10, Y(1.5)-10, '(0.5, 1.5)', '#ff69b4', 12, 'start');
+    addLabel(svg, X(0.86), Y(f(0.86))-14, 'P(x) = 6x(1−x)', '#00e5ff', 13, 'end');
+    addLabel(svg, R+18, Y(0)+22, 'x', '#ffffff', 14);
+    addLabel(svg, X(0)+16, T-4, 'P', '#ffffff', 14);
+  }
+
+  /* ============================================================
+     Drawing on load
+     ============================================================ */
+  function drawAllFigures(){
+    drawRiemann();
+    drawTwoCurves();
+    drawParabola();
+    drawArcLength();
+    drawVolume();
+    drawSurface();
+    drawFTCGraph();
+    drawPoly();
+  }
+
+  /* -------- MathJax + toggle logic -------- */
+  function typeset(el){
+    if(window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise([el]).catch(function(err){
+        console.warn('MathJax typeset error:', err);
+      });
+    } else if(window.MathJax && MathJax.typeset){
+      try { MathJax.typeset([el]); } catch(e){ /* noop */ }
+    }
+  }
+
+  function toggle(id, btn){
+    var el = document.getElementById(id);
+    if(el.style.display === 'block'){
+      el.style.display = 'none';
+      btn.textContent = 'Show Solution';
+      btn.classList.remove('open');
+    } else {
+      el.style.display = 'block';
+      btn.textContent = 'Hide Solution';
+      btn.classList.add('open');
+      typeset(el);
+    }
+  }
+
+  function toggleAll(){
+    var sols = document.querySelectorAll('.sol');
+    var btns = document.querySelectorAll('.q button');
+    var allBtn = document.getElementById('allBtn');
+    var anyHidden = false;
+    sols.forEach(function(s){ if(s.style.display !== 'block') anyHidden = true; });
+
+    sols.forEach(function(s, i){
+      if(anyHidden){
+        s.style.display = 'block';
+        btns[i].textContent = 'Hide Solution';
+        btns[i].classList.add('open');
+        typeset(s);
+      } else {
+        s.style.display = 'none';
+        btns[i].textContent = 'Show Solution';
+        btns[i].classList.remove('open');
+      }
+    });
+    allBtn.textContent = anyHidden ? 'Hide All Solutions' : 'Show All Solutions';
+    if(anyHidden) allBtn.classList.add('open'); else allBtn.classList.remove('open');
+  }
+
+  window.addEventListener('load', function(){
+    drawAllFigures();
+    if(window.MathJax && MathJax.startup && MathJax.startup.promise){
+      MathJax.startup.promise.then(function(){
+        MathJax.typesetPromise().catch(function(e){ console.warn(e); });
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

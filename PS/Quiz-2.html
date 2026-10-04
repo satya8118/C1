@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz-2 — Calculus</title>
+
+<!-- MathJax configuration MUST come before the loader -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      ignoreHtmlClass: 'no-mathjax',
+      processHtmlClass: 'math'
+    },
+    startup: {
+      typeset: true
+    }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+  :root{
+    --yellow:#ffd400;
+    --orange:#ff8c00;
+    --white:#ffffff;
+    --lime:#39ff14;
+    --cyan:#00e5ff;
+    --pink:#ff69b4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:#000000;
+    color:var(--white);
+    font-family: Georgia, "Times New Roman", serif;
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 2rem 1.2rem 4rem;
+    line-height: 1.75;
+  }
+  h1{
+    color:var(--yellow);
+    text-align:center;
+    letter-spacing:1.5px;
+    margin-bottom:0.2rem;
+    font-size:1.9rem;
+  }
+  .subtitle{
+    color:var(--orange);
+    text-align:center;
+    font-style:italic;
+    margin-top:0;
+    font-size:1rem;
+  }
+  .toolbar{
+    text-align:center;
+    margin:1.5rem 0 2rem;
+  }
+  button{
+    background:#0a0a0a;
+    color:var(--cyan);
+    border:2px solid var(--cyan);
+    padding:0.55rem 1.1rem;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:0.95rem;
+    font-family: Georgia, serif;
+    letter-spacing:0.5px;
+    transition: all 0.18s ease;
+    margin: 0.2rem;
+  }
+  button:hover{
+    background:var(--cyan);
+    color:#000;
+    box-shadow:0 0 12px rgba(0,229,255,0.7);
+  }
+  button.open{
+    background:var(--cyan);
+    color:#000;
+  }
+  .q{
+    border-left:5px solid var(--yellow);
+    background:#0b0b0b;
+    padding:1.1rem 1.3rem 0.6rem;
+    margin:1.8rem 0;
+    border-radius:10px;
+    box-shadow:0 0 18px rgba(255,212,0,0.07);
+  }
+  .q h2{
+    color:var(--yellow);
+    font-size:1.15rem;
+    margin:0 0 0.4rem;
+    letter-spacing:0.5px;
+  }
+  .marks{
+    color:var(--pink);
+    font-weight:bold;
+    font-size:0.9rem;
+    letter-spacing:0.5px;
+  }
+  .q p{ color:var(--white); }
+  .sol{
+    display:none;
+    border-left:5px solid var(--lime);
+    background:#060a06;
+    padding:0.9rem 1.3rem 1rem;
+    margin:0.9rem 0 1.6rem;
+    border-radius:10px;
+    box-shadow:0 0 20px rgba(57,255,20,0.08);
+  }
+  .sol h3{
+    color:var(--lime);
+    font-size:1.05rem;
+    margin:1.1rem 0 0.4rem;
+    letter-spacing:0.5px;
+  }
+  .sol h3:first-child{ margin-top:0.2rem; }
+  .step{ color:var(--orange); font-weight:bold; }
+  .key{ color:var(--cyan); }
+  .ans{ color:var(--lime); font-weight:bold; }
+  .warn{ color:var(--pink); }
+  .hl{ color:var(--yellow); }
+  hr.sep{
+    border:none;
+    border-top:1px dashed #333;
+    margin:1.4rem 0;
+  }
+  .note{
+    color:var(--pink);
+    font-size:0.92rem;
+    font-style:italic;
+  }
+  .graphwrap{
+    background:#050505;
+    border:1px solid #222;
+    border-radius:10px;
+    padding:0.5rem;
+    margin:1rem 0;
+  }
+  svg{ width:100%; height:auto; display:block; }
+  footer{
+    text-align:center;
+    color:#666;
+    font-size:0.85rem;
+    margin-top:3rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Quiz-2 — Calculus</h1>
+<p class="subtitle">Rolle &amp; Lagrange · Maxima–Minima · Curve Tracing · Taylor Polynomials</p>
+
+<div class="toolbar">
+  <button onclick="toggleAll()" id="allBtn">Show All Solutions</button>
+</div>
+
+<!-- ============================ PROBLEM 1 ============================ -->
+<div class="q">
+  <h2>Problem 1 — Rolle's Theorem</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Let
+    \[
+      f(x)=x^{3}-6x^{2}+11x-6
+    \]
+    on the interval \([1,3]\).
+  </p>
+  <p>
+    <span class="hl">(a)</span> Verify that Rolle's theorem applies to \(f\) on \([1,3]\).<br>
+    <span class="hl">(b)</span> Find all values of \(c\in(1,3)\) such that \(f'(c)=0\).
+    Give the numerical values correct to 3 decimal places.
+  </p>
+  <button onclick="toggle('s1', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s1">
+  <h3>Step 1 — Check the hypotheses of Rolle's theorem</h3>
+  <p>
+    \(f(x)=x^{3}-6x^{2}+11x-6\) is a <span class="key">polynomial</span>.
+    Every polynomial is continuous everywhere and differentiable everywhere.
+    Hence \(f\) is continuous on the closed interval \([1,3]\) and differentiable on the
+    open interval \((1,3)\). <span class="ans">Two hypotheses satisfied.</span>
+  </p>
+
+  <h3>Step 2 — Check the endpoint condition</h3>
+  <p>
+    \[
+      f(1)=1-6+11-6=0
+    \]
+    \[
+      f(3)=27-54+33-6=0
+    \]
+    Therefore
+    \[
+      f(1)=f(3)=0 .
+    \]
+    <span class="ans">All three hypotheses of Rolle's theorem hold.</span>
+  </p>
+
+  <h3>Step 3 — Conclusion of Rolle's theorem</h3>
+  <p>
+    Hence there exists at least one \(c\in(1,3)\) with \(f'(c)=0\).
+  </p>
+
+  <h3>Step 4 — Find those \(c\) explicitly</h3>
+  <p>Differentiate:</p>
+  <p>
+    \[
+      f'(x)=3x^{2}-12x+11 .
+    \]
+    Set \(f'(x)=0\):
+    \[
+      3x^{2}-12x+11=0
+      \quad\Longrightarrow\quad
+      x=\frac{12\pm\sqrt{144-132}}{6}
+      =\frac{12\pm\sqrt{12}}{6}.
+    \]
+    Since \(\sqrt{12}=2\sqrt{3}\),
+    \[
+      x=\frac{12\pm 2\sqrt{3}}{6}=2\pm\frac{\sqrt{3}}{3}=2\pm\frac{1}{\sqrt{3}} .
+    \]
+  </p>
+
+  <h3>Step 5 — Numerical values and final check</h3>
+  <p>
+    Using \(\sqrt{3}=1.7320508\ldots\),
+    \[
+      \frac{1}{\sqrt{3}}=0.5773503\ldots
+    \]
+    so
+    \[
+      c_{1}=2-0.5773503=1.4226497\approx 1.423,
+    \]
+    \[
+      c_{2}=2+0.5773503=2.5773503\approx 2.577 .
+    \]
+  </p>
+  <p>
+    Both lie strictly between \(1\) and \(3\), so <span class="ans">both are valid</span>.
+  </p>
+  <p class="ans">
+    Answer: \(c\approx 1.423\) and \(c\approx 2.577\).
+  </p>
+  <p class="note">
+    Remark: A cubic can give two stationary points inside the interval; Rolle's theorem
+    guarantees at least one, not exactly one.
+  </p>
+</div>
+
+<!-- ============================ PROBLEM 2 ============================ -->
+<div class="q">
+  <h2>Problem 2 — Lagrange's Mean Value Theorem</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Let
+    \[
+      f(x)=\ln(1+x).
+    \]
+  </p>
+  <p>
+    <span class="hl">(a)</span> Using Lagrange's Mean Value Theorem on \([0,x]\), \(x&gt;0\),
+    prove that
+    \[
+      \frac{x}{1+x}&lt;\ln(1+x)&lt;x .
+    \]
+  </p>
+  <p>
+    <span class="hl">(b)</span> For \(x=0.2\), find the value of \(c\in(0,0.2)\) guaranteed by
+    Lagrange's theorem satisfying
+    \[
+      \ln(1.2)=\frac{0.2}{1+c}.
+    \]
+    Give \(c\) correct to 4 decimal places.
+  </p>
+  <button onclick="toggle('s2', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s2">
+  <h3>Part (a) — Setting up the Mean Value Theorem</h3>
+  <p>
+    Fix \(x&gt;0\). On the interval \([0,x]\),
+    \[
+      f(t)=\ln(1+t)
+    \]
+    is continuous on \([0,x]\) (since \(1+t&gt;0\) there) and differentiable on \((0,x)\), with
+    \[
+      f'(t)=\frac{1}{1+t}.
+    \]
+    Lagrange's Mean Value Theorem therefore gives a number \(c\in(0,x)\) such that
+    \[
+      f'(c)=\frac{f(x)-f(0)}{x-0}.
+    \]
+  </p>
+
+  <h3>Step 2 — Substitute</h3>
+  <p>
+    Here \(f(0)=\ln 1=0\) and \(f(x)=\ln(1+x)\), so
+    \[
+      \frac{1}{1+c}=\frac{\ln(1+x)-0}{x-0}
+      \quad\Longrightarrow\quad
+      \boxed{\;\frac{\ln(1+x)}{x}=\frac{1}{1+c}\;}
+    \]
+  </p>
+
+  <h3>Step 3 — Use the position of \(c\)</h3>
+  <p>
+    Since \(0&lt;c&lt;x\),
+    \[
+      1&lt;1+c&lt;1+x .
+    \]
+    Taking reciprocals reverses the inequalities:
+    \[
+      \frac{1}{1+x}&lt;\frac{1}{1+c}&lt;1 .
+    \]
+    Substituting \(\dfrac{1}{1+c}=\dfrac{\ln(1+x)}{x}\):
+    \[
+      \frac{1}{1+x}&lt;\frac{\ln(1+x)}{x}&lt;1 .
+    \]
+  </p>
+
+  <h3>Step 4 — Multiply by \(x&gt;0\)</h3>
+  <p>
+    Multiplying by the positive number \(x\) preserves the inequalities:
+    \[
+      \frac{x}{1+x}&lt;\ln(1+x)&lt;x .
+    \]
+    <span class="ans">This is the required double inequality.</span>
+  </p>
+
+  <h3>Part (b) — Numerical value of \(c\)</h3>
+  <p>
+    Put \(x=0.2\) in \(\dfrac{\ln(1+x)}{x}=\dfrac{1}{1+c}\):
+    \[
+      \frac{\ln(1.2)}{0.2}=\frac{1}{1+c}.
+    \]
+    Now
+    \[
+      \ln(1.2)=0.1823215568\ldots
+    \]
+    so
+    \[
+      \frac{0.1823215568}{0.2}=0.9116077840\ldots
+    \]
+    Hence
+    \[
+      1+c=\frac{1}{0.9116077840}=1.0969629\ldots
+    \]
+    and therefore
+    \[
+      c=0.0969629\ldots\approx 0.09696 \quad (\text{4 d.p.}).
+    \]
+  </p>
+
+  <h3>Step 6 — Sanity check with the inequality from part (a)</h3>
+  <p>
+    \[
+      \frac{0.2}{1.2}=0.16667&lt;0.18232&lt;0.2
+    \]
+    so the double inequality is indeed satisfied. Also \(c=0.09696\in(0,0.2)\). ✓
+  </p>
+  <p class="ans">Answer: \(c\approx 0.09696\).</p>
+</div>
+
+<!-- ============================ PROBLEM 3 ============================ -->
+<div class="q">
+  <h2>Problem 3 — Application of Maxima/Minima</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    An <span class="hl">open</span> rectangular box with a <span class="hl">square base</span>
+    has volume \(32\ \text{m}^{3}\). The material for the bottom costs
+    ₹\(3/\text{m}^{2}\), and the material for the four sides costs ₹\(2/\text{m}^{2}\).
+  </p>
+  <p>
+    Find the dimensions of the box that minimise the total cost, and find the minimum
+    total cost correct to two decimal places.
+  </p>
+  <button onclick="toggle('s3', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s3">
+  <h3>Step 1 — Choose variables</h3>
+  <p>
+    Let the square base have side \(x\) metres and let the height be \(h\) metres.
+    Since the box is open, there is no lid.
+  </p>
+
+  <h3>Step 2 — Use the volume constraint</h3>
+  <p>
+    \[
+      V=x^{2}h=32
+      \quad\Longrightarrow\quad
+      h=\frac{32}{x^{2}} .
+    \]
+  </p>
+
+  <h3>Step 3 — Build the cost function</h3>
+  <p>
+    Bottom area \(=x^{2}\), cost \(=3x^{2}\).<br>
+    Side area \(=4xh\), cost \(=2\cdot 4xh=8xh\).
+  </p>
+  <p>
+    Therefore the total cost is
+    \[
+      C=3x^{2}+8xh .
+    \]
+    Substituting \(h=\dfrac{32}{x^{2}}\):
+    \[
+      C(x)=3x^{2}+8x\cdot\frac{32}{x^{2}}
+           =3x^{2}+\frac{256}{x},\qquad x&gt;0 .
+    \]
+  </p>
+
+  <h3>Step 4 — Differentiate and find the critical point</h3>
+  <p>
+    \[
+      C'(x)=6x-\frac{256}{x^{2}} .
+    \]
+    Set \(C'(x)=0\):
+    \[
+      6x=\frac{256}{x^{2}}
+      \quad\Longrightarrow\quad
+      6x^{3}=256
+      \quad\Longrightarrow\quad
+      x^{3}=\frac{128}{3}=42.6666\ldots
+    \]
+    \[
+      x=\left(\frac{128}{3}\right)^{1/3}=3.49432\ldots\approx 3.4943\ \text{m}.
+    \]
+  </p>
+
+  <h3>Step 5 — Check it is a minimum</h3>
+  <p>
+    \[
+      C''(x)=6+\frac{512}{x^{3}}&gt;0 \quad\text{for all } x&gt;0 .
+    \]
+    So the function is convex on \((0,\infty)\) and the critical point is a
+    <span class="ans">global minimum</span>.
+  </p>
+
+  <h3>Step 6 — Find the height and the minimum cost</h3>
+  <p>
+    \[
+      h=\frac{32}{x^{2}}=\frac{32}{(3.4943)^{2}}=\frac{32}{12.2103}=2.6207\ldots\approx 2.6207\ \text{m}.
+    \]
+    \[
+      C_{\min}=3(3.4943)^{2}+8(3.4943)(2.6207)
+             =36.6309+73.2605=109.8914\ldots
+    \]
+  </p>
+  <p class="ans">
+    Answer: Base \(x\approx 3.49\ \text{m}\), height \(h\approx 2.62\ \text{m}\),
+    minimum cost \(\approx ₹\,109.89\).
+  </p>
+  <p class="note">
+    Notice \(h=x/2\) at the optimum — a typical square-base box result — which is a useful
+    check on the algebra.
+  </p>
+</div>
+
+<!-- ============================ PROBLEM 4 ============================ -->
+<div class="q">
+  <h2>Problem 4 — Curve Tracing</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Trace the curve
+    \[
+      y=\frac{x^{2}-1}{x^{2}-4}.
+    \]
+    Find its symmetry, intercepts, asymptotes, intervals of increase/decrease, local
+    extrema, concavity, and then sketch the curve.
+  </p>
+  <button onclick="toggle('s4', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s4">
+  <h3>Step 1 — Domain</h3>
+  <p>
+    The denominator vanishes when \(x^{2}=4\), i.e. \(x=\pm 2\). So the domain is
+    \[
+      \mathbb{R}\setminus\{-2,\,2\}.
+    \]
+  </p>
+
+  <h3>Step 2 — Symmetry</h3>
+  <p>
+    \[
+      f(-x)=\frac{(-x)^{2}-1}{(-x)^{2}-4}=\frac{x^{2}-1}{x^{2}-4}=f(x).
+    \]
+    So the curve is <span class="ans">even</span>: symmetric about the \(y\)-axis.
+    It is enough to study \(x\ge 0\) and reflect.
+  </p>
+
+  <h3>Step 3 — A useful rewriting</h3>
+  <p>
+    Divide:
+    \[
+      y=\frac{x^{2}-1}{x^{2}-4}
+       =\frac{(x^{2}-4)+3}{x^{2}-4}
+       =1+\frac{3}{x^{2}-4}.
+    \]
+    This form makes the asymptotes and the sign of \(y\) obvious.
+  </p>
+
+  <h3>Step 4 — Intercepts</h3>
+  <p>
+    \(x\)-intercepts: \(y=0\Rightarrow x^{2}-1=0\Rightarrow x=\pm 1\),
+    i.e. \((-1,0)\) and \((1,0)\).
+  </p>
+  <p>
+    \(y\)-intercept: \(x=0\Rightarrow y=\dfrac{-1}{-4}=\dfrac14\),
+    i.e. \(\left(0,\tfrac14\right)\).
+  </p>
+
+  <h3>Step 5 — Asymptotes</h3>
+  <p>
+    <span class="key">Vertical:</span> as \(x\to 2^{-}\), \(x^{2}-4\to 0^{-}\), so
+    \(y\to-\infty\); as \(x\to 2^{+}\), \(x^{2}-4\to 0^{+}\), so \(y\to+\infty\).
+    Hence \(x=2\) and (by symmetry) \(x=-2\) are vertical asymptotes.
+  </p>
+  <p>
+    <span class="key">Horizontal:</span>
+    \[
+      \lim_{x\to\pm\infty}\left(1+\frac{3}{x^{2}-4}\right)=1,
+    \]
+    so \(y=1\) is a horizontal asymptote (approached from above, since
+    \(3/(x^{2}-4)&gt;0\) for \(|x|&gt;2\)).
+  </p>
+
+  <h3>Step 6 — First derivative: monotonicity and extrema</h3>
+  <p>
+    \[
+      y'=\frac{d}{dx}\left(1+3(x^{2}-4)^{-1}\right)
+        =-3(x^{2}-4)^{-2}\cdot 2x
+        =\frac{-6x}{(x^{2}-4)^{2}} .
+    \]
+    The denominator is always positive (except at \(x=\pm 2\)), so the sign of \(y'\) is
+    the sign of \(-6x\).
+  </p>
+  <ul>
+    <li>\(x&lt;0\): \(y'&gt;0\) → increasing on \((-\infty,-2)\) and on \((-2,0)\).</li>
+    <li>\(x&gt;0\): \(y'&lt;0\) → decreasing on \((0,2)\) and on \((2,\infty)\).</li>
+    <li>\(x=0\): \(y'=0\), and the derivative changes from \(+\) to \(-\), so
+      \((0,\tfrac14)\) is a <span class="ans">local maximum</span>.</li>
+  </ul>
+
+  <h3>Step 7 — Second derivative: concavity</h3>
+  <p>
+    \[
+      y''=\frac{d}{dx}\left(-6x(x^{2}-4)^{-2}\right)
+          =-6(x^{2}-4)^{-2}+(-6x)(-2)(x^{2}-4)^{-3}(2x)
+    \]
+    \[
+      =\frac{-6(x^{2}-4)+24x^{2}}{(x^{2}-4)^{3}}
+       =\frac{18x^{2}+24}{(x^{2}-4)^{3}}
+       =\frac{6(3x^{2}+4)}{(x^{2}-4)^{3}} .
+    \]
+    The numerator is always positive, so the sign of \(y''\) is the sign of
+    \((x^{2}-4)^{3}\).
+  </p>
+  <ul>
+    <li>\(|x|&gt;2\): \((x^{2}-4)^{3}&gt;0\) → concave up (∪).</li>
+    <li>\(|x|&lt;2\): \((x^{2}-4)^{3}&lt;0\) → concave down (∩).</li>
+    <li>No point of inflection, since \(y''\neq 0\) anywhere in the domain.</li>
+  </ul>
+
+  <h3>Step 8 — Behaviour on each branch</h3>
+  <ul>
+    <li>
+      On \((-2,2)\): \(y\) rises from \(-\infty\) at \(x\to-2^{+}\), crosses \((-1,0)\),
+      peaks at \((0,0.25)\), crosses \((1,0)\), and falls to \(-\infty\) as \(x\to 2^{-}\).
+      Here \(y\le \tfrac14\).
+    </li>
+    <li>
+      On \((2,\infty)\): \(y\) falls from \(+\infty\) at \(x\to 2^{+}\) towards the
+      horizontal asymptote \(y=1\) as \(x\to\infty\), always staying above \(1\).
+    </li>
+    <li>
+      The branch on \((-\infty,-2)\) is the mirror image.
+    </li>
+  </ul>
+
+  <h3>Step 9 — Sketch</h3>
+  <div class="graphwrap">
+    <svg id="curveGraph" viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+  <p class="note">
+    Cyan curve: \(y=\dfrac{x^{2}-1}{x^{2}-4}\). Pink dashed lines: vertical asymptotes
+    \(x=\pm 2\). Orange dashed line: horizontal asymptote \(y=1\).
+    Yellow dots: intercepts and the local maximum.
+  </p>
+</div>
+
+<!-- ============================ PROBLEM 5 ============================ -->
+<div class="q">
+  <h2>Problem 5 — Taylor Polynomial</h2>
+  <span class="marks">[5 marks]</span>
+  <p>
+    Find the Taylor polynomial of degree \(3\) for
+    \[
+      f(x)=\sqrt{1+x}
+    \]
+    about \(x=0\). Use it to approximate \(\sqrt{1.2}\). Estimate the error using
+    Lagrange's remainder term and compare with the actual value
+    \[
+      \sqrt{1.2}=1.095445115\ldots
+    \]
+  </p>
+  <button onclick="toggle('s5', this)">Show Solution</button>
+</div>
+
+<div class="sol" id="s5">
+  <h3>Step 1 — Write \(f\) as a power</h3>
+  <p>
+    \[
+      f(x)=(1+x)^{1/2},\qquad f(0)=1 .
+    \]
+  </p>
+
+  <h3>Step 2 — Compute derivatives at \(x=0\)</h3>
+  <p>
+    \[
+      f'(x)=\tfrac12(1+x)^{-1/2}
+      \quad\Longrightarrow\quad
+      f'(0)=\tfrac12 .
+    \]
+    \[
+      f''(x)=-\tfrac14(1+x)^{-3/2}
+      \quad\Longrightarrow\quad
+      f''(0)=-\tfrac14 .
+    \]
+    \[
+      f'''(x)=\tfrac{3}{8}(1+x)^{-5/2}
+      \quad\Longrightarrow\quad
+      f'''(0)=\tfrac{3}{8} .
+    \]
+  </p>
+
+  <h3>Step 3 — Assemble the Taylor polynomial</h3>
+  <p>
+    \[
+      P_{3}(x)=f(0)+f'(0)x+\frac{f''(0)}{2!}x^{2}+\frac{f'''(0)}{3!}x^{3}
+    \]
+    \[
+      P_{3}(x)=1+\frac{x}{2}+\frac{-1/4}{2}x^{2}+\frac{3/8}{6}x^{3}
+             =1+\frac{x}{2}-\frac{x^{2}}{8}+\frac{x^{3}}{16}.
+    \]
+    <span class="ans">So \(P_{3}(x)=1+\dfrac{x}{2}-\dfrac{x^{2}}{8}+\dfrac{x^{3}}{16}\).</span>
+  </p>
+
+  <h3>Step 4 — Approximate \(\sqrt{1.2}\)</h3>
+  <p>
+    Take \(x=0.2\):
+    \[
+      P_{3}(0.2)=1+\frac{0.2}{2}-\frac{(0.2)^{2}}{8}+\frac{(0.2)^{3}}{16}
+    \]
+    \[
+      =1+0.1-\frac{0.04}{8}+\frac{0.008}{16}
+      =1+0.1-0.005+0.0005
+      =1.0955 .
+    \]
+  </p>
+  <p class="ans">
+    Approximation: \(\sqrt{1.2}\approx 1.0955\).
+  </p>
+
+  <h3>Step 5 — Actual error</h3>
+  <p>
+    \[
+      \text{Actual value}=1.095445115\ldots
+    \]
+    \[
+      \text{Error}=1.0955-1.095445115
+      =0.000054885\approx 5.49\times10^{-5}.
+    \]
+  </p>
+
+  <h3>Step 6 — Lagrange remainder bound</h3>
+  <p>
+    The remainder after degree \(3\) is
+    \[
+      R_{3}(x)=\frac{f^{(4)}(\xi)}{4!}x^{4}
+      \quad\text{for some } \xi \text{ between } 0 \text{ and } x .
+    \]
+    The fourth derivative is
+    \[
+      f^{(4)}(x)=-\frac{15}{16}(1+x)^{-7/2},
+      \qquad |f^{(4)}(\xi)|\le \frac{15}{16}\ \text{ for }\xi\ge 0 .
+    \]
+    Therefore
+    \[
+      |R_{3}(0.2)|\le \frac{15/16}{24}(0.2)^{4}
+      =\frac{15}{384}\cdot 0.0016
+      =6.25\times10^{-5}.
+    \]
+  </p>
+  <p>
+    The true error \(5.49\times10^{-5}\) is indeed smaller than the bound
+    \(6.25\times10^{-5}\). ✓
+  </p>
+
+  <h3>Step 7 — Interpretation</h3>
+  <p>
+    The approximation is accurate to about \(5\times10^{-5}\), and the remainder formula
+    gives a rigorous guarantee of the same order. Note that the terms alternate in sign,
+    which is why the truncation error is small.
+  </p>
+  <p class="ans">
+    Answer: \(P_{3}(x)=1+\dfrac{x}{2}-\dfrac{x^{2}}{8}+\dfrac{x^{3}}{16}\);\;
+    \(\sqrt{1.2}\approx 1.0955\);\;
+    error \(\approx 5.49\times10^{-5}\) (bound \(6.25\times10^{-5}\)).
+  </p>
+</div>
+
+<footer>Quiz-2 · Prepared for first-year undergraduate calculus</footer>
+
+<!-- ============================ SCRIPTS ============================ -->
+<script>
+  /* ---------- Typeset a single element (safe wrapper) ---------- */
+  function typeset(el){
+    if(window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise([el]).catch(function(err){
+        console.warn('MathJax typeset error:', err);
+      });
+    } else if(window.MathJax && MathJax.typeset){
+      try { MathJax.typeset([el]); } catch(e){ /* noop */ }
+    }
+  }
+
+  /* ---------- Toggle a single solution ---------- */
+  function toggle(id, btn){
+    var el = document.getElementById(id);
+    if(el.style.display === 'block'){
+      el.style.display = 'none';
+      btn.textContent = 'Show Solution';
+      btn.classList.remove('open');
+    } else {
+      el.style.display = 'block';
+      btn.textContent = 'Hide Solution';
+      btn.classList.add('open');
+      /* Now that the container is visible, let MathJax render its LaTeX */
+      typeset(el);
+    }
+  }
+
+  /* ---------- Toggle every solution ---------- */
+  function toggleAll(){
+    var sols = document.querySelectorAll('.sol');
+    var btns = document.querySelectorAll('.q button');
+    var allBtn = document.getElementById('allBtn');
+    var anyHidden = false;
+    sols.forEach(function(s){ if(s.style.display !== 'block') anyHidden = true; });
+
+    sols.forEach(function(s, i){
+      if(anyHidden){
+        s.style.display = 'block';
+        btns[i].textContent = 'Hide Solution';
+        btns[i].classList.add('open');
+        typeset(s);
+      } else {
+        s.style.display = 'none';
+        btns[i].textContent = 'Show Solution';
+        btns[i].classList.remove('open');
+      }
+    });
+    allBtn.textContent = anyHidden ? 'Hide All Solutions' : 'Show All Solutions';
+    if(anyHidden) allBtn.classList.add('open'); else allBtn.classList.remove('open');
+  }
+
+  /* ---------- Draw the curve for Problem 4 ---------- */
+  function drawGraph(){
+    var svg = document.getElementById('curveGraph');
+    if(!svg) return;
+    var NS = 'http://www.w3.org/2000/svg';
+    var W = 520, H = 420;
+    var xmin = -6, xmax = 6, ymin = -5, ymax = 5;
+
+    function X(x){ return (x - xmin) / (xmax - xmin) * W; }
+    function Y(y){ return H - (y - ymin) / (ymax - ymin) * H; }
+    function f(x){ return (x*x - 1) / (x*x - 4); }
+    function mk(n, a){
+      var e = document.createElementNS(NS, n);
+      for(var k in a) e.setAttribute(k, a[k]);
+      return e;
+    }
+
+    /* clip region */
+    var defs = mk('defs', {});
+    var cp = mk('clipPath', {id: 'plotClip'});
+    cp.appendChild(mk('rect', {x:0, y:0, width:W, height:H}));
+    defs.appendChild(cp);
+    svg.appendChild(defs);
+
+    /* faint grid */
+    for(var gx = -6; gx <= 6; gx++){
+      svg.appendChild(mk('line', {x1:X(gx), y1:0, x2:X(gx), y2:H,
+                                  stroke:'#161616', 'stroke-width':1}));
+    }
+    for(var gy = -5; gy <= 5; gy++){
+      svg.appendChild(mk('line', {x1:0, y1:Y(gy), x2:W, y2:Y(gy),
+                                  stroke:'#161616', 'stroke-width':1}));
+    }
+
+    /* axes */
+    svg.appendChild(mk('line', {x1:0, y1:Y(0), x2:W, y2:Y(0),
+                                stroke:'#888888', 'stroke-width':1.6}));
+    svg.appendChild(mk('line', {x1:X(0), y1:0, x2:X(0), y2:H,
+                                stroke:'#888888', 'stroke-width':1.6}));
+
+    /* asymptotes */
+    svg.appendChild(mk('line', {x1:X(2), y1:0, x2:X(2), y2:H,
+        stroke:'#ff69b4', 'stroke-width':1.6, 'stroke-dasharray':'7 6'}));
+    svg.appendChild(mk('line', {x1:X(-2), y1:0, x2:X(-2), y2:H,
+        stroke:'#ff69b4', 'stroke-width':1.6, 'stroke-dasharray':'7 6'}));
+    svg.appendChild(mk('line', {x1:0, y1:Y(1), x2:W, y2:Y(1),
+        stroke:'#ff8c00', 'stroke-width':1.6, 'stroke-dasharray':'7 6'}));
+
+    /* the curve, drawn branch by branch */
+    var g = mk('g', {'clip-path':'url(#plotClip)'});
+    var branches = [[-6,-2],[-2,2],[2,6]];
+    branches.forEach(function(b){
+      var a = b[0], e = b[1], n = 900, d = '', first = true;
+      for(var i = 0; i <= n; i++){
+        var x = a + (e - a) * i / n;
+        var y = f(x);
+        if(!isFinite(y)) continue;
+        if(y > 60) y = 60;
+        if(y < -60) y = -60;
+        d += (first ? 'M' : 'L') + X(x).toFixed(2) + ' ' + Y(y).toFixed(2) + ' ';
+        first = false;
+      }
+      g.appendChild(mk('path', {d:d, fill:'none', stroke:'#00e5ff',
+                                'stroke-width':2.6, 'stroke-linejoin':'round'}));
+    });
+    svg.appendChild(g);
+
+    /* key points */
+    var pts = [[-1,0],[1,0],[0,0.25]];
+    pts.forEach(function(p){
+      svg.appendChild(mk('circle', {cx:X(p[0]), cy:Y(p[1]), r:4.5,
+                                    fill:'#ffd400', stroke:'#000000',
+                                    'stroke-width':1}));
+    });
+
+    /* labels */
+    function label(x, y, text, color, size){
+      var t = mk('text', {x:x, y:y, fill:color,
+                          'font-size': (size || 14),
+                          'font-family':'Georgia, serif'});
+      t.textContent = text;
+      svg.appendChild(t);
+    }
+    label(X(-1) - 4, Y(0) + 20, '(-1,0)', '#ffd400', 12);
+    label(X(1) + 6, Y(0) + 20, '(1,0)', '#ffd400', 12);
+    label(X(0) + 8, Y(0.25) - 10, '(0, 0.25)', '#ffd400', 12);
+    label(X(2) + 6, 20, 'x = 2', '#ff69b4', 13);
+    label(X(-2) - 60, 20, 'x = -2', '#ff69b4', 13);
+    label(W - 62, Y(1) - 8, 'y = 1', '#ff8c00', 13);
+    label(W - 20, Y(0) + 20, 'x', '#ffffff', 14);
+    label(X(0) + 10, 16, 'y', '#ffffff', 14);
+  }
+
+  /* ---------- Initial setup ---------- */
+  window.addEventListener('load', function(){
+    drawGraph();
+    if(window.MathJax && MathJax.startup && MathJax.startup.promise){
+      MathJax.startup.promise.then(function(){
+        MathJax.typesetPromise().catch(function(e){ console.warn(e); });
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
