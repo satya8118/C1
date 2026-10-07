@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculus Proofs — Differentiability, Symmetry &amp; Zeros</title>
+
+<!-- MathJax -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<style>
+  :root{
+    --yellow:#ffe14d;
+    --orange:#ff9f1c;
+    --lime:#b6ff3b;
+    --lime-soft:#d9ff8a;
+    --cyan:#4be1ff;
+    --white:#ffffff;
+    --pink:#ff7ac6;
+    --card:#0a0a0c;
+    --card2:#101014;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    padding:0 18px 90px;
+    background:#000000;
+    color:var(--white);
+    font-family:"Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size:17px;
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:940px;
+    margin:0 auto;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    padding:48px 0 24px;
+    border-bottom:2px dashed rgba(255,225,77,.35);
+    margin-bottom:34px;
+  }
+
+  h1{
+    color:var(--yellow);
+    font-size:2.05rem;
+    line-height:1.25;
+    margin:0 0 10px;
+    letter-spacing:.4px;
+    text-shadow:0 0 18px rgba(255,225,77,.28);
+  }
+
+  .subtitle{
+    color:var(--cyan);
+    font-size:1.02rem;
+    margin:0;
+  }
+
+  .subtitle .pink{ color:var(--pink); }
+  .subtitle .orange{ color:var(--orange); }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:22px 0 30px;
+  }
+
+  .tool-btn{
+    background:transparent;
+    border:2px solid var(--cyan);
+    color:var(--cyan);
+    padding:8px 18px;
+    border-radius:999px;
+    font-size:.92rem;
+    font-weight:600;
+    letter-spacing:.3px;
+    cursor:pointer;
+    transition:all .18s ease;
+  }
+  .tool-btn:hover{
+    background:var(--cyan);
+    color:#000;
+    box-shadow:0 0 16px rgba(75,225,255,.45);
+  }
+
+  /* ---------- Cards ---------- */
+  .card{
+    position:relative;
+    background:linear-gradient(160deg, var(--card2), var(--card));
+    border:1px solid rgba(255,255,255,.10);
+    border-left:5px solid var(--accent, var(--pink));
+    border-radius:14px;
+    padding:26px 26px 22px;
+    margin:0 0 30px;
+    box-shadow:0 6px 26px rgba(0,0,0,.85);
+  }
+
+  .qhead{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+  }
+
+  .badge{
+    display:inline-block;
+    background:var(--accent, var(--pink));
+    color:#000;
+    font-weight:800;
+    font-size:.78rem;
+    letter-spacing:1.1px;
+    text-transform:uppercase;
+    padding:4px 12px;
+    border-radius:999px;
+  }
+
+  .tag{
+    color:var(--orange);
+    font-size:.82rem;
+    font-style:italic;
+    letter-spacing:.4px;
+  }
+
+  .question{
+    color:var(--white);
+    font-size:1.03rem;
+  }
+  .question p{ margin:.55em 0; }
+  .question .hl{ color:var(--cyan); font-weight:600; }
+  .question .hl2{ color:var(--yellow); font-weight:600; }
+
+  /* ---------- Buttons inside cards ---------- */
+  .sol-btn{
+    margin-top:16px;
+    background:transparent;
+    border:2px solid var(--accent, var(--pink));
+    color:var(--accent, var(--pink));
+    padding:8px 22px;
+    border-radius:9px;
+    font-size:.9rem;
+    font-weight:700;
+    letter-spacing:.6px;
+    cursor:pointer;
+    transition:all .18s ease;
+  }
+  .sol-btn:hover{
+    background:var(--accent, var(--pink));
+    color:#000;
+  }
+  .sol-btn.active{
+    background:var(--accent, var(--pink));
+    color:#000;
+  }
+
+  /* ---------- Solutions ---------- */
+  .solution{
+    display:none;
+    margin-top:20px;
+    padding-top:20px;
+    border-top:1px dashed rgba(182,255,59,.40);
+    color:var(--lime-soft);
+  }
+  .solution.open{ display:block; }
+
+  .solution h3{
+    color:var(--lime);
+    font-size:1.0rem;
+    letter-spacing:.7px;
+    text-transform:uppercase;
+    margin:22px 0 8px;
+    border-left:3px solid var(--lime);
+    padding-left:10px;
+  }
+  .solution h3:first-child{ margin-top:0; }
+
+  .solution p{ margin:.7em 0; }
+
+  .solution b{ color:var(--lime); }
+  .solution em{ color:var(--yellow); font-style:italic; }
+  .solution .key{
+    color:var(--yellow);
+    font-weight:700;
+  }
+  .solution .cy{ color:var(--cyan); }
+  .solution .or{ color:var(--orange); }
+  .solution .pk{ color:var(--pink); }
+
+  .qed{
+    color:var(--pink);
+    font-weight:700;
+    float:right;
+  }
+
+  /* Boxed statement */
+  .box{
+    background:rgba(75,225,255,.06);
+    border:1px solid rgba(75,225,255,.35);
+    border-radius:10px;
+    padding:12px 16px;
+    margin:14px 0;
+    color:var(--cyan);
+  }
+
+  .warn{
+    background:rgba(255,159,28,.07);
+    border:1px solid rgba(255,159,28,.40);
+    border-radius:10px;
+    padding:12px 16px;
+    margin:14px 0;
+    color:var(--orange);
+  }
+
+  .note{
+    background:rgba(255,122,198,.07);
+    border:1px solid rgba(255,122,198,.35);
+    border-radius:10px;
+    padding:12px 16px;
+    margin:14px 0;
+    color:var(--pink);
+  }
+
+  ul, ol{ padding-left:22px; }
+  li{ margin:.35em 0; }
+
+  footer{
+    margin-top:50px;
+    padding-top:22px;
+    border-top:1px dashed rgba(255,122,198,.35);
+    color:var(--pink);
+    font-size:.88rem;
+    text-align:center;
+    letter-spacing:.4px;
+  }
+
+  /* MathJax overflow safety on small screens */
+  mjx-container[display="true"]{
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 0;
+  }
+
+  @media (max-width:620px){
+    body{ font-size:16px; padding:0 12px 70px; }
+    h1{ font-size:1.55rem; }
+    .card{ padding:20px 16px 18px; }
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Calculus Proofs — Differentiability, Symmetry &amp; Zeros</h1>
+    <p class="subtitle">
+      Six exercises with full solutions.
+      <span class="pink">Read the question</span>, try it yourself,
+      then press <span class="orange">“Show Solution.”</span>
+    </p>
+  </header>
+
+  <div class="toolbar">
+    <button class="tool-btn" onclick="toggleAll(true, this)">Show All Solutions</button>
+    <button class="tool-btn" onclick="toggleAll(false, this)">Hide All Solutions</button>
+  </div>
+
+  <!-- ============================================================
+       PROBLEM 1
+  ============================================================= -->
+  <article class="card" style="--accent: var(--pink);">
+    <div class="qhead">
+      <span class="badge">Problem 1</span>
+      <span class="tag">Symmetry of the derivative</span>
+    </div>
+
+    <div class="question">
+      <p>Suppose \(f:\mathbb{R}\to\mathbb{R}\) is differentiable at every point, so that we have \(f':\mathbb{R}\to\mathbb{R}\). Prove:</p>
+      <p><span class="hl">(a)</span> If \(f\) is even then \(f'\) is odd.</p>
+      <p><span class="hl">(b)</span> If \(f\) is odd then \(f'\) is even.</p>
+    </div>
+
+    <button class="sol-btn" onclick="toggle('s1', this)">Show Solution</button>
+
+    <div class="solution" id="s1">
+
+      <h3>Key idea</h3>
+      <p>
+        “\(f\) is even” and “\(f\) is odd” are <em>identities between two functions</em>:
+        \(f(-x)=f(x)\) and \(f(-x)=-f(x)\). Since both sides are differentiable functions of
+        \(x\), we may differentiate both sides and equate. The only tool needed is the
+        <span class="key">chain rule</span>, applied to the composite \(x\mapsto f(-x)\).
+      </p>
+
+      <div class="box">
+        <b>Chain rule reminder.</b> If \(u(x)=-x\), then \(u'(x)=-1\), and
+        \[
+          \frac{d}{dx}\,f(-x)=\frac{d}{dx}\,(f\circ u)(x)=f'\bigl(u(x)\bigr)\,u'(x)=f'(-x)\cdot(-1)=-f'(-x).
+        \]
+      </div>
+
+      <h3>(a) \(f\) even \(\Longrightarrow\) \(f'\) odd</h3>
+
+      <p><b>Step 1 — Write down the hypothesis.</b> \(f\) even means</p>
+      \[
+        f(-x)=f(x)\qquad\text{for every }x\in\mathbb{R}.
+      \]
+
+      <p><b>Step 2 — Differentiate the left-hand side.</b> Using the chain rule with \(u(x)=-x\),</p>
+      \[
+        \frac{d}{dx}\,f(-x)=f'(-x)\cdot(-1)=-f'(-x).
+      \]
+
+      <p><b>Step 3 — Differentiate the right-hand side.</b></p>
+      \[
+        \frac{d}{dx}\,f(x)=f'(x).
+      \]
+
+      <p>
+        <b>Step 4 — Equate.</b> Two functions that agree for every real \(x\) have the same
+        derivative at every real \(x\). Hence
+      </p>
+      \[
+        -f'(-x)=f'(x)
+        \qquad\Longleftrightarrow\qquad
+        \boxed{\,f'(-x)=-f'(x)\ \ \text{for all }x\in\mathbb{R}\,}
+      \]
+      <p>
+        and this is precisely the definition of \(f'\) being <b>odd</b>.
+        <span class="qed">\(\blacksquare\)</span>
+      </p>
+
+      <h3>(b) \(f\) odd \(\Longrightarrow\) \(f'\) even</h3>
+
+      <p><b>Step 1 — Hypothesis.</b> \(f\) odd means</p>
+      \[
+        f(-x)=-f(x)\qquad\text{for every }x\in\mathbb{R}.
+      \]
+
+      <p><b>Step 2 — Differentiate the left-hand side</b> (chain rule, as above):</p>
+      \[
+        \frac{d}{dx}\,f(-x)=-f'(-x).
+      \]
+
+      <p><b>Step 3 — Differentiate the right-hand side.</b> The derivative of \(-f(x)\) is \(-f'(x)\):</p>
+      \[
+        \frac{d}{dx}\bigl(-f(x)\bigr)=-f'(x).
+      \]
+
+      <p><b>Step 4 — Equate.</b></p>
+      \[
+        -f'(-x)=-f'(x)
+        \qquad\Longleftrightarrow\qquad
+        \boxed{\,f'(-x)=f'(x)\ \ \text{for all }x\in\mathbb{R}\,}
+      \]
+      <p>
+        That is exactly the statement that \(f'\) is <b>even</b>.
+        <span class="qed">\(\blacksquare\)</span>
+      </p>
+
+      <h3>Why this is believable — the geometry</h3>
+      <p>
+        If \(f\) is even, its graph is a mirror image across the \(y\)-axis. The tangent line
+        at \(x\) and the tangent line at \(-x\) are mirror images too, and mirroring across the
+        \(y\)-axis flips the <em>sign</em> of a slope. So the slope at \(-x\) is the negative of
+        the slope at \(x\): \(f'(-x)=-f'(x)\).
+      </p>
+      <p>
+        If \(f\) is odd, its graph is symmetric about the origin (a \(180^\circ\) rotation).
+        Rotating by \(180^\circ\) about the origin <em>preserves</em> a slope, so
+        \(f'(-x)=f'(x)\): the derivative is even.
+      </p>
+
+      <h3>Quick sanity checks</h3>
+      <ul>
+        <li>\(f(x)=x^2\) (even) \(\Rightarrow\) \(f'(x)=2x\), which is odd. ✓</li>
+        <li>\(f(x)=\cos x\) (even) \(\Rightarrow\) \(f'(x)=-\sin x\), which is odd. ✓</li>
+        <li>\(f(x)=x^3\) (odd) \(\Rightarrow\) \(f'(x)=3x^2\), which is even. ✓</li>
+        <li>\(f(x)=\sin x\) (odd) \(\Rightarrow\) \(f'(x)=\cos x\), which is even. ✓</li>
+      </ul>
+
+      <div class="warn">
+        <b>Where the hypothesis is used.</b> “Differentiable at every point” lets us
+        differentiate the identity \(f(-x)=\pm f(x)\) at <em>every</em> \(x\), and it lets us
+        use the chain rule at every \(x\). In Problem 2 we will only assume differentiability
+        at the single point \(0\), and there the argument must be redone more carefully.
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ============================================================
+       PROBLEM 2
+  ============================================================= -->
+  <article class="card" style="--accent: var(--cyan);">
+    <div class="qhead">
+      <span class="badge">Problem 2</span>
+      <span class="tag">Even function at the origin</span>
+    </div>
+
+    <div class="question">
+      <p>Suppose \(f\) is an <span class="hl">even</span> function which is differentiable at \(0\). Show that</p>
+      \[ f'(0)=0. \]
+    </div>
+
+    <button class="sol-btn" onclick="toggle('s2', this)">Show Solution</button>
+
+    <div class="solution" id="s2">
+
+      <h3>Proof 1 — directly from the definition of the derivative</h3>
+
+      <p><b>Step 1 — Write the derivative at \(0\).</b> By definition,</p>
+      \[
+        f'(0)=\lim_{h\to 0}\frac{f(h)-f(0)}{h}.
+      \]
+
+      <p>
+        <b>Step 2 — Let \(h\to 0\) through negative values.</b> As \(h\) runs over all nonzero
+        numbers tending to \(0\), so does \(-h\); substituting \(h\mapsto -h\) does not change
+        the limit:
+      </p>
+      \[
+        f'(0)=\lim_{h\to 0}\frac{f(-h)-f(0)}{-h}.
+      \]
+
+      <p><b>Step 3 — Use evenness.</b> Since \(f(-h)=f(h)\),</p>
+      \[
+        f'(0)=\lim_{h\to 0}\frac{f(h)-f(0)}{-h}
+              =-\lim_{h\to 0}\frac{f(h)-f(0)}{h}
+              =-f'(0).
+      \]
+
+      <p><b>Step 4 — Conclude.</b> From \(f'(0)=-f'(0)\),</p>
+      \[
+        2f'(0)=0
+        \qquad\Longrightarrow\qquad
+        \boxed{\,f'(0)=0\,}
+      \]
+      <p><span class="qed">\(\blacksquare\)</span></p>
+
+      <h3>Proof 2 — as a corollary of Problem 1(a)</h3>
+      <p>
+        If \(f\) happens to be differentiable on all of \(\mathbb{R}\), Problem 1(a) says
+        \(f'\) is <em>odd</em>. An odd function \(g\) satisfies \(g(-x)=-g(x)\); taking \(x=0\)
+        gives
+      </p>
+      \[
+        g(0)=-g(0)\quad\Longrightarrow\quad 2g(0)=0\quad\Longrightarrow\quad g(0)=0.
+      \]
+      <p>
+        With \(g=f'\) this is \(f'(0)=0\). This is the cleanest way to see it — but note that
+        it uses differentiability <em>everywhere</em>, whereas the statement only assumes
+        differentiability at \(0\). <span class="pk">Proof 1 is the one that matches the
+        hypothesis exactly.</span>
+      </p>
+
+      <h3>Geometric meaning</h3>
+      <p>
+        An even function has a graph symmetric about the \(y\)-axis. At \(x=0\), the
+        left-hand slope and the right-hand slope must therefore be negatives of each other.
+        But differentiability at \(0\) says these two one-sided slopes are actually
+        <em>equal</em>. The only number equal to its own negative is \(0\). Hence the tangent
+        line at \(x=0\) is horizontal.
+      </p>
+
+      <div class="note">
+        <b>Contrast with odd functions.</b> An odd differentiable function satisfies
+        \(f(0)=0\), but nothing forces \(f'(0)=0\). Indeed \(f(x)=x\) is odd and \(f'(0)=1\).
+        Evenness is what kills the slope at the origin.
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ============================================================
+       PROBLEM 3
+  ============================================================= -->
+  <article class="card" style="--accent: var(--lime);">
+    <div class="qhead">
+      <span class="badge">Problem 3</span>
+      <span class="tag">Logarithmic differentiation</span>
+    </div>
+
+    <div class="question">
+      <p>
+        Let \(f\) take only <span class="hl">positive</span> values. Show that \(f\) is
+        differentiable if and only if \(\log\circ f\) is differentiable.
+      </p>
+      <p style="font-size:.92rem;color:var(--orange);margin-top:10px;">
+        (Precisely: \(f:I\to(0,\infty)\) on an interval \(I\), and the equivalence is meant
+        pointwise / on all of \(I\).)
+      </p>
+    </div>
+
+    <button class="sol-btn" onclick="toggle('s3', this)">Show Solution</button>
+
+    <div class="solution" id="s3">
+
+      <h3>The two ingredients</h3>
+      <div class="box">
+        <b>(i) \(\log\) is differentiable on \((0,\infty)\)</b>, with
+        \(\dfrac{d}{dx}\log x=\dfrac{1}{x}\), and \(\dfrac{1}{x}\neq 0\) there.<br><br>
+        <b>(ii) \(\exp\) is differentiable on all of \(\mathbb{R}\)</b>, with
+        \(\dfrac{d}{dx}e^{x}=e^{x}\), and \(e^{x}\neq 0\) everywhere.<br><br>
+        Also, \(\log\) and \(\exp\) are inverse to each other:
+        \(\exp(\log y)=y\) for \(y>0\), and \(\log(e^{x})=x\).
+      </div>
+
+      <p>
+        Both directions are just the <span class="key">chain rule</span> applied to a
+        composition. The hypothesis “\(f\) takes only positive values” guarantees that
+        \(\log\circ f\) is even <em>defined</em>, and that we never divide by zero.
+      </p>
+
+      <h3>Direction 1: \(f\) differentiable \(\Longrightarrow\) \(\log\circ f\) differentiable</h3>
+
+      <p>
+        Fix \(c\in I\). The function \(\log\) is differentiable at the point \(f(c)\), because
+        \(f(c)>0\). The function \(f\) is differentiable at \(c\) by hypothesis. A composition
+        of differentiable functions is differentiable, so \(\log\circ f\) is differentiable
+        at \(c\), and the chain rule gives
+      </p>
+      \[
+        \boxed{\;(\log\circ f)'(c)=\frac{1}{f(c)}\,f'(c)=\frac{f'(c)}{f(c)}\;}
+      \]
+      <p>Since \(c\in I\) was arbitrary, \(\log\circ f\) is differentiable on \(I\). <span class="qed">\(\blacksquare\)</span></p>
+
+      <h3>Direction 2: \(\log\circ f\) differentiable \(\Longrightarrow\) \(f\) differentiable</h3>
+
+      <p>
+        Fix \(c\in I\). Because \(\log\circ f\) is differentiable at \(c\), it is in particular
+        <em>defined</em> at \(c\), so \(f(c)>0\). Now use the inverse relationship
+      </p>
+      \[
+        f(x)=\exp\bigl(\log f(x)\bigr)=\bigl(\exp\circ(\log\circ f)\bigr)(x).
+      \]
+      <p>
+        The exponential is differentiable at the point \(\log f(c)\in\mathbb{R}\) (indeed
+        everywhere), and \(\log\circ f\) is differentiable at \(c\). Hence the composition
+        \(f=\exp\circ(\log\circ f)\) is differentiable at \(c\), and the chain rule gives
+      </p>
+      \[
+        f'(c)=\exp\bigl(\log f(c)\bigr)\cdot(\log\circ f)'(c)
+             =f(c)\cdot(\log\circ f)'(c).
+      \]
+      <p>Since \(c\in I\) was arbitrary, \(f\) is differentiable on \(I\). <span class="qed">\(\blacksquare\)</span></p>
+
+      <h3>Summary of the two formulas</h3>
+      \[
+        (\log\circ f)'=\frac{f'}{f},
+        \qquad\qquad
+        f'=f\cdot(\log\circ f)'.
+      \]
+      <p>They are literally the same identity, read in two directions.</p>
+
+      <h3>Why positivity is essential</h3>
+      <ul>
+        <li>
+          If \(f(c)\le 0\) for some \(c\), then \(\log f(c)\) is undefined (for \(f(c)=0\))
+          or not real (for \(f(c)<0\)), so \(\log\circ f\) is not even a function near \(c\).
+        </li>
+        <li>
+          If \(f\) were allowed to vanish, the formula \((\log\circ f)'=f'/f\) would break
+          down by division by zero.
+        </li>
+        <li>
+          Positivity also makes \(f\) nowhere zero, so the composition with \(\exp\) recovers
+          \(f\) exactly.
+        </li>
+      </ul>
+
+      <div class="note">
+        <b>Application (logarithmic differentiation).</b> For a positive function \(f\),
+        the derivative of \(\log f\) is \(f'/f\), which is called the <em>logarithmic
+        derivative</em>. It is often far easier to compute than \(f'\) directly, and then one
+        recovers \(f'=f\cdot(\log f)'\). Example: for \(f(x)=x^{x}\) (on \(x>0\)),
+        \(\log f=x\log x\), so \((\log f)'=\log x+1\), and therefore
+        \(f'(x)=x^{x}(\log x+1)\).
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ============================================================
+       PROBLEM 4
+  ============================================================= -->
+  <article class="card" style="--accent: var(--orange);">
+    <div class="qhead">
+      <span class="badge">Problem 4</span>
+      <span class="tag">Polynomial vs. sine</span>
+    </div>
+
+    <div class="question">
+      <p>
+        Can there be a polynomial \(p(x)\) such that
+        \(p(x)=\sin x\) on the interval \((-\pi,\pi)\)?
+      </p>
+    </div>
+
+    <button class="sol-btn" onclick="toggle('s4', this)">Show Solution</button>
+
+    <div class="solution" id="s4">
+
+      <h3>Answer</h3>
+      <p style="font-size:1.15rem;">
+        <span class="pk"><b>No.</b></span> No polynomial agrees with \(\sin x\) on \((-\pi,\pi)\).
+      </p>
+
+      <h3>The key principle</h3>
+      <div class="box">
+        If two differentiable functions agree on an open interval, then they have the same
+        derivatives of every order on that interval. In particular, if a polynomial \(p\)
+        agrees with \(\sin\) on \((-\pi,\pi)\), then for every \(k\ge 0\),
+        \[
+          p^{(k)}(x)=(\sin)^{(k)}(x)\qquad\text{for all }x\in(-\pi,\pi).
+        \]
+      </div>
+
+      <h3>Proof 1 — derivatives eventually vanish for a polynomial, but not for sine</h3>
+
+      <p><b>Step 1 — Assume, for contradiction, that such a \(p\) exists.</b></p>
+      \[
+        p(x)=\sin x\qquad\text{for all }x\in(-\pi,\pi).
+      \]
+
+      <p><b>Step 2 — Differentiate \(k\) times.</b> Since \(p\) is a polynomial it is
+      infinitely differentiable, and \(\sin\) is infinitely differentiable, so for every
+      \(k\ge 0\),</p>
+      \[
+        p^{(k)}(x)=(\sin)^{(k)}(x)\qquad\text{for all }x\in(-\pi,\pi).
+      \]
+
+      <p><b>Step 3 — Choose \(k>\deg p\).</b> The \((k)\)-th derivative of a polynomial of
+      degree \(n\) is identically zero whenever \(k>n\). So</p>
+      \[
+        p^{(k)}(x)=0\qquad\text{for all }x\in(-\pi,\pi).
+      \]
+      <p>Combining with Step 2,</p>
+      \[
+        (\sin)^{(k)}(x)=0\qquad\text{for all }x\in(-\pi,\pi).
+      \]
+
+      <p><b>Step 4 — Contradiction.</b> The derivatives of sine cycle with period \(4\):</p>
+      \[
+        \sin,\ \cos,\ -\sin,\ -\cos,\ \sin,\ \cos,\ -\sin,\ -\cos,\ \dots
+      \]
+      So \((\sin)^{(k)}\) is always one of \(\pm\sin\) or \(\pm\cos\). None of these is
+      identically zero on \((-\pi,\pi)\): for instance
+      \(\cos 0=1\neq 0\) and \(\sin\frac{\pi}{2}=1\neq 0\). Hence
+      \((\sin)^{(k)}\not\equiv 0\), a contradiction.
+      <span class="qed">\(\blacksquare\)</span>
+
+      <h3>Proof 2 — a differential-equation argument</h3>
+
+      <p>Assume \(p(x)=\sin x\) on \((-\pi,\pi)\). Differentiate twice:</p>
+      \[
+        p'(x)=\cos x,\qquad p''(x)=-\sin x=-p(x)
+        \qquad\text{on }(-\pi,\pi).
+      \]
+      <p>Therefore the polynomial \(q(x):=p''(x)+p(x)\) satisfies</p>
+      \[
+        q(x)=0\qquad\text{for all }x\in(-\pi,\pi).
+      \]
+
+      <p>
+        A polynomial with infinitely many roots must be the zero polynomial. So
+        \(q\equiv 0\) as a polynomial.
+      </p>
+
+      <p>
+        But if \(p(x)=a_nx^{n}+a_{n-1}x^{n-1}+\cdots+a_0\) with \(n\ge 0\) and
+        \(a_n\neq 0\), then \(p''\) has degree \(n-2\) (or is \(0\) if \(n\le 1\)), so the
+        highest-degree term of \(p''+p\) is again \(a_nx^{n}\). Hence
+        \(p''+p\) has degree \(n\ge 0\) with leading coefficient \(a_n\neq 0\) — it cannot
+        be the zero polynomial. Contradiction.
+        <span class="qed">\(\blacksquare\)</span>
+      </p>
+
+      <h3>Remarks and intuition</h3>
+      <ul>
+        <li>
+          <b>Why restricting to \((-\pi,\pi)\) does not rescue us.</b> The obstruction is
+          <em>local</em>: agreement on any nonempty open interval already forces all
+          derivatives to match there. A polynomial simply cannot mimic the endless
+          oscillatory derivative pattern of sine.
+        </li>
+        <li>
+          <b>Agreement on a single point is fine.</b> For example, the constant polynomial
+          \(p(x)=0\) equals \(\sin x\) at \(x=0\). Agreement on an open set is what is
+          impossible.
+        </li>
+        <li>
+          <b>Comparison with Taylor polynomials.</b> The Taylor polynomial
+          \(T_{2n+1}(x)=x-\frac{x^3}{3!}+\cdots+\frac{(-1)^nx^{2n+1}}{(2n+1)!}\) agrees with
+          \(\sin x\) in value and in the first \(2n+1\) derivatives <em>at the single point
+          \(0\)</em> — but never on the whole interval. As \(n\to\infty\) the approximations
+          converge to \(\sin\) on \((-\pi,\pi)\), but no finite one equals it.
+        </li>
+        <li>
+          <b>Deeper reason.</b> \(\sin\) has infinitely many real zeros
+          (\(x=k\pi\), \(k\in\mathbb{Z}\)), while a nonzero polynomial has only finitely many.
+          That argument needs a slightly larger domain, which is why the derivative argument
+          above is the sharper one for the interval \((-\pi,\pi)\).
+        </li>
+      </ul>
+
+    </div>
+  </article>
+
+  <!-- ============================================================
+       PROBLEM 6
+  ============================================================= -->
+  <article class="card" style="--accent: var(--pink);">
+    <div class="qhead">
+      <span class="badge">Problem 5</span>
+      <span class="tag">Squeezing an integral to zero</span>
+    </div>
+
+    <div class="question">
+      <p>
+        Let \(f,g:[0,1]\to\mathbb{R}\) with \(0\le f(x)\le g(x)\) for every \(x\in[0,1]\),
+        and \(\displaystyle\int_{0}^{1} g(x)\,dx=0\). Then
+        \(\displaystyle\int_{0}^{1} f(x)\,dx=0\).
+      </p>
+    </div>
+
+    <button class="sol-btn" onclick="toggle('s6', this)">Show Solution</button>
+
+    <div class="solution" id="s6">
+
+      <h3>Setup</h3>
+      <p>
+        Assume \(f\) and \(g\) are Riemann integrable on \([0,1]\) (the statement speaks of
+        the integrals, so both integrals exist). The proof is a two-line
+        <span class="key">squeeze</span> using monotonicity of the integral.
+      </p>
+
+      <h3>The two properties of the integral we use</h3>
+      <div class="box">
+        <b>(Monotonicity.)</b> If \(u,v\) are Riemann integrable on \([0,1]\) and
+        \(u(x)\le v(x)\) for all \(x\in[0,1]\), then
+        \[
+          \int_{0}^{1}u(x)\,dx\;\le\;\int_{0}^{1}v(x)\,dx .
+        \]
+      </div>
+
+      <h3>Proof</h3>
+
+      <p><b>Step 1 — The integral of \(f\) is nonnegative.</b></p>
+      <p>
+        Since \(f(x)\ge 0\) on \([0,1]\), every Riemann sum
+        \(\sum_{i} f(t_i)\,\Delta x_i\) is a sum of nonnegative terms, hence is \(\ge 0\).
+        Passing to the limit (or using that the lower sums are \(\ge 0\) and the integral is
+        their supremum),
+      </p>
+      \[
+        \int_{0}^{1}f(x)\,dx\;\ge\;0 .
+      \]
+
+      <p><b>Step 2 — The integral of \(f\) is at most the integral of \(g\).</b></p>
+      <p>
+        Since \(f(x)\le g(x)\) on \([0,1]\), monotonicity of the integral gives
+      </p>
+      \[
+        \int_{0}^{1}f(x)\,dx\;\le\;\int_{0}^{1}g(x)\,dx .
+      \]
+
+      <p><b>Step 3 — Use the hypothesis.</b> The hypothesis says
+      \(\int_{0}^{1}g=0\). Combining Steps 1 and 2,</p>
+      \[
+        0\;\le\;\int_{0}^{1}f(x)\,dx\;\le\;\int_{0}^{1}g(x)\,dx\;=\;0 .
+      \]
+
+      <p><b>Step 4 — Conclude.</b> A real number squeezed between \(0\) and \(0\) is \(0\):</p>
+      \[
+        \boxed{\;\int_{0}^{1}f(x)\,dx=0\;}
+      \]
+      <p><span class="qed">\(\blacksquare\)</span></p>
+
+      <h3>Understanding what just happened</h3>
+      <p>
+        The hypothesis \(0\le f\le g\) makes \(f\) a “sandwich filling.” Since \(g\) is
+        nonnegative and has zero integral, \(g\) carries no area at all; and \(f\), being
+        trapped between \(0\) and \(g\), cannot carry any area either.
+      </p>
+
+      <div class="note">
+        <b>Finer consequences.</b> Let \(g\ge 0\) be Riemann integrable with
+        \(\int_{0}^{1}g=0\).
+        <ul style="margin:.5em 0 0;">
+          <li>
+            \(g\) must equal \(0\) at every point where \(g\) is continuous. (If \(g(c)>0\) at a
+            continuity point \(c\), then \(g>g(c)/2\) on a small interval around \(c\), giving a
+            positive integral — a contradiction.)
+          </li>
+          <li>
+            Consequently \(g=0\) “almost everywhere,” and since \(0\le f\le g\), the same
+            holds for \(f\). In particular \(\int_{0}^{1}f=0\), as proved.
+          </li>
+          <li>
+            If in addition \(f\) is <em>continuous</em> on \([0,1]\), then \(f\equiv 0\)
+            everywhere on \([0,1]\), not merely almost everywhere — because a continuous
+            function that vanishes on a dense set vanishes identically.
+          </li>
+        </ul>
+      </div>
+
+      <div class="warn">
+        <b>Common mistake.</b> Do not try to conclude \(g\equiv 0\) from
+        \(\int g=0\) without extra assumptions (such as continuity). A nonnegative
+        function can be nonzero at infinitely many points and still have zero integral; only
+        continuity (or positivity at a continuity point) rules this out.
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ============================================================
+       PROBLEM 7
+  ============================================================= -->
+  <article class="card" style="--accent: var(--cyan);">
+    <div class="qhead">
+      <span class="badge">Problem 6</span>
+      <span class="tag">Nonzero derivative ⇒ local injectivity</span>
+    </div>
+
+    <div class="question">
+      <p>
+        Let \(f:(a,b)\to\mathbb{R}\) be differentiable at \(c\in(a,b)\). Assume that
+        \(f'(c)\neq 0\). Show that there exists \(\delta>0\) such that for
+        \(x\in(c-\delta,c+\delta)\cap(a,b)\) with \(x\neq c\), we have
+      </p>
+      \[ f(x)\neq f(c). \]
+    </div>
+
+    <button class="sol-btn" onclick="toggle('s7', this)">Show Solution</button>
+
+    <div class="solution" id="s7">
+
+      <h3>What the statement really says</h3>
+      <p>
+        It says that \(f\) is <span class="key">locally injective at \(c\)</span>: sufficiently
+        close to \(c\), the function \(f\) never repeats the value \(f(c)\). Equivalently,
+        the horizontal line \(y=f(c)\) meets the graph of \(f\) only at the point \((c,f(c))\),
+        at least near \(c\).
+      </p>
+      <p style="font-size:.94rem;color:var(--orange);">
+        (Note: at \(x=c\) we always have \(f(x)=f(c)\), so the condition must be read for
+        \(x\neq c\).)
+      </p>
+
+      <h3>Proof — an \(\varepsilon\)–\(\delta\) argument</h3>
+
+      <p><b>Step 1 — Name the slope.</b> Put</p>
+      \[
+        L:=f'(c)\neq 0 .
+      \]
+
+      <p><b>Step 2 — Choose a radius smaller than \(|L|\).</b> Since \(|L|>0\), the number</p>
+      \[
+        \varepsilon:=\frac{|L|}{2}>0
+      \]
+      is a legitimate choice of \(\varepsilon\).
+
+      <p><b>Step 3 — Apply the definition of the limit.</b> By definition of
+      \(f'(c)=L\),</p>
+      \[
+        L=\lim_{x\to c}\frac{f(x)-f(c)}{x-c},
+      \]
+      <p>so for our chosen \(\varepsilon=|L|/2\) there exists \(\delta_1>0\) such that</p>
+      \[
+        0<|x-c|<\delta_1
+        \quad\Longrightarrow\quad
+        \left|\frac{f(x)-f(c)}{x-c}-L\right|<\frac{|L|}{2}.
+      \]
+
+      <p><b>Step 4 — Shrink \(\delta\) so the whole neighbourhood lies in \((a,b)\).</b>
+      Since \(c\in(a,b)\) is an interior point, there is \(\delta_2>0\) with
+      \((c-\delta_2,c+\delta_2)\subseteq(a,b)\). Put</p>
+      \[
+        \delta:=\min\{\delta_1,\delta_2\}>0 .
+      \]
+
+      <p><b>Step 5 — Use the reverse triangle inequality.</b> For
+      \(0<|x-c|<\delta\),</p>
+      \[
+        \left|\frac{f(x)-f(c)}{x-c}\right|
+        =\left|L+\left(\frac{f(x)-f(c)}{x-c}-L\right)\right|
+        \ge |L|-\left|\frac{f(x)-f(c)}{x-c}-L\right|
+        >|L|-\frac{|L|}{2}=\frac{|L|}{2}>0 .
+      \]
+
+      <p><b>Step 6 — Conclude.</b> The quotient
+      \(\dfrac{f(x)-f(c)}{x-c}\) has nonzero absolute value, so it is not zero. Since
+      \(x-c\neq 0\), the numerator must be nonzero:</p>
+      \[
+        f(x)-f(c)\neq 0
+        \qquad\Longrightarrow\qquad
+        \boxed{\,f(x)\neq f(c)\,}
+      \]
+      <p>for every \(x\in(c-\delta,c+\delta)\cap(a,b)\) with \(x\neq c\).
+      <span class="qed">\(\blacksquare\)</span></p>
+
+      <h3>The idea in one sentence</h3>
+      <p>
+        A nonzero derivative means the difference quotient is <em>bounded away from zero</em>
+        near \(c\) — it stays at least \(|L|/2\) in absolute value — so the numerator
+        \(f(x)-f(c)\) can never vanish while \(x\neq c\).
+      </p>
+
+      <h3>Why \(f'(c)\neq 0\) is necessary</h3>
+      <p>If \(f'(c)=0\), the conclusion can fail badly:</p>
+      <ul>
+        <li>\(f(x)=x^{2}\) at \(c=0\): \(f'(0)=0\), and \(f(x)=f(0)\) only at \(x=0\) — here the conclusion happens to hold, but not for the reason above.</li>
+        <li>\(f(x)=x^{3}\) at \(c=0\): \(f'(0)=0\), \(f(x)=f(0)\) only at \(x=0\) — again it holds accidentally.</li>
+        <li>\(f(x)\equiv \text{const}\): \(f'(c)=0\) and \(f(x)=f(c)\) for <em>all</em> \(x\) — the conclusion fails completely.</li>
+        <li>\(f(x)=x^{2}\sin(1/x)\) (with \(f(0)=0\)) has \(f'(0)=0\) and \(f\) takes the value \(0\) infinitely often in every neighbourhood of \(0\) — failure.</li>
+      </ul>
+      <p>
+        So \(f'(c)\neq 0\) is a genuine sufficient condition for local injectivity; it is not
+        necessary, as \(x^{3}\) shows.
+      </p>
+
+      <div class="note">
+        <b>Geometric picture.</b> If \(f'(c)\neq 0\), the tangent line at \(c\) is not
+        horizontal. Near \(c\) the graph is “transverse” to the horizontal line \(y=f(c)\),
+        crossing it exactly once in a small window. If \(f'(c)=0\), the tangent is
+        horizontal and the graph can hug, touch, or even run along the level line
+        \(y=f(c)\).
+      </div>
+
+      <div class="warn">
+        <b>Careful.</b> The conclusion is <em>local</em>: it only guarantees that \(f\) does not
+        repeat the particular value \(f(c)\) near \(c\). It does not say \(f\) is injective
+        on \((a,b)\), and it does not say \(f\) is injective on \((c-\delta,c+\delta)\)
+        as a whole — only that \(f(x)\neq f(c)\) there.
+      </div>
+
+    </div>
+  </article>
+
+  <footer>
+    Differentiability · Symmetry · Logarithmic differentiation · Integrals · Local injectivity
+  </footer>
+
+</div>
+
+<script>
+  function toggle(id, btn){
+    var box = document.getElementById(id);
+    if(!box) return;
+    var isOpen = box.classList.toggle('open');
+    btn.textContent = isOpen ? 'Hide Solution' : 'Show Solution';
+    btn.classList.toggle('active', isOpen);
+    if(isOpen && window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise([box]).catch(function(){});
+    }
+  }
+
+  function toggleAll(open, btn){
+    var boxes = document.querySelectorAll('.solution');
+    var buttons = document.querySelectorAll('.sol-btn');
+    var i;
+    for(i = 0; i < boxes.length; i++){
+      boxes[i].classList.toggle('open', open);
+    }
+    for(i = 0; i < buttons.length; i++){
+      buttons[i].textContent = open ? 'Hide Solution' : 'Show Solution';
+      buttons[i].classList.toggle('active', open);
+    }
+    if(open && window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise().catch(function(){});
+    }
+  }
+</script>
+
+</body>
+</html>
