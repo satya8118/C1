@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 18 – Boundedness & Extreme Value Theorems</title>
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        :root { 
+            --bg: #000000; 
+            --text-white: #ffffff;
+            --yellow: #ffee55;
+            --orange: #ff9900;
+            --cyan: #00e5ff;
+            --lime: #00ff66;
+            --pink: #ff007f;
+            --card-bg: #111111;
+            --box-bg: #181818;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-white);
+            background: var(--bg);
+            padding: 20px 20px 100px 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--yellow);
+            border-bottom: 2px solid var(--pink);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--cyan);
+            font-size: 1.1rem;
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--lime);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .step {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: none;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .tcolorbox {
+            background: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .tcolorbox-header {
+            padding: 12px 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            background: #1a1a1a;
+        }
+
+        .tcolorbox.purple .tcolorbox-header {
+            color: var(--pink);
+            border-bottom: 2px solid var(--pink);
+        }
+
+        .tcolorbox-content {
+            padding: 20px;
+        }
+
+        .proof-box {
+            background: #141414;
+            border-left: 4px dashed var(--orange);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 0.98rem;
+        }
+
+        .quiz-card {
+            background: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--yellow);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .btn-sol {
+            background: transparent;
+            border: 1px solid var(--lime);
+            color: var(--lime);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sol:hover {
+            background: var(--lime);
+            color: #000000;
+        }
+
+        .solution {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-top: 1px dashed var(--border-color);
+            color: var(--text-white);
+            background-color: #0d0d0d;
+            border-radius: 4px;
+        }
+
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #111111;
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.8);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            z-index: 1000;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-bar-bg {
+            flex-grow: 1;
+            background: #222222;
+            height: 10px;
+            border-radius: 5px;
+            margin: 0 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--pink);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--yellow);
+            min-width: 60px;
+        }
+
+        .btn-next {
+            background: var(--pink);
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            background: var(--cyan);
+            color: #000000;
+        }
+
+        .btn-next:disabled {
+            background: #444444;
+            color: #888888;
+            cursor: not-allowed;
+        }
+
+        .highlight-yellow { color: var(--yellow); }
+        .highlight-orange { color: var(--orange); }
+        .highlight-cyan { color: var(--cyan); }
+        .highlight-lime { color: var(--lime); }
+        .highlight-pink { color: var(--pink); }
+
+        ol, ul { padding-left: 20px; }
+        li { margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Lecture 18: Boundedness & Extreme Value Theorems</h1>
+            <p class="subtitle">Global Boundedness, Least Upper Bounds, and Maximum/Minimum Values</p>
+        </header>
+
+        <!-- Step 1: Global Boundedness -->
+        <div class="step">
+            <h2>Step 1 &mdash; Boundedness Theorem on Closed Intervals</h2>
+            <p>In L18, we saw that continuity at a single point implies <em>local</em> boundedness. We now prove that on a closed bounded interval $[a, b]$, continuity guarantees <span class="highlight-cyan">global boundedness</span>.</p>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Theorem 20.1 &mdash; Boundedness Theorem</div>
+                <div class="tcolorbox-content">
+                    If $f: [a, b] \to \mathbb{R}$ is continuous on $[a, b]$, then $f$ is bounded on $[a, b]$. That is, there exists $M > 0$ such that:
+                    $$|f(x)| \le M \quad \text{for all } x \in [a, b]$$
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof using LUB Property:</strong><br>
+                Define the set $S = \{x \in [a, b] : f \text{ is bounded on } [a, x]\}$.<br>
+                1. $S$ is non-empty because $a \in S$ (since $f$ is bounded on $[a, a]$ with bound $|f(a)|$).<br>
+                2. $S$ is bounded above by $b$. By the LUB property, let $c = \text{LUB}(S) \in [a, b]$.<br><br>
+
+                <strong class="highlight-lime">We claim $c = b$ and $b \in S$:</strong><br>
+                By local boundedness (L18), since $f$ is continuous at $c$, there exists $\delta > 0$ and $K > 0$ such that $|f(x)| \le K$ for all $x \in (c - \delta, c + \delta) \cap [a, b]$.<br>
+                - Since $c = \text{LUB}(S)$, pick $x_1 \in S$ with $c - \delta < x_1 \le c$. Thus $f$ is bounded on $[a, x_1]$ by some $M_1$.<br>
+                - For any $x \in [a, c + \delta/2] \cap [a, b]$, $|f(x)| \le \max(M_1, K)$.<br>
+                This shows $c + \delta/2 \in S$. If $c < b$, this contradicts $c$ being an upper bound of $S$. Therefore, <span class="highlight-pink">$c = b$</span>, and $f$ is bounded on $[a, b]$. $\blacksquare$
+            </div>
+        </div>
+
+        <!-- Step 2: Extreme Value Theorem -->
+        <div class="step">
+            <h2>Step 2 &mdash; The Extreme Value Theorem (Weierstrass Theorem)</h2>
+
+            <div class="tcolorbox purple">
+                <div class="tcolorbox-header">Theorem 20.2 &mdash; Extreme Value Theorem (EVT)</div>
+                <div class="tcolorbox-content">
+                    If $f: [a, b] \to \mathbb{R}$ is continuous, then $f$ attains its absolute maximum and absolute minimum values on $[a, b]$. That is, there exist points $x_m, x_M \in [a, b]$ such that:
+                    $$f(x_m) \le f(x) \le f(x_M) \quad \text{for all } x \in [a, b]$$
+                </div>
+            </div>
+
+            <div class="proof-box">
+                <strong class="highlight-orange">Proof using LUB and Contradiction:</strong><br>
+                By Theorem 20.1, the image set $f([a, b]) = \{f(x) : x \in [a, b]\}$ is bounded.<br>
+                Let $M^* = \text{LUB}\{f(x) : x \in [a, b]\}$. We must show there exists $x_M \in [a, b]$ such that $f(x_M) = M^*$.<br><br>
+
+                Suppose $f(x) < M^*$ for all $x \in [a, b]$. Define $g(x) = \frac{1}{M^* - f(x)}$.<br>
+                1. Since $f(x) \neq M^*$, $g(x)$ is continuous on $[a, b]$ (by quotient rule of continuous functions).<br>
+                2. By Theorem 20.1, $g(x)$ is bounded on $[a, b]$, so $\exists K > 0$ such that $\frac{1}{M^* - f(x)} \le K$ for all $x \in [a, b]$.<br>
+                3. Rearranging gives $M^* - f(x) \ge \frac{1}{K} \implies f(x) \le M^* - \frac{1}{K}$ for all $x \in [a, b]$.<br>
+                This means $M^* - \frac{1}{K}$ is an upper bound for $f([a, b])$, which contradicts $M^*$ being the <em>least</em> upper bound!<br>
+                Thus, $f(x_M) = M^*$ for some $x_M \in [a, b]$.<br>
+                (Applying the same logic to $-f(x)$ yields the existence of $x_m$ where $f(x_m) = \text{GLB}\{f(x)\}$.) $\blacksquare$
+            </div>
+        </div>
+
+        <!-- Step 3: Importance of Domain Hypotheses -->
+        <div class="step">
+            <h2>Step 3 &mdash; Why the Hypotheses Matter</h2>
+            <p>Both hypotheses&mdash;<strong>continuity</strong> and a <strong>closed bounded interval $[a,b]$</strong>&mdash;are essential for the Extreme Value Theorem to hold.</p>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Counterexample 1: Open Interval $(0, 1)$</strong><br>
+                Let $f(x) = \frac{1}{x}$ on $(0, 1)$. $f$ is continuous, but unbounded because $\lim_{x \to 0^+} f(x) = \infty$. It has no maximum.
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Counterexample 2: Unbounded Interval $[0, \infty)$</strong><br>
+                Let $f(x) = x$ on $[0, \infty)$. $f$ is continuous, but attains no maximum value.
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Counterexample 3: Discontinuous Function on $[0, 1]$</strong><br>
+                Define $f:[0,1] \to \mathbb{R}$ by:
+                $$f(x) = \begin{cases} x & \text{if } 0 \le x < 1 \\ 0 & \text{if } x = 1 \end{cases}$$
+                Here $\text{LUB}\{f(x)\} = 1$, but $f(x)$ never equals $1$ anywhere in $[0, 1]$.
+            </div>
+        </div>
+
+        <!-- Step 4: Practice Problems -->
+        <div class="step">
+            <h2>Step 4 &mdash; Practice Problems</h2>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 1: Image of a Closed Interval</strong><br>
+                Let $f: [a, b] \to \mathbb{R}$ be continuous. Prove that the image set $f([a, b])$ is also a closed bounded interval $[m, M]$, where $m = \text{GLB}\{f(x)\}$ and $M = \text{LUB}\{f(x)\}$.
+                <button class="btn-sol" onclick="toggleSolution('sol1')">Show Solution</button>
+                <div class="solution" id="sol1">
+                    <strong class="highlight-orange">Solution:</strong>
+                    1. By EVT (Theorem 20.2), there exist $x_m, x_M \in [a, b]$ such that $f(x_m) = m$ and $f(x_M) = M$.<br>
+                    2. By definition of GLB and LUB, $f(x) \in [m, M]$ for all $x \in [a, b]$, so $f([a, b]) \subseteq [m, M]$.<br>
+                    3. For any value $k \in (m, M)$, since $f$ is continuous on the subinterval between $x_m$ and $x_M$, the Intermediate Value Theorem (L19) guarantees there is some $c \in [a, b]$ such that $f(c) = k$.<br>
+                    4. Hence $[m, M] \subseteq f([a, b])$. Combining both inclusions gives $f([a, b]) = [m, M]$. $\blacksquare$
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <strong class="highlight-yellow">Problem 2: Minimum Distance Problem</strong><br>
+                Let $f: \mathbb{R} \to \mathbb{R}$ be a continuous function such that $\lim_{|x| \to \infty} f(x) = +\infty$. Prove that $f$ attains a global minimum on $\mathbb{R}$.
+                <button class="btn-sol" onclick="toggleSolution('sol2')">Show Solution</button>
+                <div class="solution" id="sol2">
+                    <strong class="highlight-orange">Solution:</strong>
+                    Fix $x_0 \in \mathbb{R}$ and set $K = f(x_0)$.<br>
+                    Since $\lim_{|x| \to \infty} f(x) = +\infty$, there exists $R > 0$ such that $|x| > R \implies f(x) > K$.<br>
+                    Consider the closed bounded interval $[-R, R]$. Since $f$ is continuous on $[-R, R]$, by EVT it attains its minimum at some point $x_m \in [-R, R]$, so $f(x_m) \le f(x)$ for all $x \in [-R, R]$.<br>
+                    Since $x_0 \in [-R, R]$ (or we can enlarge $R$ so $x_0 \in [-R, R]$), we have $f(x_m) \le f(x_0) = K$.<br>
+                    For any $x \notin [-R, R]$, $f(x) > K \ge f(x_m)$. Thus, $f(x_m) \le f(x)$ for all $x \in \mathbb{R}$. $\blacksquare$
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-label" id="progressLabel">0 / 0</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <button class="btn-next" id="btnNext" onclick="revealNext()">Next &#9654;</button>
+    </div>
+
+    <script>
+        const steps   = document.querySelectorAll('.step');
+        const fill    = document.getElementById('progressFill');
+        const label   = document.getElementById('progressLabel');
+        const btn     = document.getElementById('btnNext');
+        let   current = 0;
+
+        function updateUI() {
+            const pct = (current / steps.length) * 100;
+            fill.style.width  = pct + '%';
+            label.textContent = current + ' / ' + steps.length;
+            btn.disabled      = current >= steps.length;
+            btn.textContent   = current >= steps.length ? 'Done \u2713' : 'Next \u25ba';
+        }
+
+        function revealNext() {
+            if (current >= steps.length) return;
+            const el = steps[current];
+            el.classList.add('visible');
+            if (window.MathJax) MathJax.typesetPromise([el]);
+            current++;
+            updateUI();
+            setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        }
+
+        function toggleSolution(id) {
+            const sol = document.getElementById(id);
+            if (sol.style.display === 'block') {
+                sol.style.display = 'none';
+            } else {
+                sol.style.display = 'block';
+                if (window.MathJax) MathJax.typesetPromise([sol]);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+                if(e.key === ' ' && e.target.tagName === 'BUTTON') return;
+                e.preventDefault();
+                revealNext();
+            }
+        });
+
+        window.addEventListener('load', function() {
+            updateUI();
+            revealNext();
+        });
+    </script>
+
+</body>
+</html>
