@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Higher Order Differentiation & Taylor's Theorem: The Dynamics of ξ(x)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            neonLime: '#39ff14',
+            limeSoft: '#20e070',
+            neonYellow: '#ffe600',
+            yellowSoft: '#ffd700',
+            neonOrange: '#ff9900',
+            orangeSoft: '#ff8c00',
+            neonCyan: '#00f3ff',
+            neonPink: '#ff007f',
+            pinkSoft: '#ff2a8d',
+            darkBase: '#090a0f',
+            cardBg: '#121420',
+            cardBorder: '#1f2438'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- MathJax v3 Configuration & Async Loading -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      },
+      chtml: {
+        scale: 1.05
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Custom Theme Styles -->
+  <style>
+    body {
+      background-color: #090a0f;
+      color: #f0f4f8;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .main-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem;
+    }
+
+    .neon-card {
+      background-color: #121420;
+      border: 1px solid #1f2438;
+      border-radius: 1rem;
+      padding: 1.75rem;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+    }
+
+    /* MathJax Overrides for High-Contrast Neon Dark Theme */
+    mjx-container {
+      color: #ffffff !important;
+      font-size: 108% !important;
+      overflow-x: auto;
+      padding: 0.2rem 0;
+    }
+
+    /* Glow Utilities */
+    .glow-lime { border-color: #39ff14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.18); }
+    .glow-yellow { border-color: #ffe600; box-shadow: 0 0 20px rgba(255, 230, 0, 0.18); }
+    .glow-orange { border-color: #ff9900; box-shadow: 0 0 20px rgba(255, 153, 0, 0.18); }
+    .glow-cyan { border-color: #00f3ff; box-shadow: 0 0 20px rgba(0, 243, 255, 0.18); }
+    .glow-pink { border-color: #ff007f; box-shadow: 0 0 20px rgba(255, 0, 127, 0.18); }
+  </style>
+</head>
+
+<body class="bg-[#090a0f] text-[#f0f4f8] min-h-screen">
+
+  <!-- CENTERED MAIN CONTAINER (MAX-WIDTH 960PX) -->
+  <div class="main-container space-y-10">
+
+    <!-- HEADER & ATTRIBUTION -->
+    <header class="neon-card border-t-4 border-t-neonCyan glow-cyan text-center space-y-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-xs font-mono font-semibold">
+        <span>DEEP ANALYSIS &bull; REAL ANALYSIS &amp; CALCULUS</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+        Higher Order Differentiation,<br>
+        <span class="text-neonPink">The Dynamics of $\xi(x)$</span> &amp; <span class="text-neonYellow">Taylor's Theorem</span>
+      </h1>
+      <p class="text-gray-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+        Deconstructing the <span class="text-neonPink font-semibold">crucial insight</span> behind Taylor's remainder term: why the intermediate point $\xi(x)$ is a dynamic composite function, why it is non-polynomial, and how it behaves asymptotically as $x \to c$.
+      </p>
+
+      <!-- Acknowledgement Badge -->
+      <div class="pt-2">
+        <div class="inline-block bg-black/70 border border-white/10 rounded-xl px-4 py-2 text-xs font-mono text-gray-300">
+          <span class="text-neonCyan font-bold">Inspiration Note:</span> The continuous difference quotient framework $h_1(x), h_2(x), \dots, h_{n+1}(x)$ and remainder analysis presented here is inspired by <span class="text-white font-bold">Omar Hijab's</span> textbook, <em>Introduction to Analysis</em>.
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1: THE CORE PARADOX & ITS RESOLUTION -->
+    <section class="space-y-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-2.5 h-7 bg-neonLime rounded-full"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-neonLime tracking-wide">
+          1. The Core Paradox &amp; Its Resolution
+        </h2>
+      </div>
+
+      <div class="neon-card border-l-4 border-l-neonLime space-y-5">
+        <h3 class="text-lg font-bold text-white font-mono">
+          Why $f(x) = P_n(x) + R_{n+1}(x)$ Looks Like a Polynomial, Yet $f(x)$ is NOT
+        </h3>
+
+        <p class="text-gray-200 text-sm sm:text-base leading-relaxed">
+          Consider Taylor's theorem in Lagrange form centered at $c$:
+        </p>
+
+        <div class="bg-black/70 p-4 rounded-xl border border-neonLime/40 text-center font-mono">
+          \[
+          f(x) = \sum_{k=0}^n \frac{f^{(k)}(c)}{k!}(x-c)^k \;+\; \frac{f^{(n+1)}(\xi(x))}{(n+1)!}(x-c)^{n+1}
+          \]
+        </div>
+
+        <p class="text-gray-200 text-sm sm:text-base leading-relaxed">
+          At first glance, both terms on the right side appear to involve powers of $(x-c)$, leading to a common misconception: <em>"If both parts look like algebraic power terms, why isn't $f(x)$ just a polynomial of degree $n+1$?"</em>
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <!-- Constant Coefficients Box -->
+          <div class="bg-black/60 p-4 rounded-xl border border-neonYellow/40 space-y-2">
+            <span class="text-neonYellow font-mono font-bold text-xs uppercase tracking-wider block">1. Polynomial Part $P_n(x)$</span>
+            <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
+              In $P_n(x) = \sum_{k=0}^n a_k (x-c)^k$, the coefficients $a_k = \frac{f^{(k)}(c)}{k!}$ are <strong class="text-white">fixed scalar constants</strong> computed strictly at the expansion center $c$. $P_n(x)$ is a true polynomial.
+            </p>
+          </div>
+
+          <!-- Dynamic Remainder Box -->
+          <div class="bg-black/60 p-4 rounded-xl border border-neonPink/40 space-y-2">
+            <span class="text-neonPink font-mono font-bold text-xs uppercase tracking-wider block">2. Remainder Part $R_{n+1}(x)$</span>
+            <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
+              The coefficient of $(x-c)^{n+1}$ is $A(x) = \frac{f^{(n+1)}(\xi(x))}{(n+1)!}$. This coefficient is <strong class="text-neonPink">NOT constant</strong>! It depends dynamically on $x$ because $\xi = \xi(x)$ shifts whenever $x$ changes.
+            </p>
+          </div>
+        </div>
+
+        <!-- Key Insight Card -->
+        <div class="bg-black/60 border border-neonCyan/40 p-4 rounded-xl space-y-2 text-xs sm:text-sm">
+          <span class="text-neonCyan font-bold font-mono uppercase tracking-wider block">Resolution of the Paradox</span>
+          <p class="text-gray-300 leading-relaxed">
+            Transcendental functions such as $e^x$, $\sin x$, and $\ln(1+x)$ have infinitely many non-zero derivatives. If $R_{n+1}(x)$ were a polynomial of degree $n+1$, then $f(x)$ would be a finite polynomial, implying $f^{(N)}(x) \equiv 0$ for large $N$—a complete contradiction! The non-polynomial nature of $f(x)$ is entirely absorbed by the dynamic term $f^{(n+1)}(\xi(x))$.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: DECONSTRUCTING f^{(n+1)}(\xi(x)) AS A COMPOSITION -->
+    <section class="space-y-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-2.5 h-7 bg-neonYellow rounded-full"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-neonYellow tracking-wide">
+          2. Deconstructing $f^{(n+1)}(\xi(x))$ as a Function Composition
+        </h2>
+      </div>
+
+      <div class="neon-card border-l-4 border-l-neonYellow space-y-5">
+        <p class="text-gray-200 text-sm sm:text-base leading-relaxed">
+          To rigorously understand the expression $f^{(n+1)}(\xi(x))$, we must dissect it as a composite function $(g \circ \xi)(x) = g(\xi(x))$.
+        </p>
+
+        <!-- Composition Diagram Box -->
+        <div class="bg-black/80 p-5 rounded-xl border border-neonYellow/40 space-y-4 font-mono">
+          <div class="text-center text-xs sm:text-sm text-neonCyan font-bold uppercase tracking-wider">
+            FUNCTION COMPOSITION PIPELINE
+          </div>
+          
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3 text-center text-xs sm:text-sm">
+            <div class="bg-cardBg border border-neonPink/50 p-3 rounded-lg w-full sm:w-auto">
+              <span class="text-gray-400 text-[10px] block">DOMAIN INPUT</span>
+              <span class="text-neonPink font-bold">$x \in I \setminus \{c\}$</span>
+            </div>
+
+            <div class="text-neonYellow text-lg font-bold">&rarr;</div>
+
+            <div class="bg-cardBg border border-neonYellow/50 p-3 rounded-lg w-full sm:w-auto">
+              <span class="text-gray-400 text-[10px] block">INNER SELECTION FUNCTION $\xi(x)$</span>
+              <span class="text-neonYellow font-bold">$\xi : x \mapsto \xi(x) \in (c, x)$</span>
+            </div>
+
+            <div class="text-neonYellow text-lg font-bold">&rarr;</div>
+
+            <div class="bg-cardBg border border-neonLime/50 p-3 rounded-lg w-full sm:w-auto">
+              <span class="text-gray-400 text-[10px] block">OUTER DERIVATIVE $g(u)$</span>
+              <span class="text-neonLime font-bold">$g(u) = f^{(n+1)}(u)$</span>
+            </div>
+
+            <div class="text-neonYellow text-lg font-bold">&rarr;</div>
+
+            <div class="bg-cardBg border border-neonOrange/50 p-3 rounded-lg w-full sm:w-auto">
+              <span class="text-gray-400 text-[10px] block">COMPOSITE VALUE</span>
+              <span class="text-neonOrange font-bold font-mono">$(g \circ \xi)(x)$</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3 text-sm text-gray-300 leading-relaxed">
+          <h4 class="text-white font-bold font-mono text-base">Key Mathematical Properties of $\xi(x)$:</h4>
+          <ul class="list-disc list-inside space-y-2">
+            <li>
+              <strong class="text-neonPink">1. The Mean Value Map:</strong> $\xi(x)$ is a function that maps every evaluation point $x \neq c$ to the specific intermediate location guaranteed by the Mean Value Theorem (or Rolle's Theorem) strictly inside the interval $(c, x)$ (or $(x, c)$ if $x < c$).
+            </li>
+            <li>
+              <strong class="text-neonYellow">2. Existence vs Uniqueness &amp; Selection Dynamics:</strong> MVT guarantees that at least one such $\xi(x)$ exists. If $f^{(n+1)}$ is not strictly monotonic, there might be multiple points satisfying the equation. In such cases, $\xi(x)$ represents a well-defined <em>selection rule</em> (e.g., choosing the smallest or continuous branch of intermediate points).
+            </li>
+            <li>
+              <strong class="text-neonLime">3. Continuity of the Composite:</strong> When $f^{(n+1)}$ is continuous on $(a,b)$, as $x \to c$, the squeezed interval $(c, x)$ forces $\xi(x) \to c$. Thus, the composite function satisfies $\lim_{x \to c} f^{(n+1)}(\xi(x)) = f^{(n+1)}(c)$.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: ASYMPTOTIC BEHAVIOR & THE FRACTIONAL RULE 1/(n+2) -->
+    <section class="space-y-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-2.5 h-7 bg-neonOrange rounded-full"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-neonOrange tracking-wide">
+          3. Asymptotic Behavior &amp; The Rule $\lim_{x \to c} \frac{\xi(x)-c}{x-c} = \frac{1}{n+2}$
+        </h2>
+      </div>
+
+      <div class="neon-card border-l-4 border-l-neonOrange space-y-5">
+        <p class="text-gray-200 text-sm sm:text-base leading-relaxed">
+          Where exactly does $\xi(x)$ sit relative to $c$ and $x$ as $x$ approaches $c$? By the Squeeze Theorem, since $c < \xi(x) < x$, we immediately have $\lim_{x \to c} \xi(x) = c$. But how fast does $\xi(x)$ move toward $c$?
+        </p>
+
+        <!-- Theorem Box -->
+        <div class="bg-black/80 p-4 rounded-xl border border-neonOrange/50 text-center space-y-2">
+          <span class="text-neonOrange font-mono font-bold text-xs uppercase tracking-wider block">Asymptotic Location Theorem</span>
+          <div class="text-lg font-bold text-white font-mono">
+            \[
+            \lim_{x \to c} \frac{\xi(x) - c}{x - c} = \frac{1}{n + 2} \qquad \text{(assuming } f^{(n+2)}(c) \neq 0 \text{)}
+            \]
+          </div>
+          <p class="text-xs text-gray-400">
+            As $x \to c$, the intermediate point $\xi(x)$ approaches a fixed fractional distance $\frac{1}{n+2}$ along the segment from $c$ to $x$!
+          </p>
+        </div>
+
+        <!-- Proof Derivation for n=0 -->
+        <div class="bg-black/50 p-4 rounded-xl border border-white/10 space-y-3 text-xs sm:text-sm">
+          <span class="text-neonCyan font-bold font-mono uppercase tracking-wider block">Proof Sketch for $n=0$ (Ordinary Mean Value Theorem)</span>
+          <p class="text-gray-300 leading-relaxed">
+            By MVT, $f(x) - f(c) = f'(\xi(x))(x-c)$. Expand both sides in Taylor series around $c$ up to second order (assuming $f''(c) \neq 0$):
+          </p>
+          <div class="font-mono text-neonCyan text-center text-xs py-1">
+            \[
+            f(x) - f(c) = f'(c)(x-c) + \frac{f''(c)}{2}(x-c)^2 + o((x-c)^2)
+            \]
+            \[
+            f'(\xi(x)) = f'(c) + f''(c)(\xi(x)-c) + o(\xi(x)-c)
+            \]
+          </div>
+          <p class="text-gray-300 leading-relaxed">
+            Substitute $f'(\xi(x))$ into MVT:
+          </p>
+          <div class="font-mono text-white text-center text-xs py-1">
+            \[
+            f'(c)(x-c) + \frac{f''(c)}{2}(x-c)^2 + o((x-c)^2) = \left[ f'(c) + f''(c)(\xi(x)-c) + o(\xi(x)-c) \right] (x-c)
+            \]
+          </div>
+          <p class="text-gray-300 leading-relaxed">
+            Subtract $f'(c)(x-c)$ from both sides and divide by $f''(c)(x-c)^2$:
+          </p>
+          <div class="font-mono text-neonYellow text-center text-xs py-1">
+            \[
+            \frac{1}{2} + o(1) = \frac{\xi(x)-c}{x-c} + o(1) \implies \lim_{x \to c} \frac{\xi(x)-c}{x-c} = \frac{1}{2} = \frac{1}{0+2}
+            \]
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: CONCRETE EXPLICIT EXAMPLE: f(x) = e^x AT c = 0 -->
+    <section class="space-y-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-2.5 h-7 bg-neonCyan rounded-full"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-neonCyan tracking-wide">
+          4. Concrete Explicit Example: $f(x) = e^x$ at Center $c = 0$
+        </h2>
+      </div>
+
+      <div class="neon-card border-l-4 border-l-neonCyan space-y-5">
+        <p class="text-gray-200 text-sm sm:text-base leading-relaxed">
+          For $f(x) = e^x$ centered at $c = 0$, we can solve for $\xi(x)$ <strong class="text-neonCyan">explicitly in closed form</strong>!
+        </p>
+
+        <p class="text-gray-200 text-sm leading-relaxed">
+          The Taylor decomposition with Lagrange remainder states:
+        </p>
+
+        <div class="bg-black/70 p-4 rounded-xl border border-neonCyan/40 text-center font-mono text-xs sm:text-sm">
+          \[
+          e^x = \sum_{k=0}^n \frac{x^k}{k!} + \frac{e^{\xi(x)}}{(n+1)!}x^{n+1}
+          \]
+        </div>
+
+        <p class="text-gray-200 text-sm leading-relaxed">
+          Isolating $e^{\xi(x)}$ and taking the natural logarithm yields the explicit formula for $\xi(x)$:
+        </p>
+
+        <div class="bg-black/80 p-4 rounded-xl border border-neonCyan/60 text-center font-mono text-neonCyan text-sm sm:text-base">
+          \[
+          \xi(x) = \ln \left( \frac{(n+1)!}{x^{n+1}} \left( e^x - \sum_{k=0}^n \frac{x^k}{k!} \right) \right)
+          \]
+        </div>
+
+        <!-- Asymptotic Expansion Box for e^x -->
+        <div class="bg-black/60 p-4 rounded-xl border border-neonPink/40 space-y-2 text-xs sm:text-sm">
+          <span class="text-neonPink font-bold font-mono uppercase tracking-wider block">Evaluating $\lim_{x \to 0} \frac{\xi(x)}{x}$ for $e^x$</span>
+          <p class="text-gray-300 leading-relaxed">
+            Using the higher Taylor series expansion $e^x - \sum_{k=0}^n \frac{x^k}{k!} = \frac{x^{n+1}}{(n+1)!} + \frac{x^{n+2}}{(n+2)!} + O(x^{n+3})$, we substitute into $\xi(x)$:
+          </p>
+          <div class="font-mono text-white text-center text-xs py-1">
+            \[
+            \xi(x) = \ln \left( 1 + \frac{x}{n+2} + O(x^2) \right) = \frac{x}{n+2} + O(x^2)
+            \]
+          </div>
+          <p class="text-gray-300 leading-relaxed">
+            Dividing by $x$ gives $\frac{\xi(x)}{x} \to \frac{1}{n+2}$, confirming the general theorem directly!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: OMAR HIJAB'S CONTINUOUS QUOTIENT VS LAGRANGE FORM -->
+    <section class="space-y-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-2.5 h-7 bg-neonPink rounded-full"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-neonPink tracking-wide">
+          5. Hijab's Continuous Quotient Perspective vs Lagrange Form
+        </h2>
+      </div>
+
+      <div class="neon-card border-l-4 border-l-neonPink space-y-5">
+        <p class="text-gray-200 text-sm sm:text-base leading-relaxed">
+          In <em>Introduction to Analysis</em>, Omar Hijab avoids non-constructive intermediate values $\xi(x)$ at the outset by defining the difference quotient directly as a continuous function $h_{n+1}(x)$:
+        </p>
+
+        <div class="bg-black/70 p-4 rounded-xl border border-neonPink/40 text-center font-mono text-xs sm:text-sm">
+          \[
+          h_{n+1}(x) = \begin{cases} \frac{R_{n+1}(x,c)}{(x-c)^{n+1}/(n+1)!}, & x \neq c, \\[0.8em] f^{(n+1)}(c), & x = c. \end{cases}
+          \]
+        </div>
+
+        <div class="bg-black/60 p-4 rounded-xl border border-white/10 space-y-3 text-xs sm:text-sm">
+          <span class="text-neonLime font-bold font-mono uppercase tracking-wider block">Bridging Both Views</span>
+          <p class="text-gray-300 leading-relaxed">
+            Equating Hijab's continuous quotient $h_{n+1}(x)$ with the Lagrange remainder reveals:
+          </p>
+          <div class="font-mono text-neonLime text-center text-sm py-1">
+            \[
+            h_{n+1}(x) = f^{(n+1)}(\xi(x)) = (f^{(n+1)} \circ \xi)(x)
+            \]
+          </div>
+          <p class="text-gray-300 leading-relaxed">
+            This identity unites both perspectives: Hijab's $h_{n+1}(x)$ is continuous at $c$ precisely because $\lim_{x \to c} f^{(n+1)}(\xi(x)) = f^{(n+1)}(c) = h_{n+1}(c)$.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: INTERACTIVE DUAL-PLOT VISUALIZER & DYNAMIC TRACKER -->
+    <section class="space-y-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-2.5 h-7 bg-neonLime rounded-full"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-neonLime tracking-wide">
+          6. Interactive Dual-Plot Visualizer &amp; Dynamic $\xi(x)$ Tracker
+        </h2>
+      </div>
+
+      <div class="neon-card border-t-4 border-t-neonLime glow-lime space-y-6">
+        <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
+          Interactively test the $x$-dependence of $\xi(x)$! Adjust $n$, $c$, and drag $x$ to observe how $P_n(x)$ approximates $f(x)$, while the bottom canvas plots the exact trajectory of $\xi(x)$ and the asymptotic ratio $\frac{\xi(x)-c}{x-c}$.
+        </p>
+
+        <!-- Interactive Control Bar -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono">
+          <!-- Function Select -->
+          <div class="bg-black/60 p-3 rounded-lg border border-white/10 space-y-1">
+            <label class="text-neonCyan font-bold block">FUNCTION $f(x)$</label>
+            <select id="funcSelect" class="w-full bg-[#090a0f] border border-neonCyan/40 rounded p-1.5 text-white focus:outline-none">
+              <option value="exp">f(x) = e^x</option>
+              <option value="sin">f(x) = sin(x)</option>
+              <option value="cos">f(x) = cos(x)</option>
+              <option value="ln">f(x) = ln(1 + x)</option>
+            </select>
+          </div>
+
+          <!-- Degree Slider -->
+          <div class="bg-black/60 p-3 rounded-lg border border-white/10 space-y-1">
+            <div class="flex justify-between text-neonYellow font-bold">
+              <span>DEGREE $n$</span>
+              <span id="degVal">1</span>
+            </div>
+            <input id="degSlider" type="range" min="0" max="4" value="1" step="1" class="w-full accent-neonYellow">
+          </div>
+
+          <!-- Center Slider -->
+          <div class="bg-black/60 p-3 rounded-lg border border-white/10 space-y-1">
+            <div class="flex justify-between text-neonLime font-bold">
+              <span>CENTER $c$</span>
+              <span id="centerVal">0.0</span>
+            </div>
+            <input id="centerSlider" type="range" min="-1.5" max="1.5" value="0.0" step="0.1" class="w-full accent-neonLime">
+          </div>
+
+          <!-- Point x Slider -->
+          <div class="bg-black/60 p-3 rounded-lg border border-white/10 space-y-1">
+            <div class="flex justify-between text-neonPink font-bold">
+              <span>POINT $x$</span>
+              <span id="evalVal">1.20</span>
+            </div>
+            <input id="evalSlider" type="range" min="-2.5" max="2.5" value="1.2" step="0.02" class="w-full accent-neonPink">
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="space-y-4">
+          <!-- Top Canvas: Function & Taylor Fit -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs font-mono text-gray-400">
+              <span class="text-neonCyan font-bold">PLOT 1: $f(x)$ vs Taylor Polynomial $P_n(x)$</span>
+              <span>Yellow = $P_n(x)$, Cyan = $f(x)$, Orange = $R_{n+1}(x)$</span>
+            </div>
+            <div class="relative w-full aspect-[16/8] bg-black rounded-xl border border-white/10 overflow-hidden shadow-2xl">
+              <canvas id="funcCanvas" class="w-full h-full block"></canvas>
+            </div>
+          </div>
+
+          <!-- Bottom Canvas: Trajectory of xi(x) and Asymptotic Ratio -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs font-mono text-gray-400">
+              <span class="text-neonPink font-bold">PLOT 2: Dynamic Trajectory of $\xi(x)$ &amp; Ratio $\frac{\xi(x)-c}{x-c}$</span>
+              <span>Pink = $\xi(x)$, Lime = Target Limit $\frac{1}{n+2}$</span>
+            </div>
+            <div class="relative w-full aspect-[16/7] bg-black rounded-xl border border-white/10 overflow-hidden shadow-2xl">
+              <canvas id="xiCanvas" class="w-full h-full block"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Numeric Readouts -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs font-mono text-center">
+          <div class="bg-black/80 p-2.5 rounded-lg border border-neonCyan/40">
+            <span class="text-gray-400 block text-[10px]">EXACT $f(x)$</span>
+            <span id="metricFx" class="text-neonCyan font-bold">0.0000</span>
+          </div>
+
+          <div class="bg-black/80 p-2.5 rounded-lg border border-neonYellow/40">
+            <span class="text-gray-400 block text-[10px]">TAYLOR $P_n(x)$</span>
+            <span id="metricPn" class="text-neonYellow font-bold">0.0000</span>
+          </div>
+
+          <div class="bg-black/80 p-2.5 rounded-lg border border-neonOrange/40">
+            <span class="text-gray-400 block text-[10px]">REMAINDER $R_{n+1}$</span>
+            <span id="metricRn" class="text-neonOrange font-bold">0.0000</span>
+          </div>
+
+          <div class="bg-black/80 p-2.5 rounded-lg border border-neonPink/40">
+            <span class="text-gray-400 block text-[10px]">DYNAMIC $\xi(x)$</span>
+            <span id="metricXi" class="text-neonPink font-bold">0.0000</span>
+          </div>
+
+          <div class="bg-black/80 p-2.5 rounded-lg border border-neonLime/40">
+            <span class="text-gray-400 block text-[10px]">RATIO $\frac{\xi(x)-c}{x-c}$</span>
+            <span id="metricRatio" class="text-neonLime font-bold">0.0000</span>
+          </div>
+
+          <div class="bg-black/80 p-2.5 rounded-lg border border-white/30">
+            <span class="text-gray-400 block text-[10px]">LIMIT $\frac{1}{n+2}$</span>
+            <span id="metricTarget" class="text-white font-bold">0.0000</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center text-xs text-gray-500 font-mono py-6 border-t border-white/10">
+      <p>Higher Order Differentiation &bull; The Dynamics of $\xi(x)$ &bull; Inspired by Omar Hijab</p>
+    </footer>
+
+  </div>
+
+  <script>
+    function factorial(n) {
+      if (n <= 1) return 1;
+      let r = 1;
+      for (let i = 2; i <= n; i++) r *= i;
+      return r;
+    }
+
+    function evalF(key, x) {
+      switch (key) {
+        case 'exp': return Math.exp(x);
+        case 'sin': return Math.sin(x);
+        case 'cos': return Math.cos(x);
+        case 'ln': return (1 + x > 0) ? Math.log(1 + x) : NaN;
+        default: return 0;
+      }
+    }
+
+    function getDeriv(key, k, u) {
+      switch (key) {
+        case 'exp': return Math.exp(u);
+        case 'sin': return Math.sin(u + k * Math.PI / 2);
+        case 'cos': return Math.cos(u + k * Math.PI / 2);
+        case 'ln':
+          if (k === 0) return Math.log(1 + u);
+          return (Math.pow(-1, k - 1) * factorial(k - 1)) / Math.pow(1 + u, k);
+        default: return 0;
+      }
+    }
+
+    function evalPn(key, n, c, x) {
+      let sum = 0;
+      for (let k = 0; k <= n; k++) {
+        const d = getDeriv(key, k, c);
+        sum += (d / factorial(k)) * Math.pow(x - c, k);
+      }
+      return sum;
+    }
+
+    function solveXi(key, n, c, x) {
+      if (Math.abs(x - c) < 1e-5) return c;
+
+      const fx = evalF(key, x);
+      const pn = evalPn(key, n, c, x);
+      const rn = fx - pn;
+
+      // Lagrange target: f^{(n+1)}(\xi) = (n+1)! * R_{n+1} / (x-c)^{n+1}
+      const denom = Math.pow(x - c, n + 1);
+      if (Math.abs(denom) < 1e-12) return c;
+      const targetDeriv = (factorial(n + 1) * rn) / denom;
+
+      // Closed-form exact solution for e^x
+      if (key === 'exp') {
+        const val = targetDeriv;
+        if (val > 0) return Math.log(val);
+      }
+
+      // Dense bisection/grid search over [min(c,x), max(c,x)]
+      const minVal = Math.min(c, x);
+      const maxVal = Math.max(c, x);
+      let bestXi = (c + x) / 2;
+      let minDiff = Infinity;
+
+      const steps = 200;
+      for (let i = 0; i <= steps; i++) {
+        const u = minVal + (i / steps) * (maxVal - minVal);
+        const d = getDeriv(key, n + 1, u);
+        const diff = Math.abs(d - targetDeriv);
+        if (diff < minDiff) {
+          minDiff = diff;
+          bestXi = u;
+        }
+      }
+      return bestXi;
+    }
+
+    function render() {
+      const funcCanvas = document.getElementById('funcCanvas');
+      const xiCanvas = document.getElementById('xiCanvas');
+      if (!funcCanvas || !xiCanvas) return;
+
+      const ctxF = funcCanvas.getContext('2d');
+      const ctxX = xiCanvas.getContext('2d');
+
+      const dpr = window.devicePixelRatio || 1;
+
+      // Resize Canvas 1
+      const rectF = funcCanvas.getBoundingClientRect();
+      funcCanvas.width = rectF.width * dpr;
+      funcCanvas.height = rectF.height * dpr;
+      ctxF.scale(dpr, dpr);
+      const wF = rectF.width, hF = rectF.height;
+
+      // Resize Canvas 2
+      const rectX = xiCanvas.getBoundingClientRect();
+      xiCanvas.width = rectX.width * dpr;
+      xiCanvas.height = rectX.height * dpr;
+      ctxX.scale(dpr, dpr);
+      const wX = rectX.width, hX = rectX.height;
+
+      // Fetch control parameters
+      const key = document.getElementById('funcSelect').value;
+      const n = parseInt(document.getElementById('degSlider').value);
+      const c = parseFloat(document.getElementById('centerSlider').value);
+      const xEval = parseFloat(document.getElementById('evalSlider').value);
+
+      document.getElementById('degVal').textContent = n;
+      document.getElementById('centerVal').textContent = c.toFixed(1);
+      document.getElementById('evalVal').textContent = xEval.toFixed(2);
+
+      const xMin = -3.0, xMax = 3.0;
+      const yMin = -2.5, yMax = 3.0;
+
+      function toSx(x) { return ((x - xMin) / (xMax - xMin)) * wF; }
+      function toSy(y) { return hF - ((y - yMin) / (yMax - yMin)) * hF; }
+
+      // ==========================================
+      // DRAW CANVAS 1: f(x) vs P_n(x)
+      // ==========================================
+      ctxF.fillStyle = '#050508';
+      ctxF.fillRect(0, 0, wF, hF);
+
+      // Grid
+      ctxF.strokeStyle = '#181b29'; ctxF.lineWidth = 1;
+      for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+        const sx = toSx(x);
+        ctxF.beginPath(); ctxF.moveTo(sx, 0); ctxF.lineTo(sx, hF); ctxF.stroke();
+      }
+      for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+        const sy = toSy(y);
+        ctxF.beginPath(); ctxF.moveTo(0, sy); ctxF.lineTo(wF, sy); ctxF.stroke();
+      }
+
+      // Axes
+      ctxF.strokeStyle = '#333b5c'; ctxF.lineWidth = 1.5;
+      ctxF.beginPath(); ctxF.moveTo(0, toSy(0)); ctxF.lineTo(wF, toSy(0)); ctxF.stroke();
+      ctxF.beginPath(); ctxF.moveTo(toSx(0), 0); ctxF.lineTo(toSx(0), hF); ctxF.stroke();
+
+      // Plot f(x) (Cyan)
+      ctxF.strokeStyle = '#00f3ff'; ctxF.lineWidth = 2.5;
+      ctxF.beginPath();
+      let started = false;
+      for (let i = 0; i <= 300; i++) {
+        const x = xMin + (i / 300) * (xMax - xMin);
+        const y = evalF(key, x);
+        if (!isNaN(y) && y >= yMin - 2 && y <= yMax + 2) {
+          const sx = toSx(x), sy = toSy(y);
+          if (!started) { ctxF.moveTo(sx, sy); started = true; }
+          else ctxF.lineTo(sx, sy);
+        } else started = false;
+      }
+      ctxF.stroke();
+
+      // Plot P_n(x) (Yellow)
+      ctxF.strokeStyle = '#ffe600'; ctxF.lineWidth = 2.5;
+      ctxF.beginPath();
+      started = false;
+      for (let i = 0; i <= 300; i++) {
+        const x = xMin + (i / 300) * (xMax - xMin);
+        const y = evalPn(key, n, c, x);
+        if (!isNaN(y) && y >= yMin - 4 && y <= yMax + 4) {
+          const sx = toSx(x), sy = toSy(y);
+          if (!started) { ctxF.moveTo(sx, sy); started = true; }
+          else ctxF.lineTo(sx, sy);
+        } else started = false;
+      }
+      ctxF.stroke();
+
+      // Vertical line for Center c
+      const scx = toSx(c);
+      const fc = evalF(key, c);
+      ctxF.strokeStyle = 'rgba(57, 255, 20, 0.4)';
+      ctxF.setLineDash([3, 3]);
+      ctxF.beginPath(); ctxF.moveTo(scx, 0); ctxF.lineTo(scx, hF); ctxF.stroke();
+      ctxF.setLineDash([]);
+      ctxF.fillStyle = '#39ff14';
+      ctxF.beginPath(); ctxF.arc(scx, toSy(fc), 5, 0, Math.PI * 2); ctxF.fill();
+
+      // Evaluation Point x & Remainder Bar
+      const sxEval = toSx(xEval);
+      const fxVal = evalF(key, xEval);
+      const pnVal = evalPn(key, n, c, xEval);
+      const syFx = toSy(fxVal);
+      const syPn = toSy(pnVal);
+
+      ctxF.strokeStyle = 'rgba(255, 0, 127, 0.4)';
+      ctxF.setLineDash([3, 3]);
+      ctxF.beginPath(); ctxF.moveTo(sxEval, 0); ctxF.lineTo(sxEval, hF); ctxF.stroke();
+      ctxF.setLineDash([]);
+
+      ctxF.fillStyle = '#00f3ff';
+      ctxF.beginPath(); ctxF.arc(sxEval, syFx, 5, 0, Math.PI * 2); ctxF.fill();
+      ctxF.fillStyle = '#ffe600';
+      ctxF.beginPath(); ctxF.arc(sxEval, syPn, 5, 0, Math.PI * 2); ctxF.fill();
+
+      // Remainder bar
+      ctxF.strokeStyle = '#ff9900'; ctxF.lineWidth = 3;
+      ctxF.beginPath(); ctxF.moveTo(sxEval, syFx); ctxF.lineTo(sxEval, syPn); ctxF.stroke();
+
+      // ==========================================
+      // DRAW CANVAS 2: Dynamic Trajectory of \xi(x)
+      // ==========================================
+      ctxX.fillStyle = '#050508';
+      ctxX.fillRect(0, 0, wX, hX);
+
+      function toSx2(x) { return ((x - xMin) / (xMax - xMin)) * wX; }
+      function toSy2(y) { return hX - ((y - yMin) / (yMax - yMin)) * hX; }
+
+      // Grid & Axes for Plot 2
+      ctxX.strokeStyle = '#181b29'; ctxX.lineWidth = 1;
+      for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+        const sx = toSx2(x);
+        ctxX.beginPath(); ctxX.moveTo(sx, 0); ctxX.lineTo(sx, hX); ctxX.stroke();
+      }
+
+      ctxX.strokeStyle = '#333b5c'; ctxX.lineWidth = 1.5;
+      ctxX.beginPath(); ctxX.moveTo(0, toSy2(0)); ctxX.lineTo(wX, toSy2(0)); ctxX.stroke();
+      ctxX.beginPath(); ctxX.moveTo(toSx2(0), 0); ctxX.lineTo(toSx2(0), hX); ctxX.stroke();
+
+      // Identity reference line xi = x (Gray dashed)
+      ctxX.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctxX.setLineDash([4, 4]);
+      ctxX.beginPath(); ctxX.moveTo(toSx2(xMin), toSy2(xMin)); ctxX.lineTo(toSx2(xMax), toSy2(xMax)); ctxX.stroke();
+      // Constant line xi = c (Lime dashed)
+      ctxX.strokeStyle = 'rgba(57,255,20,0.3)';
+      ctxX.beginPath(); ctxX.moveTo(0, toSy2(c)); ctxX.lineTo(wX, toSy2(c)); ctxX.stroke();
+      ctxX.setLineDash([]);
+
+      // Plot \xi(x) Curve (Pink)
+      ctxX.strokeStyle = '#ff007f'; ctxX.lineWidth = 2.5;
+      ctxX.beginPath();
+      started = false;
+      for (let i = 0; i <= 300; i++) {
+        const x = xMin + (i / 300) * (xMax - xMin);
+        if (Math.abs(x - c) < 0.02) continue;
+        const xiCur = solveXi(key, n, c, x);
+        if (!isNaN(xiCur) && xiCur >= yMin && xiCur <= yMax) {
+          const sx = toSx2(x), sy = toSy2(xiCur);
+          if (!started) { ctxX.moveTo(sx, sy); started = true; }
+          else ctxX.lineTo(sx, sy);
+        } else started = false;
+      }
+      ctxX.stroke();
+
+      // Current point \xi(x) highlight
+      const xiVal = solveXi(key, n, c, xEval);
+      const sxiEvalX = toSx2(xEval);
+      const sxiEvalY = toSy2(xiVal);
+
+      ctxX.fillStyle = '#ff007f';
+      ctxX.beginPath(); ctxX.arc(sxiEvalX, sxiEvalY, 6, 0, Math.PI * 2); ctxX.fill();
+
+      // Calculate Metrics
+      const rnVal = fxVal - pnVal;
+      const ratio = (Math.abs(xEval - c) > 1e-4) ? (xiVal - c) / (xEval - c) : (1 / (n + 2));
+      const targetRatio = 1 / (n + 2);
+
+      // Update UI Text
+      document.getElementById('metricFx').textContent = isNaN(fxVal) ? 'N/A' : fxVal.toFixed(4);
+      document.getElementById('metricPn').textContent = isNaN(pnVal) ? 'N/A' : pnVal.toFixed(4);
+      document.getElementById('metricRn').textContent = isNaN(rnVal) ? 'N/A' : rnVal.toFixed(4);
+      document.getElementById('metricXi').textContent = isNaN(xiVal) ? 'N/A' : xiVal.toFixed(4);
+      document.getElementById('metricRatio').textContent = isNaN(ratio) ? 'N/A' : ratio.toFixed(4);
+      document.getElementById('metricTarget').textContent = targetRatio.toFixed(4);
+    }
+
+    window.addEventListener('load', () => {
+      ['funcSelect', 'degSlider', 'centerSlider', 'evalSlider'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', render);
+          el.addEventListener('change', render);
+        }
+      });
+      window.addEventListener('resize', render);
+      render();
+    });
+  </script>
+</body>
+</html>

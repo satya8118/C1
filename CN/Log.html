@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Calculus: IVP, Logarithm, and Exponential (Content is taken from Calculus by Amber Habib)</title>
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --secondary: #059669;
+            --border-color: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+        }
+
+        .math-block {
+            overflow-x: auto;
+            padding: 1rem;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .definition-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #d97706;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .btn-toggle {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-toggle:hover {
+            background-color: #1d4ed8;
+        }
+
+        .proof-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 1rem;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .proof-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .interactive-canvas {
+            width: 100%;
+            height: 300px;
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 1rem 0;
+            cursor: crosshair;
+        }
+
+        .quiz-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background-color: #f3f4f6;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .quiz-option:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Styles for the inserted proof-step block */
+        .proof-step {
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-top: 1.2rem;
+            background: #eef2f6;
+        }
+        .step-label {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .step-content {
+            margin-top: 0.5rem;
+        }
+
+        /* Styles for the summary table */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .styled-table thead tr {
+            background-color: var(--primary);
+            color: #ffffff;
+            text-align: left;
+        }
+        .styled-table th,
+        .styled-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .styled-table tbody tr {
+            background-color: #ffffff;
+        }
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f8f9fa;
+        }
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid var(--primary);
+        }
+        .styled-table tbody tr:hover {
+            background-color: var(--primary-light);
+        }
+        .badge {
+            background-color: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Interactive Calculus</h1>
+    <p> Content is taken from Caluculs book by Amber Habib.</p><br>
+    <p>Intermediate Value Property, Logarithm, and Exponential Functions</p>
+</header>
+
+<div class="container">
+
+    <!-- Section 1: IVP -->
+    <div class="card" id="ivp">
+        <h2>Part 1: Intermediate Value Property (IVP)</h2>
+        
+        <div class="definition-box">
+            <strong>Definition (IVP):</strong> Let \(I\) be an interval and \(f: I \to \mathbb{R}\). We say that \(f\) has the <strong>Intermediate Value Property</strong> if whenever \(f(a) < L < f(b)\) for some \(a, b \in I\), there exists an \(\alpha\) between \(a\) and \(b\) such that \(f(\alpha) = L\).
+        </div>
+
+        <p><strong>Theorem:</strong> Let \(I\) be an interval and \(f: I \to \mathbb{R}\) be a function that is Riemann integrable on every compact subinterval of \(I\). Let \(a \in I\) and define \(F(x) = \int_a^x f(t) dt\) for \(x \in I\). Then \(F\) has the Intermediate Value Property.</p>
+        
+        <button class="btn-toggle" onclick="toggleProof('proof-ivp')">
+            <span>▶</span> Show Proof
+        </button>
+
+        <div id="proof-ivp" class="proof-content">
+            <p>Let \(u, v \in I\) with \(u < v\). It is enough to show that \(F\) is continuous on \(I\), because then the standard Intermediate Value Theorem for continuous functions guarantees the desired property.</p>
+            
+            <p>Fix \(x_0 \in I\). Choose a compact interval \(J \subseteq I\) containing \(x_0\). Since \(f\) is Riemann integrable on \(J\), it is bounded on \(J\). Thus, there exists a constant \(M > 0\) such that \(|f(t)| \le M\) for all \(t \in J\).</p>
+            
+            <p>For any \(x \in J\), we have:</p>
+            <div class="math-block">
+                \[
+ |F(x) - F(x_0)| = \left| \int_{x_0}^x f(t) dt \right| \le \int_{x_0}^x |f(t)| dt \le M|x - x_0| 
+\]
+            </div>
+            
+            <p>Let \(\epsilon > 0\). Choose \(\delta = \epsilon / M\). Then for any \(x \in J\) with \(|x - x_0| < \delta\), we have \(|F(x) - F(x_0)| \le M|x - x_0| < M(\epsilon/M) = \epsilon\). Thus, \(F\) is continuous at \(x_0\).</p>
+            
+            <p>Since \(x_0 \in I\) was arbitrary, \(F\) is continuous on \(I\).</p>
+            
+            <p>Now let \(u, v \in I\) and suppose \(L\) lies strictly between \(F(u)\) and \(F(v)\). Since \(F\) is continuous on the interval \([u, v]\), the Intermediate Value Theorem applies and gives some \(\alpha\) between \(u\) and \(v\) such that \(F(\alpha) = L\).</p>
+            
+            <p>Hence \(F\) has the Intermediate Value Property. \(\square\)</p>
+        </div>
+    </div>
+
+    <!-- Section 2: Logarithm and Exponential -->
+    <div class="card" id="log-exp">
+        <h2>Part 2: Logarithm and Exponential Functions</h2>
+        
+        <h3>Definition of the Natural Logarithm</h3>
+        <p>Consider the function \(f(x) = 1/x\) on \((0, \infty)\). It is monotone and hence integrable on every \([a, b] \subset (0, \infty)\). We use this observation to define the natural logarithm function by</p>
+        <div class="math-block">
+            \[
+ \log(x) = \int_1^x \frac{1}{t} dt \quad (x > 0) 
+\]
+        </div>
+        <p>By definition, \(\log(1) = 0\).</p>
+
+        <!-- Inserted content begins here -->
+        <p>
+            This definition gives \(\log : (0, \infty) \to \mathbb{R}\).  
+            The choice of lower limit \(1\) ensures \(\log(1)=0\), which is
+            the natural starting point.
+        </p>
+
+        <div style="background:#edf2f7;border-radius:12px;padding:0.8rem 1.2rem;margin-top:0.8rem;">
+            <strong>💡 Intuition:</strong>
+            The logarithm of \(x\) is the <em>signed area</em> under the hyperbola
+            \(y = \frac{1}{t}\) from \(t=1\) to \(t=x\).
+            If \(x > 1\), the area is positive. If \(0 < x < 1\), the integral runs
+            from \(1\) <em>down</em> to \(x\), so the area is negative.
+        </div>
+
+        <div class="proof-step" style="margin-top:1.2rem;background:#eef2f6;">
+            <div class="step-label">🔎 Why is \(\log(x) < 0\) when \(0 < x < 1\)?</div>
+            <div class="step-content">
+                <p><strong>Direct proof from the integral:</strong></p>
+                \[
+                \log(x) = \int_{1}^{x} \frac{dt}{t} = -\int_{x}^{1} \frac{dt}{t}
+                \]
+                <p>
+                    For \(0 < x < 1\), the integrand \(\frac{1}{t}\) is positive on \([x, 1]\).
+                    Hence \(\int_{x}^{1} \frac{dt}{t} > 0\), so \(\log(x) = -(\text{positive}) < 0\).
+                </p>
+                <p style="margin-top:0.5rem;">
+                    <strong>Alternatively</strong>, using the quotient property (proved in Theorem 2.3.1 below):
+                    since \(\log(1) = \log(x \cdot \frac{1}{x}) = \log(x) + \log(\frac{1}{x})\),
+                    we have \(\log(x) = -\log(\frac{1}{x})\). If \(0 < x < 1\), then
+                    \(\frac{1}{x} > 1\). Because \(\log\) is strictly increasing
+                    (proved in Theorem 2.3.2 below) and \(\log(1)=0\), we get \(\log(\frac{1}{x}) > 0\),
+                    so \(\log(x) = -(\text{positive}) < 0\).
+                </p>
+            </div>
+        </div>
+        <!-- Inserted content ends here -->
+
+        <h3>Theorem 2.3.1 (Algebraic Properties)</h3>
+        <p>Let \(a, b > 0\). Then:</p>
+        <ol>
+            <li>\(\log(ab) = \log a + \log b\)</li>
+            <li>\(\log(a/b) = \log a - \log b\)</li>
+            <li>\(\log(a^m) = m \log a\) for any \(m \in \mathbb{Z}\)</li>
+        </ol>
+
+        <button class="btn-toggle" onclick="toggleProof('proof-log-1')">
+            <span>▶</span> Show Proof of Theorem 2.3.1
+        </button>
+        <div id="proof-log-1" class="proof-content">
+            <p><strong>1. Product Rule:</strong> We use the property of scaling of interval of integration:</p>
+            <div class="math-block">
+                \[
+ \log(ab) = \int_1^{ab} \frac{1}{t} dt = \int_1^a \frac{1}{t} dt + \int_a^{ab} \frac{1}{t} dt = \log a + \int_a^{ab} \frac{1}{t} dt 
+\]
+            </div>
+            <p>For the second integral, we use the scaling property \(\int_{\alpha}^{\beta} f(t) dt = \int_{k\alpha}^{k\beta} f(t/k) dt\). Let \(t = au\), so \(dt = a du\). The limits change from \(a \to ab\) to \(1 \to b\).</p>
+            <div class="math-block">
+                \[
+ \int_a^{ab} \frac{1}{t} dt = \int_1^b \frac{1}{au} (a du) = \int_1^b \frac{1}{u} du = \log b 
+\]
+            </div>
+            <p>Therefore, \(\log(ab) = \log a + \log b\).</p>
+            
+            <p><strong>2. Quotient Rule:</strong> Using the product rule, we have:</p>
+            <div class="math-block">
+                \[
+ \log(a/b) + \log b = \log\left(\frac{a}{b} \cdot b\right) = \log a 
+\]
+            </div>
+            <p>Subtracting \(\log b\) from both sides gives \(\log(a/b) = \log a - \log b\).</p>
+            
+            <p><strong>3. Power Rule:</strong></p>
+            <ul>
+                <li>If \(m = 0\), both sides are \(0\) since \(\log(1) = 0\).</li>
+                <li>For any \(m \in \mathbb{N}\) (positive integers), we use induction via the product rule:
+                    \[
+ \log(a^m) = \log(a \cdots a) = \log a + \cdots + \log a = m \log a 
+\]
+                </li>
+                <li>For negative integers, let \(m = -k\) where \(k \in \mathbb{N}\):
+                    \[
+ \log(a^{-m}) = \log(1/a^m) = \log 1 - \log(a^m) = 0 - m\log a = -m\log a 
+\]
+                </li>
+            </ul>
+            <p>Thus, the property holds for all \(m \in \mathbb{Z}\).</p>
+        </div>
+
+        <h3>Theorem 2.3.2 (Analytical Properties)</h3>
+        <p>The function \(\log: (0, \infty) \to \mathbb{R}\) is a strictly increasing bijection.</p>
+        
+        <button class="btn-toggle" onclick="toggleProof('proof-log-2')">
+            <span>▶</span> Show Proof of Theorem 2.3.2
+        </button>
+        <div id="proof-log-2" class="proof-content">
+            <p><strong>Strictly Increasing:</strong> Let \(b > a > 0\). Then:</p>
+            <div class="math-block">
+                \[
+ \log b - \log a = \int_1^b \frac{1}{t} dt - \int_1^a \frac{1}{t} dt = \int_a^b \frac{1}{t} dt 
+\]
+            </div>
+            <p>Since \(1/t > 0\) on \((a, b)\), the integral \(\int_a^b \frac{1}{t} dt > 0\). Thus, \(\log b > \log a\). This also proves the function is one-to-one (injective).</p>
+            
+            <p><strong>Surjective (Onto):</strong> We must show that for any \(y \in \mathbb{R}\), there exists an \(x > 0\) such that \(\log x = y\).</p>
+            <ul>
+                <li><em>Case 1: \(y > 0\).</em> We know \(\log 2 > \log 1 = 0\). By the Archimedean property, there exists \(N \in \mathbb{N}\) such that \(y < N \log 2 = \log(2^N)\). Since \(\log 1 = 0 < y < \log(2^N)\), and the indefinite integral of a monotone function has the Intermediate Value Property (as proven in Part 1 above), there exists \(x \in (1, 2^N)\) such that \(\log x = y\).</li>
+                <li><em>Case 2: \(y < 0\).</em> There exists \(x > 0\) such that \(\log x = -y > 0\) (from Case 1). Then \(\log(1/x) = -\log x = y\). So \(x' = 1/x\) works.</li>
+                <li><em>Case 3: \(y = 0\).</em> \(x = 1\) works.</li>
+            </ul>
+            <p>Hence, the function is onto. Since \(\log\) is strictly increasing and onto, it is a bijection.</p>
+        </div>
+
+        <h3>Definition of the Exponential Function</h3>
+        <p>Since \(\log: (0, \infty) \to \mathbb{R}\) is a strictly increasing bijection, it has an inverse function. We define the <strong>exponential function</strong> \(\exp: \mathbb{R} \to (0, \infty)\) by:</p>
+        <div class="math-block">
+            \[
+ y = \exp x \iff \log y = x 
+\]
+        </div>
+        <p>Since \(\log\) is strictly increasing, its inverse \(\exp\) is also strictly increasing.</p>
+
+        <h3>Theorem 2.3.3 (Exponential Properties)</h3>
+        <p>Let \(a, b \in \mathbb{R}\). Then:</p>
+        <ol>
+            <li>\(\exp(a+b) = \exp a \exp b\)</li>
+            <li>\(\exp(a-b) = \frac{\exp a}{\exp b}\)</li>
+            <li>\(\exp(ma) = (\exp a)^m\) for \(m \in \mathbb{Z}\)</li>
+        </ol>
+
+        <button class="btn-toggle" onclick="toggleProof('proof-exp-3')">
+            <span>▶</span> Show Proof of Theorem 2.3.3
+        </button>
+        <div id="proof-exp-3" class="proof-content">
+            <p>Since \(\log\) is a one-to-one function, we can prove these identities by applying \(\log\) to both sides and observing that the resulting values are equal.</p>
+            
+            <p><strong>1. Product Rule:</strong></p>
+            <div class="math-block">
+                \[
+ \log(\exp(a+b)) = a+b 
+\]
+                \[
+ \log(\exp a \exp b) = \log(\exp a) + \log(\exp b) = a + b 
+\]
+            </div>
+            <p>Since the logarithms are equal, the arguments must be equal: \(\exp(a+b) = \exp a \exp b\).</p>
+            
+            <p><strong>2. Quotient Rule:</strong></p>
+            <div class="math-block">
+                \[
+ \log(\exp(a-b)) = a-b 
+\]
+                \[
+ \log\left(\frac{\exp a}{\exp b}\right) = \log(\exp a) - \log(\exp b) = a - b 
+\]
+            </div>
+            <p>Therefore, \(\exp(a-b) = \frac{\exp a}{\exp b}\).</p>
+            
+            <p><strong>3. Power Rule:</strong></p>
+            <div class="math-block">
+                \[
+ \log(\exp(ma)) = ma 
+\]
+                \[
+ \log((\exp a)^m) = m \log(\exp a) = ma 
+\]
+            </div>
+            <p>Therefore, \(\exp(ma) = (\exp a)^m\).</p>
+        </div>
+    </div>
+
+    <!-- Interactive Visualization -->
+    <div class="card">
+        <h2>Interactive Visualization: Area under \(1/t\)</h2>
+        <p>Explore the proof of <strong>Theorem 2.3.1 (1)</strong>. Drag the sliders to change the values of \(a\) and \(b\) and observe how the area under the curve \(1/t\) from \(1\) to \(ab\) is exactly the sum of the areas from \(1\) to \(a\) and from \(a\) to \(ab\).</p>
+        
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <label style="flex: 1;">a: <input type="range" id="slider-a" min="1.1" max="3" step="0.1" value="1.5" style="width: 100%;"></label>
+            <label style="flex: 1;">b: <input type="range" id="slider-b" min="1.1" max="3" step="0.1" value="2" style="width: 100%;"></label>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <span style="font-weight: bold; color: var(--primary);">a = <span id="val-a">1.5</span></span>
+            <span style="font-weight: bold; color: var(--secondary);">b = <span id="val-b">2.0</span></span>
+            <span style="font-weight: bold; color: #d97706;">ab = <span id="val-ab">3.0</span></span>
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <div style="background: rgba(37, 99, 235, 0.1); padding: 0.5rem; border-radius: 4px; border-left: 3px solid var(--primary);">
+                \(\log(a) = \int_1^a \frac{1}{t}dt \approx\) <span id="area-a" style="font-weight: bold;">0.405</span>
+            </div>
+            <div style="background: rgba(5, 150, 105, 0.1); padding: 0.5rem; border-radius: 4px; border-left: 3px solid var(--secondary);">
+                \(\int_a^{ab} \frac{1}{t}dt \approx\) <span id="area-b" style="font-weight: bold;">0.693</span>
+            </div>
+            <div style="background: rgba(217, 119, 6, 0.1); padding: 0.5rem; border-radius: 4px; border-left: 3px solid #d97706;">
+                \(\log(ab) = \int_1^{ab} \frac{1}{t}dt \approx\) <span id="area-ab" style="font-weight: bold;">1.098</span>
+            </div>
+        </div>
+        <canvas id="logCanvas" class="interactive-canvas"></canvas>
+    </div>
+
+    <!-- Quiz Section -->
+    <div class="quiz-container">
+        <h2>Test Your Understanding</h2>
+        <p><strong>Question 1:</strong> Why does the integral of an integrable function \(F(x) = \int_a^x f(t)dt\) have the Intermediate Value Property?</p>
+        <div id="quiz-1">
+            <button class="quiz-option" onclick="checkAnswer(this, false)">Because \(f\) is always positive.</button>
+            <button class="quiz-option" onclick="checkAnswer(this, true)">Because \(F\) is continuous on the interval.</button>
+            <button class="quiz-option" onclick="checkAnswer(this, false)">Because \(f\) is strictly increasing.</button>
+        </div>
+        <div class="feedback" id="feedback-1"></div>
+    </div>
+
+    <!-- ======= 7. SUMMARY TABLE ======= -->
+    <section class="card">
+        <h2>7. Summary <span class="badge">Reference</span></h2>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Statement</th>
+                    <th>How it’s proved / role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Definition</strong></td>
+                    <td>\(\log(x) = \int_{1}^{x} \frac{dt}{t}\)</td>
+                    <td>Foundation</td>
+                </tr>
+                <tr>
+                    <td><strong>Product rule</strong></td>
+                    <td>\(\log(ab) = \log a + \log b\)</td>
+                    <td>Substitution \(t = au\) in the integral</td>
+                </tr>
+                <tr>
+                    <td><strong>Quotient rule</strong></td>
+                    <td>\(\log(a/b) = \log a - \log b\)</td>
+                    <td>Derived from product rule</td>
+                </tr>
+                <tr>
+                    <td><strong>Power rule</strong></td>
+                    <td>\(\log(a^m) = m \log a\)</td>
+                    <td>Repeated product / quotient for integers</td>
+                </tr>
+                <tr>
+                    <td><strong>Strictly increasing</strong></td>
+                    <td>\(b > a \Rightarrow \log b > \log a\)</td>
+                    <td>Integral of positive function over \([a,b]\)</td>
+                </tr>
+                <tr>
+                    <td><strong>Negativity for \(x<1\)</strong></td>
+                    <td>\(0 < x < 1 \Rightarrow \log x < 0\)</td>
+                    <td>Integral from \(x\) to \(1\) is positive, or via quotient</td>
+                </tr>
+                <tr>
+                    <td><strong>IVP</strong></td>
+                    <td>\(\log(x) < L < \log(y) \Rightarrow \exists c\)</td>
+                    <td>Completeness axiom + trichotomy</td>
+                </tr>
+                <tr>
+                    <td><strong>Bijection</strong></td>
+                    <td>\((0,\infty) \leftrightarrow \mathbb{R}\)</td>
+                    <td>Injective (strict inc.) + surjective (IVP + Archimedean)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="background:#edf2f7;border-radius:12px;padding:0.8rem 1.2rem;margin-top:0.8rem;">
+            <strong>🔗 Key takeaway:</strong> The natural logarithm is the
+            <em>unique</em> continuous function satisfying \(\log(1)=0\),
+            \(\log(ab)=\log a+\log b\), and whose derivative is \(1/x\).
+            Its inverse is the exponential function \(e^x\).
+        </div>
+    </section>
+
+</div>
+
+<div class="footer">
+    <p>Interactive Real Analysis Module &copy; 2024</p>
+</div>
+
+<script>
+    // Math Rendering
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false}
+            ]
+        });
+    });
+
+    // Toggle Proofs
+    function toggleProof(id) {
+        const el = document.getElementById(id);
+        const btn = el.previousElementSibling;
+        if (el.classList.contains('active')) {
+            el.classList.remove('active');
+            btn.innerHTML = '<span>▶</span> Show Proof';
+        } else {
+            el.classList.add('active');
+            btn.innerHTML = '<span>▼</span> Hide Proof';
+        }
+    }
+
+    // Quiz Logic
+    function checkAnswer(btn, isCorrect) {
+        const parent = btn.parentElement;
+        const feedback = parent.nextElementSibling;
+        const options = parent.querySelectorAll('.quiz-option');
+        
+        options.forEach(opt => {
+            opt.disabled = true;
+            if (opt === btn) {
+                opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+            } else if (isCorrect === false && opt.innerText.includes("continuous")) {
+                opt.classList.add('correct'); // highlight the right answer
+            }
+        });
+
+        feedback.style.display = 'block';
+        if (isCorrect) {
+            feedback.style.color = '#065f46';
+            feedback.innerHTML = "Correct! Since \(f\) is Riemann integrable, it is bounded on compact intervals, making its integral \(F\) continuous. Continuous functions on intervals have the IVP.";
+        } else {
+            feedback.style.color = '#991b1b';
+            feedback.innerText = "Incorrect. The continuity of \(F\) is the key. Try again?";
+            // Re-enable after a delay
+            setTimeout(() => {
+                options.forEach(opt => {
+                    opt.disabled = false;
+                    opt.classList.remove('correct', 'incorrect');
+                });
+                feedback.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // Interactive Canvas for Log Visualization
+    const canvas = document.getElementById('logCanvas');
+    const ctx = canvas.getContext('2d');
+    const sliderA = document.getElementById('slider-a');
+    const sliderB = document.getElementById('slider-b');
+    
+    function drawLogGraph() {
+        const a = parseFloat(sliderA.value);
+        const b = parseFloat(sliderB.value);
+        const ab = a * b;
+
+        // Update text
+        document.getElementById('val-a').innerText = a.toFixed(1);
+        document.getElementById('val-b').innerText = b.toFixed(1);
+        document.getElementById('val-ab').innerText = ab.toFixed(1);
+
+        // Numerical integration (Riemann sum) to get areas
+        function integrate(f, start, end, steps = 1000) {
+            let sum = 0;
+            const dx = (end - start) / steps;
+            for (let i = 0; i < steps; i++) {
+                sum += f(start + i * dx) * dx;
+            }
+            return sum;
+        }
+
+        const f = (x) => 1 / x;
+        const areaA = integrate(f, 1, a);
+        const areaB = integrate(f, a, ab);
+        const areaAB = integrate(f, 1, ab);
+
+        document.getElementById('area-a').innerText = areaA.toFixed(3);
+        document.getElementById('area-b').innerText = areaB.toFixed(3);
+        document.getElementById('area-ab').innerText = areaAB.toFixed(3);
+
+        // Canvas drawing logic
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+
+        const w = rect.width;
+        const h = rect.height;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, w, h);
+
+        // Coordinate mapping
+        const xMin = 0.8, xMax = Math.max(4, ab + 0.5);
+        const yMin = 0, yMax = 1.2; // 1/x is max 1 at x=1
+        
+        const toX = (x) => ((x - xMin) / (xMax - xMin)) * w;
+        const toY = (y) => h - ((y - yMin) / (yMax - yMin)) * h;
+
+        // Draw axes
+        ctx.beginPath();
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 1;
+        // X-axis
+        ctx.moveTo(0, toY(0));
+        ctx.lineTo(w, toY(0));
+        // Y-axis
+        ctx.moveTo(toX(0), 0);
+        ctx.lineTo(toX(0), h);
+        ctx.stroke();
+
+        // Draw the function 1/x
+        ctx.beginPath();
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        for (let x = xMin; x <= xMax; x += 0.01) {
+            const px = toX(x);
+            const py = toY(f(x));
+            if (x === xMin) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        // Highlight Area A (1 to a)
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.2)';
+        ctx.beginPath();
+        ctx.moveTo(toX(1), toY(0));
+        for (let x = 1; x <= a; x += 0.01) {
+            ctx.lineTo(toX(x), toY(f(x)));
+        }
+        ctx.lineTo(toX(a), toY(0));
+        ctx.fill();
+
+        // Highlight Area B (a to ab)
+        ctx.fillStyle = 'rgba(5, 150, 105, 0.2)';
+        ctx.beginPath();
+        ctx.moveTo(toX(a), toY(0));
+        for (let x = a; x <= ab; x += 0.01) {
+            ctx.lineTo(toX(x), toY(f(x)));
+        }
+        ctx.lineTo(toX(ab), toY(0));
+        ctx.fill();
+
+        // Labels
+        ctx.fillStyle = '#333';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('1', toX(1) - 4, toY(0) + 15);
+        ctx.fillText('a', toX(a) - 4, toY(0) + 15);
+        ctx.fillText('ab', toX(ab) - 8, toY(0) + 15);
+        
+        // Draw vertical dashed lines
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = '#999';
+        ctx.beginPath();
+        ctx.moveTo(toX(a), toY(0)); ctx.lineTo(toX(a), toY(f(a)));
+        ctx.moveTo(toX(ab), toY(0)); ctx.lineTo(toX(ab), toY(f(ab)));
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Event listeners
+    sliderA.addEventListener('input', drawLogGraph);
+    sliderB.addEventListener('input', drawLogGraph);
+    
+    // Initial draw
+    window.addEventListener('load', drawLogGraph);
+    window.addEventListener('resize', drawLogGraph);
+</script>
+
+</body>
+</html>
