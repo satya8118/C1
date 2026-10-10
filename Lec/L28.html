@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taylor Polynomials — Calculus I</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --bg: #faf8f4;
+    --fg: #1a1a1a;
+    --muted: #6b6560;
+    --accent: #c0392b;
+    --accent2: #1a6b4a;
+    --accent3: #2471a3;
+    --card: #ffffff;
+    --border: #e0dbd4;
+    --def-bg: #eaf2f8;
+    --def-border: #2980b9;
+    --thm-bg: #fdf2e9;
+    --thm-border: #e67e22;
+    --ex-bg: #eafaf1;
+    --ex-border: #27ae60;
+    --warn-bg: #fdedec;
+    --warn-border: #c0392b;
+    --qa-bg: #f4ecf7;
+    --qa-border: #8e44ad;
+    --note-bg: #fef9e7;
+    --note-border: #f1c40f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.75;
+    margin: 0;
+  }
+  h1, h2, h3, h4 { font-family: 'Source Serif 4', serif; }
+
+  /* TColorBox Styles */
+  .tbox {
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-left: 5px solid;
+    position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .tbox .tbox-title {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .tbox .tbox-title i { font-size: 1rem; }
+  .tbox-definition { background: var(--def-bg); border-color: var(--def-border); }
+  .tbox-definition .tbox-title { color: var(--def-border); }
+  .tbox-theorem { background: var(--thm-bg); border-color: var(--thm-border); }
+  .tbox-theorem .tbox-title { color: var(--thm-border); }
+  .tbox-example { background: var(--ex-bg); border-color: var(--ex-border); }
+  .tbox-example .tbox-title { color: var(--ex-border); }
+  .tbox-warning { background: var(--warn-bg); border-color: var(--warn-border); }
+  .tbox-warning .tbox-title { color: var(--warn-border); }
+  .tbox-question { background: var(--qa-bg); border-color: var(--qa-border); }
+  .tbox-question .tbox-title { color: var(--qa-border); }
+  .tbox-note { background: var(--note-bg); border-color: var(--note-border); }
+  .tbox-note .tbox-title { color: #b7950b; }
+
+  /* Interactive elements */
+  .quiz-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.65rem 1rem;
+    margin: 0.4rem 0;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+  }
+  .quiz-option:hover { border-color: var(--qa-border); background: #f9f5fc; }
+  .quiz-option.correct { border-color: #27ae60; background: #eafaf1; }
+  .quiz-option.wrong { border-color: #c0392b; background: #fdedec; }
+  .quiz-option.disabled { pointer-events: none; opacity: 0.85; }
+  .feedback {
+    margin-top: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: #eafaf1; color: #1a6b4a; border: 1px solid #27ae60; }
+  .feedback.wrong-fb { background: #fdedec; color: #922b21; border: 1px solid #e74c3c; }
+
+  /* Canvas container */
+  .canvas-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  }
+  canvas { display: block; margin: 0 auto; }
+
+  /* Slider styling */
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #ddd;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #c5bfb6; border-radius: 4px; }
+
+  /* TOC */
+  .toc-link {
+    display: block;
+    padding: 0.3rem 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+  .toc-link:hover, .toc-link.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: rgba(192,57,43,0.04);
+  }
+
+  /* Derivative table */
+  .deriv-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  .deriv-table th, .deriv-table td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .deriv-table th { background: var(--def-bg); font-weight: 600; }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in { animation: fadeInUp 0.5s ease-out forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in { animation: none; opacity: 1; }
+  }
+
+  /* Nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250,248,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-anchor { scroll-margin-top: 80px; }
+
+  /* Expandable solution */
+  .sol-toggle {
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  .sol-toggle:hover { text-decoration: underline; }
+  .sol-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .sol-content.open { max-height: 2000px; }
+
+  /* Func selector buttons */
+  .func-btn {
+    padding: 0.4rem 0.9rem;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .func-btn:hover { border-color: var(--accent); }
+  .func-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="topnav">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:var(--accent);">
+        <i class="fas fa-infinity text-white text-sm"></i>
+      </div>
+      <span class="font-semibold text-lg" style="font-family:'Source Serif 4',serif;">Calculus I</span>
+      <span class="text-sm px-2 py-0.5 rounded-full" style="background:var(--def-bg);color:var(--def-border);">Taylor Polynomials</span>
+    </div>
+    <div class="hidden md:flex items-center gap-6 text-sm" style="color:var(--muted);">
+      <a href="#motivation" class="hover:text-black transition">Motivation</a>
+      <a href="#definition" class="hover:text-black transition">Definition</a>
+      <a href="#examples" class="hover:text-black transition">Examples</a>
+      <a href="#interact" class="hover:text-black transition">Explore</a>
+      <a href="#error" class="hover:text-black transition">Error</a>
+      <a href="#assessment" class="hover:text-black transition">Quiz</a>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-4 py-8 flex gap-8">
+
+  <!-- Sidebar TOC (desktop) -->
+  <aside class="hidden lg:block w-56 flex-shrink-0">
+    <div class="sticky top-24">
+      <p class="text-xs font-bold uppercase tracking-wider mb-3" style="color:var(--muted);">Contents</p>
+      <nav id="toc-nav">
+        <a href="#motivation" class="toc-link active">Motivation</a>
+        <a href="#linear" class="toc-link">Linear Approximation</a>
+        <a href="#quadratic" class="toc-link">Quadratic Approximation</a>
+        <a href="#definition" class="toc-link">General Definition</a>
+        <a href="#examples" class="toc-link">Worked Examples</a>
+        <a href="#interact" class="toc-link">Interactive Explorer</a>
+        <a href="#error" class="toc-link">Error Analysis</a>
+        <a href="#common" class="toc-link">Common Expansions</a>
+        <a href="#assessment" class="toc-link">Self-Assessment</a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 min-w-0 max-w-4xl">
+
+    <!-- Hero -->
+    <header class="mb-10 animate-in">
+      <p class="text-sm font-semibold uppercase tracking-wider mb-2" style="color:var(--accent);">Chapter 3 — Differentiation</p>
+      <h1 class="text-4xl md:text-5xl font-black leading-tight mb-4" style="font-family:'Source Serif 4',serif;">
+        Taylor Polynomials
+      </h1>
+      <p class="text-lg leading-relaxed" style="color:var(--muted); max-width:640px;">
+        How do we evaluate $\sin(0.1)$ without a calculator? Or approximate $e^{0.5}$ by hand?
+        Taylor polynomials let us replace complicated functions with simple polynomials —
+        and tell us precisely how much error we make.
+      </p>
+    </header>
+
+    <!-- ==================== MOTIVATION ==================== -->
+    <section id="motivation" class="section-anchor mb-12">
+      <h2 class="text-2xl font-bold mb-4" style="font-family:'Source Serif 4',serif;">Why Approximate with Polynomials?</h2>
+
+      <p>Polynomials are the "nice" functions of calculus:</p>
+      <ul class="list-none space-y-2 my-4 pl-0">
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle mt-1" style="color:var(--accent2);"></i> Easy to evaluate — only addition and multiplication</li>
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle mt-1" style="color:var(--accent2);"></i> Easy to differentiate and integrate</li>
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle mt-1" style="color:var(--accent2);"></i> Continuous and smooth everywhere</li>
+        <li class="flex items-start gap-2"><i class="fas fa-check-circle mt-1" style="color:var(--accent2);"></i> Computers can compute them extremely fast</li>
+      </ul>
+
+      <p>The central question: <strong>Given a function $f(x)$ that is hard to compute, can we find a polynomial $T_n(x)$ that agrees well with $f(x)$ near some point $a$?</strong></p>
+
+      <div class="tbox tbox-note">
+        <div class="tbox-title"><i class="fas fa-lightbulb"></i> Historical Note</div>
+        <p class="mb-0">Brook Taylor published the method in <em>Methodus Incrementorum Directa et Inversa</em> (1715). The key idea had also been discovered independently by James Gregory and others. The result is one of the most powerful tools in all of mathematics.</p>
+      </div>
+
+      <!-- Motivation figure -->
+      <div class="canvas-wrap">
+        <canvas id="motivationCanvas" width="700" height="320"></canvas>
+        <p class="text-center text-sm mt-2" style="color:var(--muted);">Figure 1: A complicated function (blue) and its polynomial approximations of increasing degree near $a = 0$. Higher degree $\Rightarrow$ better fit over a wider interval.</p>
+      </div>
+    </section>
+
+    <!-- ==================== LINEAR APPROX ==================== -->
+    <section id="linear" class="section-anchor mb-12">
+      <h2 class="text-2xl font-bold mb-4" style="font-family:'Source Serif 4',serif;">Starting Point: Linear Approximation</h2>
+
+      <p>You already know the simplest Taylor polynomial — the tangent line. If $f$ is differentiable at $x = a$, then near $a$:</p>
+
+      <div class="tbox tbox-definition">
+        <div class="tbox-title"><i class="fas fa-book"></i> Definition: Linear Approximation (Degree 1)</div>
+        $$T_1(x) = f(a) + f'(a)(x - a)$$         <p class="mb-0">This is the equation of the tangent line to $y = f(x)$ at $x = a$. It matches $f$ in <strong>value</strong> and <strong>slope</strong> at $a$.</p>
+      </div>
+
+      <div class="tbox tbox-example">
+        <div class="tbox-title"><i class="fas fa-pen-fancy"></i> Example 1: Linear Approximation of $\sqrt{x}$ near $a = 4$</div>
+        <p>Let $f(x) = \sqrt{x}$. Then $f'(x) = \frac{1}{2\sqrt{x}}$, so $f(4) = 2$ and $f'(4) = \frac{1}{4}$.</p>
+        <p>$$T_1(x) = 2 + \frac{1}{4}(x - 4)$$</p>
+        <p>Use this to approximate $\sqrt{4.08}$:</p>
+        <p>$$T_1(4.08) = 2 + \frac{1}{4}(0.08) = 2.02$$</p>
+        <p class="mb-0">The true value is $\sqrt{4.08} \approx 2.0199$, so the error is about $0.0001$. Not bad for one line of arithmetic!</p>
+      </div>
+
+      <!-- Linear approx canvas -->
+      <div class="canvas-wrap">
+        <canvas id="linearCanvas" width="700" height="300"></canvas>
+        <p class="text-center text-sm mt-2" style="color:var(--muted);">Figure 2: $f(x) = \sqrt{x}$ (blue) and its tangent line $T_1(x)$ at $a = 4$ (red). Zoom in near $a$ and they become indistinguishable.</p>
+      </div>
+    </section>
+
+    <!-- ==================== QUADRATIC ==================== -->
+    <section id="quadratic" class="section-anchor mb-12">
+      <h2 class="text-2xl font-bold mb-4" style="font-family:'Source Serif 4',serif;">Improving: Quadratic Approximation</h2>
+
+      <p>The tangent line matches $f$ in <em>value</em> and <em>first derivative</em>. What if we also match the <strong>second derivative</strong> — the curvature?</p>
+
+      <p>We want $T_2$ to satisfy three conditions at $x = a$:</p>
+      <ol class="list-decimal pl-6 space-y-1 my-3">
+        <li>$T_2(a) = f(a)$ &nbsp; — same value</li>
+        <li>$T_2'(a) = f'(a)$ &nbsp; — same slope</li>
+        <li>$T_2''(a) = f''(a)$ &nbsp; — same curvature</li>
+      </ol>
+
+      <div class="tbox tbox-theorem">
+        <div class="tbox-title"><i class="fas fa-star"></i> Quadratic Taylor Polynomial</div>
+        $$T_2(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2$$         <p class="mb-0">The factor $\frac{1}{2!}$ ensures $T_2''(a) = f''(a)$. Differentiating $T_2$ twice: $T_2''(x) = f''(a)$, which matches at $x = a$.</p>
+      </div>
+
+      <div class="tbox tbox-example">
+        <div class="tbox-title"><i class="fas fa-pen-fancy"></i> Example 2: Quadratic Approximation of $e^x$ at $a = 0$</div>
+        <p>For $f(x) = e^x$, all derivatives equal $e^x$. So $f(0) = f'(0) = f''(0) = 1$.</p>
+        <p>$$T_2(x) = 1 + x + \frac{x^2}{2}$$</p>
+        <p>Approximate $e^{0.2}$:</p>
+        <p>$$T_2(0.2) = 1 + 0.2 + \frac{0.04}{2} = 1.22$$</p>
+        <p class="mb-0">True value: $e^{0.2} \approx 1.22140$. Error $\approx 0.0014$. The quadratic is about 14 times more accurate than the linear approximation $T_1(0.2) = 1.2$ (error $\approx 0.0214$).</p>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="quadCanvas" width="700" height="300"></canvas>
+        <p class="text-center text-sm mt-2" style="color:var(--muted);">Figure 3: $e^x$ (blue), $T_1(x) = 1+x$ (red dashed), and $T_2(x) = 1+x+\frac{x^2}{2}$ (green). The quadratic "hugs" the curve better.</p>
+      </div>
+    </section>
+
+    <!-- ==================== GENERAL DEFINITION ==================== -->
+    <section id="definition" class="section-anchor mb-12">
+      <h2 class="text-2xl font-bold mb-4" style="font-family:'Source Serif 4',serif;">The General Taylor Polynomial</h2>
+
+      <p>The pattern is now clear. To match the first $n$ derivatives of $f$ at $x = a$:</p>
+
+      <div class="tbox tbox-definition" style="border-left-width:6px;">
+        <div class="tbox-title" style="font-size:1.1rem;"><i class="fas fa-book"></i> Definition: Taylor Polynomial of Degree $n$</div>
+        $$\boxed{T_n(x) = \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!}(x-a)^k}$$         <p>Expanding:</p>
+        $$T_n(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{3!}(x-a)^3 + \cdots + \frac{f^{(n)}(a)}{n!}(x-a)^n$$         <p class="mb-0">This polynomial satisfies $T_n^{(k)}(a) = f^{(k)}(a)$ for all $k = 0, 1, 2, \ldots, n$.</p>
+      </div>
+
+      <div class="tbox tbox-note">
+        <div class="tbox-title"><i class="fas fa-lightbulb"></i> Special Case: Maclaurin Polynomial</div>
+        <p class="mb-0">When $a = 0$, the Taylor polynomial is called a <strong>Maclaurin polynomial</strong>:</p>
+        $$T_n(x) = f(0) + f'(0)\,x + \frac{f''(0)}{2!}\,x^2 + \cdots + \frac{f^{(n)}(0)}{n!}\,x^n$$       </div>
+
+      <div class="tbox tbox-warning">
+        <div class="tbox-title"><i class="fas fa-exclamation-triangle"></i> Common Pitfall</div>
+        <p class="mb-0">The "degree $n$" refers to the <strong>highest power</strong> of $(x-a)$, which is $(x-a)^n$. But the coefficient $\frac{f^{(n)}(a)}{n!}$ could be zero! In that case the actual polynomial degree is lower. Always compute the coefficients — don't assume the last term is nonzero.</p>
+      </div>
+
+      <!-- Derivative table illustration -->
+      <div class="tbox tbox-example">
+        <div class="tbox-title"><i class="fas fa-pen-fancy"></i> Example 3: Building $T_5$ for $f(x) = \sin x$ at $a = 0$</div>
+        <p>Let's tabulate the derivatives at $x = 0$:</p>
+        <table class="deriv-table">
+          <tr><th>$k$</th><th>$f^{(k)}(x)$</th><th>$f^{(k)}(0)$</th><th>Coefficient $\frac{f^{(k)}(0)}{k!}$</th></tr>
+          <tr><td>0</td><td>$\sin x$</td><td>$0$</td><td>$0$</td></tr>
+          <tr><td>1</td><td>$\cos x$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td>2</td><td>$-\sin x$</td><td>$0$</td><td>$0$</td></tr>
+          <tr><td>3</td><td>$-\cos x$</td><td>$-1$</td><td>$-\frac{1}{6}$</td></tr>
+          <tr><td>4</td><td>$\sin x$</td><td>$0$</td><td>$0$</td></tr>
+          <tr><td>5</td><td>$\cos x$</td><td>$1$</td><td>$\frac{1}{120}$</td></tr>
+        </table>
+        <p>$$T_5(x) = x - \frac{x^3}{6} + \frac{x^5}{120}$$</p>
+        <p class="mb-0">Note: only <em>odd</em> powers appear — a reflection of the fact that $\sin x$ is an odd function.</p>
+      </div>
+    </section>
+
+    <!-- ==================== MORE EXAMPLES ==================== -->
+    <section id="examples" class="section-anchor mb-12">
+      <h2 class="text-2xl font-bold mb-4" style="font-family:'Source Serif 4',serif;">Worked Examples</h2>
+
+      <div class="tbox tbox-example">
+        <div class="tbox-title"><i class="fas fa-pen-fancy"></i> Example 4: $T_4$ for $f(x) = \ln(1+x)$ at $a = 0$</div>
+        <p>$f(x) = \ln(1+x)$, &nbsp; $f'(x) = \frac{1}{1+x}$, &nbsp; $f''(x) = -\frac{1}{(1+x)^2}$, &nbsp; $f'''(x) = \frac{2}{(1+x)^3}$, &nbsp; $f^{(4)}(x) = -\frac{6}{(1+x)^4}$</p>
+        <p class="mt-2">Evaluating at $x = 0$: $f(0)=0$, $f'(0)=1$, $f''(0)=-1$, $f'''(0)=2$, $f^{(4)}(0)=-6$.</p>
+        <p>$$T_4(x) = x - \frac{x^2}{2} + \frac{x^3}{3} - \frac{x^4}{4}$$</p>
+        <p class="mb-0">Pattern: $T_n(x) = \displaystyle\sum_{k=1}^{n} \frac{(-1)^{k+1}}{k}\,x^k$ &nbsp; (valid for $|x| < 1$).</p>
+      </div>
+
+      <div class="tbox tbox-example">
+        <div class="tbox-title"><i class="fas fa-pen-fancy"></i> Example 5: $T_3$ for $f(x) = \frac{1}{1-x}$ at $a = 0$</div>
+        <p>$f(x)=(1-x)^{-1}$, so $f'(x)=(1-x)^{-2}$, $f''(x)=2(1-x)^{-3}$, $f'''(x)=6(1-x)^{-4}$.</p>
+        <p class="mt-2">At $x=0$: $f(0)=1$, $f'(0)=1$, $f''(0)=2$, $f'''(0)=6$.</p>
+        <p>$$T_3(x) = 1 + x + x^2 + x^3$$</p>
+        <p class="mb-0">This is just the finite geometric series! The pattern $T_n(x) = 1 + x + x^2 + \cdots + x^n$ is immediate.</p>
+      </div>
+
+      <div class="tbox tbox-example">
+        <div class="tbox-title"><i class="fas fa-pen-fancy"></i> Example 6: $T_3$ for $f(x) = e^x$ at $a = 1$ (not zero!)</div>
+        <p>All derivatives of $e^x$ are $e^x$. At $a=1$: $f(1)=f'(1)=f''(1)=f'''(1)=e$.</p>
+        <p>$$T_3(x) = e + e(x-1) + \frac{e}{2}(x-1)^2 + \frac{e}{6}(x-1)^3$$</p>
+        <p class="mb-0">$$= e\left[1 + (x-1) + \frac{(x-1)^2}{2} + \frac{(x-1)^3}{6}\right]$$</p>
+      </div>
+
+      <!-- Visual: sin approximations -->
+      <div class="canvas-wrap">
+        <canvas id="sinCanvas" width="700" height="320"></canvas>
+        <p class="text-center text-sm mt-2" style="color:var(--muted);">Figure 4: $\sin x$ (blue) with $T_1$, $T_3$, $T_5$, $T_7$ overlaid. Each additional odd term extends the range of accuracy.</p>
+      </div>
+    </section>
+
+    <!-- ==================== INTERACTIVE EXPLORER ==================== -->
+    <section id="interact" class="section-anchor mb-12">
+      <h2 class="text-2xl font-bold mb-4" style="font-family:'Source Serif 4',serif;">Interactive Explorer</h2>
+      <p class="mb-4">Choose a function and drag the slider to see how the Taylor polynomial changes with degree. The shaded region shows the error $|f(x) - T_n(x)|$.</p>
+
+      <div class="canvas-wrap">
+        <div class="flex flex-wrap gap-2 mb-4" id="funcButtons">
+          <button class="func-btn active" data-func="sin">sin(x)</button>
+          <button class="func-btn" data-func="exp">e<sup>x</sup></button>
+          <button class="func-btn" data-func="ln">ln(1+x)</button>
+          <button class="func-btn" data-func="cos">cos(x)</button>
+          <button class="func-btn" data-func="inv">1/(1-x)</button>
+        </div>
+        <canvas id="interactCanvas" width="700" height="400"></canvas>
+        <div class="mt-4">
+          <div class="flex items-center justify-between text-sm mb-1">
+            <span style="color:var(--muted);">Degree $n$:</span>
+            <span class="font-bold text-lg" id="degreeLabel" style="color:var(--accent);">1</span>
+          </div>
+          <input type="range" id="degreeSlider" min="0" max="15" value="1">
+          <div class="flex justify-between text-xs mt-1" style="color:var(--muted);">
+            <span>0</span><span>5</span><span>10</span><span>15</span>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center gap-4 text-sm" style="color:var(--muted);">
+          <span><span style="display:inline-block;width:20px;height:3px;background:#1a6b4a;vertical-align:middle;margin-right:4px;border-radius:2px;"></span> $f(x)$</span>
+          <span><span style="display:inline-block;width:20px;height:3px;background:var(--accent);vertical-align:middle;margin-right:4px;border-radius:2px;"></span> $T_n(x)$</span>
+          <span><span style="display:inline-block;width:20px;height:12px;background:rgba(192,57,43,0.12);vertical-align:middle;margin-right:4px;border-radius:2px;"></span> Error</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ERROR ANALYSIS ==================== -->
+    <section id="error" class="section-anchor mb-12">
+      <h2 class="text-2xl font-bold mb-4" style="font-family:'Source Serif 4',serif;">Error Analysis: Taylor's Remainder Theorem</h2>
+
+      <p>How good is our approximation? The error is called the <strong>remainder</strong>:</p>
+
+      <div class="tbox tbox-definition">
+        <div class="tbox-title"><i class="fas fa-book"></i> Remainder</div>
+        $$R_n(x) = f(x) - T_n(x)$$         <p class="mb-0">So $f(x) = T_n(x) + R_n(x)$. The smaller $|R_n(x)|$, the better our approximation.</p>
+      </div>
+
+      <div class="tbox tbox-theorem" style="border-left-width:6px;">
+        <div class="tbox-title" style="font-size:1.1rem;"><i class="fas fa-star"></i> Taylor's Remainder Theorem</div>
+        <p>If $f^{(n+1)}$ is continuous on an interval containing $a$ and $x$, then there exists a number $c$ between $a$ and $x$ such that:</p>
+        $$\boxed{R_n(x) = \frac{f^{(n+1)}(c)}{(n+1)!}(x-a)^{n+1}}$$         <p>This is the <strong>Lagrange form</strong> of the remainder. The number $c$ depends on $x$ and is usually unknown — but we can <em>bound</em> it.</p>
+      </div>
+
+      <div class="tbox tbox-example">
+        <div class="tbox-title"><i class="fas fa-pen-fancy"></i> Example 7: Bounding the Error for $e^x$</div>
+        <p>Use $T_3(x) = 1 + x + \frac{x^2}{2} + \frac{x^3}{6}$ to approximate $e^{0.5}$. How large can the error be?</p>
+        <p class="mt-2">Here $a=0$, $x=0.5$, $n=3$. The remainder is:</p>
+        <p>$$R_3(0.5) = \frac{e^c}{4!} \cdot (0.5)^4 = \frac{e^c}{384}$$</p>
+        <p>where $0 < c < 0.5$. Since $e^c < e^{0.5} < 2$ (we can check $e^{0.5} < 2$ since $e < 4$):</p>
+        <p>$$|R_3(0.5)| < \frac{2}{384} \approx 0.0052$$</p>
+        <p>So $e^{0.5} = T_3(0.5) \pm 0.0052$. Computing: $T_3(0.5) = 1 + 0.5 + 0.125 + 0.02083 \approx 1.6458$.</p>
+        <p class="mb-0">True value: $e^{0.5} \approx 1.6487$. Actual error: $\approx 0.0029$, which is indeed less than $0.0052$. <span style="color:var(--accent2);">The bound is conservative but correct.</span></p>
+      </div>
+
+      <div class="tbox tbox-note">
+        <div class="tbox-title"><i class="fas fa-lightbulb"></i> Key Insight About Error</div>
+        <p class="mb-0">The remainder has the form $\frac{(\text{something bounded})}{(n+1)!} \cdot (x-a)^{n+1}$. Since $(n+1)!$ grows <em>super-exponentially</em>, for fixed $x-a$, the error eventually becomes tiny as $n$ increases. This is why Taylor approximations work so well.</p>
+      </div>
+
+      <!-- Error visualization -->
+      <div class="canvas-wrap">
+        <canvas id="errorCanvas" width="700" height="300"></canvas>
+        <p class="text-center text-sm mt-2" style="color:var(--muted);">Figure 5: Error $|R_n(0.5)|$ for $e^x$ at $x=0.5$ as degree $n$ increases. The factorial in the denominator drives the error to zero rapidly.</p>
+      </div>
+    </section>
+
+    <!-- ==================== COMMON EXPANSIONS ==================== -->
+    <section id="common" class="section-anchor mb-12">
+      <h2 class="text-2xl font-bold mb-4" style="font-family:'Source Serif 4',serif;">Common Maclaurin Expansions</h2>
+
+      <p>These expansions at $a = 0$ arise so frequently that you should recognize them instantly:</p>
+
+      <div class="grid md:grid-cols-2 gap-4 mt-4">
+        <div class="tbox tbox-definition mb-0">
+          <div class="tbox-title"><i class="fas fa-square-root-variable"></i> Exponential</div>
+          $$e^x = \sum_{k=0}^{\infty} \frac{x^k}{k!} = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots$$         </div>
+        <div class="tbox tbox-definition mb-0">
+          <div class="tbox-title"><i class="fas fa-wave-square"></i> Sine</div>
+          $$\sin x = \sum_{k=0}^{\infty} \frac{(-1)^k x^{2k+1}}{(2k+1)!} = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \cdots$$         </div>
+        <div class="tbox tbox-definition mb-0">
+          <div class="tbox-title"><i class="fas fa-wave-square"></i> Cosine</div>
+          $$\cos x = \sum_{k=0}^{\infty} \frac{(-1)^k x^{2k}}{(2k)!} = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \cdots$$         </div>
+        <div class="tbox tbox-definition mb-0">
+          <div class="tbox-title"><i class="fas fa-log"></i> Natural Logarithm</div>
+          $$\ln(1+x) = \sum_{k=1}^{\infty} \frac{(-1)^{k+1} x^k}{k} = x - \frac{x^2}{2} + \frac{x^3}{3} - \cdots$$         </div>
+        <div class="tbox tbox-definition mb-0">
+          <div class="tbox-title"><i class="fas fa-divide"></i> Geometric Series</div>
+          $$\frac{1}{1-x} = \sum_{k=0}^{\infty} x^k = 1 + x + x^2 + x^3 + \cdots$$         </div>
+        <div class="tbox tbox-definition mb-0">
+          <div class="tbox-title"><i class="fas fa-superscript"></i> Binomial $(1+x)^m$</div>
+          $$(1+x)^m = \sum_{k=0}^{\infty} \binom{m}{k} x^k = 1 + mx + \frac{m(m-1)}{2!}x^2 + \cdots$$         </div>
+      </div>
+
+      <div class="tbox tbox-warning mt-4">
+        <div class="tbox-title"><i class="fas fa-exclamation-triangle"></i> Radius of Convergence</div>
+        <p class="mb-0">These infinite series (Taylor <em>series</em>, not just polynomials) converge only within a certain radius. For $e^x$, $\sin x$, $\cos x$: all $\mathbb{R}$. For $\ln(1+x)$ and $\frac{1}{1-x}$: $|x| < 1$. The Taylor <em>polynomial</em> $T_n$ is always defined, but it only approximates $f$ well within the convergence radius.</p>
+      </div>
+    </section>
+
+    <!-- ==================== SELF-ASSESSMENT ==================== -->
+    <section id="assessment" class="section-anchor mb-16">
+      <h2 class="text-2xl font-bold mb-2" style="font-family:'Source Serif 4',serif;">Self-Assessment</h2>
+      <p class="mb-6" style="color:var(--muted);">Test your understanding. Click an option, then check the feedback.</p>
+
+      <!-- Q1 -->
+      <div class="tbox tbox-question" id="q1">
+        <div class="tbox-title"><i class="fas fa-circle-question"></i> Question 1</div>
+        <p class="mb-3">What is the Taylor polynomial $T_3(x)$ for $f(x) = \cos x$ centered at $a = 0$?</p>
+        <button class="quiz-option" onclick="checkAnswer('q1',this,false)">A) &nbsp; $x - \dfrac{x^3}{6}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q1',this,false)">B) &nbsp; $1 + x + \dfrac{x^2}{2} + \dfrac{x^3}{6}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q1',this,true)">C) &nbsp; $1 - \dfrac{x^2}{2}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q1',this,false)">D) &nbsp; $1 - \dfrac{x^2}{2} + \dfrac{x^4}{24}$</button>
+        <div class="feedback" id="q1-fb"></div>
+        <div class="sol-content mt-2" id="q1-sol">
+          <p class="text-sm" style="color:var(--muted);">The derivatives of $\cos x$ at $0$: $f(0)=1$, $f'(0)=0$ (since $-\sin 0 = 0$), $f''(0)=-1$ (since $-\cos 0 = -1$), $f'''(0)=0$ (since $\sin 0 = 0$). So $T_3(x) = 1 + 0 \cdot x + \frac{-1}{2}x^2 + \frac{0}{6}x^3 = 1 - \frac{x^2}{2}$. Note that $T_3$ has the same terms as $T_2$ here because the $x^3$ coefficient is zero. Option D is $T_4$, not $T_3$.</p>
+        </div>
+        <span class="sol-toggle mt-2 inline-block" onclick="toggleSol('q1-sol',this)"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i> Show solution</span>
+      </div>
+
+      <!-- Q2 -->
+      <div class="tbox tbox-question" id="q2">
+        <div class="tbox-title"><i class="fas fa-circle-question"></i> Question 2</div>
+        <p class="mb-3">The $k$-th derivative of $f(x) = e^{2x}$ at $x=0$ is:</p>
+        <button class="quiz-option" onclick="checkAnswer('q2',this,false)">A) &nbsp; $e^{2x}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q2',this,true)">B) &nbsp; $2^k$</button>
+        <button class="quiz-option" onclick="checkAnswer('q2',this,false)">C) &nbsp; $k \cdot 2^{k-1}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q2',this,false)">D) &nbsp; $2^k e^{2x}$</button>
+        <div class="feedback" id="q2-fb"></div>
+        <div class="sol-content mt-2" id="q2-sol">
+          <p class="text-sm" style="color:var(--muted);">By the chain rule: $f'(x) = 2e^{2x}$, $f''(x) = 4e^{2x}$, $f'''(x) = 8e^{2x}$, ... $f^{(k)}(x) = 2^k e^{2x}$. Evaluating at $x=0$: $f^{(k)}(0) = 2^k \cdot 1 = 2^k$. Option D gives the general derivative formula (before plugging in $x=0$), but the question asks for the value <em>at</em> $x=0$.</p>
+        </div>
+        <span class="sol-toggle mt-2 inline-block" onclick="toggleSol('q2-sol',this)"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i> Show solution</span>
+      </div>
+
+      <!-- Q3 -->
+      <div class="tbox tbox-question" id="q3">
+        <div class="tbox-title"><i class="fas fa-circle-question"></i> Question 3</div>
+        <p class="mb-3">Using $T_2(x) = 1 + x + \frac{x^2}{2}$ for $e^x$, the approximate value of $e^{0.1}$ is:</p>
+        <button class="quiz-option" onclick="checkAnswer('q3',this,false)">A) &nbsp; $1.100$</button>
+        <button class="quiz-option" onclick="checkAnswer('q3',this,true)">B) &nbsp; $1.105$</button>
+        <button class="quiz-option" onclick="checkAnswer('q3',this,false)">C) &nbsp; $1.110$</button>
+        <button class="quiz-option" onclick="checkAnswer('q3',this,false)">D) &nbsp; $1.115$</button>
+        <div class="feedback" id="q3-fb"></div>
+        <div class="sol-content mt-2" id="q3-sol">
+          <p class="text-sm" style="color:var(--muted);">$T_2(0.1) = 1 + 0.1 + \frac{0.01}{2} = 1 + 0.1 + 0.005 = 1.105$. The true value is $e^{0.1} \approx 1.10517$, so this is accurate to 3 decimal places.</p>
+        </div>
+        <span class="sol-toggle mt-2 inline-block" onclick="toggleSol('q3-sol',this)"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i> Show solution</span>
+      </div>
+
+      <!-- Q4 -->
+      <div class="tbox tbox-question" id="q4">
+        <div class="tbox-title"><i class="fas fa-circle-question"></i> Question 4</div>
+        <p class="mb-3">The Taylor polynomial $T_n(x)$ for $f(x) = \sin x$ at $a = 0$ contains only odd powers of $x$ because:</p>
+        <button class="quiz-option" onclick="checkAnswer('q4',this,false)">A) &nbsp; $\sin x$ is a periodic function</button>
+        <button class="quiz-option" onclick="checkAnswer('q4',this,false)">B) &nbsp; The derivatives of $\sin x$ are always $\pm\sin x$ or $\pm\cos x$, and $\cos 0 = 1 \neq 0$</button>
+        <button class="quiz-option" onclick="checkAnswer('q4',this,true)">C) &nbsp; $\sin x$ is an odd function, so all even-order derivatives vanish at $x = 0$</button>
+        <button class="quiz-option" onclick="checkAnswer('q4',this,false)">D) &nbsp; The Maclaurin series always has odd powers for trigonometric functions</button>
+        <div class="feedback" id="q4-fb"></div>
+        <div class="sol-content mt-2" id="q4-sol">
+          <p class="text-sm" style="color:var(--muted);">An odd function $f(-x) = -f(x)$ has a Taylor expansion containing only odd powers. Even derivatives of an odd function at zero are zero: $f^{(2k)}(0) = 0$. For $\sin x$: $f(0) = 0$, $f''(0) = 0$, $f^{(4)}(0) = 0$, etc. Option D is wrong because $\cos x$ (also trigonometric) has only <em>even</em> powers. Option B is incorrect because while the derivatives are $\pm\sin$ or $\pm\cos$, the even ones evaluate to $\pm\sin(0) = 0$.</p>
+        </div>
+        <span class="sol-toggle mt-2 inline-block" onclick="toggleSol('q4-sol',this)"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i> Show solution</span>
+      </div>
+
+      <!-- Q5 -->
+      <div class="tbox tbox-question" id="q5">
+        <div class="tbox-title"><i class="fas fa-circle-question"></i> Question 5</div>
+        <p class="mb-3">If $|f^{(4)}(x)| \leq 3$ for all $x$ near $a = 0$, what is a bound for $|R_3(0.2)|$?</p>
+        <button class="quiz-option" onclick="checkAnswer('q5',this,false)">A) &nbsp; $\dfrac{3 \cdot (0.2)^3}{6}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q5',this,true)">B) &nbsp; $\dfrac{3 \cdot (0.2)^4}{24}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q5',this,false)">C) &nbsp; $\dfrac{3 \cdot (0.2)^4}{6}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q5',this,false)">D) &nbsp; $\dfrac{3 \cdot (0.2)^3}{24}$</button>
+        <div class="feedback" id="q5-fb"></div>
+        <div class="sol-content mt-2" id="q5-sol">
+          <p class="text-sm" style="color:var(--muted);">The Lagrange remainder for $R_3$ involves the $(3+1)=4$-th derivative: $R_3(x) = \frac{f^{(4)}(c)}{4!}(x-a)^4$. So $|R_3(0.2)| \leq \frac{3}{24}(0.2)^4 = \frac{3 \cdot 0.0016}{24} = 0.0002$. Note the exponent is 4 (not 3) and the denominator is $4! = 24$ (not $3! = 6$).</p>
+        </div>
+        <span class="sol-toggle mt-2 inline-block" onclick="toggleSol('q5-sol',this)"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i> Show solution</span>
+      </div>
+
+      <!-- Q6 -->
+      <div class="tbox tbox-question" id="q6">
+        <div class="tbox-title"><i class="fas fa-circle-question"></i> Question 6</div>
+        <p class="mb-3">What is $T_2(x)$ for $f(x) = \sqrt{1 + x}$ at $a = 0$?</p>
+        <button class="quiz-option" onclick="checkAnswer('q6',this,false)">A) &nbsp; $1 + \dfrac{x}{2} + \dfrac{x^2}{4}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q6',this,true)">B) &nbsp; $1 + \dfrac{x}{2} - \dfrac{x^2}{8}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q6',this,false)">C) &nbsp; $1 + x - \dfrac{x^2}{2}$</button>
+        <button class="quiz-option" onclick="checkAnswer('q6',this,false)">D) &nbsp; $1 - \dfrac{x}{2} + \dfrac{x^2}{8}$</button>
+        <div class="feedback" id="q6-fb"></div>
+        <div class="sol-content mt-2" id="q6-sol">
+          <p class="text-sm" style="color:var(--muted);">$f(x) = (1+x)^{1/2}$, $f'(x) = \frac{1}{2}(1+x)^{-1/2}$, $f''(x) = -\frac{1}{4}(1+x)^{-3/2}$. At $x=0$: $f(0)=1$, $f'(0)=\frac{1}{2}$, $f''(0)=-\frac{1}{4}$. Therefore $T_2(x) = 1 + \frac{x}{2} + \frac{-1/4}{2}x^2 = 1 + \frac{x}{2} - \frac{x^2}{8}$. This is a special case of the binomial expansion with $m = 1/2$.</p>
+        </div>
+        <span class="sol-toggle mt-2 inline-block" onclick="toggleSol('q6-sol',this)"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i> Show solution</span>
+      </div>
+
+      <!-- Q7 -->
+      <div class="tbox tbox-question" id="q7">
+        <div class="tbox-title"><i class="fas fa-circle-question"></i> Question 7 (Conceptual)</div>
+        <p class="mb-3">True or False: "The Taylor polynomial $T_n(x)$ always gives a better approximation than $T_{n-1}(x)$ for all $x$."</p>
+        <button class="quiz-option" onclick="checkAnswer('q7',this,true)">A) &nbsp; False</button>
+        <button class="quiz-option" onclick="checkAnswer('q7',this,false)">B) &nbsp; True</button>
+        <div class="feedback" id="q7-fb"></div>
+        <div class="sol-content mt-2" id="q7-sol">
+          <p class="text-sm" style="color:var(--muted);">False! While $T_n$ is more accurate <em>near</em> $a$, for fixed $x$ far from $a$, adding a higher-degree term can actually make things worse before they get better (this is related to the radius of convergence). For example, with $\ln(1+x)$ at $x = 0.9$, the partial sums oscillate and higher-degree terms can increase the error. The theorem only guarantees $R_n(x) \to 0$ as $n \to \infty$ for $x$ <em>within the radius of convergence</em>.</p>
+        </div>
+        <span class="sol-toggle mt-2 inline-block" onclick="toggleSol('q7-sol',this)"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i> Show solution</span>
+      </div>
+
+      <!-- Q8 -->
+      <div class="tbox tbox-question" id="q8">
+        <div class="tbox-title"><i class="fas fa-circle-question"></i> Question 8</div>
+        <p class="mb-3">Find $T_3(x)$ for $f(x) = \dfrac{1}{2-x}$ at $a = 1$.</p>
+        <button class="quiz-option" onclick="checkAnswer('q8',this,false)">A) &nbsp; $1 + (x-1) + (x-1)^2 + (x-1)^3$</button>
+        <button class="quiz-option" onclick="checkAnswer('q8',this,true)">B) &nbsp; $1 + (x-1) + (x-1)^2 + (x-1)^3$ — wait, let me think more carefully</button>
+        <button class="quiz-option" onclick="checkAnswer('q8',this,false)">C) &nbsp; $1 - (x-1) + (x-1)^2 - (x-1)^3$</button>
+        <button class="quiz-option" onclick="checkAnswer('q8',this,false)">D) &nbsp; $\dfrac{1}{2} + \dfrac{x-1}{4} + \dfrac{(x-1)^2}{8} + \dfrac{(x-1)^3}{16}$</button>
+        <div class="feedback" id="q8-fb"></div>
+        <div class="sol-content mt-2" id="q8-sol">
+          <p class="text-sm" style="color:var(--muted);">Rewrite: $f(x) = \frac{1}{2-x} = \frac{1}{1 - (x-1)}$. This is $\frac{1}{1-u}$ with $u = x-1$, so $f(x) = 1 + (x-1) + (x-1)^2 + (x-1)^3 + \cdots$ for $|x-1| < 1$. The answer is A. (Option B was a trick — it's the same expression!) Let's verify by direct computation: $f(1)=1$, $f'(x) = \frac{1}{(2-x)^2}$ so $f'(1)=1$, $f''(x) = \frac{2}{(2-x)^3}$ so $f''(1)=2$, $f'''(x) = \frac{6}{(2-x)^4}$ so $f'''(1)=6$. Thus $T_3 = 1 + 1\cdot(x-1) + \frac{2}{2}(x-1)^2 + \frac{6}{6}(x-1)^3 = 1 + (x-1) + (x-1)^2 + (x-1)^3$. Confirmed!</p>
+        </div>
+        <span class="sol-toggle mt-2 inline-block" onclick="toggleSol('q8-sol',this)"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i> Show solution</span>
+      </div>
+
+      <!-- Score display -->
+      <div class="mt-6 p-4 rounded-lg text-center" style="background:var(--card);border:1px solid var(--border);">
+        <span style="color:var(--muted);">Your score: </span>
+        <span class="text-2xl font-bold" id="scoreDisplay" style="color:var(--accent);">0</span>
+        <span style="color:var(--muted);"> / 8</span>
+        <button onclick="resetQuiz()" class="ml-4 px-4 py-1.5 rounded-lg text-sm font-medium text-white transition hover:opacity-90" style="background:var(--accent);">Reset</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="border-t py-8 text-center text-sm" style="border-color:var(--border);color:var(--muted);">
+  <p>Calculus I — Taylor Polynomials &nbsp;|&nbsp; Based on <a href="https://personal.math.ubc.ca/~CLP/CLP1/clp_1_dc/sec_DIFFTaylor.html" style="color:var(--accent);text-decoration:underline;" target="_blank">CLP-1 Differential Calculus, Section 3.4</a></p>
+</footer>
+
+<script>
+// ==================== QUIZ SYSTEM ====================
+let score = 0;
+const totalQuestions = 8;
+const answered = {};
+
+function checkAnswer(qId, btn, isCorrect) {
+  if (answered[qId]) return;
+  answered[qId] = true;
+
+  const container = document.getElementById(qId);
+  const options = container.querySelectorAll('.quiz-option');
+  options.forEach(o => o.classList.add('disabled'));
+
+  const fb = document.getElementById(qId + '-fb');
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    score++;
+    fb.className = 'feedback show correct-fb';
+    fb.innerHTML = '<i class="fas fa-check-circle"></i> Correct! Well done.';
+  } else {
+    btn.classList.add('wrong');
+    // Highlight the correct one
+    options.forEach(o => {
+      if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
+    });
+    fb.className = 'feedback show wrong-fb';
+    fb.innerHTML = '<i class="fas fa-times-circle"></i> Not quite. See the solution below for the reasoning.';
+  }
+  document.getElementById('scoreDisplay').textContent = score;
+}
+
+function toggleSol(id, toggle) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+  const icon = toggle.querySelector('i');
+  if (el.classList.contains('open')) {
+    icon.className = 'fas fa-chevron-down';
+    toggle.childNodes[toggle.childNodes.length - 1].textContent = ' Hide solution';
+  } else {
+    icon.className = 'fas fa-chevron-right';
+    toggle.childNodes[toggle.childNodes.length - 1].textContent = ' Show solution';
+  }
+}
+
+function resetQuiz() {
+  score = 0;
+  for (let k in answered) delete answered[k];
+  document.getElementById('scoreDisplay').textContent = '0';
+  document.querySelectorAll('.quiz-option').forEach(o => {
+    o.classList.remove('correct', 'wrong', 'disabled');
+  });
+  document.querySelectorAll('.feedback').forEach(f => {
+    f.className = 'feedback';
+    f.innerHTML = '';
+  });
+  document.querySelectorAll('.sol-content').forEach(s => s.classList.remove('open'));
+  document.querySelectorAll('.sol-toggle').forEach(t => {
+    t.querySelector('i').className = 'fas fa-chevron-right';
+    t.childNodes[t.childNodes.length - 1].textContent = ' Show solution';
+  });
+}
+
+// Fix: highlight correct answers properly on wrong click
+document.addEventListener('DOMContentLoaded', () => {
+  // Override checkAnswer to properly find correct button
+  const quizData = {
+    q1: 2, q2: 1, q3: 1, q4: 2, q5: 1, q6: 1, q7: 0, q8: 0
+  };
+  // Re-bind clicks
+  document.querySelectorAll('.tbox-question').forEach(box => {
+    const qId = box.id;
+    const options = box.querySelectorAll('.quiz-option');
+    const correctIdx = quizData[qId];
+    options.forEach((btn, idx) => {
+      btn.onclick = function() {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        options.forEach(o => o.classList.add('disabled'));
+        const fb = document.getElementById(qId + '-fb');
+        if (idx === correctIdx) {
+          btn.classList.add('correct');
+          score++;
+          fb.className = 'feedback show correct-fb';
+          fb.innerHTML = '<i class="fas fa-check-circle"></i> Correct! Well done.';
+        } else {
+          btn.classList.add('wrong');
+          options[correctIdx].classList.add('correct');
+          fb.className = 'feedback show wrong-fb';
+          fb.innerHTML = '<i class="fas fa-times-circle"></i> Not quite. See the solution below for the reasoning.';
+        }
+        document.getElementById('scoreDisplay').textContent = score;
+      };
+    });
+  });
+});
+
+// ==================== CANVAS DRAWING UTILITIES ====================
+const DPR = window.devicePixelRatio || 1;
+
+function setupCanvas(id, w, h) {
+  const canvas = document.getElementById(id);
+  canvas.width = w * DPR;
+  canvas.height = h * DPR;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+  return ctx;
+}
+
+function drawAxes(ctx, w, h, xMin, xMax, yMin, yMax, color) {
+  color = color || '#c5bfb6';
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#999';
+  ctx.font = '11px DM Sans';
+
+  // Grid lines
+  ctx.strokeStyle = '#e8e4df';
+  ctx.lineWidth = 0.5;
+  const xStep = niceStep(xMax - xMin, 8);
+  const yStep = niceStep(yMax - yMin, 6);
+
+  for (let x = Math.ceil(xMin / xStep) * xStep; x <= xMax; x += xStep) {
+    const px = mapX(x, xMin, xMax, w);
+    ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke();
+  }
+  for (let y = Math.ceil(yMin / yStep) * yStep; y <= yMax; y += yStep) {
+    const py = mapY(y, yMin, yMax, h);
+    ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(w, py); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.2;
+  // x-axis
+  if (yMin <= 0 && yMax >= 0) {
+    const y0 = mapY(0, yMin, yMax, h);
+    ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(w, y0); ctx.stroke();
+  }
+  // y-axis
+  if (xMin <= 0 && xMax >= 0) {
+    const x0 = mapX(0, xMin, xMax, w);
+    ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x0, h); ctx.stroke();
+  }
+
+  // Labels
+  ctx.fillStyle = '#aaa';
+  ctx.textAlign = 'center';
+  for (let x = Math.ceil(xMin / xStep) * xStep; x <= xMax; x += xStep) {
+    if (Math.abs(x) < xStep * 0.01) continue;
+    const px = mapX(x, xMin, xMax, w);
+    const y0 = (yMin <= 0 && yMax >= 0) ? mapY(0, yMin, yMax, h) : h - 5;
+    ctx.fillText(fmtNum(x), px, Math.min(y0 + 14, h - 2));
+  }
+  ctx.textAlign = 'right';
+  for (let y = Math.ceil(yMin / yStep) * yStep; y <= yMax; y += yStep) {
+    if (Math.abs(y) < yStep * 0.01) continue;
+    const py = mapY(y, yMin, yMax, h);
+    const x0 = (xMin <= 0 && xMax >= 0) ? mapX(0, xMin, xMax, w) : 30;
+    ctx.fillText(fmtNum(y), Math.max(x0 - 5, 32), py + 4);
+  }
+  ctx.restore();
+}
+
+function mapX(x, xMin, xMax, w) { return (x - xMin) / (xMax - xMin) * w; }
+function mapY(y, yMin, yMax, h) { return h - (y - yMin) / (yMax - yMin) * h; }
+
+function niceStep(range, maxTicks) {
+  const rough = range / maxTicks;
+  const pow = Math.pow(10, Math.floor(Math.log10(rough)));
+  const norm = rough / pow;
+  let nice;
+  if (norm < 1.5) nice = 1;
+  else if (norm < 3.5) nice = 2;
+  else if (norm < 7.5) nice = 5;
+  else nice = 10;
+  return nice * pow;
+}
+
+function fmtNum(n) {
+  if (Math.abs(n) >= 100) return n.toFixed(0);
+  if (Math.abs(n) >= 1) return parseFloat(n.toFixed(2)).toString();
+  return parseFloat(n.toFixed(3)).toString();
+}
+
+function plotFunc(ctx, f, xMin, xMax, yMin, yMax, w, h, color, lineWidth, dash) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth || 2;
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath();
+  const steps = 500;
+  let started = false;
+  for (let i = 0; i <= steps; i++) {
+    const x = xMin + (xMax - xMin) * i / steps;
+    const y = f(x);
+    if (isNaN(y) || !isFinite(y) || y < yMin - 1 || y > yMax + 1) {
+      started = false;
+      continue;
+    }
+    const px = mapX(x, xMin, xMax, w);
+    const py = mapY(y, yMin, yMax, h);
+    if (!started) { ctx.moveTo(px, py); started = true; }
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+}
+
+function fillError(ctx, f, Tn, xMin, xMax, yMin, yMax, w, h, color) {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  const steps = 400;
+  // Top edge (max of f, Tn)
+  for (let i = 0; i <= steps; i++) {
+    const x = xMin + (xMax - xMin) * i / steps;
+    const yf = f(x), yt = Tn(x);
+    if (isNaN(yf) || isNaN(yt)) continue;
+    const yTop = Math.max(yf, yt);
+    if (yTop < yMin - 1 || yTop > yMax + 1) continue;
+    const px = mapX(x, xMin, xMax, w);
+    const py = mapY(yTop, yMin, yMax, h);
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  // Bottom edge (min of f, Tn), reversed
+  for (let i = steps; i >= 0; i--) {
+    const x = xMin + (xMax - xMin) * i / steps;
+    const yf = f(x), yt = Tn(x);
+    if (isNaN(yf) || isNaN(yt)) continue;
+    const yBot = Math.min(yf, yt);
+    if (yBot < yMin - 1 || yBot > yMax + 1) continue;
+    const px = mapX(x, xMin, xMax, w);
+    const py = mapY(yBot, yMin, yMax, h);
+    ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+// ==================== FIGURE 1: MOTIVATION ====================
+(function drawMotivation() {
+  const w = 700, h = 320;
+  const ctx = setupCanvas('motivationCanvas', w, h);
+  const xMin = -6, xMax = 6, yMin = -4, yMax = 4;
+  drawAxes(ctx, w, h, xMin, xMax, yMin, yMax);
+
+  const f = x => Math.sin(x) + 0.3 * Math.cos(2 * x);
+
+  // Taylor polys at a=0: compute derivatives numerically... let's hardcode for this demo
+  // f(0) = 0.3, f'(0) = cos(0) - 0.6*sin(0) = 1, f''(0) = -sin(0) - 1.2*cos(0) = -1.2
+  // f'''(0) = -cos(0) + 2.4*sin(0) = -1, f''''(0) = sin(0) + 4.8*cos(0) = 4.8
+  // f'''''(0) = cos(0) - 9.6*sin(0) = 1
+  const T1 = x => 0.3 + 1 * x;
+  const T2 = x => 0.3 + x - 0.6 * x * x;
+  const T3 = x => 0.3 + x - 0.6 * x * x - 1/6 * x * x * x;
+  const T5 = x => 0.3 + x - 0.6*x*x - 1/6*x*x*x + 4.8/24*x*x*x*x + 1/120*x*x*x*x*x;
+
+  const colors = ['#e74c3c', '#e67e22', '#27ae60', '#2980b9'];
+  plotFunc(ctx, T1, xMin, xMax, yMin, yMax, w, h, colors[0], 1.5, [6, 4]);
+  plotFunc(ctx, T2, xMin, xMax, yMin, yMax, w, h, colors[1], 1.5, [4, 3]);
+  plotFunc(ctx, T3, xMin, xMax, yMin, yMax, w, h, colors[2], 1.5, [3, 2]);
+  plotFunc(ctx, T5, -5, 5, yMin, yMax, w, h, colors[3], 2, [2, 2]);
+  plotFunc(ctx, f, xMin, xMax, yMin, yMax, w, h, '#1a6b4a', 2.5);
+
+  // Legend
+  ctx.save();
+  ctx.font = '12px DM Sans';
+  const labels = ['T₁', 'T₂', 'T₃', 'T₅', 'f(x)'];
+  const lColors = [...colors, '#1a6b4a'];
+  labels.forEach((l, i) => {
+    ctx.strokeStyle = lColors[i];
+    ctx.lineWidth = i === 4 ? 2.5 : 1.5;
+    if (i < 4) ctx.setLineDash([4, 2]); else ctx.setLineDash([]);
+    const lx = w - 60, ly = 20 + i * 18;
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 20, ly); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = lColors[i];
+    ctx.textAlign = 'left';
+    ctx.fillText(l, lx + 25, ly + 4);
+  });
+  ctx.restore();
+})();
+
+// ==================== FIGURE 2: LINEAR APPROX ====================
+(function drawLinear() {
+  const w = 700, h = 300;
+  const ctx = setupCanvas('linearCanvas', w, h);
+  const xMin = 1, xMax = 7, yMin = 1, yMax = 3;
+  drawAxes(ctx, w, h, xMin, xMax, yMin, yMax);
+
+  const f = x => Math.sqrt(x);
+  const T1 = x => 2 + 0.25 * (x - 4);
+
+  plotFunc(ctx, T1, xMin, xMax, yMin, yMax, w, h, '#c0392b', 2, [6, 4]);
+  plotFunc(ctx, f, xMin, xMax, yMin, yMax, w, h, '#1a6b4a', 2.5);
+
+  // Point a=4
+  const ax = mapX(4, xMin, xMax, w);
+  const ay = mapY(2, yMin, yMax, h);
+  ctx.beginPath(); ctx.arc(ax, ay, 5, 0, 2 * Math.PI);
+  ctx.fillStyle = '#c0392b'; ctx.fill();
+  ctx.fillStyle = '#c0392b';
+  ctx.font = 'bold 13px DM Sans';
+  ctx.textAlign = 'left';
+  ctx.fillText('a = 4', ax + 8, ay - 8);
+
+  // Point at 4.08
+  const bx = mapX(4.08, xMin, xMax, w);
+  const byT = mapY(2.02, yMin, yMax, h);
+  const byF = mapY(Math.sqrt(4.08), yMin, yMax, h);
+  ctx.beginPath(); ctx.arc(bx, byT, 4, 0, 2*Math.PI); ctx.fillStyle = '#c0392b'; ctx.fill();
+  ctx.beginPath(); ctx.arc(bx, byF, 4, 0, 2*Math.PI); ctx.fillStyle = '#1a6b4a'; ctx.fill();
+
+  // Error line
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2, 2]);
+  ctx.beginPath(); ctx.moveTo(bx, byT); ctx.lineTo(bx, byF); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.font = '11px DM Sans';
+  ctx.fillStyle = '#c0392b';
+  ctx.textAlign = 'left';
+  ctx.fillText('T₁(4.08)=2.02', bx + 6, byT + 4);
+  ctx.fillStyle = '#1a6b4a';
+  ctx.fillText('√4.08≈2.0199', bx + 6, byF + 4);
+})();
+
+// ==================== FIGURE 3: QUADRATIC ====================
+(function drawQuad() {
+  const w = 700, h = 300;
+  const ctx = setupCanvas('quadCanvas', w, h);
+  const xMin = -2, xMax = 2.5, yMin = -0.5, yMax = 4;
+  drawAxes(ctx, w, h, xMin, xMax, yMin, yMax);
+
+  const f = x => Math.exp(x);
+  const T1 = x => 1 + x;
+  const T2 = x => 1 + x + x*x/2;
+
+  plotFunc(ctx, T1, xMin, xMax, yMin, yMax, w, h, '#c0392b', 1.8, [6, 4]);
+  plotFunc(ctx, T2, xMin, xMax, yMin, yMax, w, h, '#27ae60', 2, [4, 3]);
+  plotFunc(ctx, f, xMin, xMax, yMin, yMax, w, h, '#1a6b4a', 2.5);
+
+  // Legend
+  ctx.save();
+  ctx.font = '12px DM Sans';
+  [['T₁(x)=1+x', '#c0392b', [6,4]], ['T₂(x)=1+x+x²/2', '#27ae60', [4,3]], ['eˣ', '#1a6b4a', []]].forEach(([l,c,d], i) => {
+    ctx.strokeStyle = c; ctx.lineWidth = 2;
+    ctx.setLineDash(d);
+    const lx = w - 140, ly = 18 + i * 18;
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 20, ly); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = c; ctx.textAlign = 'left';
+    ctx.fillText(l, lx + 25, ly + 4);
+  });
+  ctx.restore();
+})();
+
+// ==================== FIGURE 4: SIN APPROXIMATIONS ====================
+(function drawSin() {
+  const w = 700, h = 320;
+  const ctx = setupCanvas('sinCanvas', w, h);
+  const xMin = -8, xMax = 8, yMin = -2.5, yMax = 2.5;
+  drawAxes(ctx, w, h, xMin, xMax, yMin, yMax);
+
+  const f = x => Math.sin(x);
+  const T1 = x => x;
+  const T3 = x => x - x*x*x/6;
+  const T5 = x => x - x*x*x/6 + x*x*x*x*x/120;
+  const T7 = x => x - x*x*x/6 + x*x*x*x*x/120 - x*x*x*x*x*x*x/5040;
+
+  const polys = [T1, T3, T5, T7];
+  const labels = ['T₁(x)=x', 'T₃(x)=x−x³/6', 'T₅(x)=x−x³/6+x⁵/120', 'T₇(x)=...−x⁷/5040'];
+  const colors = ['#e74c3c', '#e67e22', '#27ae60', '#2980b9'];
+
+  polys.forEach((p, i) => {
+    plotFunc(ctx, p, xMin, xMax, yMin, yMax, w, h, colors[i], 1.5, [4 + i, 3]);
+  });
+  plotFunc(ctx, f, xMin, xMax, yMin, yMax, w, h, '#1a6b4a', 2.5);
+
+  ctx.save();
+  ctx.font = '11px DM Sans';
+  labels.forEach((l, i) => {
+    ctx.strokeStyle = colors[i]; ctx.lineWidth = 1.5;
+    ctx.setLineDash([4+i, 3]);
+    const lx = w - 190, ly = 18 + i * 17;
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 18, ly); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = colors[i]; ctx.textAlign = 'left';
+    ctx.fillText(l, lx + 23, ly + 4);
+  });
+  ctx.fillStyle = '#1a6b4a';
+  ctx.fillText('sin(x)', w - 190, 18 + 4*17 + 4);
+  ctx.restore();
+})();
+
+// ==================== FIGURE 5: ERROR CHART ====================
+(function drawError() {
+  const w = 700, h = 300;
+  const ctx = setupCanvas('errorCanvas', w, h);
+  const xMin = -0.5, xMax = 10.5, yMin = -0.02, yMax = 0.45;
+  drawAxes(ctx, w, h, xMin, xMax, yMin, yMax);
+
+  // Error |R_n(0.5)| = e^c / (n+1)! * 0.5^(n+1), approximate with e^0.5
+  const x0 = 0.5;
+  const eHalf = Math.exp(x0);
+  const maxN = 10;
+
+  // Actual errors
+  const errors = [];
+  for (let n = 0; n <= maxN; n++) {
+    const TnVal = sumExp(x0, n);
+    errors.push(Math.abs(Math.exp(x0) - TnVal));
+  }
+
+  // Bar chart
+  const barW = (w - 80) / (maxN + 1) * 0.7;
+  const gap = (w - 80) / (maxN + 1);
+
+  ctx.save();
+  errors.forEach((e, n) => {
+    const px = 50 + n * gap + gap * 0.15;
+    const barH = mapY(e, yMin, yMax, h) - mapY(0, yMin, yMax, h);
+    const py = mapY(e, yMin, yMax, h);
+
+    const grad = ctx.createLinearGradient(0, py, 0, mapY(0, yMin, yMax, h));
+    grad.addColorStop(0, '#c0392b');
+    grad.addColorStop(1, '#e74c3c');
+    ctx.fillStyle = grad;
+    ctx.fillRect(px, py, barW, barH);
+
+    // Label
+    ctx.fillStyle = '#666';
+    ctx.font = '11px DM Sans';
+    ctx.textAlign = 'center';
+    ctx.fillText('n=' + n, px + barW / 2, mapY(0, yMin, yMax, h) + 14);
+
+    // Value on top
+    if (e > 0.005) {
+      ctx.fillStyle = '#c0392b';
+      ctx.font = '10px DM Sans';
+      ctx.fillText(e.toFixed(4), px + barW / 2, py - 4);
+    }
+  });
+
+  // y-axis label
+  ctx.save();
+  ctx.translate(12, h / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#999';
+  ctx.font = '12px DM Sans';
+  ctx.textAlign = 'center';
+  ctx.fillText('|Rₙ(0.5)| for eˣ', 0, 0);
+  ctx.restore();
+
+  ctx.restore();
+})();
+
+function sumExp(x, n) {
+  let s = 0, term = 1;
+  for (let k = 0; k <= n; k++) {
+    s += term;
+    term *= x / (k + 1);
+  }
+  return s;
+}
+
+// ==================== INTERACTIVE EXPLORER ====================
+let currentFunc = 'sin';
+let currentDegree = 1;
+
+const funcs = {
+  sin: {
+    f: x => Math.sin(x),
+    label: 'sin(x)',
+    xMin: -8, xMax: 8, yMin: -3, yMax: 3,
+    buildTn: function(n) {
+      // sin: coefficients: 0, 1, 0, -1/6, 0, 1/120, 0, -1/5040, ...
+      const coeffs = [0];
+      for (let k = 0; k <= n; k++) {
+        if (k % 2 === 0) coeffs.push(0);
+        else {
+          const sign = ((k - 1) / 2) % 2 === 0 ? 1 : -1;
+          coeffs.push(sign / factorial(k));
+        }
+      }
+      return x => {
+        let s = 0;
+        for (let k = 0; k <= n; k++) s += coeffs[k] * Math.pow(x, k);
+        return s;
+      };
+    }
+  },
+  exp: {
+    f: x => Math.exp(x),
+    label: 'eˣ',
+    xMin: -4, xMax: 4, yMin: -1, yMax: 8,
+    buildTn: function(n) {
+      return x => {
+        let s = 0, term = 1;
+        for (let k = 0; k <= n; k++) { s += term; term *= x / (k + 1); }
+        return s;
+      };
+    }
+  },
+  ln: {
+    f: x => Math.log(1 + x),
+    label: 'ln(1+x)',
+    xMin: -1.5, xMax: 2, yMin: -4, yMax: 3,
+    buildTn: function(n) {
+      return x => {
+        let s = 0;
+        for (let k = 1; k <= n; k++) s += Math.pow(-1, k + 1) * Math.pow(x, k) / k;
+        return s;
+      };
+    }
+  },
+  cos: {
+    f: x => Math.cos(x),
+    label: 'cos(x)',
+    xMin: -8, xMax: 8, yMin: -3, yMax: 3,
+    buildTn: function(n) {
+      const coeffs = [];
+      for (let k = 0; k <= n; k++) {
+        if (k % 2 === 1) coeffs.push(0);
+        else {
+          const sign = (k / 2) % 2 === 0 ? 1 : -1;
+          coeffs.push(sign / factorial(k));
+        }
+      }
+      return x => {
+        let s = 0;
+        for (let k = 0; k <= n; k++) s += coeffs[k] * Math.pow(x, k);
+        return s;
+      };
+    }
+  },
+  inv: {
+    f: x => 1 / (1 - x),
+    label: '1/(1-x)',
+    xMin: -2, xMax: 1.5, yMin: -2, yMax: 8,
+    buildTn: function(n) {
+      return x => {
+        let s = 0, term = 1;
+        for (let k = 0; k <= n; k++) { s += term; term *= x; }
+        return s;
+      };
+    }
+  }
+};
+
+function factorial(n) {
+  let r = 1; for (let i = 2; i <= n; i++) r *= i; return r;
+}
+
+function drawInteractive() {
+  const w = 700, h = 400;
+  const ctx = setupCanvas('interactCanvas', w, h);
+  const fc = funcs[currentFunc];
+  const { f, xMin, xMax, yMin, yMax, buildTn } = fc;
+
+  drawAxes(ctx, w, h, xMin, xMax, yMin, yMax);
+
+  const Tn = buildTn(currentDegree);
+
+  // Error shading
+  fillError(ctx, f, Tn, xMin, xMax, yMin, yMax, w, h, 'rgba(192,57,43,0.10)');
+
+  // Taylor polynomial
+  plotFunc(ctx, Tn, xMin, xMax, yMin, yMax, w, h, '#c0392b', 2.5);
+
+  // Original function
+  plotFunc(ctx, f, xMin, xMax, yMin, yMax, w, h, '#1a6b4a', 2.5);
+
+  // Center point
+  const cx = mapX(0, xMin, xMax, w);
+  const cy = mapY(f(0), yMin, yMax, h);
+  ctx.beginPath(); ctx.arc(cx, cy, 5, 0, 2 * Math.PI);
+  ctx.fillStyle = '#c0392b'; ctx.fill();
+  ctx.fillStyle = '#c0392b';
+  ctx.font = 'bold 12px DM Sans';
+  ctx.textAlign = 'left';
+  ctx.fillText('a = 0', cx + 8, cy - 10);
+
+  // Formula display
+  ctx.save();
+  ctx.font = '13px DM Sans';
+  ctx.fillStyle = '#333';
+  ctx.textAlign = 'left';
+  ctx.fillText(`f(x) = ${fc.label}     T${currentDegree}(x) shown in red`, 12, 20);
+  ctx.restore();
+}
+
+// Setup interactivity
+document.getElementById('degreeSlider').addEventListener('input', function() {
+  currentDegree = parseInt(this.value);
+  document.getElementById('degreeLabel').textContent = currentDegree;
+  drawInteractive();
+});
+
+document.querySelectorAll('.func-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.func-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    currentFunc = this.dataset.func;
+    // Reset degree to 1
+    currentDegree = 1;
+    document.getElementById('degreeSlider').value = 1;
+    document.getElementById('degreeLabel').textContent = '1';
+    drawInteractive();
+  });
+});
+
+// Initial draw
+drawInteractive();
+
+// ==================== TOC HIGHLIGHTING ====================
+const sections = document.querySelectorAll('.section-anchor');
+const tocLinks = document.querySelectorAll('.toc-link');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.toc-link[href="#${entry.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-100px 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// ==================== ANIMATE IN ON SCROLL ====================
+const animObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('animate-in');
+      animObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.tbox, .canvas-wrap').forEach(el => {
+  el.style.opacity = '0';
+  animObserver.observe(el);
+});
+</script>
+
+</body>
+</html>

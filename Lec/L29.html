@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Continuity, Differentiation, Integration: One Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global', scale: 1.0 } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<style>
+  :root{
+    --bg:#0e1726; --bg2:#142238; --bg3:#0b1424; --ink:#e6edf7; --soft:#9fb0c8; --line:#27395a; --radius:14px;
+    --font:'Source Serif 4','Source Serif Pro',Georgia,'Times New Roman',serif; --cy:#5ad1e6; --au:#ffd37a; --gr:#7bd88f; --co:#ff7b72; --vi:#b69cff;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.7;font-size:18px;}
+  h1,h2,h3{font-family:var(--font);font-weight:600;color:var(--au);letter-spacing:-0.01em;}
+  h3{color:var(--cy);}
+  .eyebrow{font-family:var(--font);font-size:14px;letter-spacing:0.12em;text-transform:uppercase;color:var(--cy);font-weight:600;}
+  header.hero{padding:72px 8vw 56px;background:radial-gradient(circle at 85% 15%,rgba(90,209,230,0.16),transparent 55%),radial-gradient(circle at 10% 90%,rgba(255,211,122,0.08),transparent 50%),var(--bg);border-bottom:1px solid var(--line);}
+  header.hero h1{font-size:clamp(30px,4.2vw,50px);margin:10px 0 18px;max-width:820px;line-height:1.1;}
+  header.hero p.sub{max-width:660px;color:var(--soft);font-size:17.5px;}
+  main{max-width:900px;margin:0 auto;padding:0 6vw 120px;}
+  section.block{display:none;padding-top:60px;}
+  section.block.shown{display:block;animation:fade .5s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .kicker{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  .kicker .num{font-family:var(--font);font-size:13px;color:var(--bg);background:var(--au);border-radius:6px;padding:3px 9px;font-weight:600;}
+  h2.title{font-size:clamp(24px,3vw,32px);margin:4px 0 20px;}
+  p{color:var(--ink);} p.lede{color:var(--soft);font-size:17px;}
+  strong,b{color:#fff;}
+  span[class^="k"] b,span[style*="color"] b{color:inherit;}
+  .card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;margin:22px 0;}
+  .card{border-left:4px solid var(--cy);}
+  .card.amber{border-left-color:var(--au);}
+  .card.sage{border-left-color:var(--gr);}
+  .card.indigo{border-left-color:var(--cy);}
+  .card.red{border-left-color:var(--co);}
+  .demo{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px 26px;margin:26px 0;}
+  .demo .demo-label{font-family:var(--font);font-size:14px;text-transform:uppercase;letter-spacing:0.1em;color:var(--cy);font-weight:600;margin-bottom:10px;}
+  .demo div[id^=x_pl]>svg{width:100%;height:auto;display:block;background:var(--bg3);border-radius:10px;}
+  .demo div[id^=x_pl]>svg text{font-family:var(--font);}
+  mjx-container{color:inherit;line-height:normal !important;}
+  mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%;padding:.6em .25em;margin:.5em 0;}
+  .continue-wrap{text-align:center;margin:56px 0 0;}
+  button.continue{font-family:var(--font);font-weight:600;font-size:15px;background:var(--au);color:var(--bg);border:none;padding:13px 26px;border-radius:999px;cursor:pointer;transition:transform .15s ease,background .15s ease;}
+  button.continue:hover{background:#ffe3a3;transform:translateY(-1px);}
+  button.continue:focus-visible{outline:3px solid var(--cy);outline-offset:2px;}
+  .reveal-btn{font-family:var(--font);font-size:15px;font-weight:600;background:transparent;border:1.5px solid var(--cy);color:var(--cy);padding:9px 15px;border-radius:8px;cursor:pointer;margin-top:4px;}
+  .reveal-btn:hover{background:rgba(90,209,230,.14);}
+  .answer{display:none;margin-top:12px;padding:16px 20px;background:var(--bg3);border-left:4px solid var(--gr);border-radius:var(--radius);}
+  .answer.shown{display:block;}
+  .problem{background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--au);border-radius:var(--radius);padding:22px 26px;margin:20px 0;}
+  .problem .ptitle{font-family:var(--font);font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--au);font-weight:600;margin-bottom:8px;}
+  footer{max-width:900px;margin:0 auto;padding:40px 6vw 80px;color:var(--soft);font-size:14px;border-top:1px solid var(--line);}
+  .caption{font-size:15px;color:var(--soft);margin-top:10px;}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--au);width:0%;z-index:50;transition:width .4s ease;}
+  .tier{font-family:var(--font);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--bg);padding:3px 10px;border-radius:6px;display:inline-block;margin-bottom:10px;font-weight:600;}
+  .tier.A{background:var(--gr);} .tier.B{background:var(--au);} .tier.C{background:var(--cy);}
+  .q{margin-bottom:22px;} .q p.qtext{font-weight:500;}
+  ol.apps li{margin-bottom:10px;}
+  .ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin:12px 0 6px;font-size:16px;color:var(--soft);}
+  .ctl label{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ctl select{font:inherit;padding:6px 10px;border:1.5px solid var(--cy);border-radius:8px;background:var(--bg3);color:var(--ink);max-width:100%;}
+  .ctl input[type=range]{width:min(230px,100%);accent-color:var(--au);}
+  .ctl input[type=checkbox]{accent-color:var(--au);width:16px;height:16px;}
+  .ro{font-family:var(--font);font-size:15px;color:var(--ink);background:var(--bg3);border:1px solid #2b6a7a;padding:9px 13px;border-radius:8px;margin-top:8px;line-height:1.65;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px;}
+  .chip{font-family:var(--font);font-size:14.5px;padding:3px 12px;border-radius:999px;border:1.5px solid;}
+  .chip.ok{color:var(--gr);background:rgba(123,216,143,.10);border-color:var(--gr);}
+  .chip.bad{color:var(--co);background:rgba(255,123,114,.10);border-color:var(--co);}
+  .pf li{margin-bottom:10px;}
+  .k1{color:var(--cy)} .k2{color:var(--co)} .k3{color:var(--au)} .k4{color:var(--gr)} .k5{color:var(--vi)}
+  table.t{border-collapse:collapse;width:100%;margin:16px 0;font-size:16px;display:block;overflow-x:auto;}
+  table.t th,table.t td{border:1px solid var(--line);padding:7px 12px;text-align:center;}
+  table.t th{background:var(--bg3);color:var(--au);}
+  .badge{display:inline-block;padding:1px 10px;border-radius:999px;font-size:14px;font-weight:600;color:var(--bg);}
+  .b-up{background:var(--gr);} .b-dn{background:var(--co);} .b-max{background:var(--au);} .b-min{background:var(--cy);}
+
+  .edges{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin:12px 0;}
+  .edges button,.qz button{font-family:var(--font);font-size:16px;text-align:left;padding:9px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg3);color:var(--ink);cursor:pointer;}
+  .edges button:hover,.qz button:hover:not(:disabled){border-color:var(--cy);}
+  .qz{background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--cy);border-radius:var(--radius);padding:20px 24px;margin:18px 0;}
+  .qz .opts{display:grid;gap:8px;margin-top:10px;}
+  .qz button.right{border-color:var(--gr);background:rgba(123,216,143,.14);}
+  .qz button.wrong{border-color:var(--co);background:rgba(255,123,114,.14);}
+  .qz .why{display:none;margin-top:12px;padding:12px 16px;background:var(--bg3);border-left:4px solid var(--gr);border-radius:10px;}
+  .ctl input[type=range]{width:min(260px,100%);}
+
+</style>
+</head>
+<body>
+<div class="progress" id="progressBar"></div>
+<header class="hero">
+  <div class="eyebrow">Real Analysis · Continuity · Differentiation · Integration</div>
+  <h1>Continuity, differentiation and integration: one story</h1>
+  <p class="sub">Three chapters of calculus meet in a single object, the accumulation function \(A(x)=\int_a^x f\). Sweep out area, squeeze difference quotients, hunt for primitives that cannot exist, and build the logarithm from nothing but an integral. Every picture is live.</p>
+</header>
+<main>
+<section class="block shown" id="c1">
+  <div class="kicker"><span class="num">01</span><span class="eyebrow">The big picture</span></div>
+  <h2 class="title">Three ideas, one object</h2>
+
+  <p class="lede">Continuity says a graph has no breaks. Differentiation measures how steeply it climbs. Integration measures the area underneath. They look like three separate chapters, but one object ties them together: the <b>accumulation function</b>
+  \[ A(x)=\int_a^x f(t)\,dt. \]
+  Build \(A\) from \(f\), and every question about \(f\) turns into a question about the three ideas at once. Is \(A\) continuous? Is it differentiable, and what is \(A'\)? Does every \(f\) arise as a derivative? This lecture lets you test each answer yourself.</p>
+  <div class="demo">
+    <div class="demo-label">Explore · The map of the three ideas</div>
+    <div id="x_pl0"></div>
+    <div class="edges" id="x_ed0"></div>
+    <div class="ro" id="x_ro0"></div>
+    <p class="caption">Click an arrow (or its button) to see the theorem that connects two of the ideas, and where in this lecture it is explored. The highlighted arrow is the star of the show: <b>FTC-1</b>.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="c2">Continue — building the accumulation function ↓</button></div>
+</section>
+<section class="block" id="c2">
+  <div class="kicker"><span class="num">02</span><span class="eyebrow">Integration</span></div>
+  <h2 class="title">The accumulation function</h2>
+
+  <div class="card indigo">
+    <p><strong>Definition.</strong> Let \(f\) be Riemann integrable on every closed bounded subinterval of an interval \(I\), and fix \(a\in I\). The <b>accumulation function</b> of \(f\) based at \(a\) is
+    \[ A(x)=\int_a^x f(t)\,dt,\qquad x\in I, \]
+    with the convention \(\int_a^x=-\int_x^a\) when \(x\lt a\). It records the <em>signed area</em> collected as you sweep from \(a\) to \(x\): area above the axis counts positively, area below counts negatively.</p>
+  </div>
+  <div class="demo">
+    <div class="demo-label">Explore · Sweep out the area</div>
+    <div class="ctl"><label>Function \(f\): <select id="x_fn1"></select></label></div>
+    <div id="x_pl1"></div>
+    <div id="x_pl1b" style="margin-top:10px"></div>
+    <div class="ctl"><label>Sweep to \(x\): <input type="range" id="x_x1"></label></div>
+    <div class="ro" id="x_ro1"></div>
+    <p class="caption">Top: \(f\) with the swept area shaded <span class="k4"><b>green</b></span> (positive) or <span class="k2"><b>coral</b></span> (negative). Bottom: the value \(A(x)\) plotted as you move \(x\), with the <span class="k3"><b>gold</b></span> tangent of slope \(f(x)\). For the continuous functions the tangent always fits. Switch to the jump functions and sweep across the jump to see where it fails.</p>
+  </div>
+  <div class="card amber"><strong>Three questions, three sections.</strong> Is \(A\) continuous? (Section 3.) Is \(A\) differentiable, and is \(A'=f\)? (Section 4.) Which functions are derivatives of something at all? (Sections 5 and 6.)</div>
+
+  <div class="continue-wrap"><button class="continue" data-next="c3">Continue — is A always continuous? ↓</button></div>
+</section>
+<section class="block" id="c3">
+  <div class="kicker"><span class="num">03</span><span class="eyebrow">Integration ⇒ Continuity</span></div>
+  <h2 class="title">Accumulating area never makes a jump</h2>
+
+  <div class="card indigo">
+    <p><strong>Theorem.</strong> Let \(f\) be Riemann integrable on every closed bounded subinterval of an interval \(I\), \(a\in I\), and \(A(x)=\int_a^xf(t)\,dt\). Then \(A\) is continuous on \(I\) and therefore has the <b>Intermediate Value Property</b>: if \(A(u)\lt L\lt A(v)\), then \(A(\alpha)=L\) for some \(\alpha\) between \(u\) and \(v\).</p>
+  </div>
+  <div class="card sage">
+    <p><strong>Proof.</strong> Fix \(x_0\in I\) and a closed bounded interval \(J\subseteq I\) that contains a neighbourhood of \(x_0\) in \(I\). A Riemann integrable function is bounded, so there is \(M\gt0\) with \(|f(t)|\le M\) on \(J\). For \(x\in J\),
+    \[ |A(x)-A(x_0)|=\Bigl|\int_{x_0}^{x}f(t)\,dt\Bigr|\le\Bigl|\int_{x_0}^{x}|f(t)|\,dt\Bigr|\le M\,|x-x_0|. \]
+    Given \(\varepsilon\gt0\) put \(\delta=\varepsilon/M\). Then \(|x-x_0|\lt\delta\) implies \(|A(x)-A(x_0)|\lt\varepsilon\), so \(A\) is continuous at \(x_0\). Since \(x_0\) was arbitrary, \(A\) is continuous on \(I\). The Intermediate Value Property is the standard Intermediate Value Theorem applied to the continuous \(A\) on \([u,v]\). \(\blacksquare\)</p>
+  </div>
+  <div class="demo">
+    <div class="demo-label">Explore · The cone and the \(\varepsilon\)–\(\delta\) box</div>
+    <div class="ctl"><label>Function \(f\): <select id="x_fn3"></select></label></div>
+    <div id="x_pl3"></div>
+    <div class="ctl">
+      <label>Base point \(x_0\): <input type="range" id="x_x3"></label>
+      <label>Tolerance \(\varepsilon\): <input type="range" id="x_e3" min="0.05" max="1.5" step="0.05" value="0.5"></label>
+    </div>
+    <div class="ro" id="x_ro3"></div>
+    <p class="caption">The bound \(|f|\le M\) forces the graph of \(A\) (<span class="k1"><b>cyan</b></span>) to stay inside the <span class="k5"><b>violet</b></span> cone through \((x_0,A(x_0))\), whose slopes are \(\pm M\). The <span class="k3"><b>gold</b></span> box is the \(\varepsilon\)–\(\delta\) picture: any \(\varepsilon\) is answered by \(\delta=\varepsilon/M\). Try the jump functions: \(A\) bends sharply, but it never breaks.</p>
+  </div>
+  <div class="card amber"><strong>Smoothing.</strong> Even when \(f\) has a jump, \(A\) is continuous. Integration makes a function <em>better behaved</em> than the one you started with.</div>
+
+  <div class="continue-wrap"><button class="continue" data-next="c4">Continue — the derivative of A (FTC-1) ↓</button></div>
+</section>
+<section class="block" id="c4">
+  <div class="kicker"><span class="num">04</span><span class="eyebrow">Continuity ⇒ Differentiation</span></div>
+  <h2 class="title">The Fundamental Theorem of Calculus, part 1</h2>
+
+  <div class="card indigo">
+    <p><strong>FTC-1.</strong> Let \(f:[a,b]\to\mathbb R\) be integrable and continuous at a point \(x\in(a,b)\). Then \(A(x)=\int_a^xf\) is differentiable at \(x\) and \(A'(x)=f(x)\). In particular, if \(f\) is continuous on \([a,b]\), then \(A\) is a <b>primitive</b> of \(f\).</p>
+  </div>
+  <div class="card sage">
+    <p><strong>Proof.</strong> <em>Step 1: the difference quotient is an average.</em> For \(h\gt0\),
+    \[ \frac{A(x+h)-A(x)}{h}=\frac1h\int_x^{x+h}f(t)\,dt. \]
+    <em>Step 2: squeeze between extremes.</em> Let \(m_h\) and \(M_h\) be the smallest and largest values of \(f\) on \([x,x+h]\) (they exist by the Extreme Value Theorem when \(f\) is continuous there). Then \(m_h h\le\int_x^{x+h}f\le M_h h\), so
+    \[ m_h\le\frac{A(x+h)-A(x)}{h}\le M_h. \]
+    <em>Step 3: let \(h\to0^+\).</em> By continuity of \(f\) at \(x\), \(m_h\to f(x)\) and \(M_h\to f(x)\). By the Squeeze Theorem the quotient tends to \(f(x)\). The case \(h\to0^-\) is identical with the interval \([x+h,x]\). Hence \(A'(x)=f(x)\). \(\blacksquare\)</p>
+  </div>
+  <div class="demo">
+    <div class="demo-label">Explore · Watch the squeeze</div>
+    <div class="ctl"><label>Function \(f\): <select id="x_fn2"></select></label></div>
+    <div id="x_pl2"></div>
+    <div class="ctl">
+      <label>Point \(x\): <input type="range" id="x_x2"></label>
+      <label>Width \(h\): <input type="range" id="x_h2" min="0.02" max="2" step="0.02" value="1.6"></label>
+    </div>
+    <div class="ro" id="x_ro2"></div>
+    <p class="caption">The shaded strip over \([x,x+h]\) is the new area. Its average height (<span class="k3"><b>gold line</b></span>) equals the difference quotient. It is trapped between the lowest (<span class="k1"><b>cyan</b></span>) and highest (<span class="k2"><b>coral</b></span>) heights of \(f\) on the strip. Shrink \(h\): the walls close in on \(f(x)\), the white dot.</p>
+  </div>
+  <div class="card amber"><strong>A first consequence: chain rule with FTC-1.</strong> If \(G(x)=\int_3^{x^2}\cos t\,dt\), write \(G=A\circ u\) with \(A(s)=\int_3^s\cos t\,dt\) and \(u(x)=x^2\). Since \(A'=\cos\), the chain rule gives \(G'(x)=\cos(x^2)\cdot2x\).</div>
+
+  <div class="continue-wrap"><button class="continue" data-next="c5">Continue — primitives: reversing differentiation ↓</button></div>
+</section>
+<section class="block" id="c5">
+  <div class="kicker"><span class="num">05</span><span class="eyebrow">Differentiation ⇒ Integration</span></div>
+  <h2 class="title">Primitives, tables and uniqueness</h2>
+
+  <div class="card indigo">
+    <p><strong>Definition (primitive).</strong> Let \(I\) be an interval. A function \(F:I\to\mathbb R\) is a <b>primitive</b> (or antiderivative) of \(f:I\to\mathbb R\) if \(F\) is differentiable at every point of \(I\) and \(F'(x)=f(x)\) for every \(x\in I\).</p>
+    <p>By FTC-1, a continuous \(f\) always has one: the accumulation function. But there are many more.</p>
+  </div>
+  <div class="card sage">
+    <p><strong>Theorem (uniqueness on an interval).</strong> If \(F\) and \(G\) are primitives of \(f\) on an <em>interval</em> \(I\), then \(G=F+C\) for a constant \(C\).</p>
+    <p><em>Proof.</em> Let \(H=G-F\). Then \(H'=f-f=0\) on \(I\). Fix \(x_0\in I\). For any \(x\in I\) the segment between \(x_0\) and \(x\) lies in \(I\), and the Mean Value Theorem gives \(c\) between them with \(\dfrac{H(x)-H(x_0)}{x-x_0}=H'(c)=0\). So \(H(x)=H(x_0)\) for every \(x\): \(H\) is constant. \(\blacksquare\)</p>
+  </div>
+  <div class="demo">
+    <div class="demo-label">Explore · Is this a primitive? The checker</div>
+    <div class="ctl"><label>Function \(f\): <select id="x_fn5"></select></label></div>
+    <div id="x_pl5"></div>
+    <div id="x_pl5b" style="margin-top:10px"></div>
+    <div class="ctl">
+      <label>Constant \(C\): <input type="range" id="x_c5" min="-3" max="3" step="0.5" value="0"></label>
+      <label><input type="checkbox" id="x_s5"> separate constant for \(x\lt0\)</label>
+      <label>\(C_2\) (for \(x\lt0\)): <input type="range" id="x_d5" min="-3" max="3" step="0.5" value="2"></label>
+    </div>
+    <div class="ro" id="x_ro5"></div>
+    <p class="caption">Top: \(f\) in <span class="k1"><b>cyan</b></span>, and the numerically computed derivative of the candidate \(F+C\) as a <span class="k3"><b>gold dashed</b></span> curve on top of it. Bottom: the candidate \(F+C\) in <span class="k5"><b>violet</b></span> among faint copies shifted vertically. Every shifted copy has the same derivative. For \(1/x\) and \(-1/x^2\) the domain has <em>two</em> pieces, so tick the box and use a different constant on each piece: it is still a primitive.</p>
+  </div>
+  <div class="card red"><strong>Pathology: a disconnected domain.</strong> On \(D=(-\infty,0)\cup(0,\infty)\) both \(F(x)=\tfrac1x\) and \(G(x)=\tfrac1x+5\) (for \(x\gt0\)), \(G(x)=\tfrac1x-12\) (for \(x\lt0\)) have derivative \(-\tfrac1{x^2}\). But \(G-F\) is \(+5\) on one piece and \(-12\) on the other: <b>not</b> a single constant. The uniqueness proof used that the segment from \(x_0\) to \(x\) stays in the domain, which fails when the domain is split.</div>
+  <h3>Reference table of primitives</h3>
+  <table class="t"><tr><th>\(f(x)\)</th><th>Primitive \(F(x)\)</th><th>Where valid</th></tr>
+  <tr><td>\(x^n\)</td><td>\(\dfrac{x^{n+1}}{n+1}\)</td><td>\(n\ne-1\)</td></tr>
+  <tr><td>\(\dfrac1x\)</td><td>\(\ln|x|\)</td><td>\(x\ne0\) (constants may differ on each side)</td></tr>
+  <tr><td>\(e^{kx}\)</td><td>\(\dfrac1ke^{kx}\)</td><td>\(k\ne0\), all \(x\)</td></tr>
+  <tr><td>\(\sin x,\ \cos x\)</td><td>\(-\cos x,\ \sin x\)</td><td>all \(x\)</td></tr>
+  <tr><td>\(\sec^2x\)</td><td>\(\tan x\)</td><td>\(|x|\lt\pi/2\)</td></tr>
+  <tr><td>\(\dfrac1{1+x^2}\)</td><td>\(\arctan x\)</td><td>all \(x\)</td></tr>
+  <tr><td>\(\dfrac1{\sqrt{1-x^2}}\)</td><td>\(\arcsin x\)</td><td>\(|x|\lt1\)</td></tr>
+  <tr><td>\(|x|\)</td><td>\(\tfrac12x|x|\)</td><td>all \(x\) (the one-sided formulas agree at \(0\))</td></tr>
+  <tr><td>\(2x\ (x\le1),\ 3x^2-1\ (x\gt1)\)</td><td>\(x^2\ (x\le1),\ x^3-x+1\ (x\gt1)\)</td><td>constant on the right fixed so \(F\) is continuous at \(1\)</td></tr></table>
+
+  <div class="continue-wrap"><button class="continue" data-next="c6">Continue — functions that cannot be derivatives ↓</button></div>
+</section>
+<section class="block" id="c6">
+  <div class="kicker"><span class="num">06</span><span class="eyebrow">Differentiation ⇒ Continuity</span></div>
+  <h2 class="title">When no primitive exists: Darboux</h2>
+
+  <p class="lede">Does every function have a primitive? No. A derivative, even a wild one, cannot skip values.</p>
+  <div class="card indigo">
+    <p><strong>Darboux's Theorem.</strong> If \(F\) is differentiable on \([a,b]\) and \(y\) lies strictly between \(F'(a)\) and \(F'(b)\), then \(F'(c)=y\) for some \(c\in(a,b)\).</p>
+  </div>
+  <div class="card sage">
+    <p><strong>Proof.</strong> Suppose \(F'(a)\lt y\lt F'(b)\) (the other case is the same with \(F\) replaced by \(-F\)). Let \(g(x)=F(x)-yx\). Then \(g\) is continuous on \([a,b]\) and \(g'(a)=F'(a)-y\lt0\), \(g'(b)=F'(b)-y\gt0\). Since \(g'(a)\lt0\), \(g\) takes values below \(g(a)\) just to the right of \(a\); since \(g'(b)\gt0\), it takes values below \(g(b)\) just to the left of \(b\). So the minimum of \(g\) on \([a,b]\), which exists by the Extreme Value Theorem, is not attained at an endpoint. It is attained at some \(c\in(a,b)\), where Fermat's Lemma gives \(g'(c)=0\), i.e. \(F'(c)=y\). \(\blacksquare\)</p>
+  </div>
+  <div class="card red"><strong>Consequence.</strong> A function with a <b>jump discontinuity</b> has no primitive. For \(f=\operatorname{sgn}\) on \([-1,1]\), a primitive \(F\) would have \(F'=-1\) on the left and \(+1\) on the right, yet \(F'\) would have to take the value \(\tfrac12\) in between. It never does.</div>
+  <div class="demo">
+    <div class="demo-label">Explore · Corners and bad points</div>
+    <div class="ctl"><label>Function \(f\): <select id="x_fn4"></select></label></div>
+    <div id="x_pl4"></div>
+    <div id="x_pl4b" style="margin-top:10px"></div>
+    <div class="ctl"><label>Distance \(h\) from the special point \(p\): <input type="range" id="x_h4" min="0.02" max="1.5" step="0.02" value="1"></label></div>
+    <div class="ro" id="x_ro4"></div>
+    <p class="caption">The special point \(p\) is where the shape of \(f\) matters. Compare the slope of \(A\) just to the left (<span class="k2"><b>coral</b></span>) and just to the right (<span class="k1"><b>cyan</b></span>). If they disagree, \(A\) has a corner. If both equal \(f(p)\), FTC-1 holds. The "one point" example is subtle: \(A\) is smooth, but its slope \(0\) is not \(f(0)=1\).</p>
+  </div>
+  <table class="t"><tr><th>Class of \(f\) on \([a,b]\)</th><th>Riemann integrable?</th><th>Has a primitive?</th></tr>
+  <tr><td>Continuous</td><td>yes</td><td>yes (FTC-1)</td></tr>
+  <tr><td>Jump discontinuity</td><td>yes</td><td><b>no</b> (violates Darboux)</td></tr>
+  <tr><td>Derivative of \(x^2\sin(1/x^2)\) (unbounded)</td><td><b>no</b></td><td>yes (it is a derivative by construction)</td></tr></table>
+  <div class="card amber"><strong>Moral.</strong> Integrability and having a primitive are different properties. Continuity is a safe guarantee for both, and it is the bridge between the three ideas.</div>
+
+  <div class="continue-wrap"><button class="continue" data-next="c7">Continue — new functions from integration: log and exp ↓</button></div>
+</section>
+<section class="block" id="c7">
+  <div class="kicker"><span class="num">07</span><span class="eyebrow">All three at once</span></div>
+  <h2 class="title">Defining \(\log\) and \(\exp\) by integration</h2>
+
+  <p class="lede">Here is the three-way story in action. We do not <em>start</em> with the logarithm: we <b>define</b> it as an accumulation function, and let the theorems of this lecture do the rest.</p>
+  <div class="card indigo">
+    <p><strong>Definition.</strong> The function \(f(t)=1/t\) is continuous (hence integrable) on \((0,\infty)\). Define
+    \[ \log x=\int_1^x\frac1t\,dt\qquad(x\gt0),\qquad\text{so }\log1=0. \]</p>
+    <p><b>Integration</b> gave us the function; <b>continuity</b> of \(A\) follows from Section 3; and <b>differentiation</b> follows from FTC-1 because \(1/t\) is continuous:
+    \[ \log'(x)=\frac1x. \]</p>
+  </div>
+  <div class="card sage">
+    <p><strong>Product rule: \(\log(ab)=\log a+\log b\).</strong> Split the integral and substitute \(t=au\) in the second part:
+    \[ \log(ab)=\int_1^a\frac{dt}t+\int_a^{ab}\frac{dt}t=\log a+\int_1^b\frac{a\,du}{au}=\log a+\log b. \]
+    Consequently \(\log(a/b)=\log a-\log b\) and \(\log(a^m)=m\log a\) for integers \(m\).</p>
+    <p><strong>Strictly increasing.</strong> \(\log'(x)=1/x\gt0\), so \(\log\) is strictly increasing (increasing test). Also \(\log b-\log a=\int_a^b\frac{dt}t\gt0\) for \(b\gt a\).</p>
+    <p><strong>Onto \(\mathbb R\).</strong> \(\log2\gt0\), and \(\log(2^n)=n\log2\to\infty\), \(\log(2^{-n})\to-\infty\). \(\log\) is continuous, so by the Intermediate Value Theorem it takes every real value. Hence \(\log:(0,\infty)\to\mathbb R\) is a bijection.</p>
+  </div>
+  <div class="demo">
+    <div class="demo-label">Explore · Why \(\log(ab)=\log a+\log b\)</div>
+    <div id="x_pl6"></div>
+    <div id="x_pl6b" style="margin-top:10px"></div>
+    <div class="ctl">
+      <label>\(a\): <input type="range" id="x_a6" min="1" max="4" step="0.1" value="1.5"></label>
+      <label>\(b\): <input type="range" id="x_b6" min="1" max="4" step="0.1" value="2"></label>
+    </div>
+    <div class="ro" id="x_ro6"></div>
+    <p class="caption">All areas are computed numerically from \(\int dt/t\), not from a log button. The <span class="k3"><b>gold</b></span> region over \([a,ab]\) (top) and the gold region over \([1,b]\) (bottom) have the same area, which is the heart of the substitution \(t=au\).</p>
+  </div>
+  <div class="card indigo">
+    <p><strong>The exponential.</strong> Since \(\log:(0,\infty)\to\mathbb R\) is a strictly increasing bijection, it has an inverse \(\exp:\mathbb R\to(0,\infty)\), with \(y=\exp x\iff\log y=x\). Taking \(\log\) of both sides turns the properties of \(\log\) into those of \(\exp\): \(\exp(a+b)=\exp a\cdot\exp b\), \(\exp(a-b)=\exp a/\exp b\), \(\exp(ma)=(\exp a)^m\). And since \(\log'(y)=1/y\gt0\), the inverse is differentiable with
+    \[ \exp'(x)=\frac1{\log'(\exp x)}=\exp x. \]
+    The number \(e\) is defined by \(\log e=1\), i.e. by <b>area \(=1\) under \(1/t\) from \(1\) to \(e\)</b>.</p>
+  </div>
+  <div class="demo">
+    <div class="demo-label">Explore · Hunting for \(e\), and the mirror pair</div>
+    <div class="two" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px"><div id="x_pl7"></div><div id="x_pl7b"></div></div>
+    <div class="ctl"><label>Right end \(x\): <input type="range" id="x_x7" min="1" max="5" step="0.005" value="2"></label></div>
+    <div class="ro" id="x_ro7"></div>
+    <p class="caption">Left: slide \(x\) until the shaded area is exactly \(1\). Right: \(\log\) (<span class="k1"><b>cyan</b></span>) and \(\exp\) (<span class="k3"><b>gold</b></span>) are reflections across the diagonal, as inverse functions must be.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="c8">Continue — test yourself ↓</button></div>
+</section>
+<section class="block" id="c8">
+  <div class="kicker"><span class="num">08</span><span class="eyebrow">Concept checks</span></div>
+  <h2 class="title">Test yourself</h2>
+  <p class="lede">Pick an answer; you will see the reasoning straight away.</p>
+  <div class="qz" id="qz1"><p><b>Q1.</b> Let \(G(x)=\int_3^{x^2}\cos t\,dt\). What is \(G^{\prime}(x)\)?</p><div class="opts"><button onclick="ans(1,0,1)">\(\cos(x^2)\)</button><button onclick="ans(1,1,1)">\(2x\cos(x^2)\)</button><button onclick="ans(1,2,1)">\(-\sin(x^2)+\sin3\)</button></div><div class="why" id="qe1">FTC-1 gives \(A^{\prime}(s)=\cos s\) for \(A(s)=\int_3^s\cos t\,dt\); the chain rule with \(s=x^2\) multiplies by \(2x\). Option C is the value of \(G\), not its derivative.</div></div>
+  <div class="qz" id="qz2"><p><b>Q2.</b> Is every Riemann integrable function on \([a,b]\) guaranteed to have a primitive?</p><div class="opts"><button onclick="ans(2,0,1)">Yes, always.</button><button onclick="ans(2,1,1)">No: a step function is integrable but has a jump, which Darboux’s Theorem forbids for a derivative.</button><button onclick="ans(2,2,1)">No, because integrability needs differentiability.</button></div><div class="why" id="qe2">Integrable functions may have jumps; derivatives cannot. Continuity, not integrability, is the safe sufficient condition.</div></div>
+  <div class="qz" id="qz3"><p><b>Q3.</b> Let \(f(t)=\operatorname{sgn}t\) and \(A(x)=\int_0^xf\). Then \(A(x)=|x|\). What is \(A^{\prime}(0)\)?</p><div class="opts"><button onclick="ans(3,0,2)">\(1\)</button><button onclick="ans(3,1,2)">\(0\)</button><button onclick="ans(3,2,2)">It does not exist.</button></div><div class="why" id="qe3">The left slope is \(-1\) and the right slope is \(+1\): a corner. \(A\) is continuous at \(0\) (Section 3) but not differentiable there.</div></div>
+  <div class="qz" id="qz4"><p><b>Q4.</b> On \((-\infty,0)\cup(0,\infty)\), how many free constants does the family of primitives of \(-1/x^2\) have?</p><div class="opts"><button onclick="ans(4,0,1)">One.</button><button onclick="ans(4,1,1)">Two (one on each piece).</button><button onclick="ans(4,2,1)">None.</button></div><div class="why" id="qe4">The domain is not an interval, so the Mean Value Theorem argument only shows that \(G-F\) is constant on each piece separately.</div></div>
+  <div class="qz" id="qz5"><p><b>Q5.</b> Why does \(F(x)=\int_a^xf(t)\,dt\) have the Intermediate Value Property even when \(f\) has jumps?</p><div class="opts"><button onclick="ans(5,0,1)">Because \(f\) is positive.</button><button onclick="ans(5,1,1)">Because \(F\) is continuous (it satisfies \(|F(x)-F(x_0)|\le M|x-x_0|\)).</button><button onclick="ans(5,2,1)">Because \(f\) is increasing.</button></div><div class="why" id="qe5">Boundedness of \(f\) gives a Lipschitz bound for \(F\), hence continuity, and the Intermediate Value Theorem applies to \(F\).</div></div>
+  <div class="qz" id="qz6"><p><b>Q6.</b> Let \(f(t)=0\) for \(t\ne0\) and \(f(0)=1\), and \(F(x)=\int_0^xf\). What is \(F^{\prime}(0)\)?</p><div class="opts"><button onclick="ans(6,0,1)">\(1\), since \(f(0)=1\).</button><button onclick="ans(6,1,1)">\(0\), because \(F\equiv0\).</button><button onclick="ans(6,2,1)">It does not exist.</button></div><div class="why" id="qe6">A single point does not change an integral, so \(F\equiv0\) and \(F^{\prime}(0)=0\ne f(0)\). FTC-1 needs continuity of \(f\) at the point.</div></div>
+  <div class="qz" id="qz7"><p><b>Q7.</b> With \(\log x=\int_1^x\frac{dt}t\), how do we know \(\log^{\prime}(x)=1/x\)?</p><div class="opts"><button onclick="ans(7,0,1)">By the definition of \(e\).</button><button onclick="ans(7,1,1)">By FTC-1, because \(1/t\) is continuous on \((0,\infty)\).</button><button onclick="ans(7,2,1)">By the product rule.</button></div><div class="why" id="qe7">FTC-1 applies to any accumulation function of a continuous integrand. No formula for \(\log\) is needed.</div></div>
+
+  <div class="card sage"><strong>Summary.</strong>
+  <table class="t"><tr><th>Question</th><th>Answer</th><th>Where</th></tr>
+  <tr><td>Is \(A(x)=\int_a^xf\) continuous?</td><td>Always (Lipschitz), for any integrable \(f\)</td><td>3</td></tr>
+  <tr><td>Is \(A'=f\)?</td><td>At every point where \(f\) is continuous (FTC-1)</td><td>4</td></tr>
+  <tr><td>How many primitives?</td><td>One up to a constant on an interval; one constant per piece otherwise</td><td>5</td></tr>
+  <tr><td>Does every \(f\) have a primitive?</td><td>No. Jumps are impossible (Darboux); continuity suffices</td><td>6</td></tr>
+  <tr><td>What can integration define?</td><td>New functions such as \(\log\), and \(\exp\) as its inverse</td><td>7</td></tr></table></div>
+</section>
+
+</main>
+<footer><p>Combines material on antiderivatives and FTC-1 with material on the intermediate value property, the logarithm and the exponential.</p></footer>
+<script>
+
+document.querySelectorAll('.continue').forEach(btn=>{btn.addEventListener('click',()=>{const next=document.getElementById(btn.dataset.next);next.classList.add('shown');next.scrollIntoView({behavior:'smooth',block:'start'});updateProgress();if(window.MathJax)MathJax.typesetPromise([next]);});});
+document.querySelectorAll('.reveal-btn[data-ans]').forEach(btn=>{btn.addEventListener('click',()=>{const ans=document.getElementById(btn.dataset.ans);ans.classList.toggle('shown');if(window.MathJax)MathJax.typesetPromise([ans]);});});
+function updateProgress(){const total=document.querySelectorAll('.block').length,shown=document.querySelectorAll('.block.shown').length;document.getElementById('progressBar').style.width=(shown/total*100)+'%';}
+updateProgress();
+
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const C={cy:'#5ad1e6',co:'#ff7b72',au:'#ffd37a',gr:'#7bd88f',vi:'#b69cff',or:'#ffa94d',ax:'#8aa0c0',gd:'#1a2c47',dim:'#3d6f85',wh:'#e6edf7'},SUB=['₁','₂','₃','₄','₅'];
+const fmt=x=>!isFinite(x)?(x>0?'+∞':x<0?'−∞':'undefined'):(Math.abs(x)<5e-4?'0.000':x.toFixed(3)).replace('-','−');
+let _u=0;
+function Plot(el,xr,yr,o){o=o||{};const W=o.w||640,H=o.h||330,p=o.bare?10:38,S=[],id='pl'+(++_u);
+ const X=x=>p+(x-xr[0])/(xr[1]-xr[0])*(W-2*p),Y=y=>H-p-(y-yr[0])/(yr[1]-yr[0])*(H-2*p),f=n=>n.toFixed(1);
+ const da=d=>d?` stroke-dasharray="${d}"`:'';
+ const kx=(W-2*p)/(xr[1]-xr[0]),ky=(H-2*p)/(yr[1]-yr[0]);
+ function line(x1,y1,x2,y2,c,w,d){S.push(`<line x1="${f(X(x1))}" y1="${f(Y(y1))}" x2="${f(X(x2))}" y2="${f(Y(y2))}" stroke="${c}" stroke-width="${w||1.5}"${da(d)} stroke-linecap="round"/>`)}
+ return{X,Y,line,
+  seg(x,y,m,pix,c,w){const dx=(pix/2)/Math.sqrt(1+(m*ky/kx)**2)/kx;line(x-dx,y-m*dx,x+dx,y+m*dx,c,w||3.4)},
+  path(fn,a,b,c,w,d){let s='',pen=false;for(let i=0;i<=320;i++){const x=a+(b-a)*i/320,y=fn(x);if(isFinite(y)){s+=(pen?'L':'M')+f(X(x))+' '+f(Y(y));pen=true}else pen=false}
+   S.push(`<path d="${s}" fill="none" stroke="${c}" stroke-width="${w||2.6}"${da(d)} stroke-linecap="round" stroke-linejoin="round"/>`)},
+  pt(x,y,c,hol,r){S.push(`<circle cx="${f(X(x))}" cy="${f(Y(y))}" r="${r||5.5}" fill="${hol?'#0b1424':c}" stroke="${c}" stroke-width="2.2"/>`)},
+  rect(x1,y1,x2,y2,fill,op,stroke){S.push(`<rect x="${f(X(Math.min(x1,x2)))}" y="${f(Y(Math.max(y1,y2)))}" width="${f(Math.abs(X(x2)-X(x1)))}" height="${f(Math.abs(Y(y2)-Y(y1)))}" fill="${fill}" fill-opacity="${op==null?1:op}" stroke="${stroke||'none'}" stroke-width="2"/>`)},
+  ell(cx,cy,rx,ry,fill,stroke,op){S.push(`<ellipse cx="${f(X(cx))}" cy="${f(Y(cy))}" rx="${f(rx*kx)}" ry="${f(ry*ky)}" fill="${fill||'none'}" fill-opacity="${op==null?1:op}" stroke="${stroke||'none'}" stroke-width="2"/>`)},
+  txt(x,y,t,c,a,sz){S.push(`<text x="${f(X(x))}" y="${f(Y(y))}" fill="${c||'#c9d6ea'}" text-anchor="${a||'start'}" font-size="${sz||14}" font-style="italic">${t}</text>`)},
+  draw(){let g='',ax='';
+   if(!o.bare){for(let x=Math.ceil(xr[0]);x<=xr[1];x++)g+=`<line x1="${f(X(x))}" y1="${p}" x2="${f(X(x))}" y2="${H-p}" stroke="${C.gd}"/>`;
+    for(let y=Math.ceil(yr[0]);y<=yr[1];y++)g+=`<line x1="${p}" y1="${f(Y(y))}" x2="${W-p}" y2="${f(Y(y))}" stroke="${C.gd}"/>`;
+    const ay=Y(Math.min(Math.max(0,yr[0]),yr[1])),axx=X(Math.min(Math.max(0,xr[0]),xr[1]));
+    ax=`<line x1="${p-8}" y1="${f(ay)}" x2="${W-p+16}" y2="${f(ay)}" stroke="${C.ax}" stroke-width="1.5" marker-end="url(#m${id})"/>
+    <line x1="${f(axx)}" y1="${H-p+8}" x2="${f(axx)}" y2="${p-18}" stroke="${C.ax}" stroke-width="1.5" marker-end="url(#m${id})"/>
+    <text x="${W-p+8}" y="${f(ay)-8}" font-size="14" font-style="italic" fill="#9fb0c8">x</text><text x="${f(axx)+8}" y="${p-14}" font-size="14" font-style="italic" fill="#9fb0c8">y</text>`}
+   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}"><defs><clipPath id="${id}"><rect x="${p-8}" y="${p-14}" width="${W-2*p+16}" height="${H-2*p+22}"/></clipPath>
+   <marker id="m${id}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0L8,3L0,6Z" fill="${C.ax}"/></marker></defs>${g}${ax}
+   <g ${o.bare?'':`clip-path="url(#${id})"`}>${S.join('')}</g></svg>`}}}
+function fill(sel,arr){arr.forEach(o=>{const e=document.createElement('option');e.textContent=o.n;sel.appendChild(e)})}
+function zeros(g,a,b){const out=[],n=1500,xs=i=>a+(b-a)*(i+.3137)/(n+.8123);let px=xs(0),pv=g(px);
+ for(let i=1;i<=n;i++){const x=xs(i),v=g(x);if(isNaN(v))continue;
+  if(!isNaN(pv)&&pv*v<0){let lo=px,hi=x;for(let k=0;k<60;k++){const m=(lo+hi)/2;if(!(g(lo)*g(m)>0))hi=m;else lo=m}
+   const r=(lo+hi)/2;if(r>a&&r<b&&(!out.length||Math.abs(r-out[out.length-1])>1e-3))out.push(r)}
+  px=x;pv=v}
+ return out}
+function runs(key,a,b,n){n=n||600;const out=[];let cs=a,ck=key(a+(b-a)*.5/n);
+ for(let i=1;i<n;i++){const k=key(a+(b-a)*(i+.5)/n);if(k!==ck){const x=a+(b-a)*i/n;out.push([cs,x,ck]);cs=x;ck=k}}
+ out.push([cs,b,ck]);return out}
+function cpath(P,f,key,a,b,cols,w){runs(key,a,b).forEach(r=>P.path(f,r[0],r[1],cols[r[2]],w||3.4))}
+const sk=d=>x=>{const v=d(x);return v>1e-9?0:v<-1e-9?1:2};
+const sgn=v=>v>0?1:v<0?-1:0;
+const LIB={
+ cubic:{n:'x³ − 3x',f:x=>x**3-3*x,d:x=>3*x*x-3,d2:x=>6*x,xr:[-2.6,2.6],yr:[-4.5,4.5],ab:[-2.2,2.2]},
+ cube:{n:'x³',cr:[0],f:x=>x**3,d:x=>3*x*x,d2:x=>6*x,xr:[-2,2],yr:[-4,4],ab:[-1.5,1.5]},
+ quartic:{n:'x⁴ − 2x²',f:x=>x**4-2*x*x,d:x=>4*x**3-4*x,d2:x=>12*x*x-4,xr:[-1.9,1.9],yr:[-1.6,4.6],ab:[-1.7,1.5]},
+ abs:{n:'|x|',f:Math.abs,d:x=>x===0?NaN:Math.sign(x),d2:x=>0,xr:[-2,2],yr:[-.5,2.5],ab:[-1,2]},
+ cusp:{n:'x^(2/3)',f:x=>Math.cbrt(x)**2,d:x=>x===0?Infinity:2/3/Math.cbrt(x),d2:x=>-2/9/Math.cbrt(x)**4,xr:[-2,2],yr:[-.4,2.2],ab:[-1.5,1.8]},
+ xex:{n:'x·e^(−x)',f:x=>x*Math.exp(-x),d:x=>(1-x)*Math.exp(-x),d2:x=>(x-2)*Math.exp(-x),xr:[-.5,6],yr:[-.9,.6],ab:[-.3,5]},
+ rat:{n:'x/(1+x²)',f:x=>x/(1+x*x),d:x=>(1-x*x)/(1+x*x)**2,d2:x=>2*x*(x*x-3)/(1+x*x)**3,xr:[-6,6],yr:[-.8,.8],ab:[-4,3],ha:[0]},
+ gauss:{n:'e^(−x²)',f:x=>Math.exp(-x*x),d:x=>-2*x*Math.exp(-x*x),d2:x=>(4*x*x-2)*Math.exp(-x*x),xr:[-3,3],yr:[-.2,1.3],ab:[-2,1.2],ha:[0]},
+ hyper:{n:'x + 1/x',f:x=>x+1/x,d:x=>1-1/(x*x),d2:x=>2/x**3,xr:[-4,4],yr:[-6,6],bad:[0],va:[0],oa:[[1,0]]},
+ sine:{n:'sin x',f:Math.sin,d:Math.cos,d2:x=>-Math.sin(x),xr:[-.5,6.8],yr:[-1.5,1.5],ab:[.5,5.5]}};
+const pick=ks=>ks.map(k=>LIB[k]);
+const bad=(F,c)=>(F.bad||[]).some(b=>Math.abs(b-c)<1e-3);
+const crit=(F,a,b)=>{const lo=a==null?F.xr[0]:a,hi=b==null?F.xr[1]:b;return zeros(F.d,lo,hi).concat((F.cr||[]).filter(c=>c>lo&&c<hi)).filter(c=>!bad(F,c)).sort((u,v)=>u-v)};
+const infl=F=>zeros(F.d2,F.xr[0],F.xr[1]).filter(c=>!bad(F,c));
+function classify(F,c){const e=1e-4,l=sgn(F.d(c-e)),r=sgn(F.d(c+e));return l<0&&r>0?'min':l>0&&r<0?'max':'none'}
+function yrOf(fn,a,b,pad){let lo=1e9,hi=-1e9;for(let i=0;i<=300;i++){const v=fn(a+(b-a)*i/300);if(isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}}const s=(hi-lo)||1;return[lo-(pad||.15)*s,hi+(pad||.15)*s]}
+
+const simpson=(f,a,b,n)=>{n=n||400;const h=(b-a)/n;let s=f(a)+f(b);for(let i=1;i<n;i++)s+=f(a+i*h)*(i%2?4:2);return s*h/3};
+const cl=(v,lo,hi)=>Math.min(hi,Math.max(lo,v));
+const FL=[
+ {n:'f(t) = t',f:t=>t,I:x=>x*x/2,xr:[-3,3],yr:[-3.5,3.5],yA:[-.5,5],cont:1,M:3,x0:1.5,p:0},
+ {n:'f(t) = ½t² − 1',f:t=>.5*t*t-1,I:x=>x**3/6-x,xr:[-3,3],yr:[-1.5,3.5],yA:[-2,3],cont:1,M:3.5,x0:2,p:0},
+ {n:'f(t) = sin t + 1.2',f:t=>Math.sin(t)+1.2,I:x=>1-Math.cos(x)+1.2*x,xr:[-1,7],yr:[-.5,2.5],yA:[-1,10],cont:1,M:2.2,x0:2,p:0},
+ {n:'f(t) = cos t',f:Math.cos,I:Math.sin,xr:[-4,4],yr:[-1.5,1.5],yA:[-1.5,1.5],cont:1,M:1,x0:1,p:0},
+ {n:'f(t) = 1/(1 + t²)',f:t=>1/(1+t*t),I:Math.atan,xr:[-5,5],yr:[-.3,1.2],yA:[-1.7,1.7],cont:1,M:1,x0:1.5,p:0},
+ {n:'f(t) = |t|  (a corner in f)',f:Math.abs,I:x=>x*Math.abs(x)/2,xr:[-3,3],yr:[-.5,3.5],yA:[-5,5],cont:1,M:3,x0:1.2,p:0},
+ {n:'f(t) = sgn t  (a jump)',f:Math.sign,I:Math.abs,xr:[-3,3],yr:[-1.6,1.6],yA:[-.5,3.5],jumps:[{x:0,l:-1,r:1,v:0}],M:1,x0:-1.5,p:0},
+ {n:'step: 0, then 2 from t = 1  (a jump)',f:t=>t<1?0:2,I:x=>2*Math.max(0,x-1),xr:[-1,4],yr:[-.6,2.8],yA:[-.5,6.5],jumps:[{x:1,l:0,r:2,v:2}],M:2,x0:2.5,p:1},
+ {n:'f = 0 except f(0) = 1  (one point)',f:t=>t===0?1:0,I:x=>0,xr:[-3,3],yr:[-.6,1.6],yA:[-1,1],jumps:[{x:0,l:0,r:0,v:1}],M:1,x0:1.2,p:0}];
+function fpath(P,F,col,w){const br=[F.xr[0]].concat((F.jumps||[]).map(j=>j.x),[F.xr[1]]);
+ for(let i=0;i<br.length-1;i++)P.path(F.f,br[i]+(i?1e-6:0),br[i+1]-(i<br.length-2?1e-6:0),col,w||3.6);
+ (F.jumps||[]).forEach(j=>{P.pt(j.x,j.l,col,1,5.5);if(j.r!==j.l)P.pt(j.x,j.r,col,1,5.5);P.pt(j.x,j.v,col,0,5.5)})}
+function strips(P,F,a,b){const n=200,lo=Math.min(a,b),hi=Math.max(a,b),sg=b>=a?1:-1;for(let i=0;i<n;i++){const x1=lo+(hi-lo)*i/n,x2=lo+(hi-lo)*(i+1)/n,y=F.f((x1+x2)/2);P.rect(x1,0,x2,y,y*sg>=0?C.gr:C.co,.34)}}
+const dA=(F,x)=>{const h=1e-4;return(F.I(x+h)-F.I(x-h))/(2*h)};
+function sliderFor(F,id,x){const e=$(id);e.min=F.xr[0]+.05;e.max=F.xr[1]-.05;e.step=.05;e.value=x}
+/* ===== E0 concept map ===== */
+const ND={C:{x:120,y:70,t:'Continuity'},D:{x:520,y:70,t:'Differentiation'},I:{x:320,y:270,t:'Integration'}};
+const ED=[
+ {k:'I>C',a:'I',b:'C',lab:'① Integration ⇒ Continuity',sec:'Section 3',txt:'If \\(f\\) is Riemann integrable, the accumulation function \\(A(x)=\\int_a^x f\\) is <b>continuous</b> (even Lipschitz), whether or not \\(f\\) has jumps. Hence \\(A\\) has the Intermediate Value Property.'},
+ {k:'C>I',a:'C',b:'I',lab:'② Continuity ⇒ Integration',sec:'Section 2',txt:'A continuous \\(f\\) on \\([a,b]\\) is integrable, so the accumulation function \\(A(x)=\\int_a^x f\\) exists and is a well-defined new function.'},
+ {k:'C>D',a:'C',b:'D',lab:'③ Continuity ⇒ Differentiation',sec:'Section 4',txt:'<b>FTC-1.</b> If \\(f\\) is continuous at \\(x\\), then \\(A\\) is differentiable at \\(x\\) and \\(A\'(x)=f(x)\\): integrating a continuous function and then differentiating returns the function.'},
+ {k:'D>C',a:'D',b:'C',lab:'④ Differentiation ⇒ Continuity',sec:'Section 6',txt:'A differentiable \\(F\\) is continuous. Moreover its derivative \\(F\'\\), even when not continuous, has the <b>Intermediate Value Property</b> (Darboux). A jump function can never be a derivative.'},
+ {k:'D>I',a:'D',b:'I',lab:'⑤ Differentiation ⇒ Integration',sec:'Section 5',txt:'If \\(F\'=f\\) on an interval (a <b>primitive</b>), then any other primitive differs from \\(F\\) by a constant. So derivatives give back accumulation functions, up to a constant.'},
+ {k:'I>D',a:'I',b:'D',lab:'⑥ Integration ⇒ Differentiation',sec:'Sections 4 and 6',txt:'Integrating <em>smooths</em>: \\(A\\) is differentiable wherever \\(f\\) is continuous, but at a jump of \\(f\\) the accumulation function has a <b>corner</b> and is not differentiable there.'}];
+let edge=2;
+function drawMap(){let s='';
+ ED.forEach((e,i)=>{const A=ND[e.a],B=ND[e.b],dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,px=-uy,py=ux,o=9,r=56,
+  x1=A.x+ux*r+px*o,y1=A.y+uy*r+py*o,x2=B.x-ux*r+px*o,y2=B.y-uy*r+py*o,on=i===edge;
+  s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${on?C.au:'#4a6286'}" stroke-width="${on?5:2.4}" marker-end="url(#${on?'mhA':'mhB'})" style="cursor:pointer" onclick="pickEdge(${i})"/>`;
+  s+=`<text x="${(x1+x2)/2+px*14}" y="${(y1+y2)/2+py*14+5}" text-anchor="middle" font-size="17" fill="${on?C.au:'#9fb0c8'}" style="cursor:pointer" onclick="pickEdge(${i})">${e.lab[0]}</text>`});
+ Object.values(ND).forEach(n=>{s+=`<rect x="${n.x-62}" y="${n.y-26}" width="124" height="52" rx="14" fill="#142238" stroke="${C.cy}" stroke-width="2"/><text x="${n.x}" y="${n.y+6}" text-anchor="middle" font-size="16" fill="#e6edf7" font-weight="600">${n.t}</text>`});
+ $('x_pl0').innerHTML=`<svg viewBox="0 0 640 330"><defs><marker id="mhA" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0L9,3.5L0,7Z" fill="${C.au}"/></marker><marker id="mhB" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0L9,3.5L0,7Z" fill="#4a6286"/></marker></defs>${s}</svg>`;
+ const e=ED[edge];$('x_ro0').innerHTML='<b class="k3">'+e.lab+'</b> &nbsp;<span class="k1">('+e.sec+')</span><br>'+e.txt;if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([$('x_ro0')])}
+function pickEdge(i){edge=i;drawMap();$('x_ed0').querySelectorAll('button').forEach((b,j)=>b.style.borderColor=j===i?C.au:'')}
+$('x_ed0').innerHTML=ED.map((e,i)=>`<button onclick="pickEdge(${i})">${e.lab}</button>`).join('');
+/* ===== E1 accumulation lab ===== */
+fill($('x_fn1'),FL);
+function s1(){const F=FL[$('x_fn1').selectedIndex];sliderFor(F,'x_x1',F.x0);e1()}
+function e1(){const F=FL[$('x_fn1').selectedIndex],x=+$('x_x1').value,P=Plot($('x_pl1'),F.xr,F.yr),Q=Plot($('x_pl1b'),F.xr,F.yA,{h:240});
+ strips(P,F,0,x);fpath(P,F,C.cy);P.line(x,0,x,F.f(x),C.au,1.6,'5 4');P.pt(x,F.f(x),C.au,0,6.5);P.draw();
+ const hh=1e-4,dl=(F.I(x)-F.I(x-hh))/hh,dr=(F.I(x+hh)-F.I(x))/hh,fx=F.f(x),ok=Math.abs(dl-fx)<2e-3&&Math.abs(dr-fx)<2e-3;
+ Q.path(F.I,F.xr[0],F.xr[1],C.vi,3.6);Q.seg(x,F.I(x),fx,150,C.au,3.6);if(!ok){Q.seg(x-.15,F.I(x)-.15*dl,dl,90,C.co,3.2);Q.seg(x+.15,F.I(x)+.15*dr,dr,90,C.cy,3.2)}Q.pt(x,F.I(x),C.vi,0,7);Q.txt(F.xr[0]+.03*(F.xr[1]-F.xr[0]),F.yA[1]-.1*(F.yA[1]-F.yA[0]),'A(x) = ∫ from 0 to x of f',C.vi,'start',15);Q.draw();
+ $('x_ro1').innerHTML='x = '+fmt(x)+' &nbsp; f(x) = <b class="k3">'+fmt(fx)+'</b> &nbsp; A(x) = <b class="k5">'+fmt(F.I(x))+'</b><br>slope of A just left of x: <span class="k2">'+fmt(dl)+'</span> &nbsp; just right of x: <span class="k1">'+fmt(dr)+'</span><br>'+(ok?'<b class="k4">A′(x) = f(x)</b>: the gold tangent (slope f(x)) matches the curve of A.':'<b class="k2">A′(x) ≠ f(x)</b> here: the slopes of A on the two sides (coral, cyan) do not match f(x). This is a point where f is not continuous.')}
+$('x_fn1').onchange=s1;$('x_x1').oninput=e1;
+/* ===== E3 continuity cone ===== */
+fill($('x_fn3'),FL);
+function s3(){const F=FL[$('x_fn3').selectedIndex];sliderFor(F,'x_x3',F.x0);e3()}
+function e3(){const F=FL[$('x_fn3').selectedIndex],x0=+$('x_x3').value,eps=+$('x_e3').value,M=F.M,dl=eps/M,A0=F.I(x0),P=Plot($('x_pl3'),F.xr,F.yA);
+ P.rect(x0-dl,A0-eps,x0+dl,A0+eps,C.au,.13,C.au);
+ P.path(x=>A0+M*Math.abs(x-x0),F.xr[0],F.xr[1],C.vi,1.6,'7 5');P.path(x=>A0-M*Math.abs(x-x0),F.xr[0],F.xr[1],C.vi,1.6,'7 5');
+ P.path(F.I,F.xr[0],F.xr[1],C.cy,3.6);P.pt(x0,A0,C.au,0,7);P.draw();
+ let ratio=0,inside=true;for(let i=0;i<=800;i++){const x=F.xr[0]+(F.xr[1]-F.xr[0])*i/800;if(Math.abs(x-x0)>1e-9)ratio=Math.max(ratio,Math.abs(F.I(x)-A0)/Math.abs(x-x0));if(Math.abs(x-x0)<dl&&Math.abs(F.I(x)-A0)>eps+1e-9)inside=false}
+ $('x_ro3').innerHTML='bound |f| ≤ M = '+fmt(M)+' &nbsp;⇒&nbsp; |A(x) − A(x₀)| ≤ M·|x − x₀|  (violet cone)<br>largest slope of a chord from x₀ seen on screen: <b class="k3">'+fmt(ratio)+'</b> ≤ M ✓<br>tolerance ε = '+fmt(eps)+' ⇒ δ = ε/M = <b class="k1">'+fmt(dl)+'</b>: every x with |x − x₀| &lt; δ stays inside the gold box: <b class="k4">'+(inside?'yes':'no')+'</b>'}
+$('x_fn3').onchange=s3;$('x_x3').oninput=$('x_e3').oninput=e3;
+/* ===== E2 squeeze lab (FTC-1) ===== */
+const FC=FL.filter(F=>F.cont);fill($('x_fn2'),FC);
+function s2(){const F=FC[$('x_fn2').selectedIndex];sliderFor(F,'x_x2',F.x0);e2()}
+function e2(){const F=FC[$('x_fn2').selectedIndex],x0=+$('x_x2').value,h=Math.min(+$('x_h2').value,F.xr[1]-x0-1e-3),P=Plot($('x_pl2'),F.xr,F.yr);
+ let m=1e9,M=-1e9;for(let i=0;i<=400;i++){const v=F.f(x0+h*i/400);m=Math.min(m,v);M=Math.max(M,v)}
+ const avg=(F.I(x0+h)-F.I(x0))/h;
+ strips(P,F,x0,x0+h);P.rect(x0,0,x0+h,m,C.cy,.22,C.cy);fpath(P,F,C.cy,3);
+ P.line(F.xr[0],M,F.xr[1],M,C.co,1.3,'6 5');P.line(F.xr[0],m,F.xr[1],m,C.cy,1.3,'6 5');P.line(x0,avg,x0+h,avg,C.au,3.6);
+ P.pt(x0,F.f(x0),C.wh,0,6.5);P.txt(F.xr[1]-.02*(F.xr[1]-F.xr[0]),M+.04*(F.yr[1]-F.yr[0]),'M_h (max on [x, x+h])',C.co,'end',14);P.txt(F.xr[1]-.02*(F.xr[1]-F.xr[0]),m-.08*(F.yr[1]-F.yr[0]),'m_h (min on [x, x+h])',C.cy,'end',14);P.draw();
+ $('x_ro2').innerHTML='h = '+fmt(h)+' &nbsp; f(x) = '+fmt(F.f(x0))+'<br><span class="k1">m_h = '+fmt(m)+'</span> ≤ <b class="k3">[A(x+h) − A(x)]/h = '+fmt(avg)+'</b> ≤ <span class="k2">M_h = '+fmt(M)+'</span><br>width of the squeeze M_h − m_h = '+fmt(M-m)+' &nbsp;→ shrinks to 0 as h → 0, trapping the quotient at f(x) = <b>'+fmt(F.f(x0))+'</b>'}
+$('x_fn2').onchange=s2;$('x_x2').oninput=$('x_h2').oninput=e2;
+/* ===== E4 corner / Darboux ===== */
+const FD=[FL[6],FL[7],FL[8],FL[5],FL[0]];fill($('x_fn4'),FD);
+function e4(){const F=FD[$('x_fn4').selectedIndex],h=+$('x_h4').value,p=F.p,P=Plot($('x_pl4'),F.xr,F.yr),Q=Plot($('x_pl4b'),F.xr,F.yA,{h:240});
+ fpath(P,F,C.cy);P.draw();
+ const A0=F.I(p),sl=(A0-F.I(p-h))/h,sr=(F.I(p+h)-A0)/h;
+ Q.path(F.I,F.xr[0],F.xr[1],C.vi,3.6);Q.seg(p-h/2,(A0+F.I(p-h))/2,sl,Math.max(60,330*h/(F.xr[1]-F.xr[0])+70),C.co,3.6);Q.seg(p+h/2,(A0+F.I(p+h))/2,sr,Math.max(60,330*h/(F.xr[1]-F.xr[0])+70),C.cy,3.6);
+ Q.pt(p-h,F.I(p-h),C.co,0,5.5);Q.pt(p+h,F.I(p+h),C.cy,0,5.5);Q.pt(p,A0,C.au,0,7);Q.txt(F.xr[0]+.03*(F.xr[1]-F.xr[0]),F.yA[1]-.1*(F.yA[1]-F.yA[0]),'graph of A',C.vi);Q.draw();
+ const j=(F.jumps||[])[0],v=F.f(p),l=j?j.l:v,r=j?j.r:v;let msg;
+ if(j&&l!==r)msg='<b class="k2">Corner.</b> The left slope ('+fmt(sl)+') and right slope ('+fmt(sr)+') of A disagree, so A′('+fmt(p)+') does not exist. Because f jumps from '+fmt(l)+' to '+fmt(r)+' and skips every value in between, f cannot be the derivative of <em>any</em> function (Darboux).';
+ else if(j)msg='<b class="k2">One bad point.</b> A is flat, so A′('+fmt(p)+') = 0, yet f('+fmt(p)+') = '+fmt(v)+'. FTC-1 needs f <em>continuous</em> at the point. No function can have derivative f here either: F′ would be 0 off '+fmt(p)+', so F is constant, so F′ = 0 at '+fmt(p)+' too.';
+ else msg='<b class="k4">Continuous point.</b> Both slopes approach f('+fmt(p)+') = '+fmt(v)+': A′ = f, as FTC-1 promises.';
+ $('x_ro4').innerHTML='point p = '+fmt(p)+', h = '+fmt(h)+'<br><span class="k2">left slope [A(p) − A(p−h)]/h = '+fmt(sl)+'</span><br><span class="k1">right slope [A(p+h) − A(p)]/h = '+fmt(sr)+'</span><br>'+msg}
+$('x_fn4').onchange=e4;$('x_h4').oninput=e4;
+/* ===== E5 primitive checker ===== */
+const NaNf=(f,lo,hi)=>x=>x>lo&&x<hi?f(x):NaN;
+const PC=[
+ {n:'x²',f:x=>x*x,F:x=>x**3/3,xr:[-3,3],yr:[-1,9],yF:[-12,12],fm:'x³/3 + C'},
+ {n:'e^(2x)',f:x=>Math.exp(2*x),F:x=>Math.exp(2*x)/2,xr:[-2,1.5],yr:[-1,21],yF:[-4,12],fm:'e^(2x)/2 + C'},
+ {n:'sin x',f:Math.sin,F:x=>-Math.cos(x),xr:[-4,4],yr:[-1.5,1.5],yF:[-4.5,4.5],fm:'−cos x + C'},
+ {n:'1/(1 + x²)',f:x=>1/(1+x*x),F:Math.atan,xr:[-5,5],yr:[-.3,1.2],yF:[-4.5,4.5],fm:'arctan x + C'},
+ {n:'1/√(1 − x²)   on (−1, 1)',f:NaNf(x=>1/Math.sqrt(1-x*x),-1,1),F:NaNf(Math.asin,-1,1),xr:[-1.3,1.3],yr:[-.5,5],yF:[-4.5,4.5],fm:'arcsin x + C'},
+ {n:'sec² x   on (−π/2, π/2)',f:NaNf(x=>1/Math.cos(x)**2,-1.5707,1.5707),F:NaNf(Math.tan,-1.5707,1.5707),xr:[-1.6,1.6],yr:[-.5,10],yF:[-10,10],fm:'tan x + C'},
+ {n:'|x|',f:Math.abs,F:x=>x*Math.abs(x)/2,xr:[-3,3],yr:[-.5,3.5],yF:[-6,6],fm:'½·x|x| + C  (differentiable at 0, F′(0) = 0)'},
+ {n:'2x for x ≤ 1, 3x² − 1 for x > 1',f:x=>x<=1?2*x:3*x*x-1,F:x=>x<=1?x*x:x**3-x+1,xr:[-1,2.5],yr:[-3,12],yF:[-1,17],fm:'x² (x ≤ 1), x³ − x + 1 (x > 1): the constants are matched so F is continuous at 1'},
+ {n:'1/x   (domain: x ≠ 0)',f:x=>1/x,F:x=>Math.log(Math.abs(x)),xr:[-4,4],yr:[-4,4],yF:[-5,5],two:1,fm:'ln|x| + C on each piece'},
+ {n:'−1/x²   (domain: x ≠ 0)',f:x=>-1/(x*x),F:x=>1/x,xr:[-3,3],yr:[-9,1],yF:[-6,6],two:1,fm:'1/x + C on each piece'}];
+fill($('x_fn5'),PC);
+function e5(){const F=PC[$('x_fn5').selectedIndex],C1=+$('x_c5').value,C2=$('x_s5').checked&&F.two?+$('x_d5').value:C1,G=x=>F.F(x)+(x<0?C2:C1),P=Plot($('x_pl5'),F.xr,F.yr),Q=Plot($('x_pl5b'),F.xr,F.yF,{h:260});
+ $('x_s5').disabled=$('x_d5').disabled=!F.two;
+ const brk=F.two?[0]:[];const pieces=(fn,col,w,d)=>{const e=[F.xr[0]].concat(brk,[F.xr[1]]);for(let i=0;i<e.length-1;i++)fn(e[i]+(i?1e-4:0),e[i+1]-(i<e.length-2?1e-4:0),col,w,d)};
+ pieces((a,b,c,w)=>P.path(F.f,a,b,c,w),C.cy,3.6);
+ const h=1e-5,nd=x=>(G(x+h)-G(x-h))/(2*h);pieces((a,b,c,w,d)=>P.path(nd,a,b,c,w,d),C.au,2.2,'6 5');P.draw();
+ for(let c=-3;c<=3;c++)pieces((a,b,col,w)=>Q.path(x=>F.F(x)+c,a,b,col,w),'#35507a',1.3);
+ pieces((a,b,c,w)=>Q.path(G,a,b,c,w),C.vi,3.6);Q.draw();
+ let err=0,cnt=0;for(let i=1;i<400;i++){const x=F.xr[0]+(F.xr[1]-F.xr[0])*i/400;if(F.two&&Math.abs(x)<.02)continue;if(isNaN(F.f(x))||isNaN(nd(x)))continue;if(Math.abs(F.f(x))>50)continue;err=Math.max(err,Math.abs(nd(x)-F.f(x))/(1+Math.abs(F.f(x))));cnt++}
+ $('x_ro5').innerHTML='candidate primitive: <b class="k5">'+F.fm+'</b><br>checked at '+cnt+' points: largest mismatch between F′ (gold dashed) and f (cyan) = '+err.toExponential(1)+' ⇒ <b class="k4">'+(err<1e-4?'F′ = f ✓ (a valid primitive)':'not a primitive')+'</b>'+(F.two?'<br>The domain has <b>two pieces</b>, so the constant on x &lt; 0 may differ from the one on x &gt; 0: '+(F.two&&$('x_s5').checked&&C1!==C2?'<b class="k2">C₁ = '+C1+', C₂ = '+C2+' and F′ = f still holds</b>. Uniqueness up to ONE constant fails on a disconnected domain.':'tick the box to try it.'):'<br>Slide C: the whole family F + C has the same derivative, so every member is a primitive.')}
+$('x_fn5').onchange=$('x_c5').oninput=$('x_d5').oninput=$('x_s5').onchange=e5;
+/* ===== E6a: log product rule ===== */
+function shade(P,f,a,b,col,op){const n=160;for(let i=0;i<n;i++){const x1=a+(b-a)*i/n,x2=a+(b-a)*(i+1)/n;P.rect(x1,0,x2,f((x1+x2)/2),col,op||.4)}}
+const rec=t=>1/t;
+function e6(){const a=+$('x_a6').value,b=+$('x_b6').value,P=Plot($('x_pl6'),[0,16.5],[0,2.2]),Q=Plot($('x_pl6b'),[0,16.5],[0,2.2],{h:230});
+ shade(P,rec,1,a,C.cy);shade(P,rec,a,a*b,C.au);P.path(rec,.25,16.5,C.wh,2.4);
+ P.txt(Math.max(1.2,(1+a)/2),.15,'log a',C.cy,'middle',14);P.txt((a+a*b)/2,.15+.5*(1/(a*b)),'∫ from a to ab',C.au,'middle',14);P.draw();
+ shade(Q,rec,1,b,C.au);Q.path(rec,.25,16.5,C.wh,2.4);Q.txt((1+b)/2+.5,.15,'log b',C.au,'middle',14);Q.draw();
+ const la=simpson(rec,1,a),mid=simpson(rec,a,a*b),lb=simpson(rec,1,b),lab=simpson(rec,1,a*b);
+ $('x_ro6').innerHTML='<span class="k1">log a = ∫₁ᵃ dt/t = '+fmt(la)+'</span> &nbsp; <span class="k3">∫ₐ^(ab) dt/t = '+fmt(mid)+'</span> &nbsp; <span class="k3">log b = '+fmt(lb)+'</span><br>log(ab) = ∫₁^(ab) dt/t = <b>'+fmt(lab)+'</b> = log a + log b = '+fmt(la+lb)+' ✓<br>The gold region on the left is the gold region below, stretched sideways by a and squashed vertically by a: same area.'}
+$('x_a6').oninput=$('x_b6').oninput=e6;
+/* ===== E6b: finding e, inverse pair ===== */
+function e7(){const x=+$('x_x7').value,ar=simpson(rec,1,x),P=Plot($('x_pl7'),[0,6],[0,1.3],{h:260}),Q=Plot($('x_pl7b'),[-1.5,4.5],[-1.5,4.5],{h:260});
+ shade(P,rec,1,x,C.cy);P.path(rec,.2,6,C.wh,2.4);P.line(Math.E,0,Math.E,1/Math.E,C.gr,1.6,'5 5');P.txt(Math.E,-0+.05,'e',C.gr,'middle',15);P.pt(x,1/x,C.au,0,6);P.draw();
+ Q.path(t=>t,-1.5,4.5,'#4a6286',1.4,'6 5');Q.path(Math.log,.02,4.5,C.cy,3.2);Q.path(Math.exp,-1.5,Math.log(4.5),C.au,3.2);
+ const L=Math.log(x);Q.line(x,L,L,x,'#6b809e',1.2,'4 4');Q.pt(x,L,C.cy,0,6);Q.pt(L,x,C.au,0,6);Q.txt(3.6,-.9,'log (cyan)  and  exp (gold)',C.wh,'end',14);Q.draw();
+ $('x_ro7').innerHTML='x = '+fmt(x)+' &nbsp; area under 1/t from 1 to x = <b class="k1">'+fmt(ar)+'</b> = log x<br>'+(Math.abs(ar-1)<.012?'<b class="k4">area ≈ 1: this x is e ≈ 2.71828</b>':'Slide x until the area is exactly 1: that special x is called e.')+'<br>Points (x, log x) and (log x, x) are mirror images in the line y = x: exp is the inverse of log, so exp(log x) = x.'}
+$('x_x7').oninput=e7;
+/* ===== quiz ===== */
+function ans(q,i,ok){const box=$('qz'+q);box.querySelectorAll('button').forEach((b,j)=>{b.disabled=true;b.classList.add(j===ok?'right':(j===i?'wrong':''))});$('qe'+q).style.display='block'}
+pickEdge(2);s1();s3();s2();e4();e5();e6();e7();
+
+</script>
+</body>
+</html>

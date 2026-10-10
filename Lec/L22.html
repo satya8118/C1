@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lecture 22 — Differentiability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$']]},svg:{fontCache:'global',scale:0.88}};</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--ind:#2b3a67;--ind2:#4a5fa8;--amb:#c98a1b;--ambl:#fdf4e3;--sage:#5f8a6a;--sagel:#eaf2ec;--red:#b3402f;--redl:#fbebe8;--bg:#f6f3ec;--ink:#1f2433}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:15px;line-height:1.7;color:var(--ink);background:var(--bg);padding:18px 14px 100px}
+.wrap{max-width:900px;margin:auto;background:#fff;padding:36px 40px;border-radius:10px;box-shadow:0 4px 20px rgba(30,40,80,.1)}
+nav{max-width:900px;margin:0 auto 10px;font-size:.9rem;color:#8a8fa0}nav a{color:var(--ind2);text-decoration:none}
+h1,h2{font-family:Fraunces,Georgia,serif;color:var(--ind)}
+h1{font-size:1.55rem;border-bottom:3px solid var(--amb);padding-bottom:8px;margin-bottom:6px}
+.sub{color:#6b7288;font-size:.9rem;margin-bottom:22px}
+h2{font-size:1.2rem;margin:4px 0 14px}h3{font-size:.98rem;color:var(--ind2);margin:18px 0 8px}p{margin-bottom:.9rem}
+.chip{display:inline-block;background:var(--ind);color:#fff;font-size:.72rem;letter-spacing:.1em;font-weight:600;padding:2px 10px;border-radius:4px;margin-bottom:6px}
+.box{border-radius:8px;margin:14px 0;border:1px solid #d5d9e8;overflow:hidden}
+.box>b.t{display:block;padding:8px 16px;color:#fff;font-weight:600}.box>div{padding:14px 18px;min-width:0}
+.def>b.t{background:var(--ind)}.def>div{background:#eef1fa}
+.thm>b.t{background:#1d2850}.thm>div{background:#e4e9f7}
+.idea>b.t{background:var(--amb)}.idea>div{background:var(--ambl)}
+.ok>b.t{background:var(--sage)}.ok>div{background:var(--sagel)}
+.warn>b.t{background:var(--red)}.warn>div{background:var(--redl)}
+.rough{background:#fffbea;border:2px dashed #d9a82f;border-radius:8px;padding:14px 18px;margin:14px 0}
+.rough b.t{display:block;color:#a8660b;margin-bottom:6px}
+.proof{background:#f8f8f6;border-left:4px solid var(--sage);padding:14px 18px;margin:14px 0;border-radius:0 6px 6px 0}
+.proof b.t{display:block;color:#3f6a4b;margin-bottom:6px}.qed{float:right}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:14px 0}.two>*{min-width:0;margin:0}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%;padding:2px 0}
+.fig{background:#fcfbf8;border:1px solid #e1ddd0;border-radius:8px;padding:12px;margin:16px 0;text-align:center}
+.fig div[id^=g]>svg{width:100%;height:auto;display:block}.fig mjx-container svg{width:auto;display:inline-block}.cap{font-size:.8rem;color:#555;font-style:italic;margin-top:6px}
+.ctl{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;font-size:.82rem;margin-top:8px}
+.ctl input{width:min(320px,60%)}.ro{font-variant-numeric:tabular-nums;color:var(--ind);font-weight:600}
+table{width:100%;border-collapse:collapse;margin:12px 0;display:block;overflow-x:auto}
+th,td{border:1px solid #ddd;font-size:.9rem;padding:6px 10px;text-align:left}th{background:#f1f0ea}
+.q{background:#fdfdfb;border:1px solid #e2e4ec;border-left:5px solid var(--ind2);padding:16px 18px;margin:14px 0;border-radius:6px}
+.btn{background:none;border:1.5px solid var(--ind2);color:var(--ind2);padding:6px 14px;border-radius:5px;cursor:pointer;font-weight:600;margin-top:8px}
+.btn:hover{background:var(--ind2);color:#fff}
+.sol{display:none;margin-top:10px;padding:12px 14px;background:#f5f7fb;border-top:1px dashed #cdd3e6;border-radius:4px}
+.step{display:none}.step.on{display:block;animation:in .45s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#efe9da;border-top:2px solid #cdbf9c;padding:10px 24px;display:flex;gap:18px;align-items:center;z-index:9}
+.pg{flex:1;height:5px;background:#cdbf9c;border-radius:3px;overflow:hidden}.pg i{display:block;height:100%;width:0;background:var(--amb);transition:width .4s}
+.next{background:var(--ind);color:#fff;border:0;padding:8px 20px;border-radius:5px;cursor:pointer;font-size:14px}.next:disabled{background:#b9ae93}
+.hint{font-size:.8rem;color:#7a6e55;font-style:italic}
+@media(max-width:600px){.wrap{padding:22px 16px}.hint{display:none}}
+</style></head><body>
+<nav><a href="main.html">← Course Home</a> &nbsp;|&nbsp; Lecture 22 &nbsp;|&nbsp; <a href="L23_caratheodory.html">Lecture 23 →</a></nav>
+<div class="wrap"><h1>Lecture 22 &mdash; Differentiability</h1><p class="sub">The derivative as the best affine approximation &nbsp;·&nbsp; Calculus / Real Analysis</p>
+
+<!-- PART 1 -->
+<div class="step"><span class="chip">PART 1 · THE IDEA</span>
+<h2>Approximating a function by a straight line</h2>
+<p>Differential calculus rests on one idea: <b>near a point, replace a complicated function by an affine one.</b>
+Let $J$ be an interval, $c\in J$ and $f:J\to\mathbb R$. Among all lines $a+b(x-c)$, which one hugs the graph of $f$ most closely near $c$?</p>
+
+<div class="box def"><b class="t">What should “closely” mean?</b><div>
+Write the <em>error</em> of an approximation as $E(x)=f(x)-a-b(x-c).$ Asking only $E(x)\to0$ is too weak: any line through $(c,f(c))$ achieves that when $f$ is continuous. We demand more &mdash; the error must vanish <em>faster than the distance to $c$</em>:
+$$\lim_{x\to c}\frac{E(x)}{x-c}=0 .$$</div></div>
+
+<p>Two things follow at once. First, $E(x)=(x-c)\cdot\frac{E(x)}{x-c}\to 0\cdot 0=0$, so $f(x)\to a$: the constant must be $a=f(c)$, and $f$ has to be continuous at $c$. Second, the condition then reads
+$$\frac{f(x)-f(c)}{x-c}-b\;\to\;0,\qquad\text{i.e.}\qquad b=\lim_{x\to c}\frac{f(x)-f(c)}{x-c}.$$
+So the best slope $b$, if it exists, is a <em>limit of slopes of chords</em>.</p>
+
+<div class="fig"><div id="g1"></div>
+<div class="ctl"><label for="s1">Move the point $x=c+h$ :</label><input type="range" id="s1" min="-1" max="1.6" step="0.05" value="1">
+<span class="ro" id="r1"></span></div>
+<div class="cap">Both dashed lines pass through $(c,f(c))$. The <span style="color:#5f8a6a"><b>tangent</b></span> has a tiny error (green bar); a line of any other slope has an error (amber bar) that stays proportional to $|h|$. Slide $h\to0$: only the tangent's error shrinks relative to $|h|$.</div></div>
+
+<div class="box idea"><b class="t">Conclusion of the heuristic</b><div>The line $y=f(c)+\alpha(x-c)$ is the best affine approximation at $c$ exactly when $\displaystyle\lim_{x\to c}\frac{f(x)-f(c)}{x-c}=\alpha$. This $\alpha$ is what we will call the derivative.</div></div>
+</div>
+
+<!-- PART 2 -->
+<div class="step"><span class="chip">PART 2 · DEFINITION</span>
+<h2>Differentiability at a point</h2>
+<div class="box def"><b class="t">Definition</b><div>
+Let $f:J\to\mathbb R$ and $c\in J$. We say $f$ is <b>differentiable at $c$</b> if there is a real number $\alpha$ with
+$$\lim_{x\to c}\frac{f(x)-f(c)}{x-c}=\alpha .$$
+Such an $\alpha$ is unique; we write $f'(c)=\alpha$ and call it the <b>derivative of $f$ at $c$</b>. The function $f$ is <b>differentiable on $J$</b> if it is differentiable at every point of $J$.</div></div>
+
+<div class="box thm"><b class="t">The definition in quantifiers</b><div>
+$f$ is differentiable at $c$ if and only if
+$$\begin{aligned}&\exists\,\alpha\in\mathbb R\;\;\forall\,\varepsilon>0\;\;\exists\,\delta>0\;\;\forall\,x\in J:\\&\qquad 0&lt;|x-c|&lt;\delta\;\Longrightarrow\;\Bigl|\frac{f(x)-f(c)}{x-c}-\alpha\Bigr|&lt;\varepsilon .\end{aligned}$$
+<b>Reading it, quantifier by quantifier:</b>
+<ul style="margin:6px 0 6px 1.3rem">
+<li>$\exists\,\alpha$: one number is chosen <em>first</em>, and it may not depend on $\varepsilon$ or $x$. This is $f'(c)$.</li>
+<li>$\forall\,\varepsilon>0$: an arbitrary tolerance is then set by an opponent.</li>
+<li>$\exists\,\delta>0$: we answer with a neighbourhood size, which may depend on $\varepsilon$ (and on $c$).</li>
+<li>$\forall\,x$ with $0&lt;|x-c|&lt;\delta$: <em>every</em> such $x$ must pass, and $x=c$ is excluded since the quotient is undefined there.</li></ul>
+<b>Negation</b> ($f$ is not differentiable at $c$):
+$$\begin{aligned}&\forall\,\alpha\in\mathbb R\;\;\exists\,\varepsilon>0\;\;\forall\,\delta>0\;\;\exists\,x\in J:\\&\qquad 0&lt;|x-c|&lt;\delta\;\text{ and }\;\Bigl|\frac{f(x)-f(c)}{x-c}-\alpha\Bigr|\ge\varepsilon .\end{aligned}$$
+For $|x|$ at $0$: given any $\alpha$, take $\varepsilon=1/2$; in every $\delta$-neighbourhood the quotient equals $\pm1$, and it cannot be within $1/2$ of $\alpha$ for both signs.</div></div>
+
+<h3>Two equivalent forms</h3>
+<div class="two">
+<div class="box ok"><b class="t">Increment form</b><div>Put $h=x-c$, so $x=c+h$:
+$$\lim_{h\to0}\frac{f(c+h)-f(c)}{h}=\alpha .$$</div></div>
+<div class="box def"><b class="t">Error form ($\varepsilon$–$\delta$)</b><div>There is $\alpha\in\mathbb R$ such that for every $\varepsilon>0$ there is $\delta>0$ with
+$$\begin{aligned}&x\in J,\;0&lt;|x-c|&lt;\delta\\&\Longrightarrow\;|f(x)-f(c)-\alpha(x-c)|&lt;\varepsilon\,|x-c| .\end{aligned}$$</div></div>
+</div>
+
+<div class="box idea"><b class="t">Why the error form is the same thing</b><div>
+$\bigl|\tfrac{f(x)-f(c)}{x-c}-\alpha\bigr|&lt;\varepsilon$ becomes the error form after multiplying by $|x-c|>0$. We prefer it in proofs: there is no division, and it says precisely “error $\ll |x-c|$”.</div></div>
+
+<div class="rough"><b class="t">✎ Working strategy</b>
+To show $f$ is differentiable at $c$: expand the increment as
+$$f(x)-f(c)=\alpha\,(x-c)+\text{error},$$
+guess $\alpha$ from the term linear in $x-c$, then prove $\dfrac{|\text{error}|}{|x-c|}\to0$.</div>
+
+<div class="fig"><div id="g2"></div>
+<div class="ctl"><label for="s2">Choose $h$ :</label><input type="range" id="s2" min="-1" max="1.6" step="0.05" value="1.2">
+<span class="ro" id="r2"></span></div>
+<div class="cap">The slope of the secant through $(c,f(c))$ and $(c+h,f(c+h))$ is the difference quotient. As $h\to0$ the secant rotates into the tangent, and its slope approaches $f'(c)$ from both sides.</div></div>
+</div>
+
+<!-- PART 3 -->
+<div class="step"><span class="chip">PART 3 · FIRST EXAMPLES</span>
+<h2>Constant and affine functions</h2>
+<h3>(a) Constant function $f(x)=C$</h3>
+<div class="box ok"><b class="t">Claim</b><div>$f$ is differentiable at every $c\in J$, and $f'(c)=0$.</div></div>
+<div class="proof"><b class="t">Proof.</b> Try $\alpha=0$. For every $x\in J$,
+$$|f(x)-f(c)-0\cdot(x-c)|=|C-C|=0&lt;\varepsilon|x-c|\quad(x\ne c).$$
+So every $\delta>0$ works for every $\varepsilon$, and $f'(c)=0$. <span class="qed">$\blacksquare$</span></div>
+
+<h3>(b) Affine function $f(x)=ax+b$</h3>
+<div class="box ok"><b class="t">Claim</b><div>$f$ is differentiable at every $c\in J$, and $f'(c)=a$.</div></div>
+<div class="rough"><b class="t">✎ Rough work</b>
+$f(x)-f(c)=(ax+b)-(ac+b)=a(x-c)$. This is already a multiple of $x-c$ with no error left over, so $\alpha=a$.</div>
+<div class="proof"><b class="t">Proof.</b> With $\alpha=a$: $\;|f(x)-f(c)-a(x-c)|=|a(x-c)-a(x-c)|=0&lt;\varepsilon|x-c|$ for all $x\ne c$, so any $\delta$ works. Hence $f'(c)=a$. <span class="qed">$\blacksquare$</span></div>
+
+<div class="fig"><div class="two"><div id="g3a"></div><div id="g3b"></div></div>
+<div class="cap">Chords of a line all have the same slope, so there is nothing to take a limit of: the tangent <em>is</em> the line. Left: slope $0$. Right: slope $a$.</div></div>
+</div>
+
+<!-- PART 4 -->
+<div class="step"><span class="chip">PART 4 · A GENUINE ERROR TERM</span>
+<h2>The power function $f(x)=x^n$</h2>
+<div class="box ok"><b class="t">Claim</b><div>For $n\in\mathbb N$, $f(x)=x^n$ is differentiable at every $c\in\mathbb R$ and $\;f'(c)=nc^{\,n-1}$.</div></div>
+<p>The case $n=1$ is the affine case, so let $n\ge2$.</p>
+<div class="rough"><b class="t">✎ Rough work — binomial expansion</b>
+$$\begin{aligned}(c+h)^n-c^n&=nc^{n-1}h+\binom n2c^{n-2}h^2+\cdots+h^n\\&=nc^{n-1}h+\underbrace{\sum_{k=2}^{n}\binom nk c^{n-k}h^k}_{\text{every term contains }h^2}.\end{aligned}$$
+So $\alpha=nc^{n-1}$, and the sum is the error to be controlled.</div>
+
+<div class="proof"><b class="t">Error estimate.</b> For $|h|&lt;1$ we have $|h|^k\le|h|^2$ when $k\ge2$, hence
+$$\Bigl|\sum_{k=2}^{n}\binom nk c^{n-k}h^k\Bigr|\le|h|^2\underbrace{\sum_{k=2}^{n}\binom nk|c|^{n-k}}_{=:M}\;,$$
+where $M\ge1$ depends only on $n$ and $c$ (the $k=n$ term is $1$).</div>
+
+<div class="proof"><b class="t">Proof.</b> Let $\varepsilon>0$ and choose $\delta=\min\{1,\varepsilon/M\}$. If $0&lt;|h|&lt;\delta$, then
+$$|f(c+h)-f(c)-nc^{n-1}h|\le M|h|^2&lt;M|h|\,\delta\le\varepsilon|h| .$$
+So $f'(c)=nc^{n-1}$. <span class="qed">$\blacksquare$</span></div>
+
+<div class="fig"><div id="g4"></div>
+<div class="ctl"><label for="s4">Tolerance $\varepsilon$ :</label><input type="range" id="s4" min="0.1" max="1" step="0.05" value="0.5">
+<span class="ro" id="r4"></span></div>
+<div class="cap">Case $n=3,\ c=1$ (so $M=4$). The true error $3h^2+h^3$ (blue) lies under the bound $Mh^2$ (amber), which lies under the allowed error $\varepsilon h$ (red) until $h=\varepsilon/M$. That value is the $\delta$ of the proof.</div></div>
+
+<table><tr><th>$f(x)$</th><th>$f'(c)$</th></tr>
+<tr><td>$C$</td><td>$0$</td></tr><tr><td>$ax+b$</td><td>$a$</td></tr><tr><td>$x^2$</td><td>$2c$</td></tr><tr><td>$x^3$</td><td>$3c^2$</td></tr><tr><td>$x^n$</td><td>$nc^{n-1}$</td></tr></table>
+
+
+</div>
+<div class="step"><span class="chip">PART 5 · SHORT ANSWER QUESTIONS</span><h2>Practice problems</h2><p>Try each problem on paper first, then open the solution.</p><div class="q"><p><b>SAQ 1.</b> Prove from the definition that $f(x)=\dfrac1x$ is differentiable at every $c\neq0$ and $f^{\prime}(c)=-\dfrac1{c^2}$.</p><button class="btn" onclick="tog('saq1')">Show / Hide solution</button><div class="sol" id="saq1"><b>Rough work.</b> $\dfrac{1/x-1/c}{x-c}=\dfrac{c-x}{xc(x-c)}=-\dfrac1{xc}$.<br><b>Proof.</b> For $|x-c|&lt;|c|/2$ we have $x\ne0$, and there the quotient equals $-\dfrac1{xc}$. As $x\to c$ this tends to $-\dfrac1{c^2}$. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>SAQ 2.</b> Using the error form, find a $\delta$ (in terms of $\varepsilon$) that works for $f(x)=x^2$ at $c=2$.</p><button class="btn" onclick="tog('saq2')">Show / Hide solution</button><div class="sol" id="saq2">$\alpha=4$ and $|x^2-4-4(x-2)|=(x-2)^2$. We need $(x-2)^2&lt;\varepsilon|x-2|$, i.e. $|x-2|&lt;\varepsilon$. So $\delta=\varepsilon$ works.</div></div><div class="q"><p><b>SAQ 3.</b> Let $f(x)=x|x|$. Show $f$ is differentiable at $0$ and find $f^{\prime}(0)$.</p><button class="btn" onclick="tog('saq3')">Show / Hide solution</button><div class="sol" id="saq3">$\dfrac{f(h)-f(0)}{h}=\dfrac{h|h|}{h}=|h|\to0$ as $h\to0$. Hence $f^{\prime}(0)=0$. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>SAQ 4.</b> Show that $f(x)=\sqrt{|x|}$ is not differentiable at $0$, even though it is continuous there.</p><button class="btn" onclick="tog('saq4')">Show / Hide solution</button><div class="sol" id="saq4">$\dfrac{f(h)-f(0)}{h}=\dfrac{\sqrt{|h|}}{h}$, which equals $\dfrac1{\sqrt h}\to+\infty$ for $h\to0^+$ and $-\dfrac1{\sqrt{|h|}}\to-\infty$ for $h\to0^-$. No finite limit exists. Geometrically the tangent at the origin is vertical. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>SAQ 5.</b> Suppose $|f(x)|\le x^2$ for all $x\in\mathbb R$. Prove $f$ is differentiable at $0$ with $f^{\prime}(0)=0$.</p><button class="btn" onclick="tog('saq5')">Show / Hide solution</button><div class="sol" id="saq5">Putting $x=0$ gives $f(0)=0$. Then $\Bigl|\dfrac{f(h)-f(0)}{h}\Bigr|=\dfrac{|f(h)|}{|h|}\le|h|\to0$, so $f^{\prime}(0)=0$ by the sandwich lemma. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>SAQ 6.</b> If $f$ is differentiable at $c$, show $\displaystyle\lim_{h\to0}\frac{f(c+h)-f(c-h)}{2h}=f^{\prime}(c)$. Is the converse true?</p><button class="btn" onclick="tog('saq6')">Show / Hide solution</button><div class="sol" id="saq6">Split: $\dfrac{f(c+h)-f(c-h)}2\cdot\dfrac1h=\dfrac12\Bigl[\dfrac{f(c+h)-f(c)}{h}+\dfrac{f(c-h)-f(c)}{-h}\Bigr]\to\dfrac12\bigl[f^{\prime}(c)+f^{\prime}(c)\bigr]=f^{\prime}(c)$.<br><b>Converse is false:</b> for $f(x)=|x|$ at $0$ the symmetric quotient is $\dfrac{|h|-|h|}{2h}=0\to0$, yet $|x|$ is not differentiable at $0$.</div></div><div class="q"><p><b>SAQ 7.</b> Find the equation of the tangent line to $y=x^3$ at $c=1$, and use the error form to explain in what sense it is the best linear approximation.</p><button class="btn" onclick="tog('saq7')">Show / Hide solution</button><div class="sol" id="saq7">$f(1)=1$ and $f^{\prime}(1)=3$, so the tangent is $y=1+3(x-1)$. The error is $x^3-1-3(x-1)=(x-1)^2(x+2)$, and $\dfrac{|\text{error}|}{|x-1|}=|x-1|\,|x+2|\to0$. Any other slope $m\ne3$ leaves error $\approx(3-m)(x-1)$, which is of the same order as $|x-1|$.</div></div><div class="box idea"><b class="t">Next lecture</b><div>Proving differentiability by hand with $\varepsilon$ and $\delta$ is heavy. <a href="L23_caratheodory.html">Lecture 23</a> gives Carathéodory's criterion, which turns differentiability into a factorisation $f(x)=f(c)+f_1(x)(x-c)$ with $f_1$ continuous, and makes the standard rules almost mechanical.</div></div></div>
+</div>
+<div class="bar"><span class="hint">Press Enter or → to continue</span><div class="pg"><i id="pf"></i></div><span id="pl" class="ro">0 / 0</span><button class="next" id="nx" onclick="nextStep()">Continue ▸</button></div>
+<script>
+const $=id=>document.getElementById(id);
+const F=x=>1.5+Math.sin(.9*x)+.15*x, D=x=>.9*Math.cos(.9*x)+.15;
+let _u=0;
+function Plot(el,xr,yr,o){o=o||{};const W=o.w||640,H=o.h||300,p=34,S=[],id='cp'+(++_u);
+ const X=x=>p+(x-xr[0])/(xr[1]-xr[0])*(W-2*p),Y=y=>H-p-(y-yr[0])/(yr[1]-yr[0])*(H-2*p),f=n=>n.toFixed(1);
+ const da=d=>d?` stroke-dasharray="${d}"`:'';
+ return{X,Y,
+  path(fn,a,b,c,w,d){let s='';for(let i=0;i<=260;i++){const x=a+(b-a)*i/260,y=fn(x);if(isFinite(y))s+=(s?'L':'M')+f(X(x))+' '+f(Y(y))}
+   S.push(`<path d="${s}" fill="none" stroke="${c}" stroke-width="${w||2.6}"${da(d)} stroke-linecap="round"/>`)},
+  line(x1,y1,x2,y2,c,w,d){S.push(`<line x1="${f(X(x1))}" y1="${f(Y(y1))}" x2="${f(X(x2))}" y2="${f(Y(y2))}" stroke="${c}" stroke-width="${w||1.5}"${da(d)}/>`)},
+  pt(x,y,c,hol){S.push(`<circle cx="${f(X(x))}" cy="${f(Y(y))}" r="5.5" fill="${hol?'#fff':c}" stroke="${c}" stroke-width="2"/>`)},
+  txt(x,y,t,c,a,sz){S.push(`<text x="${f(X(x))}" y="${f(Y(y))}" fill="${c||'#444'}" text-anchor="${a||'start'}" font-size="${sz||11}" font-style="italic">${t}</text>`)},
+  draw(){let g='';for(let x=Math.ceil(xr[0]);x<=xr[1];x++)g+=`<line x1="${f(X(x))}" y1="${p}" x2="${f(X(x))}" y2="${H-p}" stroke="#ece8dc"/>`;
+   for(let y=Math.ceil(yr[0]);y<=yr[1];y++)g+=`<line x1="${p}" y1="${f(Y(y))}" x2="${W-p}" y2="${f(Y(y))}" stroke="#ece8dc"/>`;
+   const ay=Y(Math.min(Math.max(0,yr[0]),yr[1])),ax=X(Math.min(Math.max(0,xr[0]),xr[1]));
+   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}"><defs><clipPath id="${id}"><rect x="${p-6}" y="${p-12}" width="${W-2*p+12}" height="${H-2*p+18}"/></clipPath>
+   <marker id="m${id}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0L8,3L0,6Z" fill="#6b7288"/></marker></defs>${g}
+   <line x1="${p-8}" y1="${f(ay)}" x2="${W-p+14}" y2="${f(ay)}" stroke="#6b7288" stroke-width="1.6" marker-end="url(#m${id})"/>
+   <line x1="${f(ax)}" y1="${H-p+8}" x2="${f(ax)}" y2="${p-16}" stroke="#6b7288" stroke-width="1.6" marker-end="url(#m${id})"/>
+   <text x="${W-p+6}" y="${f(ay)-8}" font-size="12" font-style="italic" fill="#555">x</text><text x="${f(ax)+8}" y="${p-12}" font-size="12" font-style="italic" fill="#555">y</text>
+   <g clip-path="url(#${id})">${S.join('')}</g></svg>`}}}
+const IND='#2b3a67',SAGE='#5f8a6a',AMB='#c98a1b',RED='#b3402f';
+const steps=[...document.querySelectorAll('.step')];let cur=0;
+function ui(){$('pf').style.width=(cur/steps.length*100)+'%';$('pl').textContent=cur+' / '+steps.length;
+ $('nx').disabled=cur>=steps.length;$('nx').textContent=cur>=steps.length?'Done ✓':'Continue ▸'}
+function nextStep(){if(cur>=steps.length)return;const e=steps[cur++];e.classList.add('on');if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([e]);ui();
+ if(cur>1)setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'start'}),80)}
+function tog(id){const s=$(id),sh=s.style.display!=='block';s.style.display=sh?'block':'none';if(sh&&window.MathJax)MathJax.typesetPromise([s])}
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key==='ArrowRight')&&!/BUTTON|A|INPUT/.test(e.target.tagName)){e.preventDefault();nextStep()}});
+function boot(){ui();nextStep()}
+
+
+const c=1.2,fc=F(c),d=D(c),m2=d+.9,T=t=>fc+d*(t-c),L=t=>fc+m2*(t-c);
+function g1(){const h=+$('s1').value||.02,x=c+h,P=Plot($('g1'),[0,3.2],[0,4]);
+ P.path(F,0,3.2,IND);P.path(T,0,3.2,SAGE,2.2,'8 5');P.path(L,0,3.2,AMB,2.2,'8 5');
+ P.line(c,0,c,fc,'#bbb',1,'4 4');P.line(x,0,x,F(x),'#bbb',1,'4 4');
+ P.line(x-.02,F(x),x-.02,T(x),SAGE,6);P.line(x+.02,F(x),x+.02,L(x),AMB,6);
+ P.pt(c,fc,IND);P.pt(x,F(x),IND,1);
+ P.txt(c,-.0,'c',IND,'middle');P.txt(.1,F(0)+.28,'y = f(x)',IND);P.txt(3.15,T(3.15)-.3,'tangent',SAGE,'end');P.txt(3.15,L(3.15)-.3,'other slope',AMB,'end');P.draw();
+ const eT=Math.abs(F(x)-T(x)),eL=Math.abs(F(x)-L(x));
+ $('r1').textContent='error/|h|:  tangent '+(eT/Math.abs(h)).toFixed(3)+'   other line '+(eL/Math.abs(h)).toFixed(3)}
+function g2(){const h=Math.abs(+$('s2').value)<.03?.03:+$('s2').value,x=c+h,P=Plot($('g2'),[0,3.2],[0,4]),sl=(F(x)-fc)/h;
+ P.path(F,0,3.2,IND);P.path(T,0,3.2,SAGE,1.8,'3 5');P.path(t=>fc+sl*(t-c),0,3.2,AMB,2.4,'8 5');
+ P.line(c,0,c,fc,'#bbb',1,'4 4');P.line(x,0,x,F(x),'#bbb',1,'4 4');P.line(c,.15,x,.15,RED,2.4);
+ P.pt(c,fc,SAGE);P.pt(x,F(x),AMB);P.txt(c,-.0,'c',SAGE,'middle');P.txt(x,-.0,'c+h',AMB,'middle');P.txt((c+x)/2,.42,'h',RED,'middle');P.draw();
+ $('r2').textContent='secant slope '+sl.toFixed(3)+'   f′(c) = '+d.toFixed(3)}
+function g3(){let P=Plot($('g3a'),[-1,4],[-1,4],{h:260});P.path(t=>2,-1,4,IND);
+ [0.6,1.8].forEach(t=>{P.pt(t,2,AMB)});P.txt(3.9,1.6,'y = C  (slope 0)',IND,'end');P.draw();
+ P=Plot($('g3b'),[-1,4],[-1,4],{h:260});P.path(t=>.8*t+.5,-1,4,IND);
+ [.6,1.8,3].forEach(t=>P.pt(t,.8*t+.5,AMB));P.txt(3.9,2.4,'y = ax + b  (slope a)',IND,'end');P.draw()}
+function g4(){const e=+$('s4').value,M=4,dl=Math.min(1,e/M),P=Plot($('g4'),[0,.5],[0,1]);
+ P.path(h=>e*h,0,.5,RED,2.4);P.path(h=>M*h*h,0,.5,AMB,2.4);P.path(h=>3*h*h+h*h*h,0,.5,IND,2.8);
+ P.line(dl,0,dl,1,SAGE,2,'6 4');P.txt(dl+.008,.95,'δ = '+dl.toFixed(3),SAGE);
+ P.txt(.49,.2+.0,'',IND);P.txt(.495,e*.5+.04,'ε·h',RED,'end');P.txt(.3,M*.09+.07,'M·h²',AMB);P.txt(.49,.6,'true error',IND,'end');P.draw();
+ $('r4').textContent='ε = '+e.toFixed(2)+'  →  δ = min{1, ε/M} = '+dl.toFixed(3)}
+['s1','s2','s4'].forEach((s,i)=>$(s).addEventListener('input',[g1,g2,g4][i]));
+g1();g2();g3();g4();
+
+window.addEventListener('load',boot);</script></body></html>

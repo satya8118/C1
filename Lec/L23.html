@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lecture 23 — Carathéodory's Criterion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$']]},svg:{fontCache:'global',scale:0.88}};</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--ind:#2b3a67;--ind2:#4a5fa8;--amb:#c98a1b;--ambl:#fdf4e3;--sage:#5f8a6a;--sagel:#eaf2ec;--red:#b3402f;--redl:#fbebe8;--bg:#f6f3ec;--ink:#1f2433}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:15px;line-height:1.7;color:var(--ink);background:var(--bg);padding:18px 14px 100px}
+.wrap{max-width:900px;margin:auto;background:#fff;padding:36px 40px;border-radius:10px;box-shadow:0 4px 20px rgba(30,40,80,.1)}
+nav{max-width:900px;margin:0 auto 10px;font-size:.9rem;color:#8a8fa0}nav a{color:var(--ind2);text-decoration:none}
+h1,h2{font-family:Fraunces,Georgia,serif;color:var(--ind)}
+h1{font-size:1.55rem;border-bottom:3px solid var(--amb);padding-bottom:8px;margin-bottom:6px}
+.sub{color:#6b7288;font-size:.9rem;margin-bottom:22px}
+h2{font-size:1.2rem;margin:4px 0 14px}h3{font-size:.98rem;color:var(--ind2);margin:18px 0 8px}p{margin-bottom:.9rem}
+.chip{display:inline-block;background:var(--ind);color:#fff;font-size:.72rem;letter-spacing:.1em;font-weight:600;padding:2px 10px;border-radius:4px;margin-bottom:6px}
+.box{border-radius:8px;margin:14px 0;border:1px solid #d5d9e8;overflow:hidden}
+.box>b.t{display:block;padding:8px 16px;color:#fff;font-weight:600}.box>div{padding:14px 18px;min-width:0}
+.def>b.t{background:var(--ind)}.def>div{background:#eef1fa}
+.thm>b.t{background:#1d2850}.thm>div{background:#e4e9f7}
+.idea>b.t{background:var(--amb)}.idea>div{background:var(--ambl)}
+.ok>b.t{background:var(--sage)}.ok>div{background:var(--sagel)}
+.warn>b.t{background:var(--red)}.warn>div{background:var(--redl)}
+.rough{background:#fffbea;border:2px dashed #d9a82f;border-radius:8px;padding:14px 18px;margin:14px 0}
+.rough b.t{display:block;color:#a8660b;margin-bottom:6px}
+.proof{background:#f8f8f6;border-left:4px solid var(--sage);padding:14px 18px;margin:14px 0;border-radius:0 6px 6px 0}
+.proof b.t{display:block;color:#3f6a4b;margin-bottom:6px}.qed{float:right}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:14px 0}.two>*{min-width:0;margin:0}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%;padding:2px 0}
+.fig{background:#fcfbf8;border:1px solid #e1ddd0;border-radius:8px;padding:12px;margin:16px 0;text-align:center}
+.fig div[id^=g]>svg{width:100%;height:auto;display:block}.fig mjx-container svg{width:auto;display:inline-block}.cap{font-size:.8rem;color:#555;font-style:italic;margin-top:6px}
+.ctl{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;font-size:.82rem;margin-top:8px}
+.ctl input{width:min(320px,60%)}.ro{font-variant-numeric:tabular-nums;color:var(--ind);font-weight:600}
+table{width:100%;border-collapse:collapse;margin:12px 0;display:block;overflow-x:auto}
+th,td{border:1px solid #ddd;font-size:.9rem;padding:6px 10px;text-align:left}th{background:#f1f0ea}
+.q{background:#fdfdfb;border:1px solid #e2e4ec;border-left:5px solid var(--ind2);padding:16px 18px;margin:14px 0;border-radius:6px}
+.btn{background:none;border:1.5px solid var(--ind2);color:var(--ind2);padding:6px 14px;border-radius:5px;cursor:pointer;font-weight:600;margin-top:8px}
+.btn:hover{background:var(--ind2);color:#fff}
+.sol{display:none;margin-top:10px;padding:12px 14px;background:#f5f7fb;border-top:1px dashed #cdd3e6;border-radius:4px}
+.step{display:none}.step.on{display:block;animation:in .45s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#efe9da;border-top:2px solid #cdbf9c;padding:10px 24px;display:flex;gap:18px;align-items:center;z-index:9}
+.pg{flex:1;height:5px;background:#cdbf9c;border-radius:3px;overflow:hidden}.pg i{display:block;height:100%;width:0;background:var(--amb);transition:width .4s}
+.next{background:var(--ind);color:#fff;border:0;padding:8px 20px;border-radius:5px;cursor:pointer;font-size:14px}.next:disabled{background:#b9ae93}
+.hint{font-size:.8rem;color:#7a6e55;font-style:italic}
+@media(max-width:600px){.wrap{padding:22px 16px}.hint{display:none}}
+</style></head><body>
+<nav><a href="main.html">← Course Home</a> &nbsp;|&nbsp; <a href="L22_differentiability.html">← Lecture 22</a> &nbsp;|&nbsp; Lecture 23</nav>
+<div class="wrap"><h1>Lecture 23 &mdash; Carathéodory's Criterion</h1><p class="sub">Differentiability as factorisation, and what follows from it &nbsp;·&nbsp; Calculus / Real Analysis</p>
+
+<div class="step"><span class="chip">PART 1 · THE CRITERION</span>
+<h2>Carathéodory's characterisation of differentiability</h2>
+<p>Last time, differentiability meant a limit of a quotient. Carathéodory replaced the limit by a <b>factorisation plus continuity</b>, which is far easier to compute with (products, chains, inverses).</p>
+<div class="box thm"><b class="t">Theorem (Carathéodory)</b><div>
+Let $f:J\to\mathbb R$ and $c\in J$. Then $f$ is differentiable at $c$ <b>if and only if</b> there is a function $f_1:J\to\mathbb R$ such that
+<ol style="margin:8px 0 8px 1.4rem"><li>$f(x)=f(c)+f_1(x)\,(x-c)$ for all $x\in J$, and</li><li>$f_1$ is continuous at $c$.</li></ol>
+In that case $f^{\prime}(c)=f_1(c)$.</div></div>
+<div class="box idea"><b class="t">How to read it</b><div>For $x\ne c$ condition 1 forces $f_1(x)=\dfrac{f(x)-f(c)}{x-c}$, the chord slope. The only freedom is the value $f_1(c)$, and condition 2 says: <em>the chord-slope function can be completed continuously at $c$</em>. The completing value is the derivative.</div></div>
+
+<div class="fig"><div class="two"><div id="g5a"></div><div id="g5b"></div></div>
+<div class="cap">Chord-slope function $f_1$. Left: $f(x)=x^2$, $c=1$: $f_1(x)=x+1$ has a hole at $x=1$ that is filled continuously by $f_1(1)=2=f^{\prime}(1)$. Right: $f(x)=|x|$, $c=0$: $f_1=\pm1$ jumps, no value at $0$ can fill it, so $|x|$ is not differentiable at $0$.</div></div>
+
+<h3>($\Leftarrow$) A factorisation gives differentiability</h3>
+<div class="proof"><b class="t">Proof.</b> Let $f_1$ satisfy 1 and 2, and put $\alpha=f_1(c)$. For $x\ne c$,
+$$|f(x)-f(c)-\alpha(x-c)|=|x-c|\,|f_1(x)-f_1(c)| .$$
+Given $\varepsilon>0$, continuity of $f_1$ at $c$ gives $\delta>0$ with $|f_1(x)-f_1(c)|&lt;\varepsilon$ whenever $|x-c|&lt;\delta$. Then for $0&lt;|x-c|&lt;\delta$ the error is $&lt;\varepsilon|x-c|$, so $f^{\prime}(c)=f_1(c)$. <span class="qed">$\blacksquare$</span></div>
+
+<h3>($\Rightarrow$) Differentiability gives a factorisation</h3>
+<div class="rough"><b class="t">✎ Strategy</b> Condition 1 dictates $f_1(x)$ for $x\ne c$. Continuity at $c$ then dictates $f_1(c)=\lim_{x\to c}f_1(x)=f^{\prime}(c)$. Define it that way and check.</div>
+<div class="proof"><b class="t">Proof.</b> Let $f$ be differentiable at $c$ and define
+$$f_1(x)=\begin{cases}\dfrac{f(x)-f(c)}{x-c},&x\ne c,\\[8pt] f^{\prime}(c),&x=c.\end{cases}$$
+<b>Condition 1.</b> For $x\ne c$ multiply by $x-c$. For $x=c$ both sides equal $f(c)$.
+<b>Condition 2.</b> $\displaystyle\lim_{x\to c}f_1(x)=\lim_{x\to c}\frac{f(x)-f(c)}{x-c}=f^{\prime}(c)=f_1(c)$. <span class="qed">$\blacksquare$</span></div>
+</div>
+
+<div class="step"><span class="chip">PART 2 · CONSEQUENCES</span>
+<h2>What the criterion gives us for free</h2>
+<div class="box ok"><b class="t">Corollary: differentiable ⟹ continuous</b><div>If $f$ is differentiable at $c$, then $f$ is continuous at $c$.</div></div>
+<div class="proof"><b class="t">Proof.</b> $f(x)=f(c)+f_1(x)(x-c)$ with $f_1$ continuous at $c$, so
+$\displaystyle\lim_{x\to c}f(x)=f(c)+f_1(c)\cdot 0=f(c).$ <span class="qed">$\blacksquare$</span></div>
+<div class="proof"><b class="t">Direct proof.</b> $|f(x)-f(c)|=\Bigl|\tfrac{f(x)-f(c)}{x-c}\Bigr|\,|x-c|\to|f^{\prime}(c)|\cdot0=0.$ <span class="qed">$\blacksquare$</span></div>
+
+<div class="box warn"><b class="t">The converse is false</b><div>$f(x)=|x|$ is continuous everywhere but not differentiable at $0$: the chord slopes are $-1$ on the left and $+1$ on the right. Weierstrass (1872) gave a function that is continuous on all of $\mathbb R$ and differentiable at no point.</div></div>
+
+<div class="box thm"><b class="t">Theorem (Chain Rule)</b><div>
+Let $I,J$ be intervals, $g:I\to\mathbb R$ with $g(I)\subseteq J$, and $f:J\to\mathbb R$. If $g$ is differentiable at $c\in I$ and $f$ is differentiable at $g(c)$, then $f\circ g$ is differentiable at $c$ and
+$$(f\circ g)^{\prime}(c)=f^{\prime}\bigl(g(c)\bigr)\,g^{\prime}(c).$$</div></div>
+
+<div class="rough"><b class="t">✎ Why the naive proof needs care</b>
+The tempting computation
+$$\frac{f(g(x))-f(g(c))}{x-c}=\frac{f(g(x))-f(g(c))}{g(x)-g(c)}\cdot\frac{g(x)-g(c)}{x-c}$$
+divides by $g(x)-g(c)$, which can be $0$ for $x$ arbitrarily close to $c$ (e.g. $g(x)=x^2\sin(1/x)$ near $0$). Carathéodory's factorisation avoids the division altogether.</div>
+
+<div class="proof"><b class="t">Proof.</b> Put $d=g(c)$.
+<br><b>Step 1: factorise both functions.</b> By the theorem there are $g_1:I\to\mathbb R$ continuous at $c$ and $f_1:J\to\mathbb R$ continuous at $d$ with
+$$g(x)=g(c)+g_1(x)(x-c)\ \ (x\in I),\qquad f(y)=f(d)+f_1(y)(y-d)\ \ (y\in J),$$
+and $g_1(c)=g^{\prime}(c)$, $f_1(d)=f^{\prime}(d)$.
+<br><b>Step 2: substitute.</b> For $x\in I$ we have $g(x)\in J$, so we may take $y=g(x)$:
+$$\begin{aligned}f(g(x))&=f(d)+f_1\bigl(g(x)\bigr)\bigl(g(x)-d\bigr)\\&=f(g(c))+f_1\bigl(g(x)\bigr)\,g_1(x)\,(x-c).\end{aligned}$$
+<br><b>Step 3: continuity of the new factor.</b> Let $\phi(x)=f_1\bigl(g(x)\bigr)\,g_1(x)$. Since $g$ is differentiable at $c$, it is continuous at $c$; since $f_1$ is continuous at $g(c)=d$, the composition $f_1\circ g$ is continuous at $c$. The function $g_1$ is continuous at $c$, so the product $\phi$ is continuous at $c$.
+<br><b>Step 4: conclude.</b> We have shown $(f\circ g)(x)=(f\circ g)(c)+\phi(x)(x-c)$ for all $x\in I$ with $\phi$ continuous at $c$. By Carathéodory's theorem $f\circ g$ is differentiable at $c$ and
+$$(f\circ g)^{\prime}(c)=\phi(c)=f_1\bigl(g(c)\bigr)g_1(c)=f^{\prime}\bigl(g(c)\bigr)\,g^{\prime}(c).\qquad\blacksquare$$</div>
+
+<div class="box ok"><b class="t">Example</b><div>$h(x)=(3x^2+1)^5$ is $f\circ g$ with $g(x)=3x^2+1$ and $f(y)=y^5$. Then $h^{\prime}(x)=5(3x^2+1)^4\cdot6x=30x\,(3x^2+1)^4$.</div></div>
+
+<table><tr><th>Idea</th><th>Statement</th></tr>
+<tr><td>Definition</td><td>$f^{\prime}(c)=\lim_{x\to c}\frac{f(x)-f(c)}{x-c}$, the slope of the tangent</td></tr>
+<tr><td>Error form</td><td>$f(x)-f(c)=\alpha(x-c)+\text{error}$ with $\text{error}/|x-c|\to0$</td></tr>
+<tr><td>Carathéodory</td><td>$f^{\prime}(c)$ exists $\iff f(x)=f(c)+f_1(x)(x-c)$ with $f_1$ continuous at $c$; then $f^{\prime}(c)=f_1(c)$</td></tr>
+<tr><td>Continuity</td><td>differentiable $\Rightarrow$ continuous; the converse fails ($|x|$)</td></tr>
+<tr><td>Power rule</td><td>$(x^n)'=nx^{n-1}$ from the binomial theorem and an error bound</td></tr></table>
+</div>
+<div class="step"><span class="chip">SELF-ASSESSMENT A</span><h2>Definitions and basic computations</h2><div class="q"><p><b>Q1.</b> State the ratio form and the increment form of differentiability at $c$. How are they related?</p><button class="btn" onclick="tog('a1')">Show / Hide solution</button><div class="sol" id="a1"><b>Answer.</b> Ratio: $\lim_{x\to c}\frac{f(x)-f(c)}{x-c}=\alpha$. Increment: $\lim_{h\to0}\frac{f(c+h)-f(c)}{h}=\alpha$. They are the same statement under $x=c+h$: $x\to c$ iff $h\to0$.</div></div><div class="q"><p><b>Q2.</b> Prove from the definition that $\sqrt x$ has derivative $\frac1{2\sqrt c}$ at every $c>0$.</p><button class="btn" onclick="tog('a2')">Show / Hide solution</button><div class="sol" id="a2"><b>Proof.</b> For $x>0,\ x\ne c$: $\dfrac{\sqrt x-\sqrt c}{x-c}=\dfrac{1}{\sqrt x+\sqrt c}\to\dfrac1{2\sqrt c}$ as $x\to c$. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>Q3.</b> Show that $|x|$ is not differentiable at $0$ using the definition.</p><button class="btn" onclick="tog('a3')">Show / Hide solution</button><div class="sol" id="a3"><b>Proof.</b> $\dfrac{|h|}{h}=+1$ for $h>0$ and $-1$ for $h&lt;0$. The one-sided limits differ, so $\lim_{h\to0}|h|/h$ does not exist. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>Q4.</b> Use the error form to prove $f(x)=x^2$ has $f^{\prime}(3)=6$.</p><button class="btn" onclick="tog('a4')">Show / Hide solution</button><div class="sol" id="a4"><b>Proof.</b> With $\alpha=6$: $|x^2-9-6(x-3)|=(x-3)^2$. Given $\varepsilon>0$ take $\delta=\varepsilon$; for $0&lt;|x-3|&lt;\delta$ we get $(x-3)^2&lt;\varepsilon|x-3|$. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>Q5.</b> Explain why differentiability implies continuity, and give an example where the converse fails.</p><button class="btn" onclick="tog('a5')">Show / Hide solution</button><div class="sol" id="a5"><b>Answer.</b> $|f(x)-f(c)|=\bigl|\tfrac{f(x)-f(c)}{x-c}\bigr||x-c|\to f^{\prime}(c)\cdot0=0$. Converse fails for $|x|$ at $0$: continuous there, but there is a corner (Q3).</div></div></div><div class="step"><span class="chip">SELF-ASSESSMENT B</span><h2>Carathéodory and deeper results</h2><div class="q"><p><b>Q6.</b> State Carathéodory’s criterion in your own words. For $f(x)=x^3$ and $c=2$ find $f_1$ and verify both conditions.</p><button class="btn" onclick="tog('b1')">Show / Hide solution</button><div class="sol" id="b1"><b>Answer.</b> $f_1(x)=\dfrac{x^3-8}{x-2}=x^2+2x+4$ for $x\ne2$, and $f_1(2)=12=f^{\prime}(2)$. Condition 1: $8+(x^2+2x+4)(x-2)=x^3$. Condition 2: $x^2+2x+4\to12=f_1(2)$.</div></div><div class="q"><p><b>Q7.</b> Prove the Product Rule with the criterion.</p><button class="btn" onclick="tog('b2')">Show / Hide solution</button><div class="sol" id="b2"><b>Proof.</b> Write $f=f(c)+f_1(x-c)$, $g=g(c)+g_1(x-c)$. Then $fg=f(c)g(c)+\bigl[f(c)g_1+g(c)f_1+f_1g_1(x-c)\bigr](x-c)$. The bracket $h_1$ is continuous at $c$ with $h_1(c)=f(c)g^{\prime}(c)+g(c)f^{\prime}(c)$. So $(fg)^{\prime}(c)=f(c)g^{\prime}(c)+f^{\prime}(c)g(c)$. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>Q8.</b> Let $f(x)=x^2\sin(1/x)$ for $x\ne0$ and $f(0)=0$. Show $f^{\prime}(0)$ exists and find it.</p><button class="btn" onclick="tog('b3')">Show / Hide solution</button><div class="sol" id="b3"><b>Proof.</b> $\dfrac{f(h)-f(0)}{h}=h\sin(1/h)$ and $|h\sin(1/h)|\le|h|\to0$. By the sandwich lemma $f^{\prime}(0)=0$. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>Q9.</b> Write the error form with quantifiers and say what each means. Why $0&lt;|x-c|$ rather than $|x-c|&lt;\delta$?</p><button class="btn" onclick="tog('b4')">Show / Hide solution</button><div class="sol" id="b4"><b>Answer.</b> $\forall\varepsilon>0\ \exists\delta>0:\ x\in J,\,0&lt;|x-c|&lt;\delta\Rightarrow|f(x)-f(c)-\alpha(x-c)|&lt;\varepsilon|x-c|$. Here $\varepsilon$ is any tolerance for the <em>relative</em> error, $\delta$ is our reply, and $\alpha$ is fixed first. At $x=c$ both sides are $0$ and the strict inequality $0&lt;0$ would fail, so $x=c$ is excluded.</div></div><div class="q"><p><b>Q10.</b> Let $f,g$ be differentiable at $c$. Prove that $f+g$ is differentiable at $c$ and $(f+g)^{\prime}(c)=f^{\prime}(c)+g^{\prime}(c)$.</p><button class="btn" onclick="tog('b6')">Show / Hide solution</button><div class="sol" id="b6"><b>Proof.</b> <b>Proof (Carathéodory).</b> Write $f(x)=f(c)+f_1(x)(x-c)$ and $g(x)=g(c)+g_1(x)(x-c)$ with $f_1,g_1$ continuous at $c$. Adding, $$(f+g)(x)=(f+g)(c)+\bigl[f_1(x)+g_1(x)\bigr](x-c).$$ The bracket is continuous at $c$ (a sum of functions continuous at $c$), with value $f_1(c)+g_1(c)=f^{\prime}(c)+g^{\prime}(c)$. By the criterion, $(f+g)^{\prime}(c)=f^{\prime}(c)+g^{\prime}(c)$. <span class="qed">$\blacksquare$</span><br><b>Direct proof.</b> $\dfrac{(f+g)(x)-(f+g)(c)}{x-c}=\dfrac{f(x)-f(c)}{x-c}+\dfrac{g(x)-g(c)}{x-c}\to f^{\prime}(c)+g^{\prime}(c)$ by the sum law for limits. The same argument gives $(f-g)^{\prime}(c)=f^{\prime}(c)-g^{\prime}(c)$.</div></div><div class="q"><p><b>Q11.</b> Let $f$ be differentiable at $c$ and $\lambda\in\mathbb R$. Prove that $\lambda f$ is differentiable at $c$ and $(\lambda f)^{\prime}(c)=\lambda f^{\prime}(c)$.</p><button class="btn" onclick="tog('b7')">Show / Hide solution</button><div class="sol" id="b7"><b>Proof.</b> <b>Proof (Carathéodory).</b> From $f(x)=f(c)+f_1(x)(x-c)$ we get $$(\lambda f)(x)=(\lambda f)(c)+\bigl[\lambda f_1(x)\bigr](x-c).$$ The function $\lambda f_1$ is continuous at $c$ with value $\lambda f_1(c)=\lambda f^{\prime}(c)$. Hence $(\lambda f)^{\prime}(c)=\lambda f^{\prime}(c)$. <span class="qed">$\blacksquare$</span><br><b>Direct proof.</b> $\dfrac{\lambda f(x)-\lambda f(c)}{x-c}=\lambda\cdot\dfrac{f(x)-f(c)}{x-c}\to\lambda f^{\prime}(c)$. <b>Consequence:</b> differentiation is linear, $(\lambda f+\mu g)^{\prime}(c)=\lambda f^{\prime}(c)+\mu g^{\prime}(c)$.</div></div><div class="q"><p><b>Q12.</b> Find the derivative of $5x^4-3x^2+7x-2$ using the power rule together with Q10 and Q11.</p><button class="btn" onclick="tog('b5')">Show / Hide solution</button><div class="sol" id="b5"><b>Solution.</b> Differentiability is preserved under sums and scalar multiples (limits of sums and multiples). So the derivative is $5\cdot4c^3-3\cdot2c+7-0=20c^3-6c+7$.</div></div></div><div class="step"><span class="chip">SELF-ASSESSMENT C</span><h2>Challenge problems</h2><div class="q"><p><b>Q13.</b> Let $f(x)=x^2$ for $x\in\mathbb Q$ and $f(x)=0$ otherwise. Show $f$ is differentiable at $0$ and at no other point.</p><button class="btn" onclick="tog('c1')">Show / Hide solution</button><div class="sol" id="c1"><b>Proof.</b> At $0$: $\bigl|\tfrac{f(h)}{h}\bigr|\le\tfrac{h^2}{|h|}=|h|\to0$, so $f^{\prime}(0)=0$. At $c\ne0$: take rationals $r_n\to c$ and irrationals $s_n\to c$. If $c$ is rational, $f(s_n)=0\not\to c^2=f(c)$. If $c$ is irrational, $f(r_n)=r_n^2\to c^2\ne0=f(c)$. Either way $f$ is discontinuous at $c$, hence not differentiable there. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>Q14.</b> Suppose $f$ is differentiable at $c$ and $f^{\prime}(c)\ne0$. Prove there is $\delta>0$ with $f(x)\ne f(c)$ for $0&lt;|x-c|&lt;\delta$.</p><button class="btn" onclick="tog('c2')">Show / Hide solution</button><div class="sol" id="c2"><b>Proof.</b> Write $f(x)-f(c)=f_1(x)(x-c)$ with $f_1(c)=f^{\prime}(c)\ne0$. By continuity of $f_1$ there is $\delta>0$ with $|f_1(x)-f^{\prime}(c)|&lt;|f^{\prime}(c)|/2$, so $f_1(x)\ne0$ on $|x-c|&lt;\delta$. Then $f(x)-f(c)\ne0$ for $x\ne c$. <span class="qed">$\blacksquare$</span><br><b>Warning.</b> This does <em>not</em> make $f$ one-to-one near $c$. Take $f(x)=x+2x^2\sin(1/x)$, $f(0)=0$: $f^{\prime}(0)=1$, but $f^{\prime}(x)=1+4x\sin(1/x)-2\cos(1/x)$ equals $-1$ at $x=\frac1{2\pi k}$ and $3$ at $x=\frac1{(2k+1)\pi}$, so $f$ is not monotone, hence not injective, on any interval around $0$. Injectivity needs $f^{\prime}$ continuous at $c$.</div></div><div class="q"><p><b>Q15.</b> Let $f(x)=x\sin(1/x)$ for $x\ne0$, $f(0)=0$. Show $f$ is continuous but not differentiable at $0$.</p><button class="btn" onclick="tog('c3')">Show / Hide solution</button><div class="sol" id="c3"><b>Solution.</b> $|f(x)|\le|x|\to0$, so $f$ is continuous at $0$. But $\dfrac{f(h)-f(0)}{h}=\sin(1/h)$ oscillates between $-1$ and $1$ as $h\to0$, so it has no limit. Compare Q8: the extra factor $h$ damps the oscillation. <span class="qed">$\blacksquare$</span></div></div><div class="q"><p><b>Q16.</b> Prove the Quotient Rule from the definition, for $g(c)\ne0$.</p><button class="btn" onclick="tog('c4')">Show / Hide solution</button><div class="sol" id="c4"><b>Proof.</b> Since $g$ is continuous at $c$ and $g(c)\ne0$, $g\ne0$ near $c$. There $\dfrac{f(x)/g(x)-f(c)/g(c)}{x-c}=\dfrac1{g(x)g(c)}\Bigl[\dfrac{f(x)-f(c)}{x-c}\,g(c)-f(c)\dfrac{g(x)-g(c)}{x-c}\Bigr]$. Let $x\to c$ (using $g(x)\to g(c)$): $(f/g)^{\prime}(c)=\dfrac{f^{\prime}(c)g(c)-f(c)g^{\prime}(c)}{g(c)^2}$. <span class="qed">$\blacksquare$</span></div></div></div>
+</div>
+<div class="bar"><span class="hint">Press Enter or → to continue</span><div class="pg"><i id="pf"></i></div><span id="pl" class="ro">0 / 0</span><button class="next" id="nx" onclick="nextStep()">Continue ▸</button></div>
+<script>
+const $=id=>document.getElementById(id);
+const F=x=>1.5+Math.sin(.9*x)+.15*x, D=x=>.9*Math.cos(.9*x)+.15;
+let _u=0;
+function Plot(el,xr,yr,o){o=o||{};const W=o.w||640,H=o.h||300,p=34,S=[],id='cp'+(++_u);
+ const X=x=>p+(x-xr[0])/(xr[1]-xr[0])*(W-2*p),Y=y=>H-p-(y-yr[0])/(yr[1]-yr[0])*(H-2*p),f=n=>n.toFixed(1);
+ const da=d=>d?` stroke-dasharray="${d}"`:'';
+ return{X,Y,
+  path(fn,a,b,c,w,d){let s='';for(let i=0;i<=260;i++){const x=a+(b-a)*i/260,y=fn(x);if(isFinite(y))s+=(s?'L':'M')+f(X(x))+' '+f(Y(y))}
+   S.push(`<path d="${s}" fill="none" stroke="${c}" stroke-width="${w||2.6}"${da(d)} stroke-linecap="round"/>`)},
+  line(x1,y1,x2,y2,c,w,d){S.push(`<line x1="${f(X(x1))}" y1="${f(Y(y1))}" x2="${f(X(x2))}" y2="${f(Y(y2))}" stroke="${c}" stroke-width="${w||1.5}"${da(d)}/>`)},
+  pt(x,y,c,hol){S.push(`<circle cx="${f(X(x))}" cy="${f(Y(y))}" r="5.5" fill="${hol?'#fff':c}" stroke="${c}" stroke-width="2"/>`)},
+  txt(x,y,t,c,a,sz){S.push(`<text x="${f(X(x))}" y="${f(Y(y))}" fill="${c||'#444'}" text-anchor="${a||'start'}" font-size="${sz||11}" font-style="italic">${t}</text>`)},
+  draw(){let g='';for(let x=Math.ceil(xr[0]);x<=xr[1];x++)g+=`<line x1="${f(X(x))}" y1="${p}" x2="${f(X(x))}" y2="${H-p}" stroke="#ece8dc"/>`;
+   for(let y=Math.ceil(yr[0]);y<=yr[1];y++)g+=`<line x1="${p}" y1="${f(Y(y))}" x2="${W-p}" y2="${f(Y(y))}" stroke="#ece8dc"/>`;
+   const ay=Y(Math.min(Math.max(0,yr[0]),yr[1])),ax=X(Math.min(Math.max(0,xr[0]),xr[1]));
+   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}"><defs><clipPath id="${id}"><rect x="${p-6}" y="${p-12}" width="${W-2*p+12}" height="${H-2*p+18}"/></clipPath>
+   <marker id="m${id}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0L8,3L0,6Z" fill="#6b7288"/></marker></defs>${g}
+   <line x1="${p-8}" y1="${f(ay)}" x2="${W-p+14}" y2="${f(ay)}" stroke="#6b7288" stroke-width="1.6" marker-end="url(#m${id})"/>
+   <line x1="${f(ax)}" y1="${H-p+8}" x2="${f(ax)}" y2="${p-16}" stroke="#6b7288" stroke-width="1.6" marker-end="url(#m${id})"/>
+   <text x="${W-p+6}" y="${f(ay)-8}" font-size="12" font-style="italic" fill="#555">x</text><text x="${f(ax)+8}" y="${p-12}" font-size="12" font-style="italic" fill="#555">y</text>
+   <g clip-path="url(#${id})">${S.join('')}</g></svg>`}}}
+const IND='#2b3a67',SAGE='#5f8a6a',AMB='#c98a1b',RED='#b3402f';
+const steps=[...document.querySelectorAll('.step')];let cur=0;
+function ui(){$('pf').style.width=(cur/steps.length*100)+'%';$('pl').textContent=cur+' / '+steps.length;
+ $('nx').disabled=cur>=steps.length;$('nx').textContent=cur>=steps.length?'Done ✓':'Continue ▸'}
+function nextStep(){if(cur>=steps.length)return;const e=steps[cur++];e.classList.add('on');if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([e]);ui();
+ if(cur>1)setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'start'}),80)}
+function tog(id){const s=$(id),sh=s.style.display!=='block';s.style.display=sh?'block':'none';if(sh&&window.MathJax)MathJax.typesetPromise([s])}
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key==='ArrowRight')&&!/BUTTON|A|INPUT/.test(e.target.tagName)){e.preventDefault();nextStep()}});
+function boot(){ui();nextStep()}
+
+
+function fp(el,fn,f1,hole,xr,yr,lab){const P=Plot(el,xr,yr,{h:260});P.draw;return P}
+(function(){let P=Plot($('g5a'),[-1,3],[-1,4],{h:260});
+ P.path(t=>t+1,-1,3,IND);P.pt(1,2,SAGE);P.txt(1.1,1.4,'f₁(1) = 2 = f′(1)',SAGE);P.txt(-.9,3.3,'f₁(x) = x + 1',IND);P.line(1,-1,1,2,'#bbb',1,'4 4');P.draw();
+ P=Plot($('g5b'),[-2,2],[-2,2],{h:260});
+ P.path(t=>t<0?-1:NaN,-2,-.0001,IND);P.path(t=>t>0?1:NaN,.0001,2,IND);P.pt(0,-1,IND,1);P.pt(0,1,IND,1);
+ P.txt(.15,.15,'jump: no f₁(0) works',RED);P.txt(-1.9,1.5,'f₁(x) = x/|x|',IND);P.draw()})();
+
+window.addEventListener('load',boot);</script></body></html>

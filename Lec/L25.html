@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lagrange Mean Value Theorem and Its Applications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global', scale: 1.0 } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<style>
+  :root{
+    --bg:#0e1726; --bg2:#142238; --bg3:#0b1424; --ink:#e6edf7; --soft:#9fb0c8; --line:#27395a; --radius:14px;
+    --font:'Source Serif 4','Source Serif Pro',Georgia,'Times New Roman',serif; --cy:#5ad1e6; --au:#ffd37a; --gr:#7bd88f; --co:#ff7b72; --vi:#b69cff;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.7;font-size:18px;}
+  h1,h2,h3{font-family:var(--font);font-weight:600;color:var(--au);letter-spacing:-0.01em;}
+  h3{color:var(--cy);}
+  .eyebrow{font-family:var(--font);font-size:14px;letter-spacing:0.12em;text-transform:uppercase;color:var(--cy);font-weight:600;}
+  header.hero{padding:72px 8vw 56px;background:radial-gradient(circle at 85% 15%,rgba(90,209,230,0.16),transparent 55%),radial-gradient(circle at 10% 90%,rgba(255,211,122,0.08),transparent 50%),var(--bg);border-bottom:1px solid var(--line);}
+  header.hero h1{font-size:clamp(30px,4.2vw,50px);margin:10px 0 18px;max-width:820px;line-height:1.1;}
+  header.hero p.sub{max-width:660px;color:var(--soft);font-size:17.5px;}
+  main{max-width:900px;margin:0 auto;padding:0 6vw 120px;}
+  section.block{display:none;padding-top:60px;}
+  section.block.shown{display:block;animation:fade .5s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .kicker{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  .kicker .num{font-family:var(--font);font-size:13px;color:var(--bg);background:var(--au);border-radius:6px;padding:3px 9px;font-weight:600;}
+  h2.title{font-size:clamp(24px,3vw,32px);margin:4px 0 20px;}
+  p{color:var(--ink);} p.lede{color:var(--soft);font-size:17px;}
+  strong,b{color:#fff;}
+  .card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;margin:22px 0;}
+  .card{border-left:4px solid var(--cy);}
+  .card.amber{border-left-color:var(--au);}
+  .card.sage{border-left-color:var(--gr);}
+  .card.indigo{border-left-color:var(--cy);}
+  .card.red{border-left-color:var(--co);}
+  .demo{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px 26px;margin:26px 0;}
+  .demo .demo-label{font-family:var(--font);font-size:14px;text-transform:uppercase;letter-spacing:0.1em;color:var(--cy);font-weight:600;margin-bottom:10px;}
+  .demo div[id^=x_pl]>svg{width:100%;height:auto;display:block;background:var(--bg3);border-radius:10px;}
+  .demo div[id^=x_pl]>svg text{font-family:var(--font);}
+  mjx-container{color:inherit;line-height:normal !important;}
+  mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%;padding:.6em .25em;margin:.5em 0;}
+  .continue-wrap{text-align:center;margin:56px 0 0;}
+  button.continue{font-family:var(--font);font-weight:600;font-size:15px;background:var(--au);color:var(--bg);border:none;padding:13px 26px;border-radius:999px;cursor:pointer;transition:transform .15s ease,background .15s ease;}
+  button.continue:hover{background:#ffe3a3;transform:translateY(-1px);}
+  button.continue:focus-visible{outline:3px solid var(--cy);outline-offset:2px;}
+  .reveal-btn{font-family:var(--font);font-size:15px;font-weight:600;background:transparent;border:1.5px solid var(--cy);color:var(--cy);padding:9px 15px;border-radius:8px;cursor:pointer;margin-top:4px;}
+  .reveal-btn:hover{background:rgba(90,209,230,.14);}
+  .answer{display:none;margin-top:12px;padding:16px 20px;background:var(--bg3);border-left:4px solid var(--gr);border-radius:var(--radius);}
+  .answer.shown{display:block;}
+  .problem{background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--au);border-radius:var(--radius);padding:22px 26px;margin:20px 0;}
+  .problem .ptitle{font-family:var(--font);font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--au);font-weight:600;margin-bottom:8px;}
+  footer{max-width:900px;margin:0 auto;padding:40px 6vw 80px;color:var(--soft);font-size:14px;border-top:1px solid var(--line);}
+  .caption{font-size:15px;color:var(--soft);margin-top:10px;}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--au);width:0%;z-index:50;transition:width .4s ease;}
+  .tier{font-family:var(--font);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--bg);padding:3px 10px;border-radius:6px;display:inline-block;margin-bottom:10px;font-weight:600;}
+  .tier.A{background:var(--gr);} .tier.B{background:var(--au);} .tier.C{background:var(--cy);}
+  .q{margin-bottom:22px;} .q p.qtext{font-weight:500;}
+  ol.apps li{margin-bottom:10px;}
+  .ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin:12px 0 6px;font-size:16px;color:var(--soft);}
+  .ctl label{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ctl select{font:inherit;padding:6px 10px;border:1.5px solid var(--cy);border-radius:8px;background:var(--bg3);color:var(--ink);max-width:100%;}
+  .ctl input[type=range]{width:min(230px,100%);accent-color:var(--au);}
+  .ctl input[type=checkbox]{accent-color:var(--au);width:16px;height:16px;}
+  .ro{font-family:var(--font);font-size:15px;color:var(--ink);background:var(--bg3);border:1px solid #2b6a7a;padding:9px 13px;border-radius:8px;margin-top:8px;line-height:1.65;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px;}
+  .chip{font-family:var(--font);font-size:14.5px;padding:3px 12px;border-radius:999px;border:1.5px solid;}
+  .chip.ok{color:var(--gr);background:rgba(123,216,143,.10);border-color:var(--gr);}
+  .chip.bad{color:var(--co);background:rgba(255,123,114,.10);border-color:var(--co);}
+  .pf li{margin-bottom:10px;}
+  .k1{color:var(--cy)} .k2{color:var(--co)} .k3{color:var(--au)} .k4{color:var(--gr)} .k5{color:var(--vi)}
+</style>
+</head>
+<body>
+<div class="progress" id="progressBar"></div>
+
+<header class="hero">
+  <div class="eyebrow">Real Analysis · Differentiation</div>
+  <h1>The Lagrange Mean Value Theorem and its applications</h1>
+  <p class="sub">Rolle's Theorem needed the graph to return to the same height. Drop that requirement and ask a more honest question instead: is there always a point where the instantaneous rate of change matches the average rate of change over the whole interval? The answer is yes — and it's one of the hardest-working theorems in analysis. As before, every problem hides its solution behind a "Show solution" button.</p>
+</header>
+
+<main>
+
+<!-- SECTION 1: statement -->
+<section class="block shown" id="m1">
+  <div class="kicker"><span class="num">01</span><span class="eyebrow">The statement</span></div>
+  <h2 class="title">The Lagrange Mean Value Theorem</h2>
+  <div class="card indigo">
+    <p><strong>Statement.</strong> Let \(f:[a,b]\to\mathbb{R}\) be a function such that:</p>
+    <ol>
+      <li>\(f\) is continuous on the closed interval \([a,b]\),</li>
+      <li>\(f\) is differentiable on the open interval \((a,b)\).</li>
+    </ol>
+    <p>Then there exists at least one \(c\in(a,b)\) such that</p>
+    \[ f'(c)=\frac{f(b)-f(a)}{b-a}. \]
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">Explore · Secant and tangent</div>
+    <div class="ctl"><label>Function: <select id="x_fn1"></select></label></div>
+    <div id="x_pl1"></div>
+    <div class="ctl">
+      <label>Left end <i>a</i>: <input type="range" id="x_a1"></label>
+      <label>Right end <i>b</i>: <input type="range" id="x_b1"></label>
+    </div>
+    <div class="ctl">
+      <label>Slide the tangent point: <input type="range" id="x_t1" min="0.02" max="0.98" step="0.005" value="0.3"></label>
+      <label><input type="checkbox" id="x_rv1"> reveal the guaranteed points \(c\)</label>
+    </div>
+    <div class="ro" id="x_ro1"></div>
+    <p class="caption">The <span class="k2"><b>coral</b></span> secant joins \((a,f(a))\) and \((b,f(b))\); its slope \(m\) is the <em>average</em> rate of change. The <span class="k3"><b>gold</b></span> tangent follows your slider; its slope is the <em>instantaneous</em> rate of change. Drag it until it is parallel to the secant, then tick the box to see every \(c\) (<span class="k4"><b>green</b></span>) where that happens. Change \(a\) and \(b\) and watch \(c\) move, or change the function: \(x^3-3x\) has two such points.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="mp">Continue — why is it true? The proof ↓</button></div>
+</section>
+
+<!-- SECTION: proof -->
+<section class="block" id="mp">
+  <div class="kicker"><span class="num">02</span><span class="eyebrow">The proof</span></div>
+  <h2 class="title">Rolle's Theorem applied to "f minus its secant"</h2>
+  <p class="lede">Rolle's Theorem handles curves whose endpoints are level. A general curve is not level, but we can make it level by subtracting the straight line through its endpoints.</p>
+  <div class="card sage">
+    <p><b>Setup.</b> Let \(m=\dfrac{f(b)-f(a)}{b-a}\) be the slope of the secant, and define
+    \[ \varphi(x)=f(x)-\bigl[f(a)+m(x-a)\bigr]. \]
+    The bracket is the secant line, so \(\varphi(x)\) is the signed vertical gap between the curve and the secant.</p>
+    <p><b>Step 1: equal endpoint values.</b> \(\varphi(a)=f(a)-f(a)-0=0\), and
+    \[ \varphi(b)=f(b)-f(a)-m(b-a)=f(b)-f(a)-\bigl(f(b)-f(a)\bigr)=0. \]
+    So \(\varphi(a)=\varphi(b)\).</p>
+    <p><b>Step 2: regularity.</b> \(f\) is continuous on \([a,b]\) and differentiable on \((a,b)\), and so is the linear function \(f(a)+m(x-a)\). Hence so is their difference \(\varphi\).</p>
+    <p><b>Step 3: Rolle.</b> \(\varphi\) satisfies all three hypotheses of Rolle's Theorem, so there is \(c\in(a,b)\) with \(\varphi'(c)=0\). Since \(\varphi'(x)=f'(x)-m\),
+    \[ f'(c)=m=\frac{f(b)-f(a)}{b-a}.\qquad\blacksquare \]</p>
+  </div>
+  <div class="demo">
+    <div class="demo-label">Explore · Tilt the curve until it is level</div>
+    <div class="ctl"><label>Function: <select id="x_fn2"></select></label></div>
+    <div id="x_pl2"></div>
+    <div class="ctl">
+      <label>Tilt \(s\): <input type="range" id="x_s2" min="0" max="1" step="0.01" value="0"></label>
+      <label><input type="checkbox" id="x_rv2"> mark points where \(\psi'=0\)</label>
+    </div>
+    <div class="ro" id="x_ro2"></div>
+    <p class="caption">The <span class="k5"><b>violet</b></span> curve is \(\psi_s(x)=f(x)-s\,m\,(x-a)\); the dim dashed curve is \(f\) itself. At \(s=0\) the endpoints sit at different heights (coral dashed level shows \(f(a)\)). As you raise \(s\) the whole curve tilts, and at \(s=1\) the endpoints are exactly level: this is \(\varphi\) (up to the constant \(f(a)\)). Its flat tangent is the Rolle point, and a flat tangent of \(\psi_1\) means \(f'(c)=m\).</p>
+  </div>
+  <div class="card amber"><strong>Geometric meaning.</strong> The point where \(\varphi\) is largest or smallest is the point of the curve <em>farthest from the secant</em> (measured vertically). There the tangent runs parallel to the secant, which is exactly why the slopes match.</div>
+  <div class="card indigo"><strong>Slogan.</strong> The Mean Value Theorem is Rolle's Theorem applied to "\(f\) minus its secant line". The trick of subtracting off the straight-line part to force equal endpoint values will reappear constantly.</div>
+  <div class="continue-wrap"><button class="continue" data-next="mh">Continue — what if a hypothesis fails? ↓</button></div>
+</section>
+
+<!-- SECTION: hypotheses -->
+<section class="block" id="mh">
+  <div class="kicker"><span class="num">03</span><span class="eyebrow">Explore</span></div>
+  <h2 class="title">Which hypotheses really matter?</h2>
+  <p class="lede">The theorem asks for continuity on the closed interval and differentiability on the open one. Test six examples.</p>
+  <div class="demo">
+    <div class="demo-label">Explore · Testing the hypotheses</div>
+    <div class="ctl"><label>Example: <select id="x_fn3"></select></label></div>
+    <div id="x_pl3"></div>
+    <div class="chips" id="x_ch3"></div>
+    <div class="ro" id="x_ro3"></div>
+  </div>
+  <div class="card sage"><strong>Takeaway.</strong> Corners, cusps and jumps inside \((a,b)\) can destroy the conclusion. Trouble at an endpoint (like \(\sqrt x\) at \(0\)) does not, as long as \(f\) is continuous there. And the hypotheses are <em>sufficient</em>, not <em>necessary</em>: failing one means no guarantee, not that no \(c\) exists.</div>
+  <div class="continue-wrap"><button class="continue" data-next="m2">Continue — six things this theorem is good for ↓</button></div>
+</section>
+
+<!-- SECTION 2: applications overview -->
+<section class="block" id="m2">
+  <div class="kicker"><span class="num">04</span><span class="eyebrow">Six uses of one central theorem</span></div>
+  <h2 class="title">Applications of the Mean Value Theorem</h2>
+  <ol class="apps">
+    <li><strong>Establishing inequalities.</strong> If \(f\) is continuous on \([a,b]\) and \(|f'(x)|\le M\) for all \(x\in(a,b)\), then \(|f(b)-f(a)|\le M|b-a|\) — bounding the derivative bounds how much the function can move.</li>
+    <li><strong>Proving monotonicity.</strong> If \(f'(x)>0\) throughout \((a,b)\), then \(f\) is strictly increasing on \([a,b]\); if \(f'(x)&lt;0\), strictly decreasing.</li>
+    <li><strong>Detecting constant functions.</strong> If \(f'(x)=0\) for every \(x\) in an interval, then \(f\) is constant there — a fact that looks obvious but genuinely needs proof, and the MVT supplies it.</li>
+    <li><strong>Mean rate of change interpretation.</strong> There is always some instant where the instantaneous rate of change equals the average rate of change over the whole interval.</li>
+    <li><strong>Error estimation.</strong> In Taylor's theorem and numerical methods, the MVT bounds the gap between a function and its linear approximation.</li>
+    <li><strong>Physics — matching average and instantaneous velocity.</strong> If \(s(t)\) is position, some instant \(c\) has \(v(c)=\dfrac{s(t_2)-s(t_1)}{t_2-t_1}\) — this is the precise statement behind "somewhere on the highway you were going exactly the speed limit average."</li>
+  </ol>
+
+  
+  <div class="demo">
+    <div class="demo-label">Explore · The highway speed-limit idea (application 6)</div>
+    <div id="x_pl4a"></div><div id="x_pl4b" style="margin-top:10px"></div>
+    <div class="ctl">
+      <label>Trip length \(T\) (hours): <input type="range" id="x_T4" min="1" max="3" step="0.1" value="2"></label>
+      <label>Move the car: <input type="range" id="x_u4" min="0" max="1" step="0.005" value="0.4"></label>
+    </div>
+    <div class="ro" id="x_ro4"></div>
+    <p class="caption">Top: position \(s(t)\) with the <span class="k2"><b>coral</b></span> secant (average speed) and the <span class="k3"><b>gold</b></span> tangent (speedometer). Bottom: the speedometer \(v(t)=s'(t)\) against the average speed (coral dashed). Wherever the speedometer curve crosses the dashed line, a point \(c\) from the theorem appears (<span class="k4"><b>green</b></span>). Change \(T\): the number of such moments can change, but it is never zero.</p>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="m3">Continue — verifying the theorem directly ↓</button></div>
+</section>
+
+<!-- SECTION 3: Problems 4-5 -->
+<section class="block" id="m3">
+  <div class="kicker"><span class="num">05</span><span class="eyebrow">Problems 1–2</span></div>
+  <h2 class="title">Finding c by hand</h2>
+
+  <div class="problem">
+    <div class="ptitle">Problem 1</div>
+    <p>Verify the MVT for \(f(x)=x^2+2x+1\) on \([1,3]\).</p>
+    <button class="reveal-btn" data-ans="p4">Show solution</button>
+    <div class="answer" id="p4">
+      <p>\(f\) is a polynomial, so continuous and differentiable everywhere — MVT applies on any interval, in particular \([1,3]\).</p>
+      \[ f(3)=9+6+1=16, \qquad f(1)=1+2+1=4, \qquad \frac{f(3)-f(1)}{3-1}=\frac{12}{2}=6. \]
+      <p>Find \(c\) with \(f'(c)=6\): \(f'(x)=2x+2\), so \(2c+2=6\implies c=2\). Indeed \(c=2\in(1,3)\). ✓</p>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 2</div>
+    <p>Apply the MVT to \(f(x)=\sqrt{x}\) on \([1,4]\).</p>
+    <button class="reveal-btn" data-ans="p5">Show solution</button>
+    <div class="answer" id="p5">
+      <p>\(f\) is continuous on \([1,4]\) and differentiable on \((1,4)\), so the MVT applies.</p>
+      \[ f(4)=2,\quad f(1)=1,\quad \frac{f(4)-f(1)}{4-1}=\frac13. \]
+      <p>\(f'(x)=\dfrac{1}{2\sqrt x}\); set \(f'(c)=\dfrac13\): \(\dfrac{1}{2\sqrt c}=\dfrac13\implies\sqrt c=\dfrac32\implies c=\dfrac94\). Indeed \(c=\dfrac94\in(1,4)\). ✓</p>
+    </div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="m4">Continue — monotonicity and an inequality ↓</button></div>
+</section>
+
+<!-- SECTION 4: Problems 6-7 -->
+<section class="block" id="m4">
+  <div class="kicker"><span class="num">06</span><span class="eyebrow">Problems 3–4</span></div>
+  <h2 class="title">Monotonicity, and a classic inequality</h2>
+
+  <div class="problem">
+    <div class="ptitle">Problem 3</div>
+    <p>Solve \(\ln(x)&lt;\ln(5)\) for \(x\in(0,\infty)\).</p>
+    <button class="reveal-btn" data-ans="p6">Show solution</button>
+    <div class="answer" id="p6">
+      <p>\(\ln'(x)=\dfrac1x>0\) for every \(x>0\), so by MVT-application 2, \(\ln x\) is strictly increasing on \((0,\infty)\). A strictly increasing function preserves the direction of an inequality: \(\ln(x)&lt;\ln(5)\iff x&lt;5\). Combined with the domain requirement \(x>0\):</p>
+      \[ \boxed{0&lt;x&lt;5} \]
+      <p class="caption">This looks like a one-line algebra fact, but "you can just compare the insides of an increasing function" is secretly the Mean Value Theorem at work every time you use it.</p>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 4</div>
+    <p>Use the MVT to show \(|\sin w-\sin z|\le|w-z|\) for \(0\le z&lt;w\le2\pi\).</p>
+    <button class="reveal-btn" data-ans="p7">Show solution</button>
+    <div class="answer" id="p7">
+      <p>Let \(f(x)=\sin x\) on \([z,w]\). \(f\) is continuous on \([z,w]\) and differentiable on \((z,w)\) (sine is smooth everywhere), with \(f'(x)=\cos x\) — so the MVT applies. There is some \(c\in(z,w)\) with</p>
+      \[ f'(c)=\frac{f(w)-f(z)}{w-z} \implies \cos c=\frac{\sin w-\sin z}{w-z}. \]
+      <p>Take absolute values: \(\dfrac{|\sin w-\sin z|}{|w-z|}=|\cos c|\le1\), since cosine is always between \(-1\) and \(1\). Multiplying through by \(|w-z|>0\):</p>
+      \[ |\sin w-\sin z|\le|w-z|. \]
+      <p class="caption">This is application 1 from Section 2 in action: bounding \(|f'|\le1\) directly bounded how much \(\sin\) could change.</p>
+    </div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="m5">Continue — when the derivative vanishes everywhere ↓</button></div>
+</section>
+
+<!-- SECTION 5: Problems 8-9 -->
+<section class="block" id="m5">
+  <div class="kicker"><span class="num">07</span><span class="eyebrow">Problems 5–6</span></div>
+  <h2 class="title">Zero derivative means constant — and what follows from it</h2>
+
+  <div class="problem">
+    <div class="ptitle">Problem 5</div>
+    <p>Suppose \(f'(x)=0\) for every \(x\in[a,b]\). Show \(f\) is constant on \([a,b]\).</p>
+    <button class="reveal-btn" data-ans="p8">Show solution</button>
+    <div class="answer" id="p8">
+      <p>By contradiction: suppose \(f\) is <em>not</em> constant. Then there exist \(x_1\ne x_2\) in \([a,b]\) with \(f(x_1)\ne f(x_2)\). Since \(f\) is differentiable on \([a,b]\) (hence continuous too), the MVT applies on the interval between \(x_1\) and \(x_2\): there's some \(c\) between them with</p>
+      \[ f'(c)=\frac{f(x_2)-f(x_1)}{x_2-x_1}. \]
+      <p>But \(f'(c)=0\) by hypothesis, forcing \(f(x_2)=f(x_1)\) — contradicting \(f(x_1)\ne f(x_2)\). So the assumption was false: \(f\) is constant.</p>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 6 — two corollaries</div>
+    <p>(a) If \(f'(x)=g'(x)\) for all \(x\in[a,b]\), show \(f(x)=g(x)+c\) for some constant \(c\).<br>(b) If \(f'(x)=k\) (a constant) for all \(x\), show \(f(x)=kx+d\) for some constant \(d\).</p>
+    <button class="reveal-btn" data-ans="p9">Show solution</button>
+    <div class="answer" id="p9">
+      <p>(a) Let \(h(x)=f(x)-g(x)\). Then \(h'(x)=f'(x)-g'(x)=0\) for every \(x\), so by Problem 5, \(h\) is constant: \(h(x)=c\) for some \(c\), i.e. \(f(x)=g(x)+c\).</p>
+      <p>(b) Let \(g(x)=kx\), so \(g'(x)=k=f'(x)\) for every \(x\). By part (a), \(f(x)=g(x)+d=kx+d\) for some constant \(d\).</p>
+      <p class="caption">Part (b) is the fact that makes "\(\int k\,dx=kx+C\)" true — antiderivatives are only defined up to a constant precisely because of Problem 5.</p>
+    </div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="m6">Continue — bounding a function from its derivative ↓</button></div>
+</section>
+
+<!-- SECTION 6: Problems 10, 12 -->
+<section class="block" id="m6">
+  <div class="kicker"><span class="num">08</span><span class="eyebrow">Problems 7–8</span></div>
+  <h2 class="title">How far can f travel if its derivative is bounded?</h2>
+
+  <div class="problem">
+    <div class="ptitle">Problem 7</div>
+    <p>Suppose \(f\) is continuous and differentiable on \([-7,0]\), \(f(-7)=-3\), and \(f'(x)\le2\) for all \(x\). What's the largest possible value of \(f(0)\)?</p>
+    <button class="reveal-btn" data-ans="p10">Show solution</button>
+    <div class="answer" id="p10">
+      <p>The MVT applies on \([-7,0]\): there's some \(c\in(-7,0)\) with</p>
+      \[ f(0)-f(-7)=f'(c)\big(0-(-7)\big) \implies f(0)+3=7f'(c) \implies f(0)=7f'(c)-3. \]
+      <p>Since \(f'(c)\le2\), the largest \(f(0)\) can possibly be occurs when \(f'(c)\) takes its maximum allowed value, \(2\):</p>
+      \[ f(0)\le7(2)-3=11. \]
+      <p>So the largest possible value of \(f(0)\) is \(\boxed{11}\).</p>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 8</div>
+    <p>Suppose \(f(0)=-3\) and \(f'(x)\le5\) for all \(x\). How large can \(f(2)\) be? Separately, prove \(\tan^{-1}x+\cot^{-1}x=\dfrac\pi2\) for all \(x\).</p>
+    <button class="reveal-btn" data-ans="p12">Show solution</button>
+    <div class="answer" id="p12">
+      <p><strong>First part.</strong> \(f(2)=f(0)+2f'(c)=-3+2f'(c)\) for some \(c\in(0,2)\), by the same MVT argument as Problem 7. Since \(f'(c)\le5\), \(f(2)\le-3+2(5)=7\).</p>
+      <p><strong>Second part.</strong> Let \(f(x)=\tan^{-1}x+\cot^{-1}x\). Then \(f'(x)=\dfrac{1}{1+x^2}-\dfrac{1}{1+x^2}=0\) for every \(x\). By Problem 5, \(f\) is constant: \(f(x)=c\) for all \(x\). Evaluate at any convenient point, say \(x=1\): \(c=\tan^{-1}1+\cot^{-1}1=\dfrac\pi4+\dfrac\pi4=\dfrac\pi2\). So \(\tan^{-1}x+\cot^{-1}x=\dfrac\pi2\) for every \(x\).</p>
+    </div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="m7">Continue — when no such function can exist ↓</button></div>
+</section>
+
+<!-- SECTION 7: Problems 14, 15 -->
+<section class="block" id="m7">
+  <div class="kicker"><span class="num">09</span><span class="eyebrow">Problems 9–10</span></div>
+  <h2 class="title">Ruling out functions, and a symmetric case</h2>
+
+  <div class="problem">
+    <div class="ptitle">Problem 9</div>
+    <p>Does there exist a function \(f\) with \(f(0)=-1\), \(f(2)=4\), and \(f'(x)&lt;2\) for all \(x\)?</p>
+    <button class="reveal-btn" data-ans="p14">Show solution</button>
+    <div class="answer" id="p14">No. If \(f'(x)\) exists everywhere, \(f\) is differentiable (hence continuous), so the MVT applies on \([0,2]\): there's some \(c\in(0,2)\) with \(f'(c)=\dfrac{f(2)-f(0)}{2-0}=\dfrac{4-(-1)}{2}=\dfrac52\). But \(\dfrac52=2.5>2\), contradicting the requirement \(f'(x)&lt;2\) for <em>every</em> \(x\), including this particular \(c\). So no such function exists.</div>
+  </div>
+
+  <div class="problem">
+    <div class="ptitle">Problem 10</div>
+    <p>Suppose \(f\) is odd (\(f(-x)=-f(x)\)) and differentiable everywhere. Show that for every \(b>0\), there is some \(c\in(-b,b)\) with \(f'(c)=\dfrac{f(b)}{b}\).</p>
+    <button class="reveal-btn" data-ans="p15">Show solution</button>
+    <div class="answer" id="p15">
+      <p>Apply the MVT to \(f\) on \([-b,b]\): there's some \(c\in(-b,b)\) with</p>
+      \[ f'(c)=\frac{f(b)-f(-b)}{b-(-b)}=\frac{f(b)-(-f(b))}{2b}=\frac{2f(b)}{2b}=\frac{f(b)}{b}, \]
+      <p>using oddness, \(f(-b)=-f(b)\), in the middle step.</p>
+      <p class="caption">A natural follow-up: could you instead find \(c\in(0,b)\)? Yes — since \(f\) is odd, \(f(0)=0\) automatically (set \(x=0\) in \(f(-x)=-f(x)\) to get \(f(0)=-f(0)\)), so applying the MVT to \(f\) on \([0,b]\) directly gives \(f'(c)=\dfrac{f(b)-f(0)}{b-0}=\dfrac{f(b)}{b}\) with \(c\in(0,b)\), a sharper conclusion than the symmetric interval above.</p>
+    </div>
+  </div>
+
+  <div class="continue-wrap"><button class="continue" data-next="m8">Continue — check your understanding ↓</button></div>
+</section>
+
+<!-- SECTION 8: self-assessment -->
+<section class="block" id="m8">
+  <div class="kicker"><span class="num">10</span><span class="eyebrow">Wrapping up</span></div>
+  <h2 class="title">Self-assessment</h2>
+
+  <div class="q">
+    <span class="tier A">Part A — recall</span>
+    <p class="qtext">State the two hypotheses of the MVT and its conclusion. How does Rolle's Theorem sit inside it?</p>
+    <button class="reveal-btn" data-ans="sa1">Show answer</button>
+    <div class="answer" id="sa1">\(f\) continuous on \([a,b]\), differentiable on \((a,b)\); conclusion: \(\exists c\in(a,b)\) with \(f'(c)=\frac{f(b)-f(a)}{b-a}\). Rolle's Theorem is the special case \(f(a)=f(b)\), which makes the right-hand side \(0\).</div>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Part B — apply</span>
+    <p class="qtext">Verify the MVT for \(f(x)=x^3\) on \([0,2]\), finding \(c\) explicitly.</p>
+    <button class="reveal-btn" data-ans="sa2">Show answer</button>
+    <div class="answer" id="sa2">\(f\) is a polynomial (continuous, differentiable everywhere), so the MVT applies. \(\frac{f(2)-f(0)}{2-0}=\frac{8-0}{2}=4\). \(f'(x)=3x^2\); set \(3c^2=4\implies c=\sqrt{4/3}=\frac{2}{\sqrt3}\approx1.15\), which lies in \((0,2)\). ✓</div>
+  </div>
+
+  <div class="q">
+    <span class="tier B">Part B — apply</span>
+    <p class="qtext">Use the MVT to show \(e^x\ge1+x\) for all \(x\ge0\). (Hint: apply the MVT to \(f(t)=e^t\) on \([0,x]\).)</p>
+    <button class="reveal-btn" data-ans="sa3">Show answer</button>
+    <div class="answer" id="sa3">For \(x=0\), equality holds trivially. For \(x>0\), the MVT on \([0,x]\) gives some \(c\in(0,x)\) with \(e^c=\frac{e^x-e^0}{x-0}=\frac{e^x-1}{x}\). Since \(c>0\), \(e^c>e^0=1\), so \(\frac{e^x-1}{x}>1\implies e^x-1>x\implies e^x>1+x\). Combined with the \(x=0\) case, \(e^x\ge1+x\) for all \(x\ge0\).</div>
+  </div>
+
+  <div class="q">
+    <span class="tier C">Part C — think</span>
+    <p class="qtext">Problem 5 (zero derivative ⟹ constant) required the domain to be an interval. Find a function defined on a <em>non</em>-interval set where the derivative is zero everywhere it's defined, but the function isn't constant.</p>
+    <button class="reveal-btn" data-ans="sa4">Show answer</button>
+    <div class="answer" id="sa4">Let \(f(x)=1\) for \(x\in(0,1)\) and \(f(x)=2\) for \(x\in(2,3)\), defined on the disconnected set \((0,1)\cup(2,3)\). Then \(f'(x)=0\) everywhere it's defined, but \(f\) takes two different values overall. The proof of Problem 5 breaks down because the MVT needs a genuine interval \([x_1,x_2]\) between any two points \(x_1,x_2\) in the domain — and here, a point like \(x_1=0.5\) and \(x_2=2.5\) has no path through the domain connecting them.</div>
+  </div>
+
+  <div class="q">
+    <span class="tier C">Part C — think</span>
+    <p class="qtext">Problem 9 concluded no function exists with \(f(0)=-1\), \(f(2)=4\), \(f'(x)&lt;2\) everywhere. Which specific hypothesis would you need to weaken to make such a function possible, and why?</p>
+    <button class="reveal-btn" data-ans="sa5">Show answer</button>
+    <div class="answer" id="sa5">You'd need to drop differentiability (or continuity) somewhere on \([0,2]\) — the contradiction relied entirely on the MVT applying, which needs \(f\) differentiable on the open interval and continuous on the closed one. If \(f\) is allowed a jump discontinuity, it can leap from near \(-1\) straight up to near \(4\) without any single point ever needing a steep-enough slope, sidestepping the MVT's guarantee entirely.</div>
+  </div>
+
+  <div class="card sage" style="margin-top:34px;">
+    <strong>The one idea to take away.</strong> Every non-trivial problem above reduced to the same move: build a single-variable function (often a difference, like \(f-g\) or \(g-h\)), confirm it's continuous and differentiable on the interval in question, then read off what the MVT (or, when the endpoint values match, Rolle's Theorem) forces to be true about its derivative. Recognizing "I want to compare two values of something" as the cue for this move is most of the skill.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Content adapted from lecture notes on the Lagrange Mean Value Theorem and Applications, real analysis course.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.continue').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const next = document.getElementById(btn.dataset.next);
+      next.classList.add('shown');
+      next.scrollIntoView({behavior:'smooth', block:'start'});
+      updateProgress();
+      if (window.MathJax) MathJax.typesetPromise([next]);
+    });
+  });
+  document.querySelectorAll('.reveal-btn[data-ans]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const ans = document.getElementById(btn.dataset.ans);
+      ans.classList.toggle('shown');
+      if (window.MathJax) MathJax.typesetPromise([ans]);
+    });
+  });
+  function updateProgress(){
+    const total = document.querySelectorAll('.block').length;
+    const shown = document.querySelectorAll('.block.shown').length;
+    document.getElementById('progressBar').style.width = (shown/total*100)+'%';
+  }
+  updateProgress();
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const C={cy:'#5ad1e6',co:'#ff7b72',au:'#ffd37a',gr:'#7bd88f',vi:'#b69cff',ax:'#8aa0c0',gd:'#1a2c47',dim:'#3d6f85'},SUB=['₁','₂','₃','₄'];
+let _u=0;
+function Plot(el,xr,yr,o){o=o||{};const W=o.w||640,H=o.h||330,p=38,S=[],id='pl'+(++_u);
+ const X=x=>p+(x-xr[0])/(xr[1]-xr[0])*(W-2*p),Y=y=>H-p-(y-yr[0])/(yr[1]-yr[0])*(H-2*p),f=n=>n.toFixed(1);
+ const da=d=>d?` stroke-dasharray="${d}"`:'';
+ const kx=(W-2*p)/(xr[1]-xr[0]),ky=(H-2*p)/(yr[1]-yr[0]);
+ function line(x1,y1,x2,y2,c,w,d){S.push(`<line x1="${f(X(x1))}" y1="${f(Y(y1))}" x2="${f(X(x2))}" y2="${f(Y(y2))}" stroke="${c}" stroke-width="${w||1.5}"${da(d)} stroke-linecap="round"/>`)}
+ return{X,Y,line,
+  seg(x,y,m,pix,c,w){const dx=(pix/2)/Math.sqrt(1+(m*ky/kx)**2)/kx;line(x-dx,y-m*dx,x+dx,y+m*dx,c,w||3.4)},
+  path(fn,a,b,c,w,d){let s='',pen=false;for(let i=0;i<=320;i++){const x=a+(b-a)*i/320,y=fn(x);if(isFinite(y)){s+=(pen?'L':'M')+f(X(x))+' '+f(Y(y));pen=true}else pen=false}
+   S.push(`<path d="${s}" fill="none" stroke="${c}" stroke-width="${w||2.6}"${da(d)} stroke-linecap="round" stroke-linejoin="round"/>`)},
+  pt(x,y,c,hol,r){S.push(`<circle cx="${f(X(x))}" cy="${f(Y(y))}" r="${r||5.5}" fill="${hol?'#0b1424':c}" stroke="${c}" stroke-width="2.2"/>`)},
+  txt(x,y,t,c,a,sz){S.push(`<text x="${f(X(x))}" y="${f(Y(y))}" fill="${c||'#c9d6ea'}" text-anchor="${a||'start'}" font-size="${sz||13}" font-style="italic">${t}</text>`)},
+  draw(){let g='';for(let x=Math.ceil(xr[0]);x<=xr[1];x++)g+=`<line x1="${f(X(x))}" y1="${p}" x2="${f(X(x))}" y2="${H-p}" stroke="${C.gd}"/>`;
+   for(let y=Math.ceil(yr[0]);y<=yr[1];y++)g+=`<line x1="${p}" y1="${f(Y(y))}" x2="${W-p}" y2="${f(Y(y))}" stroke="${C.gd}"/>`;
+   const ay=Y(Math.min(Math.max(0,yr[0]),yr[1])),ax=X(Math.min(Math.max(0,xr[0]),xr[1]));
+   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}"><defs><clipPath id="${id}"><rect x="${p-8}" y="${p-14}" width="${W-2*p+16}" height="${H-2*p+22}"/></clipPath>
+   <marker id="m${id}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0L8,3L0,6Z" fill="${C.ax}"/></marker></defs>${g}
+   <line x1="${p-8}" y1="${f(ay)}" x2="${W-p+16}" y2="${f(ay)}" stroke="${C.ax}" stroke-width="1.5" marker-end="url(#m${id})"/>
+   <line x1="${f(ax)}" y1="${H-p+8}" x2="${f(ax)}" y2="${p-18}" stroke="${C.ax}" stroke-width="1.5" marker-end="url(#m${id})"/>
+   <text x="${W-p+8}" y="${f(ay)-8}" font-size="13" font-style="italic" fill="#9fb0c8">x</text><text x="${f(ax)+8}" y="${p-14}" font-size="13" font-style="italic" fill="#9fb0c8">y</text>
+   <g clip-path="url(#${id})">${S.join('')}</g></svg>`}}}
+function fill(sel,arr){arr.forEach(o=>{const e=document.createElement('option');e.textContent=o.n;sel.appendChild(e)})}
+function zeros(g,a,b){const out=[],n=1500;let px=a+1e-9,pv=g(px);
+ for(let i=1;i<=n;i++){const x=a+(b-a)*i/n,v=g(x);
+  if(pv*v<0){let lo=px,hi=x;for(let k=0;k<60;k++){const m=(lo+hi)/2;if(g(lo)*g(m)<=0)hi=m;else lo=m}
+   const r=(lo+hi)/2;if(r>a+1e-6&&r<b-1e-6&&(!out.length||Math.abs(r-out[out.length-1])>1e-3))out.push(r)}
+  px=x;pv=v}
+ return out}
+const FNS=[
+ {n:'sin x + 0.3x',f:x=>Math.sin(x)+.3*x,d:x=>Math.cos(x)+.3,lo:0,hi:6.5,xr:[-.4,6.9],yr:[-.5,2.6],a:.5,b:5.5},
+ {n:'0.4x² − x + 1',f:x=>.4*x*x-x+1,d:x=>.8*x-1,lo:-1,hi:6,xr:[-1.5,6.5],yr:[-.5,10],a:-.5,b:5},
+ {n:'√x',f:Math.sqrt,d:x=>.5/Math.sqrt(x),lo:0,hi:9,xr:[-.6,9.8],yr:[-.4,3.6],a:1,b:8},
+ {n:'e^(x/2)',f:x=>Math.exp(x/2),d:x=>Math.exp(x/2)/2,lo:-1,hi:5,xr:[-1.5,5.5],yr:[-.5,13.5],a:0,b:4},
+ {n:'x³ − 3x  (two points c)',f:x=>x**3-3*x,d:x=>3*x*x-3,lo:-2.4,hi:2.4,xr:[-2.9,2.9],yr:[-8,8],a:-2,b:2}];
+
+/* ===== E1: secant & tangent explorer ===== */
+fill($('x_fn1'),FNS);
+function setup1(){const F=FNS[$('x_fn1').selectedIndex];['x_a1','x_b1'].forEach(i=>{const e=$(i);e.min=F.lo;e.max=F.hi;e.step=.05});$('x_a1').value=F.a;$('x_b1').value=F.b;e1()}
+function e1(){const F=FNS[$('x_fn1').selectedIndex],{f,d}=F,a=+$('x_a1').value,b=+$('x_b1').value,t=+$('x_t1').value,P=Plot($('x_pl1'),F.xr,F.yr),
+ sy=F.yr[1]-F.yr[0],m=(f(b)-f(a))/(b-a),L=x=>f(a)+m*(x-a),x0=a+(b-a)*t;
+ P.path(f,F.lo,F.hi,C.dim,2);P.path(f,a,b,C.cy,3.4);
+ P.line(F.xr[0],L(F.xr[0]),F.xr[1],L(F.xr[1]),C.co,1.2,'5 6');P.line(a,f(a),b,f(b),C.co,3.2);
+ P.line(a,F.yr[0],a,f(a),'#556b8c',1,'3 4');P.line(b,F.yr[0],b,f(b),'#556b8c',1,'3 4');
+ const zs=zeros(x=>d(x)-m,a,b);
+ if($('x_rv1').checked)zs.forEach((c,i)=>{P.line(c,F.yr[0],c,f(c),'#4d7a58',1,'3 4');P.seg(c,f(c),m,190,C.gr,3.4);P.pt(c,f(c),C.gr,0,6.5);P.txt(c,F.yr[0]+.05*sy,'c'+(zs.length>1?SUB[i]:''),C.gr,'middle',16)});
+ P.seg(x0,f(x0),d(x0),150,C.au,3.6);P.pt(x0,f(x0),C.au);P.pt(a,f(a),C.co);P.pt(b,f(b),C.co);
+ P.txt(a,F.yr[0]+.05*sy,'a',C.cy,'middle',16);P.txt(b,F.yr[0]+.05*sy,'b',C.cy,'middle',16);P.draw();
+ const df=d(x0)-m;
+ $('x_ro1').innerHTML='secant slope <b class="k2">m = '+m.toFixed(3)+'</b>  &nbsp;|&nbsp;  tangent slope at x = '+x0.toFixed(2)+': <b class="k3">f′(x) = '+d(x0).toFixed(3)+'</b><br>difference f′(x) − m = '+df.toFixed(3)+(Math.abs(df)<.04*Math.max(1,Math.abs(m)+1)?'  ← almost parallel: near a point c':'')+'<br>'+zs.length+' point'+(zs.length!==1?'s':'')+' c in (a, b) with f′(c) = m'+($('x_rv1').checked?': '+zs.map(c=>c.toFixed(3)).join(', '):'  (tick the box to reveal)')}
+$('x_fn1').onchange=setup1;
+$('x_a1').oninput=()=>{if(+$('x_b1').value-+$('x_a1').value<.4)$('x_a1').value=+$('x_b1').value-.4;e1()};
+$('x_b1').oninput=()=>{if(+$('x_b1').value-+$('x_a1').value<.4)$('x_b1').value=+$('x_a1').value+.4;e1()};
+$('x_t1').oninput=$('x_rv1').onchange=e1;
+
+/* ===== E2: tilt the curve ===== */
+fill($('x_fn2'),FNS);
+function e2(){const F=FNS[$('x_fn2').selectedIndex],{f,d,a,b}=F,s=+$('x_s2').value,m=(f(b)-f(a))/(b-a),psi=x=>f(x)-s*m*(x-a);
+ let lo=1e9,hi=-1e9;for(let i=0;i<=200;i++){const x=a+(b-a)*i/200;[psi(x),f(x)].forEach(v=>{lo=Math.min(lo,v);hi=Math.max(hi,v)})}
+ const pad=(hi-lo)*.15,yr=[lo-pad,hi+pad],xp=(b-a)*.08,P=Plot($('x_pl2'),[a-xp,b+xp],yr),sy=yr[1]-yr[0];
+ P.path(f,a,b,C.dim,2,'6 5');P.line(a-xp,f(a),b+xp,f(a),C.co,1.3,'6 5');
+ P.path(psi,a,b,C.vi,3.6);P.pt(a,psi(a),C.vi);P.pt(b,psi(b),C.vi);
+ const zs=zeros(x=>d(x)-s*m,a,b);
+ if($('x_rv2').checked)zs.forEach(c=>{P.seg(c,psi(c),0,150,C.gr,3.4);P.pt(c,psi(c),C.gr,0,6.5);P.txt(c,psi(c)+.07*sy,'ψ′ = 0',C.gr,'middle',13)});
+ P.txt(a,yr[0]+.05*sy,'a',C.cy,'middle',16);P.txt(b,yr[0]+.05*sy,'b',C.cy,'middle',16);P.draw();
+ const gap=psi(b)-psi(a);
+ $('x_ro2').innerHTML='ψ(a) = '+psi(a).toFixed(3)+'   ψ(b) = '+psi(b).toFixed(3)+'   gap = (1 − s)·(f(b) − f(a)) = <b class="k5">'+gap.toFixed(3)+'</b><br>'+
+  (Math.abs(1-s)<.005?'<b class="k4">Level!</b> ψ(a) = ψ(b), so Rolle applies: some c has ψ′(c) = f′(c) − m = 0, i.e. f′(c) = m.':'Endpoints are not level yet: Rolle gives no guarantee. Push s to 1.')}
+$('x_fn2').onchange=$('x_s2').oninput=$('x_rv2').onchange=e2;
+
+/* ===== E3: hypotheses ===== */
+const HX=[
+ {n:'Good: x² on [0, 2]',f:x=>x*x,a:0,b:2,xr:[-.4,2.4],yr:[-.6,4.8],h:[1,1],cs:[1],note:'Both hypotheses hold: the MVT promises a c. Here m = 2 and f′(c) = 2c = 2 gives c = 1.'},
+ {n:'Corner: |x| on [−1, 2]',f:Math.abs,a:-1,b:2,xr:[-1.5,2.5],yr:[-.5,2.6],h:[1,0],cs:[],bad:0,note:'m = 1/3, but the slope of |x| is only −1 or +1. No point has slope 1/3, and the corner at 0 has no derivative at all.'},
+ {n:'Cusp: x^(2/3) on [−1, 2]',f:x=>Math.cbrt(x)**2,a:-1,b:2,xr:[-1.5,2.5],yr:[-.4,2.2],h:[1,0],cs:[],bad:0,note:'m ≈ 0.196, but f′(x) = (2/3)x^(−1/3) is negative for x < 0 and above 0.52 for 0 < x < 2. At 0 the tangent is vertical.'},
+ {n:'Jump: x on [0,1), x + 1 on [1, 2]',f:x=>x<1?x:x+1,segs:[[0,1-1e-6],[1,2]],a:0,b:2,xr:[-.4,2.4],yr:[-.4,3.4],h:[0,1],cs:[],jump:1,note:'m = 3/2, but f′ = 1 at every point where it exists, and at x = 1 the graph jumps. Continuity on [a, b] fails.'},
+ {n:'Endpoint trouble is fine: √x on [0, 4]',f:Math.sqrt,a:0,b:4,xr:[-.4,4.4],yr:[-.3,2.6],h:[1,1],cs:[1],note:'f is not differentiable at 0, but 0 is an endpoint, and the MVT only asks for continuity there. m = 1/2 gives c = 1.'},
+ {n:'Lucky: x² + |x| on [−1, 2]',f:x=>x*x+Math.abs(x),a:-1,b:2,xr:[-1.5,2.5],yr:[-.5,6.8],h:[1,0],cs:[1/6],bad:0,note:'The corner at 0 breaks H2, so there is no guarantee. Yet m = 4/3 and f′(x) = 2x + 1 = 4/3 at x = 1/6, so a point c exists anyway.'}];
+fill($('x_fn3'),HX);
+function e3(){const F=HX[$('x_fn3').selectedIndex],{f,a,b}=F,P=Plot($('x_pl3'),F.xr,F.yr),sy=F.yr[1]-F.yr[0],m=(f(b)-f(a))/(b-a);
+ P.line(F.xr[0],f(a)+m*(F.xr[0]-a),F.xr[1],f(a)+m*(F.xr[1]-a),C.co,1.2,'5 6');
+ (F.segs||[[a,b]]).forEach(s=>P.path(f,s[0],s[1],C.cy,3.4));
+ P.line(a,f(a),b,f(b),C.co,3);
+ P.line(a,F.yr[0],a,f(a),'#556b8c',1,'3 4');P.line(b,F.yr[0],b,f(b),'#556b8c',1,'3 4');
+ F.cs.forEach(c=>{P.seg(c,f(c),m,170,C.gr,3.6);P.pt(c,f(c),C.gr,0,6.5);P.txt(c,f(c)+.09*sy,'c',C.gr,'middle',16)});
+ if(F.jump){P.pt(1,1,C.cy,1);P.pt(1,2,C.cy)}
+ if(F.bad!==undefined)P.pt(F.bad,f(F.bad),C.au,1,8);
+ P.pt(a,f(a),C.co);P.pt(b,f(b),C.co);
+ P.txt(a,F.yr[0]+.05*sy,'a',C.cy,'middle',16);P.txt(b,F.yr[0]+.05*sy,'b',C.cy,'middle',16);P.draw();
+ const lab=['H1  continuous on [a, b]','H2  differentiable on (a, b)'];
+ $('x_ch3').innerHTML=lab.map((l,i)=>`<span class="chip ${F.h[i]?'ok':'bad'}">${F.h[i]?'✓':'✗'} ${l}</span>`).join('');
+ const all=F.h.every(x=>x);
+ $('x_ro3').innerHTML=(all?'<b class="k4">The MVT applies:</b> a point c is guaranteed.':'<b class="k2">The MVT does not apply.</b>'+(F.cs.length?' A point c exists anyway.':' And here there truly is no c.'))+'<br>'+F.note}
+$('x_fn3').onchange=e3;
+
+/* ===== E4: highway ===== */
+const S4=t=>55*t+30*Math.sin(1.7*t),V4=t=>55+51*Math.cos(1.7*t);
+function e4(){const T=+$('x_T4').value,tau=Math.min(+$('x_u4').value*T,T),avg=S4(T)/T,P=Plot($('x_pl4a'),[-.15,3.2],[-10,185],{h:260}),Q=Plot($('x_pl4b'),[-.15,3.2],[-5,115],{h:240});
+ P.path(S4,0,3,C.dim,2);P.path(S4,0,T,C.cy,3.4);P.line(0,0,T,S4(T),C.co,3);P.seg(tau,S4(tau),V4(tau),120,C.au,3.4);P.pt(tau,S4(tau),C.au);P.pt(0,0,C.co);P.pt(T,S4(T),C.co);
+ P.txt(T,-3,'T',C.cy,'middle',15);P.txt(.05,175,'position (miles)',C.cy);P.draw();
+ const zs=zeros(t=>V4(t)-avg,0,T);
+ Q.path(V4,0,3,C.dim,2);Q.path(V4,0,T,C.au,3.4);Q.line(-.15,avg,3.2,avg,C.co,1.8,'6 5');Q.txt(3.15,avg+4,'average speed',C.co,'end');
+ zs.forEach((c,i)=>{Q.line(c,-5,c,V4(c),'#4d7a58',1,'3 4');Q.pt(c,V4(c),C.gr,0,6.5);Q.txt(c,10,'c'+(zs.length>1?SUB[i]:''),C.gr,'middle',15)});
+ Q.pt(tau,V4(tau),C.au);Q.txt(.05,108,'speedometer (mph)',C.au);Q.txt(T,-.0,'',C.cy);Q.draw();
+ $('x_ro4').innerHTML='average speed over [0, '+T.toFixed(1)+'] h = <b class="k2">'+avg.toFixed(1)+' mph</b>  &nbsp;|&nbsp;  speedometer at t = '+tau.toFixed(2)+' h: <b class="k3">'+V4(tau).toFixed(1)+' mph</b><br>moments with speedometer = average: '+zs.length+(zs.length?'  (t = '+zs.map(c=>c.toFixed(2)).join(', ')+' h)':'')}
+$('x_T4').oninput=$('x_u4').oninput=e4;
+setup1();e2();e3();e4();
+
+</script>
+</body>
+</html>
