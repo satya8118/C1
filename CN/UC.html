@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uniformly Continuous Functions — An Expository Article</title>
+<style>
+  :root{
+    --bg1:#15112a;
+    --bg2:#1f1840;
+    --bg3:#2d1f52;
+    --card:rgba(255,255,255,0.05);
+    --border:rgba(184,166,255,0.22);
+    --text:#f2eeff;
+    --muted:#bcb0dd;
+    --head:#ffd27f;
+    --accent:#ff9db0;
+    --accent2:#b8a6ff;
+    --warn:#ff8f6b;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.78;
+    color:var(--text);
+    background:
+      radial-gradient(1100px 600px at 12% -8%, #452a7a 0%, transparent 58%),
+      radial-gradient(900px 520px at 100% 2%, #6b2b5e 0%, transparent 55%),
+      linear-gradient(165deg, var(--bg1) 0%, var(--bg2) 45%, var(--bg3) 100%);
+    background-attachment:fixed;
+  }
+
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 22px 90px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    padding:58px 0 34px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    margin-bottom:38px;
+  }
+  header h1{
+    font-size:2.15rem;
+    line-height:1.25;
+    margin:0 0 12px;
+    color:#ffffff;
+    letter-spacing:.3px;
+    text-shadow:0 2px 18px rgba(0,0,0,.5);
+  }
+  header p.sub{
+    margin:0;
+    color:var(--head);
+    font-size:1.02rem;
+    letter-spacing:.4px;
+  }
+  .rule{
+    width:90px;height:4px;margin:20px auto 0;border-radius:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:46px;}
+
+  h2{
+    font-size:1.42rem;
+    color:var(--head);
+    margin:0 0 16px;
+    padding-bottom:9px;
+    border-bottom:2px solid rgba(255,210,127,0.18);
+    letter-spacing:.2px;
+  }
+  h3{
+    font-size:1.1rem;
+    color:var(--accent2);
+    margin:26px 0 10px;
+    letter-spacing:.2px;
+  }
+
+  p{margin:0 0 15px;}
+  strong{color:#ffffff;}
+
+  /* ---------- Math ---------- */
+  .m{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    color:#fdf6e3;
+    white-space:nowrap;
+  }
+  .eq{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-size:1.13rem;
+    color:#fffaf0;
+    background:rgba(0,0,0,0.22);
+    border-left:4px solid var(--accent);
+    border-radius:0 10px 10px 0;
+    padding:14px 20px;
+    margin:18px 0;
+    text-align:center;
+    overflow-x:auto;
+  }
+  .eq.small{font-size:1rem;}
+
+  /* ---------- Callout boxes ---------- */
+  .box{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px 24px;
+    margin:22px 0;
+    backdrop-filter:blur(2px);
+  }
+  .box.motiv{
+    background:linear-gradient(135deg, rgba(255,157,176,0.13), rgba(184,166,255,0.09));
+    border-color:rgba(255,157,176,0.42);
+  }
+  .box.key{
+    border-left:5px solid var(--accent2);
+  }
+  .box.warnbox{
+    border-left:5px solid var(--warn);
+    background:rgba(255,143,107,0.08);
+  }
+  .box h4{
+    margin:0 0 10px;
+    font-size:1.02rem;
+    color:var(--accent);
+    letter-spacing:.5px;
+    text-transform:uppercase;
+  }
+  .box.key h4{color:var(--accent2);}
+  .box.warnbox h4{color:var(--warn);}
+
+  /* ---------- Lists ---------- */
+  ul,ol{margin:0 0 16px;padding-left:26px;}
+  li{margin-bottom:9px;}
+  li::marker{color:var(--accent);}
+
+  /* ---------- Table ---------- */
+  .tablewrap{overflow-x:auto;margin:22px 0;}
+  table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:660px;
+    font-size:.94rem;
+    background:rgba(0,0,0,0.2);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  th,td{
+    border:1px solid rgba(184,166,255,0.16);
+    padding:11px 14px;
+    vertical-align:top;
+    text-align:left;
+  }
+  th{
+    background:rgba(255,210,127,0.13);
+    color:#ffffff;
+    font-weight:600;
+    letter-spacing:.3px;
+  }
+  tbody tr:nth-child(even){background:rgba(255,255,255,0.035);}
+  td:first-child{color:var(--head);font-weight:600;}
+
+  /* ---------- Figure ---------- */
+  figure{
+    margin:26px 0;
+    background:rgba(0,0,0,0.24);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px 14px 10px;
+  }
+  figure svg{display:block;width:100%;height:auto;}
+  figcaption{
+    margin-top:12px;
+    font-size:.9rem;
+    color:var(--muted);
+    text-align:center;
+    line-height:1.6;
+    padding:0 8px;
+  }
+  figcaption b{color:var(--accent);}
+
+  /* ---------- Misc ---------- */
+  code{
+    font-family:"Consolas","Courier New",monospace;
+    background:rgba(0,0,0,0.32);
+    padding:2px 7px;
+    border-radius:6px;
+    font-size:.92em;
+    color:#ffe9b0;
+  }
+  .center{text-align:center;}
+  .qed{float:right;color:var(--accent);font-size:1.05rem;}
+  hr.sep{
+    border:0;height:1px;margin:34px 0;
+    background:linear-gradient(90deg,transparent,rgba(184,166,255,0.35),transparent);
+  }
+  footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:.88rem;
+    border-top:1px solid var(--border);
+    padding-top:26px;
+    margin-top:10px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Uniformly Continuous Functions</h1>
+  <p class="sub">From pointwise continuity to a single <span class="m">δ</span> that works everywhere on a set</p>
+  <div class="rule"></div>
+</header>
+
+<!-- ============ MOTIVATION ============ -->
+<section id="motivation">
+  <h2>1. Motivation: Can One <span class="m">δ</span> Serve Every Point?</h2>
+
+  <p>Recall what it means for a function <span class="m">f</span> to be continuous at a point
+  <span class="m">x₀</span>. For every <span class="m">ε &gt; 0</span> there is a <span class="m">δ &gt; 0</span>
+  such that</p>
+
+  <div class="eq">
+    | f(x) − f(x₀) | &lt; ε &nbsp;&nbsp; whenever &nbsp; | x − x₀ | &lt; δ.
+  </div>
+
+  <p>The number <span class="m">δ</span> is allowed to depend on <span class="m">ε</span> <em>and</em> on the
+  point <span class="m">x₀</span>. At a place where the function changes quickly, we may need a very small
+  <span class="m">δ</span>; where it changes slowly, a larger <span class="m">δ</span> will do. Continuity at a
+  point is therefore a <strong>local</strong> property: it is decided separately at each point.</p>
+
+  <p>Now suppose we are interested in a whole set <span class="m">A</span> at once, and we ask a stronger
+  question:</p>
+
+  <div class="box motiv">
+    <h4>The Question</h4>
+    <p style="margin-bottom:0">Can we find a <em>single</em> <span class="m">δ &gt; 0</span> that works
+    simultaneously at <strong>every</strong> point of <span class="m">A</span>? That is, for a given
+    <span class="m">ε &gt; 0</span>, is there one <span class="m">δ</span> such that</p>
+    <div class="eq" style="margin:14px 0 6px">
+      | f(x) − f(y) | &lt; ε &nbsp;&nbsp; whenever &nbsp; x, y ∈ A and | x − y | &lt; δ ?
+    </div>
+  </div>
+
+  <h3>A first test: <span class="m">f(x) = 1/x</span> on <span class="m">(0, 1]</span></h3>
+
+  <p>Take <span class="m">ε = 0.5</span> and look at two places on the graph.</p>
+
+  <ul>
+    <li><strong>At <span class="m">x₀ = 1</span>.</strong> Here <span class="m">f(1) = 1</span>, and we need
+    <span class="m">|1/x − 1| &lt; 0.5</span>, i.e. <span class="m">0.5 &lt; 1/x &lt; 1.5</span>, i.e.
+    <span class="m">0.667 &lt; x</span>. So any <span class="m">δ ≤ 0.33</span> works comfortably around
+    <span class="m">x₀ = 1</span>.</li>
+
+    <li><strong>At <span class="m">x₀ = 0.2</span>.</strong> Here <span class="m">f(0.2) = 5</span>, and we need
+    <span class="m">4.5 &lt; 1/x &lt; 5.5</span>, i.e. <span class="m">0.1818 &lt; x &lt; 0.2222</span>. The
+    largest safe <span class="m">δ</span> is only about <span class="m">0.018</span> — nearly twenty times
+    smaller than before.</li>
+  </ul>
+
+  <p>As <span class="m">x₀ → 0⁺</span>, the needed <span class="m">δ</span> shrinks to <span class="m">0</span>.
+  No single <span class="m">δ &gt; 0</span> can work at every point of <span class="m">(0, 1]</span> for this
+  <span class="m">ε</span>. The function <span class="m">1/x</span> is continuous at every point of
+  <span class="m">(0, 1]</span>, but the continuity is not <em>uniform</em> over the set.</p>
+
+  <h3>A second test: <span class="m">f(x) = x²</span> on <span class="m">ℝ</span></h3>
+
+  <p>At a point <span class="m">x₀</span>, the slope of the graph is about <span class="m">2x₀</span>. To keep
+  the output within <span class="m">ε</span> we need roughly <span class="m">δ ≈ ε / (2|x₀|)</span>. As
+  <span class="m">|x₀| → ∞</span>, this shrinks to <span class="m">0</span>. Again, no single
+  <span class="m">δ</span> works on all of <span class="m">ℝ</span>.</p>
+
+  <p>These two examples show that the question is a genuine one, and that the answer is sometimes
+  <em>no</em>. When the answer is <em>yes</em>, we say the function is <strong>uniformly continuous on the
+  set</strong>. Let us now make this precise.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ DEFINITION ============ -->
+<section id="definition">
+  <h2>2. Definition</h2>
+
+  <p>Let <span class="m">A ⊆ ℝ</span> and let <span class="m">f : A → ℝ</span>.</p>
+
+  <div class="box key">
+    <h4>Definition (uniform continuity on a set)</h4>
+    <p>We say that <span class="m">f</span> is <strong>uniformly continuous on <span class="m">A</span></strong>
+    if for every <span class="m">ε &gt; 0</span> there exists <span class="m">δ &gt; 0</span> such that</p>
+    <div class="eq" style="margin:14px 0 6px">
+      | f(x) − f(y) | &lt; ε &nbsp;&nbsp; whenever &nbsp; x, y ∈ A and | x − y | &lt; δ.
+    </div>
+    <p style="margin-bottom:0">In quantifier form: &nbsp;
+    <span class="m">∀ ε &gt; 0, &nbsp; ∃ δ &gt; 0, &nbsp; ∀ x, y ∈ A : &nbsp; | x − y | &lt; δ ⟹ | f(x) − f(y) | &lt; ε.</span></p>
+  </div>
+
+  <div class="box warnbox">
+    <h4>Uniform continuity is on a set, not at a point</h4>
+    <p>Notice carefully where the quantifiers sit. In the definition of uniform continuity, the phrase
+    &ldquo;<span class="m">∀ x, y ∈ A</span>&rdquo; comes <em>after</em> the choice of
+    <span class="m">δ</span>. This means one and the same <span class="m">δ</span> must serve every pair of
+    points in <span class="m">A</span>.</p>
+    <p style="margin-bottom:0">It therefore makes no sense to say that a function is &ldquo;uniformly continuous
+    at a point&rdquo;. The word <em>uniform</em> refers precisely to the fact that the same
+    <span class="m">δ</span> is used <em>uniformly</em> across the whole set. Uniform continuity is a property of
+    the function <strong>on the set <span class="m">A</span></strong>, and it must always be read with the set
+    named.</p>
+  </div>
+
+  <h3>How it differs from ordinary continuity</h3>
+
+  <p>Let us place the two definitions side by side, both written for the same set
+  <span class="m">A</span>.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>Continuous on <span class="m">A</span></th>
+          <th>Uniformly continuous on <span class="m">A</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Quantifier order</td>
+          <td>∀ x₀ ∈ A, &nbsp; ∀ ε &gt; 0, &nbsp; ∃ δ &gt; 0 : &nbsp; x ∈ A, | x − x₀ | &lt; δ ⟹ | f(x) − f(x₀) | &lt; ε</td>
+          <td>∀ ε &gt; 0, &nbsp; ∃ δ &gt; 0, &nbsp; ∀ x, y ∈ A : &nbsp; | x − y | &lt; δ ⟹ | f(x) − f(y) | &lt; ε</td>
+        </tr>
+        <tr>
+          <td>What <span class="m">δ</span> may depend on</td>
+          <td><span class="m">ε</span> and the point <span class="m">x₀</span></td>
+          <td><span class="m">ε</span> only</td>
+        </tr>
+        <tr>
+          <td>Nature of the condition</td>
+          <td>Local: decided separately at each point</td>
+          <td>Global: one <span class="m">δ</span> for the whole set <span class="m">A</span></td>
+        </tr>
+        <tr>
+          <td>How the negation reads</td>
+          <td>∃ x₀ ∈ A, ∃ ε &gt; 0, ∀ δ &gt; 0, ∃ x ∈ A : | x − x₀ | &lt; δ and | f(x) − f(x₀) | ≥ ε</td>
+          <td>∃ ε &gt; 0, ∀ δ &gt; 0, ∃ x, y ∈ A : | x − y | &lt; δ and | f(x) − f(y) | ≥ ε</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Every uniformly continuous function on <span class="m">A</span> is continuous on <span class="m">A</span>:
+  if a single <span class="m">δ</span> works for all pairs, then in particular it works for all pairs involving
+  a fixed <span class="m">x₀</span>. The converse is not true, as the examples <span class="m">1/x</span> on
+  <span class="m">(0, 1]</span> and <span class="m">x²</span> on <span class="m">ℝ</span> show.</p>
+
+  <div class="eq">Uniformly continuous on A &nbsp;⟹&nbsp; continuous on A &nbsp;&nbsp;(but not conversely).</div>
+
+  <h3>Geometric picture</h3>
+
+  <p>Uniform continuity says the following. Fix <span class="m">ε &gt; 0</span>. Draw around the graph of
+  <span class="m">f</span> a band of vertical width <span class="m">2ε</span>. Uniform continuity guarantees
+  that there is a horizontal width <span class="m">δ</span> such that whenever two points of the domain are
+  within <span class="m">δ</span> of each other, the corresponding points of the graph are within
+  <span class="m">ε</span> vertically — and this same <span class="m">δ</span> works everywhere along the
+  graph. For <span class="m">1/x</span> on <span class="m">(0, 1]</span>, no such uniform horizontal width
+  exists: the graph becomes steeper and steeper as we approach <span class="m">0</span>, so the horizontal
+  window must shrink without bound.</p>
+
+  <figure>
+    <svg viewBox="0 0 730 430" role="img"
+         aria-label="Graph of 1 over x on the interval from 0 to 1, showing that the delta needed for a fixed epsilon shrinks as x approaches 0">
+      <defs>
+        <clipPath id="plotClip">
+          <rect x="90" y="30" width="600" height="350" rx="8"/>
+        </clipPath>
+        <linearGradient id="curveGrad" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ff9db0"/>
+          <stop offset="100%" stop-color="#ffd27f"/>
+        </linearGradient>
+      </defs>
+
+      <!-- plot panel -->
+      <rect x="90" y="30" width="600" height="350" rx="8"
+            fill="#100c22" stroke="rgba(184,166,255,0.3)" stroke-width="1.5"/>
+
+      <g clip-path="url(#plotClip)">
+        <!-- epsilon band around x0 = 1  (wide delta) -->
+        <rect x="453.6" y="299.2" width="181.9" height="53.9"
+              fill="rgba(255,210,127,0.17)" stroke="#ffd27f" stroke-width="1.6"
+              stroke-dasharray="6 4" rx="3"/>
+        <!-- epsilon band around x0 = 0.2 (narrow delta) -->
+        <rect x="189.2" y="83.8" width="22" height="53.9"
+              fill="rgba(255,157,176,0.22)" stroke="#ff9db0" stroke-width="1.6"
+              stroke-dasharray="6 4" rx="3"/>
+
+        <!-- the curve y = 1/x -->
+        <path d="M 635.5 326.2 L 608.2 323.3 L 580.9 320.2 L 553.6 316.7 L 526.4 312.7
+                 L 499.1 308.2 L 471.8 303.1 L 444.5 297.2 L 417.3 290.3 L 390.0 282.1
+                 L 362.7 272.3 L 335.5 260.3 L 308.2 245.4 L 280.9 226.2 L 253.6 200.5
+                 L 242.7 187.7 L 231.8 172.9 L 220.9 155.6 L 210.0 135.2 L 199.1 110.8
+                 L 193.6 96.6 L 188.2 80.8 L 185.5 72.3 L 182.7 63.3 L 180.9 56.9"
+              fill="none" stroke="url(#curveGrad)" stroke-width="4" stroke-linecap="round"/>
+
+        <!-- marked points -->
+        <circle cx="635.5" cy="326.2" r="5.5" fill="#ffd27f" stroke="#100c22" stroke-width="2"/>
+        <circle cx="199.1" cy="110.8" r="5.5" fill="#ff9db0" stroke="#100c22" stroke-width="2"/>
+      </g>
+
+      <!-- axes -->
+      <line x1="90" y1="380" x2="706" y2="380" stroke="rgba(242,238,255,0.55)" stroke-width="1.8"/>
+      <line x1="90" y1="380" x2="90" y2="20" stroke="rgba(242,238,255,0.55)" stroke-width="1.8"/>
+      <polygon points="706,380 696,375 696,385" fill="rgba(242,238,255,0.7)"/>
+      <polygon points="90,20 85,30 95,30" fill="rgba(242,238,255,0.7)"/>
+
+      <!-- axis labels -->
+      <text x="712" y="398" fill="#f2eeff" font-size="16" font-style="italic"
+            font-family="Georgia, serif">x</text>
+      <text x="72" y="26" fill="#f2eeff" font-size="16" font-style="italic"
+            font-family="Georgia, serif">y</text>
+
+      <!-- x tick labels -->
+      <text x="635.5" y="400" fill="#bcb0dd" font-size="13" text-anchor="middle">1</text>
+      <text x="199.1" y="400" fill="#bcb0dd" font-size="13" text-anchor="middle">0.2</text>
+
+      <!-- point labels -->
+      <text x="648" y="318" fill="#ffd27f" font-size="14" font-style="italic"
+            font-family="Georgia, serif">x₀ = 1</text>
+      <text x="214" y="102" fill="#ff9db0" font-size="14" font-style="italic"
+            font-family="Georgia, serif">x₀ = 0.2</text>
+
+      <!-- delta annotations -->
+      <text x="500" y="336" fill="#ffd27f" font-size="13.5" text-anchor="middle">δ ≈ 0.33</text>
+      <text x="140" y="96" fill="#ff9db0" font-size="13.5" text-anchor="end">δ ≈ 0.018</text>
+      <line x1="146" y1="99" x2="187" y2="104" stroke="#ff9db0" stroke-width="1.2"
+            stroke-dasharray="3 3"/>
+
+      <!-- curve label -->
+      <text x="576" y="348" fill="#ff9db0" font-size="15" font-style="italic"
+            font-family="Georgia, serif">y = 1/x</text>
+
+      <!-- caption inside svg -->
+      <text x="390" y="422" fill="#bcb0dd" font-size="13" text-anchor="middle"
+            font-family="Segoe UI, sans-serif">
+        For the same ε, the safe δ shrinks as x₀ → 0⁺ — no single δ works on all of (0, 1]
+      </text>
+    </svg>
+    <figcaption>
+      <b>Why uniformity fails for <span class="m">1/x</span> on <span class="m">(0, 1]</span>.</b>
+      The two shaded rectangles are the parts of the graph that lie within a fixed vertical distance
+      <span class="m">ε</span> of the marked values. Around <span class="m">x₀ = 1</span> the horizontal
+      window <span class="m">δ</span> can be about <span class="m">0.33</span>; around
+      <span class="m">x₀ = 0.2</span> it must shrink to about <span class="m">0.018</span>. As
+      <span class="m">x₀ → 0⁺</span> it shrinks to <span class="m">0</span>, so no one
+      <span class="m">δ</span> serves the whole set.
+    </figcaption>
+  </figure>
+</section>
+
+<hr class="sep">
+
+<!-- ============ EXAMPLES ============ -->
+<section id="examples">
+  <h2>3. Examples</h2>
+
+  <h3>Example 1 — Linear functions</h3>
+  <p>Let <span class="m">f(x) = mx + b</span> on <span class="m">ℝ</span>. Then</p>
+  <div class="eq">| f(x) − f(y) | = | m | | x − y |.</div>
+  <p>If <span class="m">m = 0</span>, take any <span class="m">δ &gt; 0</span>. If
+  <span class="m">m ≠ 0</span>, take <span class="m">δ = ε ⁄ |m|</span>. Either way the choice of
+  <span class="m">δ</span> depends only on <span class="m">ε</span> (and on the fixed slope
+  <span class="m">m</span>), not on the point. So linear functions are uniformly continuous on
+  <span class="m">ℝ</span>.</p>
+
+  <h3>Example 2 — Sine and cosine</h3>
+  <p>For <span class="m">f(x) = sin x</span> on <span class="m">ℝ</span>, the identity
+  <span class="m">sin x − sin y = 2 cos((x+y)/2) sin((x−y)/2)</span> gives</p>
+  <div class="eq">| sin x − sin y | ≤ | x − y |,</div>
+  <p>so <span class="m">δ = ε</span> works everywhere. The same argument applies to
+  <span class="m">cos</span>. Both are uniformly continuous on <span class="m">ℝ</span>.</p>
+
+  <h3>Example 3 — Square root on <span class="m">[0, ∞)</span></h3>
+  <p>For <span class="m">f(x) = √x</span> on <span class="m">[0, ∞)</span>, rationalising gives</p>
+  <div class="eq">| √x − √y | = | x − y | ⁄ ( √x + √y ) ≤ √| x − y |.</div>
+  <p>So if <span class="m">|x − y| &lt; ε²</span>, then <span class="m">|√x − √y| &lt; ε</span>. Taking
+  <span class="m">δ = ε²</span> — a number that depends only on <span class="m">ε</span> — shows that
+  <span class="m">√x</span> is uniformly continuous on <span class="m">[0, ∞)</span>. Notice how different
+  this is from <span class="m">1/x</span>: here the needed <span class="m">δ</span> shrinks as
+  <span class="m">ε → 0</span> (like <span class="m">ε²</span>), but it does <em>not</em> depend on where we
+  are in the domain.</p>
+
+  <h3>Example 4 — <span class="m">1/x</span> away from the origin</h3>
+  <p>For <span class="m">f(x) = 1/x</span> on <span class="m">[1, ∞)</span>,</p>
+  <div class="eq">| 1/x − 1/y | = | x − y | ⁄ (xy) ≤ | x − y |,</div>
+  <p>so <span class="m">δ = ε</span> works. The same function is <em>not</em> uniformly continuous on
+  <span class="m">(0, 1]</span>. The set matters: the very same formula can be uniformly continuous on one
+  set and not on another.</p>
+
+  <h3>Example 5 — A bounded derivative on an interval</h3>
+  <p>If <span class="m">f</span> is differentiable on an interval <span class="m">I</span> and
+  <span class="m">|f′(x)| ≤ M</span> for all <span class="m">x ∈ I</span>, then by the Mean Value
+  Theorem, for some <span class="m">c</span> between <span class="m">x</span> and <span class="m">y</span>,</p>
+  <div class="eq">| f(x) − f(y) | = | f′(c) | | x − y | ≤ M | x − y |.</div>
+  <p>So <span class="m">δ = ε ⁄ M</span> works everywhere on <span class="m">I</span>. For instance
+  <span class="m">arctan x</span> has <span class="m">|f′(x)| ≤ 1</span> on <span class="m">ℝ</span>, so it is
+  uniformly continuous on <span class="m">ℝ</span> with <span class="m">δ = ε</span>.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ NON-EXAMPLES ============ -->
+<section id="nonexamples">
+  <h2>4. Non-Examples</h2>
+
+  <h3>Non-Example 1 — <span class="m">1/x</span> on <span class="m">(0, 1]</span></h3>
+  <p>Take <span class="m">ε = 1/2</span>. We show that no <span class="m">δ &gt; 0</span> can work. Given any
+  <span class="m">δ &gt; 0</span>, choose an integer <span class="m">n</span> so large that
+  <span class="m">1/n &lt; δ</span>, and set</p>
+  <div class="eq">x = 1/n, &nbsp;&nbsp; y = 1/(n+1).</div>
+  <p>Both lie in <span class="m">(0, 1]</span>, and</p>
+  <div class="eq">| x − y | = 1 ⁄ (n(n+1)) &lt; 1/n &lt; δ, &nbsp;&nbsp; yet &nbsp;&nbsp;
+  | f(x) − f(y) | = | n − (n+1) | = 1 &gt; 1/2.</div>
+  <p>So every candidate <span class="m">δ</span> fails for this <span class="m">ε</span>. The function is
+  continuous on <span class="m">(0, 1]</span>, but not uniformly continuous there.</p>
+
+  <h3>Non-Example 2 — <span class="m">x²</span> on <span class="m">ℝ</span></h3>
+  <p>Take <span class="m">ε = 1</span>. Given any <span class="m">δ &gt; 0</span>, choose
+  <span class="m">x = n</span> and <span class="m">y = n + δ/2</span> with <span class="m">n</span> large.
+  Then <span class="m">|x − y| = δ/2 &lt; δ</span>, while</p>
+  <div class="eq">| f(x) − f(y) | = | n² − (n + δ/2)² | = nδ + δ²/4,</div>
+  <p>which exceeds <span class="m">1</span> once <span class="m">n</span> is large enough. So
+  <span class="m">x²</span> is not uniformly continuous on <span class="m">ℝ</span>. On a bounded interval,
+  however, it <em>is</em> uniformly continuous, because there the slope is bounded.</p>
+
+  <h3>Non-Example 3 — <span class="m">sin(1/x)</span> on <span class="m">(0, 1]</span></h3>
+  <p>As <span class="m">x → 0⁺</span>, the quantity <span class="m">1/x</span> runs through ever larger values,
+  and <span class="m">sin(1/x)</span> oscillates between <span class="m">−1</span> and
+  <span class="m">1</span> infinitely often. Whatever <span class="m">δ &gt; 0</span> we try, we can find two
+  points <span class="m">x, y</span> within <span class="m">δ</span> of each other where
+  <span class="m">sin(1/x) = 1</span> and <span class="m">sin(1/y) = −1</span>. So with
+  <span class="m">ε = 1</span>, no <span class="m">δ</span> works.</p>
+
+  <h3>Non-Example 4 — A function with a jump</h3>
+  <p>Let <span class="m">f(x) = 0</span> for <span class="m">x &lt; 0</span> and
+  <span class="m">f(x) = 1</span> for <span class="m">x ≥ 0</span> on <span class="m">[−1, 1]</span>. Taking
+  <span class="m">x = −1/n</span> and <span class="m">y = 1/n</span> gives
+  <span class="m">|f(x) − f(y)| = 1</span> for arbitrarily small <span class="m">|x − y|</span>. So the
+  function is not uniformly continuous — indeed it is not even continuous.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ PROPERTIES ============ -->
+<section id="properties">
+  <h2>5. Some Useful Properties</h2>
+
+  <ol>
+    <li><strong>Sums and scalar multiples.</strong> If <span class="m">f</span> and <span class="m">g</span> are
+    uniformly continuous on <span class="m">A</span>, then so is <span class="m">f + g</span>: given
+    <span class="m">ε</span>, choose <span class="m">δ₁</span> for <span class="m">f</span> and
+    <span class="m">δ₂</span> for <span class="m">g</span> with tolerance <span class="m">ε/2</span>, and take
+    <span class="m">δ = min(δ₁, δ₂)</span>. Similarly <span class="m">cf</span> is uniformly continuous for any
+    constant <span class="m">c</span>.</li>
+
+    <li><strong>Composition.</strong> If <span class="m">f : A → B</span> is uniformly continuous on
+    <span class="m">A</span> and <span class="m">g : B → ℝ</span> is uniformly continuous on
+    <span class="m">B</span>, then <span class="m">g ∘ f</span> is uniformly continuous on
+    <span class="m">A</span>. One simply feeds the <span class="m">δ</span> of <span class="m">g</span> into
+    the definition of uniform continuity for <span class="m">f</span>.</li>
+
+    <li><strong>Restriction to a subset.</strong> If <span class="m">f</span> is uniformly continuous on
+    <span class="m">A</span> and <span class="m">B ⊆ A</span>, then <span class="m">f</span> is uniformly
+    continuous on <span class="m">B</span>. The same <span class="m">δ</span> continues to work, since there
+    are fewer pairs to check.</li>
+
+    <li><strong>Products, when both factors are bounded.</strong> If <span class="m">f</span> and
+    <span class="m">g</span> are both uniformly continuous <em>and bounded</em> on
+    <span class="m">A</span>, then <span class="m">fg</span> is uniformly continuous on
+    <span class="m">A</span>. Write
+    <span class="m">fg(x) − fg(y) = f(x)(g(x) − g(y)) + g(y)(f(x) − f(y))</span> and use the bounds. Without
+    boundedness the conclusion can fail: <span class="m">f(x) = g(x) = x</span> is uniformly continuous on
+    <span class="m">ℝ</span> but <span class="m">x²</span> is not.</li>
+
+    <li><strong>Boundedness on a bounded interval.</strong> If <span class="m">f</span> is uniformly continuous
+    on a bounded interval <span class="m">(a, b)</span>, then <span class="m">f</span> is bounded there. Indeed,
+    apply the definition with <span class="m">ε = 1</span> to get a <span class="m">δ</span>, split
+    <span class="m">(a, b)</span> into finitely many subintervals of length less than <span class="m">δ</span>,
+    and move from one subinterval to the next using the bound <span class="m">1</span> at each step.</li>
+
+    <li><strong>Extension to the closure.</strong> If <span class="m">f</span> is uniformly continuous on a
+    bounded interval <span class="m">(a, b)</span>, then the limits
+    <span class="m">lim<sub>x→a⁺</sub> f(x)</span> and <span class="m">lim<sub>x→b⁻</sub> f(x)</span> exist,
+    and <span class="m">f</span> can be extended to a continuous function on the closed interval
+    <span class="m">[a, b]</span>. This is one of the most useful consequences of uniform continuity.</li>
+  </ol>
+</section>
+
+<hr class="sep">
+
+<!-- ============ HEINE-CANTOR ============ -->
+<section id="heine">
+  <h2>6. Every Continuous Function on <span class="m">[a, b]</span> Is Uniformly Continuous</h2>
+
+  <p>The examples of failure — <span class="m">1/x</span> on <span class="m">(0, 1]</span>, <span class="m">x²</span>
+  on <span class="m">ℝ</span> — all involved a domain that is either not closed or not bounded. The following
+  theorem says that on a closed bounded interval, failure is impossible.</p>
+
+  <div class="box key">
+    <h4>Theorem (Heine–Cantor)</h4>
+    <p style="margin-bottom:0">Let <span class="m">f : [a, b] → ℝ</span> be continuous on
+    <span class="m">[a, b]</span>. Then <span class="m">f</span> is uniformly continuous on
+    <span class="m">[a, b]</span>.</p>
+  </div>
+
+  <p>We prove this by contradiction, using bisection. The proof uses only the
+  <span class="m">ε</span>–<span class="m">δ</span> definition of continuity at a point (not the sequential
+  one), together with the nested interval property of the real line.</p>
+
+  <p><strong>Proof.</strong> Suppose, towards a contradiction, that <span class="m">f</span> is continuous on
+  <span class="m">[a, b]</span> but not uniformly continuous there. Unwinding the negation of uniform
+  continuity, this means:</p>
+
+  <div class="box" style="padding:16px 22px;">
+    <p style="margin-bottom:0">There exists <span class="m">ε₀ &gt; 0</span> such that for every
+    <span class="m">δ &gt; 0</span> there are points <span class="m">x, y ∈ [a, b]</span> with
+    <span class="m">|x − y| &lt; δ</span> but <span class="m">|f(x) − f(y)| ≥ ε₀</span>. &nbsp;&nbsp;(∗)</p>
+  </div>
+
+  <p>We now build a nested sequence of closed intervals</p>
+
+  <div class="eq">I₀ ⊇ I₁ ⊇ I₂ ⊇ ⋯,</div>
+
+  <p>each of which still has property (∗) — that is, inside each <span class="m">Iₙ</span> we can find pairs
+  of points as close together as we like whose <span class="m">f</span>-values differ by at least
+  <span class="m">ε₀</span>. Start with <span class="m">I₀ = [a, b]</span>, which has (∗) by assumption.</p>
+
+  <p><strong>The bisection step.</strong> Suppose <span class="m">I = [u, v]</span> has property (∗). Let
+  <span class="m">m = (u + v)/2</span> be its midpoint, and consider the two closed halves
+  <span class="m">[u, m]</span> and <span class="m">[m, v]</span>. We claim that <em>at least one</em> of these
+  halves also has property (∗).</p>
+
+  <p>Suppose not. Then there are numbers <span class="m">δ₁ &gt; 0</span> and <span class="m">δ₂ &gt; 0</span>
+  such that</p>
+
+  <div class="eq small">
+    | f(x) − f(y) | &lt; ε₀ &nbsp; whenever &nbsp; x, y ∈ [u, m] &nbsp; and &nbsp; | x − y | &lt; δ₁,
+  </div>
+  <div class="eq small">
+    | f(x) − f(y) | &lt; ε₀ &nbsp; whenever &nbsp; x, y ∈ [m, v] &nbsp; and &nbsp; | x − y | &lt; δ₂.
+  </div>
+
+  <p>Since <span class="m">f</span> is continuous at <span class="m">m</span>, there is
+  <span class="m">δ₃ &gt; 0</span> such that</p>
+
+  <div class="eq small">
+    | t − m | &lt; δ₃ &nbsp;⟹&nbsp; | f(t) − f(m) | &lt; ε₀ ⁄ 2.
+  </div>
+
+  <p>Let <span class="m">δ = min(δ₁, δ₂, δ₃)</span>, and take any <span class="m">x, y ∈ [u, v]</span> with
+  <span class="m">|x − y| &lt; δ</span>. There are three cases.</p>
+
+  <ul>
+    <li><em>Both in <span class="m">[u, m]</span>.</em> Then <span class="m">|x − y| &lt; δ ≤ δ₁</span>, so
+    <span class="m">|f(x) − f(y)| &lt; ε₀</span>.</li>
+    <li><em>Both in <span class="m">[m, v]</span>.</em> Then <span class="m">|x − y| &lt; δ ≤ δ₂</span>, so
+    <span class="m">|f(x) − f(y)| &lt; ε₀</span>.</li>
+    <li><em>One in each half</em>, say <span class="m">x ∈ [u, m]</span> and
+    <span class="m">y ∈ [m, v]</span>. Then <span class="m">x ≤ m ≤ y</span>, so
+    <span class="m">|x − m| ≤ |x − y| &lt; δ ≤ δ₃</span> and
+    <span class="m">|y − m| ≤ |x − y| &lt; δ ≤ δ₃</span>. Hence
+    <span class="m">|f(x) − f(m)| &lt; ε₀/2</span> and <span class="m">|f(y) − f(m)| &lt; ε₀/2</span>, so by
+    the triangle inequality <span class="m">|f(x) − f(y)| &lt; ε₀</span>.</li>
+  </ul>
+
+  <p>In every case we have <span class="m">|f(x) − f(y)| &lt; ε₀</span> for all
+  <span class="m">x, y ∈ [u, v]</span> with <span class="m">|x − y| &lt; δ</span>. That contradicts property
+  (∗) for <span class="m">I</span>. Hence at least one half has property (∗), and we take it to be
+  <span class="m">Iₙ₊₁</span>.</p>
+
+  <p><strong>Finishing the construction.</strong> Inductively we obtain closed intervals
+  <span class="m">I₀ ⊇ I₁ ⊇ I₂ ⊇ ⋯</span>, each with property (∗), whose lengths are</p>
+
+  <div class="eq">(b − a) ⁄ 2ⁿ &nbsp;⟶&nbsp; 0.</div>
+
+  <p>By the nested interval property of <span class="m">ℝ</span>, the intersection
+  <span class="m">∩ₙ Iₙ</span> contains exactly one point; call it <span class="m">c</span>. Since
+  <span class="m">f</span> is continuous at <span class="m">c</span>, there is <span class="m">η &gt; 0</span>
+  such that</p>
+
+  <div class="eq small">
+    | t − c | &lt; η &nbsp;⟹&nbsp; | f(t) − f(c) | &lt; ε₀ ⁄ 2.
+  </div>
+
+  <p>Choose <span class="m">n</span> so large that the length of <span class="m">Iₙ</span> is less than
+  <span class="m">η</span>. Since <span class="m">c ∈ Iₙ</span>, the whole interval
+  <span class="m">Iₙ</span> lies inside <span class="m">(c − η, c + η)</span>. Therefore for any
+  <span class="m">x, y ∈ Iₙ</span>,</p>
+
+  <div class="eq">
+    | f(x) − f(y) | ≤ | f(x) − f(c) | + | f(c) − f(y) | &lt; ε₀ ⁄ 2 + ε₀ ⁄ 2 = ε₀.
+  </div>
+
+  <p>But <span class="m">Iₙ</span> has property (∗), which demands that some pair
+  <span class="m">x, y ∈ Iₙ</span> satisfies <span class="m">|f(x) − f(y)| ≥ ε₀</span>. This is a
+  contradiction. Hence <span class="m">f</span> must be uniformly continuous on <span class="m">[a, b]</span>.
+  <span class="qed">∎</span></p>
+
+  <div class="box">
+    <h4>What made the proof work?</h4>
+    <p style="margin-bottom:0">Two features of <span class="m">[a, b]</span> were essential: it is
+    <strong>bounded</strong> (so bisection produces intervals of length tending to <span class="m">0</span>),
+    and it is <strong>closed</strong> (so the point <span class="m">c</span> where the intervals shrink lies
+    inside the domain, where <span class="m">f</span> is assumed continuous). Drop either feature and the
+    theorem can fail: <span class="m">1/x</span> on <span class="m">(0, 1]</span> shows what happens when the
+    interval is not closed, and <span class="m">x²</span> on <span class="m">ℝ</span> shows what happens when
+    it is not bounded.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ CONSEQUENCES ============ -->
+<section id="consequences">
+  <h2>7. Consequences of the Theorem</h2>
+
+  <ul>
+    <li><strong>A large supply of examples.</strong> Every continuous function on a closed bounded interval is
+    uniformly continuous there. So <span class="m">x³</span>, <span class="m">sin x</span>,
+    <span class="m">eˣ</span>, <span class="m">ln(1 + x)</span>, and any polynomial are uniformly continuous
+    on every interval <span class="m">[a, b]</span>, no matter how large the interval.</li>
+
+    <li><strong>Boundedness.</strong> A continuous function on <span class="m">[a, b]</span> is bounded. This
+    follows from the theorem together with the property that a uniformly continuous function on a bounded
+    interval is bounded.</li>
+
+    <li><strong>Riemann integrability.</strong> A continuous function on <span class="m">[a, b]</span> is
+    Riemann integrable. The standard proof uses the uniform continuity of <span class="m">f</span> to make all
+    the upper and lower sums on a sufficiently fine partition differ by less than any prescribed
+    <span class="m">ε</span>.</li>
+
+    <li><strong>Extension to the endpoints.</strong> If <span class="m">f</span> is continuous on
+    <span class="m">(a, b)</span> and uniformly continuous there, then <span class="m">f</span> extends
+    continuously to <span class="m">[a, b]</span>. Uniform continuity is exactly the extra hypothesis that
+    rules out blow-ups at the endpoints, as in <span class="m">1/x</span> on <span class="m">(0, 1]</span>.</li>
+  </ul>
+</section>
+
+<hr class="sep">
+
+<!-- ============ SUMMARY TABLE ============ -->
+<section id="table">
+  <h2>8. Summary</h2>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Continuous on <span class="m">A</span></th>
+          <th>Uniformly continuous on <span class="m">A</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Where is the property decided?</td>
+          <td>At each point <span class="m">x₀</span> separately</td>
+          <td>On the whole set <span class="m">A</span> at once</td>
+        </tr>
+        <tr>
+          <td>Order of quantifiers</td>
+          <td>∀ x₀ ∀ ε ∃ δ</td>
+          <td>∀ ε ∃ δ ∀ x, y</td>
+        </tr>
+        <tr>
+          <td>What <span class="m">δ</span> depends on</td>
+          <td><span class="m">ε</span> and <span class="m">x₀</span></td>
+          <td><span class="m">ε</span> only</td>
+        </tr>
+        <tr>
+          <td>Example on <span class="m">ℝ</span></td>
+          <td><span class="m">x²</span></td>
+          <td><span class="m">sin x</span></td>
+        </tr>
+        <tr>
+          <td>Example on a bounded interval</td>
+          <td><span class="m">1/x</span> on <span class="m">(0, 1]</span></td>
+          <td><span class="m">√x</span> on <span class="m">[0, 1]</span></td>
+        </tr>
+        <tr>
+          <td>Behaviour on <span class="m">[a, b]</span></td>
+          <td colspan="2" class="center">
+            If <span class="m">f</span> is continuous on <span class="m">[a, b]</span>, then it is
+            <em>automatically</em> uniformly continuous there (Heine–Cantor)
+          </td>
+        </tr>
+        <tr>
+          <td>Implication</td>
+          <td colspan="2" class="center">
+            Uniformly continuous on <span class="m">A</span> &nbsp;⟹&nbsp; continuous on
+            <span class="m">A</span> &nbsp;&nbsp;(the converse fails in general)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ CONCLUSION ============ -->
+<section id="conclusion">
+  <h2>9. Conclusion</h2>
+
+  <p>Uniform continuity is what happens when we ask continuity to be <em>uniform</em> over a whole set rather
+  than merely to hold point by point. The definition looks almost identical to ordinary continuity, but the
+  position of the quantifiers makes all the difference: the same <span class="m">δ</span> must serve every pair
+  of points in <span class="m">A</span>, so it is not permitted to depend on where we are.</p>
+
+  <p>The key points to remember:</p>
+
+  <ul>
+    <li>Uniform continuity is a property <strong>on a set</strong>, not at a point. There is no such thing as
+    being &ldquo;uniformly continuous at <span class="m">x₀</span>&rdquo;.</li>
+    <li>Uniformly continuous on <span class="m">A</span> implies continuous on <span class="m">A</span>, but
+    not conversely. The functions <span class="m">1/x</span> on <span class="m">(0, 1]</span> and
+    <span class="m">x²</span> on <span class="m">ℝ</span> are the standard counterexamples.</li>
+    <li>A bounded derivative on an interval gives uniform continuity there, with
+    <span class="m">δ = ε ⁄ M</span>.</li>
+    <li>The Heine–Cantor theorem says that on a closed bounded interval every continuous function is uniformly
+    continuous. The proof is a bisection argument: if uniform continuity failed, we could trap a point
+    <span class="m">c</span> inside ever smaller intervals, and continuity at <span class="m">c</span> would
+    then contradict the failure.</li>
+    <li>Uniform continuity on <span class="m">(a, b)</span> is exactly what is needed for
+    <span class="m">f</span> to extend continuously to the endpoints, for <span class="m">f</span> to be
+    bounded, and for <span class="m">f</span> to be Riemann integrable on <span class="m">[a, b]</span>.</li>
+  </ul>
+
+  <p>Once the distinction between &ldquo;continuous at each point&rdquo; and &ldquo;continuous uniformly on the
+  set&rdquo; is clear, a large part of real analysis — integration, extension theorems, and the behaviour of
+  functions on compact intervals — becomes much easier to organise.</p>
+</section>
+
+<footer>
+  Expository article on uniform continuity &middot; Written for students of real analysis
+</footer>
+
+</div>
+</body>
+</html>

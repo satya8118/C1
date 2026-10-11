@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Intermediate Value Property — An Expository Article</title>
+<style>
+  :root{
+    --paper:#fdf8f0;
+    --paper-2:#f4e9d7;
+    --paper-3:#eadcc4;
+    --ink:#2c2620;
+    --ink-soft:#5b4f3f;
+    --muted:#8a7860;
+    --teal:#1d5c63;
+    --teal-2:#0f766e;
+    --rust:#c1502e;
+    --rust-soft:#e07a56;
+    --card:#fffdf8;
+    --border:rgba(29,92,99,0.18);
+    --warn:#b3261e;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.78;
+    color:var(--ink);
+    background:
+      radial-gradient(1100px 600px at 8% 0%, #fffdf8 0%, transparent 55%),
+      radial-gradient(900px 520px at 92% 100%, #f0e2c9 0%, transparent 55%),
+      linear-gradient(160deg, var(--paper) 0%, var(--paper-2) 50%, var(--paper-3) 100%);
+    background-attachment:fixed;
+  }
+
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 22px 90px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    padding:58px 0 34px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    margin-bottom:38px;
+  }
+  header h1{
+    font-size:2.15rem;
+    line-height:1.25;
+    margin:0 0 12px;
+    color:var(--teal);
+    letter-spacing:.3px;
+  }
+  header p.sub{
+    margin:0;
+    color:var(--rust);
+    font-size:1.02rem;
+    letter-spacing:.4px;
+    font-weight:500;
+  }
+  .rule{
+    width:90px;height:4px;margin:20px auto 0;border-radius:3px;
+    background:linear-gradient(90deg,var(--rust),var(--teal-2));
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:46px;}
+
+  h2{
+    font-size:1.42rem;
+    color:var(--teal);
+    margin:0 0 16px;
+    padding-bottom:9px;
+    border-bottom:2px solid rgba(29,92,99,0.16);
+    letter-spacing:.2px;
+  }
+  h3{
+    font-size:1.1rem;
+    color:var(--rust);
+    margin:26px 0 10px;
+    letter-spacing:.2px;
+  }
+
+  p{margin:0 0 15px;}
+  strong{color:#1a1510;}
+
+  /* ---------- Math ---------- */
+  .m{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    color:#3a2f24;
+    white-space:nowrap;
+  }
+  .eq{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-size:1.13rem;
+    color:#3a2f24;
+    background:var(--card);
+    border-left:4px solid var(--rust);
+    border-radius:0 10px 10px 0;
+    padding:14px 20px;
+    margin:18px 0;
+    text-align:center;
+    overflow-x:auto;
+    box-shadow:0 2px 10px rgba(44,38,32,0.05);
+  }
+  .eq.small{font-size:1rem;}
+
+  /* ---------- Callout boxes ---------- */
+  .box{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px 24px;
+    margin:22px 0;
+    box-shadow:0 3px 16px rgba(44,38,32,0.06);
+  }
+  .box.motiv{
+    background:linear-gradient(135deg, rgba(193,80,46,0.07), rgba(15,118,110,0.06));
+    border-color:rgba(193,80,46,0.28);
+  }
+  .box.key{
+    border-left:5px solid var(--teal-2);
+  }
+  .box.warnbox{
+    border-left:5px solid var(--warn);
+    background:rgba(179,38,30,0.045);
+  }
+  .box h4{
+    margin:0 0 10px;
+    font-size:1.02rem;
+    color:var(--rust);
+    letter-spacing:.5px;
+    text-transform:uppercase;
+  }
+  .box.key h4{color:var(--teal-2);}
+  .box.warnbox h4{color:var(--warn);}
+
+  /* ---------- Lists ---------- */
+  ul,ol{margin:0 0 16px;padding-left:26px;}
+  li{margin-bottom:9px;}
+  li::marker{color:var(--rust);}
+
+  /* ---------- Table ---------- */
+  .tablewrap{overflow-x:auto;margin:22px 0;}
+  table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:660px;
+    font-size:.94rem;
+    background:var(--card);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 3px 16px rgba(44,38,32,0.06);
+  }
+  th,td{
+    border:1px solid rgba(29,92,99,0.14);
+    padding:11px 14px;
+    vertical-align:top;
+    text-align:left;
+  }
+  th{
+    background:rgba(29,92,99,0.09);
+    color:var(--teal);
+    font-weight:600;
+    letter-spacing:.3px;
+  }
+  tbody tr:nth-child(even){background:rgba(244,233,215,0.35);}
+  td:first-child{color:var(--rust);font-weight:600;}
+
+  /* ---------- Figure ---------- */
+  figure{
+    margin:26px 0;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px 14px 10px;
+    box-shadow:0 3px 18px rgba(44,38,32,0.07);
+  }
+  figure svg{display:block;width:100%;height:auto;}
+  figcaption{
+    margin-top:12px;
+    font-size:.9rem;
+    color:var(--muted);
+    text-align:center;
+    line-height:1.6;
+    padding:0 8px;
+  }
+  figcaption b{color:var(--teal-2);}
+
+  /* ---------- Misc ---------- */
+  code{
+    font-family:"Consolas","Courier New",monospace;
+    background:rgba(29,92,99,0.08);
+    padding:2px 7px;
+    border-radius:6px;
+    font-size:.92em;
+    color:#8a3a1e;
+  }
+  .center{text-align:center;}
+  .qed{float:right;color:var(--teal-2);font-size:1.05rem;}
+  hr.sep{
+    border:0;height:1px;margin:34px 0;
+    background:linear-gradient(90deg,transparent,rgba(29,92,99,0.28),transparent);
+  }
+  footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:.88rem;
+    border-top:1px solid var(--border);
+    padding-top:26px;
+    margin-top:10px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>The Intermediate Value Property</h1>
+  <p class="sub">When a function cannot jump over a value &middot; Definition &middot; Examples &middot; Darboux &middot; Integrals</p>
+  <div class="rule"></div>
+</header>
+
+<!-- ============ MOTIVATION ============ -->
+<section id="motivation">
+  <h2>1. Motivation: Skipping a Value</h2>
+
+  <p>Think of the graph of a function as a path drawn on the plane. A natural question is whether the path can
+  <em>skip</em> a horizontal level. If the graph starts below a line and later ends above it, must it cross the
+  line at some point in between?</p>
+
+  <p>For a continuous function the answer is yes — this is the familiar Intermediate Value Theorem. But the
+  interesting discovery is that continuity is <em>not</em> the only way to guarantee this crossing behaviour.
+  Some very wild, discontinuous functions still manage to hit every intermediate value. The property of
+  &ldquo;never skipping a level&rdquo; deserves its own name, because it can be studied independently of
+  continuity.</p>
+
+  <div class="box motiv">
+    <h4>The Question</h4>
+    <p style="margin-bottom:0">Suppose <span class="m">f(a) &lt; γ &lt; f(b)</span>. Must there be a point
+    <span class="m">c</span> between <span class="m">a</span> and <span class="m">b</span> with
+    <span class="m">f(c) = γ</span>? What if we drop the assumption that <span class="m">f</span> is
+    continuous?</p>
+  </div>
+
+  <p>A first example of failure is a step function. Let <span class="m">f(x) = 0</span> for
+  <span class="m">x &lt; 0</span> and <span class="m">f(x) = 1</span> for <span class="m">x ≥ 0</span>. On the
+  interval <span class="m">[−1, 1]</span> we have <span class="m">f(−1) = 0</span> and
+  <span class="m">f(1) = 1</span>, but the value <span class="m">γ = 0.5</span> is never attained. The function
+  jumps over it. So the property can fail.</p>
+
+  <p>The plan of this article is to make the property precise, record the standard theorem that continuous
+  functions have it, produce a discontinuous function that still has it, and then show two further sources of
+  the property: differentiable functions (via Darboux's theorem) and Riemann integrable functions (via the
+  continuity of the integral function).</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ DEFINITION ============ -->
+<section id="definition">
+  <h2>2. Definition of the Intermediate Value Property</h2>
+
+  <p>Let <span class="m">I</span> be an interval and let <span class="m">f : I → ℝ</span>.</p>
+
+  <div class="box key">
+    <h4>Definition (Intermediate Value Property)</h4>
+    <p>We say that <span class="m">f</span> has the <strong>intermediate value property</strong> (IVP) on
+    <span class="m">I</span> if:</p>
+    <div class="eq" style="margin:14px 0 6px">
+      for all a, b ∈ I with a &lt; b, and every γ strictly between f(a) and f(b),
+      there exists c ∈ (a, b) with f(c) = γ.
+    </div>
+    <p style="margin-bottom:0">Here &ldquo;strictly between&rdquo; means either
+    <span class="m">f(a) &lt; γ &lt; f(b)</span> or <span class="m">f(b) &lt; γ &lt; f(a)</span>. Functions with
+    the IVP are sometimes called <strong>Darboux functions</strong>.</p>
+  </div>
+
+  <p>Equivalently: for every <span class="m">a &lt; b</span> in <span class="m">I</span>, the image
+  <span class="m">f((a, b))</span> contains every number between <span class="m">f(a)</span> and
+  <span class="m">f(b)</span>. In other words, the function cannot jump over a value that lies between two of
+  its values.</p>
+
+  <div class="box warnbox">
+    <h4>IVP is not continuity</h4>
+    <p style="margin-bottom:0">The IVP is a condition on the <em>range</em> of the function over intervals. It
+    says nothing about how wildly the function may oscillate, and nothing about limits at a point. As we shall
+    see, a function can have the IVP and still be discontinuous at some point.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ IVT ============ -->
+<section id="ivt">
+  <h2>3. Continuous Functions Have the IVP</h2>
+
+  <div class="box key">
+    <h4>Theorem (Intermediate Value Theorem)</h4>
+    <p style="margin-bottom:0">If <span class="m">f</span> is continuous on <span class="m">[a, b]</span> and
+    <span class="m">γ</span> lies strictly between <span class="m">f(a)</span> and
+    <span class="m">f(b)</span>, then there exists <span class="m">c ∈ (a, b)</span> with
+    <span class="m">f(c) = γ</span>. In particular, every continuous function has the IVP on every interval on
+    which it is defined.</p>
+  </div>
+
+  <p><strong>Proof.</strong> Assume <span class="m">f(a) &lt; γ &lt; f(b)</span>; the other case is handled by
+  replacing <span class="m">f</span> with <span class="m">−f</span>. Consider the set</p>
+
+  <div class="eq">S = { x ∈ [a, b] : f(x) &lt; γ }.</div>
+
+  <p>This set is nonempty, since <span class="m">a ∈ S</span>, and it is bounded above by
+  <span class="m">b</span>. So <span class="m">S</span> has a least upper bound; call it
+  <span class="m">c</span>. We claim that <span class="m">f(c) = γ</span>.</p>
+
+  <ul>
+    <li><em>Suppose <span class="m">f(c) &lt; γ</span>.</em> Since <span class="m">f</span> is continuous at
+    <span class="m">c</span>, there is <span class="m">δ &gt; 0</span> such that
+    <span class="m">|x − c| &lt; δ</span> implies <span class="m">f(x) &lt; γ</span>. Then points slightly to the
+    right of <span class="m">c</span> also lie in <span class="m">S</span>, contradicting the fact that
+    <span class="m">c</span> is an upper bound for <span class="m">S</span>.</li>
+
+    <li><em>Suppose <span class="m">f(c) &gt; γ</span>.</em> Again by continuity, there is
+    <span class="m">δ &gt; 0</span> such that <span class="m">|x − c| &lt; δ</span> implies
+    <span class="m">f(x) &gt; γ</span>. Then no point of <span class="m">(c − δ, c]</span> belongs to
+    <span class="m">S</span>, so <span class="m">c − δ/2</span> is an upper bound for <span class="m">S</span>
+    smaller than <span class="m">c</span>, contradicting the choice of <span class="m">c</span> as the least
+    upper bound.</li>
+  </ul>
+
+  <p>The only remaining possibility is <span class="m">f(c) = γ</span>. Finally, since
+  <span class="m">f(a) &lt; γ</span> we have <span class="m">c &gt; a</span>, and since
+  <span class="m">f(b) &gt; γ</span> we have <span class="m">c &lt; b</span>. Hence
+  <span class="m">c ∈ (a, b)</span>. <span class="qed">∎</span></p>
+
+  <p>So continuity is a <em>sufficient</em> condition for the IVP. The natural next question is whether it is
+  necessary. It is not.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ DISCONTINUOUS EXAMPLE ============ -->
+<section id="discontinuous">
+  <h2>4. A Discontinuous Function with the IVP</h2>
+
+  <p>Consider the function defined on <span class="m">ℝ</span> by</p>
+
+  <div class="eq">
+    f(x) = sin(1/x) &nbsp; for x ≠ 0, &nbsp;&nbsp;&nbsp; f(0) = 0.
+  </div>
+
+  <p>This function oscillates faster and faster as <span class="m">x</span> approaches
+  <span class="m">0</span>. Let us check the two claims: it is discontinuous at <span class="m">0</span>, and
+  nevertheless it has the IVP on <span class="m">ℝ</span>.</p>
+
+  <h3>It is discontinuous at <span class="m">0</span></h3>
+
+  <p>For each positive integer <span class="m">n</span>, set</p>
+
+  <div class="eq">x<sub>n</sub> = 1 ⁄ (π/2 + 2πn).</div>
+
+  <p>Then <span class="m">x<sub>n</sub> → 0</span>, and</p>
+
+  <div class="eq">f(x<sub>n</sub>) = sin(π/2 + 2πn) = 1.</div>
+
+  <p>So <span class="m">f(x<sub>n</sub>) → 1</span>, whereas <span class="m">f(0) = 0</span>. The limit of
+  <span class="m">f</span> at <span class="m">0</span> either does not exist or differs from the value
+  <span class="m">f(0)</span>; either way, <span class="m">f</span> is not continuous at
+  <span class="m">0</span>.</p>
+
+  <h3>It has the IVP on <span class="m">ℝ</span></h3>
+
+  <p>Let <span class="m">a &lt; b</span> and let <span class="m">γ</span> lie strictly between
+  <span class="m">f(a)</span> and <span class="m">f(b)</span>. We must find
+  <span class="m">c ∈ (a, b)</span> with <span class="m">f(c) = γ</span>.</p>
+
+  <p><em>Case 1: <span class="m">0 ∉ [a, b]</span>.</em> Then <span class="m">f</span> is continuous on
+  <span class="m">[a, b]</span> (because <span class="m">sin(1/x)</span> is continuous away from
+  <span class="m">0</span>), so the IVT applies.</p>
+
+  <p><em>Case 2: <span class="m">0 ∈ [a, b]</span>.</em> At least one of the open intervals
+  <span class="m">(a, 0)</span> or <span class="m">(0, b)</span> is nonempty. Suppose, for instance, that
+  <span class="m">b &gt; 0</span>, so that <span class="m">(0, b) ⊆ (a, b)</span>. As <span class="m">x</span>
+  runs over <span class="m">(0, b)</span>, the quantity <span class="m">1/x</span> runs over
+  <span class="m">(1/b, ∞)</span>, an interval of infinite length. The sine function takes every value in
+  <span class="m">[−1, 1]</span> on any interval of length at least <span class="m">2π</span>, and
+  <span class="m">(1/b, ∞)</span> certainly contains such intervals. Hence</p>
+
+  <div class="eq">f((0, b)) = [−1, 1].</div>
+
+  <p>Now <span class="m">f(a)</span> and <span class="m">f(b)</span> both lie in
+  <span class="m">[−1, 1]</span>, so any <span class="m">γ</span> strictly between them also lies in
+  <span class="m">[−1, 1]</span>. Therefore <span class="m">γ = f(c)</span> for some
+  <span class="m">c ∈ (0, b) ⊆ (a, b)</span>. The same argument works if <span class="m">a &lt; 0</span>, using
+  the interval <span class="m">(a, 0)</span> instead.</p>
+
+  <p>Hence <span class="m">f</span> has the IVP on <span class="m">ℝ</span>, although it is discontinuous at
+  <span class="m">0</span>. This shows that <strong>IVP does not imply continuity</strong>.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 420" role="img"
+         aria-label="Left panel shows a step function that jumps over 0.5; right panel shows sin(1/x) which oscillates infinitely near zero yet attains every intermediate value">
+      <defs>
+        <style>
+          .ax{stroke:#8a7a64;stroke-width:1.4;}
+          .panel{fill:#fdfaf3;stroke:rgba(29,92,99,0.22);stroke-width:1.5;}
+          .lbl{font-family:"Segoe UI",sans-serif;font-size:12.5px;fill:#5b4f3f;}
+          .mat{font-family:Georgia,serif;font-style:italic;font-size:13.5px;}
+          .title{font-family:"Segoe UI",sans-serif;font-size:13.5px;fill:#2c2620;text-anchor:middle;}
+        </style>
+      </defs>
+
+      <!-- ================= PANEL 1: STEP FUNCTION ================= -->
+      <rect class="panel" x="20" y="40" width="340" height="330" rx="10"/>
+
+      <!-- axes -->
+      <line class="ax" x1="40" y1="287" x2="340" y2="287"/>
+      <line class="ax" x1="190" y1="60" x2="190" y2="330"/>
+
+      <!-- step function -->
+      <line x1="40" y1="287" x2="190" y2="287" stroke="#1d5c63" stroke-width="3.2"/>
+      <line x1="190" y1="113" x2="340" y2="113" stroke="#1d5c63" stroke-width="3.2"/>
+      <circle cx="190" cy="287" r="5" fill="#fdfaf3" stroke="#1d5c63" stroke-width="2.5"/>
+      <circle cx="190" cy="113" r="5" fill="#1d5c63"/>
+
+      <!-- dashed gamma line -->
+      <line x1="40" y1="200" x2="340" y2="200" stroke="#c1502e" stroke-width="1.6"
+            stroke-dasharray="7 5"/>
+      <text x="300" y="194" class="lbl" fill="#c1502e">γ = 0.5</text>
+
+      <!-- axis labels -->
+      <text x="180" y="110" class="lbl" text-anchor="end">1</text>
+      <text x="180" y="292" class="lbl" text-anchor="end">0</text>
+      <text x="50" y="78" class="mat" fill="#1d5c63">f(x)</text>
+
+      <!-- jump marker -->
+      <text x="200" y="240" class="lbl" fill="#1d5c63">jump</text>
+      <line x1="196" y1="245" x2="190" y2="270" stroke="#1d5c63" stroke-width="1"
+            stroke-dasharray="3 3"/>
+
+      <!-- title -->
+      <text x="190" y="358" class="title">Step function: IVP fails</text>
+
+      <!-- ================= PANEL 2: SIN(1/X) ================= -->
+      <rect class="panel" x="400" y="40" width="340" height="330" rx="10"/>
+
+      <!-- envelope lines y = ±1 -->
+      <line x1="420" y1="100" x2="720" y2="100" stroke="#c1502e" stroke-width="1.4"
+            stroke-dasharray="6 5" opacity="0.5"/>
+      <line x1="420" y1="300" x2="720" y2="300" stroke="#c1502e" stroke-width="1.4"
+            stroke-dasharray="6 5" opacity="0.5"/>
+
+      <!-- axes -->
+      <line class="ax" x1="420" y1="200" x2="720" y2="200"/>
+      <line class="ax" x1="570" y1="60" x2="570" y2="330"/>
+
+      <!-- left half of the curve -->
+      <polyline points="420,291 435,279 450,260 465,229 480,181 489,147 495,124 501,107 507,100 510,104 516,133 522,197 525,237 528,276 531,299 534,289 537,233 540,146 543,101 546,193 549,299 552,118 555,291 558,187 561,294 564,174"
+                fill="none" stroke="#0f766e" stroke-width="2.2" stroke-linejoin="round"/>
+
+      <!-- right half of the curve -->
+      <polyline points="576,226 579,106 582,213 585,109 588,282 591,101 594,207 597,299 600,254 603,167 606,111 609,101 612,124 615,163 618,203 624,267 630,296 633,300 639,293 645,276 651,253 660,219 675,171 690,140 705,121 720,109"
+                fill="none" stroke="#0f766e" stroke-width="2.2" stroke-linejoin="round"/>
+
+      <!-- the point (0,0) -->
+      <circle cx="570" cy="200" r="5.5" fill="#c1502e" stroke="#fdfaf3" stroke-width="2"/>
+      <text x="580" y="194" class="lbl" fill="#c1502e">(0, 0)</text>
+
+      <!-- labels -->
+      <text x="700" y="92" class="mat" fill="#c1502e">y = 1</text>
+      <text x="694" y="318" class="mat" fill="#c1502e">y = −1</text>
+      <text x="620" y="78" class="mat" fill="#0f766e">y = sin(1/x)</text>
+
+      <!-- title -->
+      <text x="570" y="358" class="title">Oscillates infinitely near 0 — IVP holds</text>
+
+      <!-- overall caption inside svg -->
+      <text x="380" y="400" class="lbl" text-anchor="middle" fill="#8a7860">
+        Left: a value is skipped. Right: every level in [−1, 1] is attained, yet the function is discontinuous at 0.
+      </text>
+    </svg>
+    <figcaption>
+      <b>Two contrasting behaviours.</b> The step function (left) jumps over
+      <span class="m">γ = 0.5</span>, so it does not have the IVP. The function
+      <span class="m">sin(1/x)</span> with <span class="m">f(0) = 0</span> (right) oscillates ever more rapidly
+      as <span class="m">x → 0</span>, but it still attains every value in <span class="m">[−1, 1]</span> on
+      every interval containing <span class="m">0</span> — even though it is discontinuous at the origin.
+    </figcaption>
+  </figure>
+</section>
+
+<hr class="sep">
+
+<!-- ============ DARBOUX ============ -->
+<section id="darboux">
+  <h2>5. Derivatives Have the IVP: Darboux's Theorem</h2>
+
+  <p>The next source of the IVP is differentiation. Even though a derivative need not be continuous, it can
+  never jump over a value.</p>
+
+  <div class="box key">
+    <h4>Theorem (Darboux, 1875)</h4>
+    <p style="margin-bottom:0">Let <span class="m">f</span> be differentiable on an open interval containing
+    <span class="m">[a, b]</span>. If <span class="m">γ</span> lies strictly between
+    <span class="m">f′(a)</span> and <span class="m">f′(b)</span>, then there exists
+    <span class="m">c ∈ (a, b)</span> with <span class="m">f′(c) = γ</span>. In other words,
+    <span class="m">f′</span> has the intermediate value property on that interval.</p>
+  </div>
+
+  <p><strong>Proof.</strong> Assume first that</p>
+
+  <div class="eq">f′(a) &lt; γ &lt; f′(b).</div>
+
+  <p>Define a new function <span class="m">g</span> on <span class="m">[a, b]</span> by</p>
+
+  <div class="eq">g(x) = f(x) − γx.</div>
+
+  <p>Since <span class="m">f</span> is differentiable, it is continuous, so <span class="m">g</span> is
+  continuous on <span class="m">[a, b]</span>. Its derivatives at the endpoints are</p>
+
+  <div class="eq">g′(a) = f′(a) − γ &lt; 0, &nbsp;&nbsp;&nbsp; g′(b) = f′(b) − γ &gt; 0.</div>
+
+  <p>By the extreme value theorem, <span class="m">g</span> attains a minimum at some point
+  <span class="m">c ∈ [a, b]</span>. We show that <span class="m">c</span> is neither
+  <span class="m">a</span> nor <span class="m">b</span>.</p>
+
+  <ul>
+    <li><em>Why not <span class="m">a</span>?</em> Since <span class="m">g′(a) &lt; 0</span>,
+    <div class="eq small" style="margin:12px 0">lim<sub>h→0⁺</sub> ( g(a + h) − g(a) ) ⁄ h &lt; 0.</div>
+    So for all sufficiently small positive <span class="m">h</span> we have
+    <span class="m">g(a + h) &lt; g(a)</span>. Hence <span class="m">a</span> is not a minimum point.</li>
+
+    <li><em>Why not <span class="m">b</span>?</em> Since <span class="m">g′(b) &gt; 0</span>,
+    <div class="eq small" style="margin:12px 0">lim<sub>h→0⁻</sub> ( g(b + h) − g(b) ) ⁄ h &gt; 0.</div>
+    For all sufficiently small negative <span class="m">h</span>, the quotient is positive; since
+    <span class="m">h &lt; 0</span>, this forces <span class="m">g(b + h) &lt; g(b)</span>. Hence
+    <span class="m">b</span> is not a minimum point.</li>
+  </ul>
+
+  <p>Therefore <span class="m">c ∈ (a, b)</span>. Since <span class="m">g</span> has an interior minimum at
+  <span class="m">c</span> and is differentiable there, we must have <span class="m">g′(c) = 0</span>. Thus</p>
+
+  <div class="eq">f′(c) − γ = 0, &nbsp;&nbsp; i.e. &nbsp;&nbsp; f′(c) = γ.</div>
+
+  <p>The case <span class="m">f′(a) &gt; γ &gt; f′(b)</span> follows by applying the argument above to
+  <span class="m">−f</span> (or equivalently, to <span class="m">−g</span>). <span class="qed">∎</span></p>
+
+  <div class="box">
+    <h4>A derivative that is discontinuous but still has the IVP</h4>
+    <p>Let</p>
+    <div class="eq small" style="margin:12px 0">f(x) = x² sin(1/x) &nbsp; for x ≠ 0, &nbsp;&nbsp; f(0) = 0.</div>
+    <p>One checks that <span class="m">f</span> is differentiable everywhere, with
+    <span class="m">f′(0) = 0</span> and</p>
+    <div class="eq small" style="margin:12px 0">f′(x) = 2x sin(1/x) − cos(1/x) &nbsp; for x ≠ 0.</div>
+    <p style="margin-bottom:0">As <span class="m">x → 0</span>, the term <span class="m">cos(1/x)</span>
+    oscillates between <span class="m">−1</span> and <span class="m">1</span>, so
+    <span class="m">f′</span> has no limit at <span class="m">0</span>: the derivative is discontinuous there.
+    Yet by Darboux's theorem, <span class="m">f′</span> has the IVP on every interval. This is a striking
+    illustration that the IVP is strictly weaker than continuity.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ RIEMANN INTEGRAL ============ -->
+<section id="integral">
+  <h2>6. Riemann Integrable Functions and the Continuity of <span class="m">F</span></h2>
+
+  <p>Our final source of the IVP comes from integration. Given a Riemann integrable function
+  <span class="m">f</span> on <span class="m">[a, b]</span>, define its integral function by</p>
+
+  <div class="eq">
+    F(x) = ∫<sub>a</sub><sup>x</sup> f(t) dt, &nbsp;&nbsp; x ∈ [a, b].
+  </div>
+
+  <p>Even if <span class="m">f</span> is very badly behaved — discontinuous at infinitely many points, for
+  instance — as long as it is Riemann integrable, the function <span class="m">F</span> turns out to be
+  continuous.</p>
+
+  <div class="box key">
+    <h4>Theorem (continuity of the integral function)</h4>
+    <p style="margin-bottom:0">Let <span class="m">f</span> be Riemann integrable on <span class="m">[a, b]</span>.
+    Then the function <span class="m">F(x) = ∫<sub>a</sub><sup>x</sup> f(t) dt</span> is continuous on
+    <span class="m">[a, b]</span>. Consequently, by the Intermediate Value Theorem,
+    <span class="m">F</span> has the IVP on <span class="m">[a, b]</span>.</p>
+  </div>
+
+  <p><strong>Proof.</strong> Since <span class="m">f</span> is Riemann integrable on
+  <span class="m">[a, b]</span>, it is bounded there: there exists <span class="m">M ≥ 0</span> such that</p>
+
+  <div class="eq">| f(t) | ≤ M &nbsp;&nbsp; for all t ∈ [a, b].</div>
+
+  <p>Let <span class="m">x, y ∈ [a, b]</span> with <span class="m">x &lt; y</span>. By additivity of the
+  integral,</p>
+
+  <div class="eq">
+    F(y) − F(x) = ∫<sub>a</sub><sup>y</sup> f(t) dt − ∫<sub>a</sub><sup>x</sup> f(t) dt
+    = ∫<sub>x</sub><sup>y</sup> f(t) dt.
+  </div>
+
+  <p>Taking absolute values and using the standard estimate for integrals,</p>
+
+  <div class="eq">
+    | F(y) − F(x) | = | ∫<sub>x</sub><sup>y</sup> f(t) dt |
+    ≤ ∫<sub>x</sub><sup>y</sup> | f(t) | dt
+    ≤ M (y − x) = M | y − x |.
+  </div>
+
+  <p>The case <span class="m">y &lt; x</span> is symmetric, and the case <span class="m">x = y</span> is
+  trivial. Hence</p>
+
+  <div class="eq">| F(y) − F(x) | ≤ M | y − x | &nbsp;&nbsp; for all x, y ∈ [a, b].</div>
+
+  <p>Now let <span class="m">ε &gt; 0</span>. If <span class="m">M &gt; 0</span>, take
+  <span class="m">δ = ε / M</span>; if <span class="m">M = 0</span>, then <span class="m">F</span> is constant
+  and any <span class="m">δ</span> works. Then for <span class="m">x, y ∈ [a, b]</span>,</p>
+
+  <div class="eq">
+    | x − y | &lt; δ &nbsp;⟹&nbsp; | F(y) − F(x) | ≤ M | y − x | &lt; M · (ε / M) = ε.
+  </div>
+
+  <p>So <span class="m">F</span> is continuous on <span class="m">[a, b]</span>. (The estimate actually shows
+  that <span class="m">F</span> is uniformly continuous there.) By the Intermediate Value Theorem,
+  <span class="m">F</span> has the IVP on <span class="m">[a, b]</span>. <span class="qed">∎</span></p>
+
+  <div class="box">
+    <h4>Remarks</h4>
+    <ul style="margin-bottom:0">
+      <li>Continuity of <span class="m">F</span> requires only that <span class="m">f</span> be Riemann
+      integrable — not that <span class="m">f</span> be continuous. The boundedness of
+      <span class="m">f</span>, which is automatic for Riemann integrable functions, is what drives the
+      proof.</li>
+      <li>If <span class="m">f</span> happens to be continuous at a point <span class="m">x₀</span>, then the
+      Fundamental Theorem of Calculus gives the stronger conclusion that <span class="m">F</span> is
+      differentiable at <span class="m">x₀</span> with <span class="m">F′(x₀) = f(x₀)</span>. But continuity of
+      <span class="m">F</span> itself needs no such hypothesis.</li>
+      <li>The estimate <span class="m">|F(y) − F(x)| ≤ M|y − x|</span> is exactly the kind of bound that
+      guarantees uniform continuity. So the integral function is not merely continuous: it is uniformly
+      continuous on <span class="m">[a, b]</span>.</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ SUMMARY TABLE ============ -->
+<section id="summary">
+  <h2>7. Summary</h2>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Hypothesis on <span class="m">f</span></th>
+          <th>Conclusion</th>
+          <th>Name / Remark</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Continuous on <span class="m">[a, b]</span></td>
+          <td><span class="m">f</span> has the IVP on <span class="m">[a, b]</span></td>
+          <td>Intermediate Value Theorem</td>
+        </tr>
+        <tr>
+          <td>Differentiable on an open interval containing <span class="m">[a, b]</span></td>
+          <td><span class="m">f′</span> has the IVP on <span class="m">[a, b]</span></td>
+          <td>Darboux's Theorem (1875)</td>
+        </tr>
+        <tr>
+          <td>Riemann integrable on <span class="m">[a, b]</span></td>
+          <td><span class="m">F(x) = ∫<sub>a</sub><sup>x</sup> f(t) dt</span> is continuous, hence has the
+          IVP</td>
+          <td>Fundamental Theorem of Calculus, continuity part</td>
+        </tr>
+        <tr>
+          <td>Has the IVP on <span class="m">ℝ</span></td>
+          <td>Does <em>not</em> imply continuity</td>
+          <td>Example: <span class="m">sin(1/x)</span> with <span class="m">f(0) = 0</span></td>
+        </tr>
+        <tr>
+          <td>Discontinuous at a point</td>
+          <td>May still have the IVP</td>
+          <td>Same example; also derivatives of differentiable functions</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The logical relationships can be summarised in a single line:</p>
+
+  <div class="eq">
+    continuous &nbsp;⟹&nbsp; IVP, &nbsp;&nbsp;&nbsp; differentiable &nbsp;⟹&nbsp; derivative has IVP,
+    &nbsp;&nbsp;&nbsp; Riemann integrable &nbsp;⟹&nbsp; integral function is continuous &nbsp;⟹&nbsp; IVP,
+  </div>
+
+  <p>and none of the arrows pointing towards the IVP can be reversed.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ CONCLUSION ============ -->
+<section id="conclusion">
+  <h2>8. Conclusion</h2>
+
+  <p>The intermediate value property captures a simple geometric idea: a function cannot skip over a horizontal
+  level that lies between two of its values. Continuity is the most familiar way to guarantee this, but it is
+  not the only way.</p>
+
+  <p>The key points of this article are:</p>
+
+  <ul>
+    <li><strong>Definition.</strong> <span class="m">f</span> has the IVP on an interval
+    <span class="m">I</span> if, whenever <span class="m">a &lt; b</span> in <span class="m">I</span> and
+    <span class="m">γ</span> lies between <span class="m">f(a)</span> and <span class="m">f(b)</span>, there is
+    <span class="m">c ∈ (a, b)</span> with <span class="m">f(c) = γ</span>.</li>
+
+    <li><strong>Continuous ⟹ IVP.</strong> This is the Intermediate Value Theorem, proved by a least-upper-bound
+    argument on the set <span class="m">{x : f(x) &lt; γ}</span>.</li>
+
+    <li><strong>IVP does not imply continuous.</strong> The function
+    <span class="m">f(x) = sin(1/x)</span> for <span class="m">x ≠ 0</span>, with
+    <span class="m">f(0) = 0</span>, is discontinuous at <span class="m">0</span> yet attains every intermediate
+    value on every interval.</li>
+
+    <li><strong>Differentiable ⟹ derivative has IVP.</strong> This is Darboux's theorem. The proof applies the
+    extreme value theorem to <span class="m">g(x) = f(x) − γx</span> and shows that the minimum cannot occur at
+    either endpoint.</li>
+
+    <li><strong>Riemann integrable ⟹ integral function is continuous.</strong> Boundedness of
+    <span class="m">f</span> gives the estimate
+    <span class="m">|F(y) − F(x)| ≤ M|y − x|</span>, which yields continuity (indeed uniform continuity) of
+    <span class="m">F</span>. By the IVT, <span class="m">F</span> then has the IVP.</li>
+  </ul>
+
+  <p>Thus the intermediate value property sits at a curious crossroads: it is guaranteed by continuity, by
+  differentiability (for the derivative), and by Riemann integrability (for the integral function), yet it is
+  strictly weaker than continuity. Recognising this distinction is a first step towards the wilder corners of
+  real analysis, where functions oscillate without limit yet still manage to respect the simple rule that no
+  level between two values may be skipped.</p>
+</section>
+
+<footer>
+  Expository article on the Intermediate Value Property &middot; Written for students of real analysis
+</footer>
+
+</div>
+</body>
+</html>
