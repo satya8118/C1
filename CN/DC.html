@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Differential Quotient — Interactive Notes</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  :root {
+    --bg: #000000;
+    --bg-panel: #0a0a0a;
+    --bg-panel2: #111111;
+    --fg: #ffffff;
+    --yellow: #ffd93d;
+    --orange: #ff9f1c;
+    --lime: #b6ff3d;
+    --cyan: #4dd0e1;
+    --pink: #ff6ec7;
+    --muted: #b0b0b0;
+    --border: #2a2a2a;
+    --border-bright: #3a3a3a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  header.hero {
+    text-align: center;
+    padding: 3.5rem 1.5rem 2.5rem;
+    background: linear-gradient(180deg, #000000 0%, #0e0e0e 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  header.hero h1 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    letter-spacing: -0.01em;
+    color: var(--yellow);
+    text-shadow: 0 0 18px rgba(255, 217, 61, 0.25);
+  }
+  header.hero p.subtitle {
+    margin: 0;
+    color: var(--cyan);
+    font-style: italic;
+    font-size: 1.1rem;
+  }
+  header.hero p.author {
+    margin: 1rem 0 0;
+    color: var(--pink);
+    font-size: 0.9rem;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+  }
+
+  nav.toc {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    justify-content: center;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(6px);
+    z-index: 10;
+  }
+  nav.toc a {
+    color: var(--lime);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--lime);
+    padding-bottom: 1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  nav.toc a:hover {
+    color: var(--yellow);
+    border-bottom-color: var(--yellow);
+    text-shadow: 0 0 8px rgba(255, 217, 61, 0.5);
+  }
+
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 6rem;
+  }
+  section { margin: 3.5rem 0; }
+  h2 {
+    font-size: 1.65rem;
+    color: var(--yellow);
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 0.3rem;
+    margin-top: 3rem;
+    scroll-margin-top: 4rem;
+  }
+  h3 {
+    font-size: 1.2rem;
+    color: var(--lime);
+    margin-top: 2rem;
+  }
+  p { margin: 0.9rem 0; color: var(--fg); }
+
+  strong { color: var(--yellow); }
+  em { color: var(--cyan); }
+
+  .formula {
+    background: var(--bg-panel2);
+    border-left: 3px solid var(--cyan);
+    padding: 0.9rem 1.2rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    overflow-x: auto;
+    color: var(--cyan);
+  }
+
+  .theorem, .proof, .note, .comment {
+    margin: 1.2rem 0;
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    background: var(--bg-panel);
+  }
+  .theorem {
+    border-left: 4px solid var(--yellow);
+  }
+  .proof {
+    border-left: 4px solid var(--cyan);
+  }
+  .note {
+    border-left: 4px solid var(--lime);
+  }
+  .comment {
+    border-left: 4px solid var(--orange);
+  }
+  .theorem::before {
+    content: "Definition";
+    display: block;
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+    color: var(--yellow);
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+  }
+  .proof::before {
+    content: "Derivation.";
+    font-style: italic;
+    font-weight: bold;
+    color: var(--cyan);
+    margin-right: 0.4rem;
+  }
+  .note::before {
+    content: "Note.";
+    font-style: italic;
+    font-weight: bold;
+    color: var(--lime);
+    margin-right: 0.4rem;
+  }
+  .comment::before {
+    content: "Comment.";
+    font-style: italic;
+    font-weight: bold;
+    color: var(--orange);
+    margin-right: 0.4rem;
+  }
+
+  .comment p { color: var(--fg); }
+  .comment em { color: var(--pink); font-style: italic; }
+  .proof p { color: var(--fg); }
+  .note p { color: var(--fg); }
+
+  table {
+    border-collapse: collapse;
+    margin: 1rem 0;
+    width: 100%;
+    font-size: 0.95rem;
+    background: var(--bg-panel);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  table th, table td {
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+  }
+  table th {
+    background: #1a1a1a;
+    font-weight: bold;
+    color: var(--yellow);
+    font-variant: small-caps;
+    letter-spacing: 0.03em;
+    border-bottom: 2px solid var(--orange);
+  }
+  table tr:last-child td { border-bottom: none; }
+  table tr:hover { background: #141414; }
+
+  .demo {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-bright);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 0 20px rgba(77, 208, 225, 0.06);
+  }
+  .demo canvas {
+    display: block;
+    width: 100%;
+    height: 320px;
+    border-radius: 6px;
+    background: #000000;
+  }
+  .demo .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 0.8rem;
+    font-size: 0.92rem;
+  }
+  .demo .controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--fg);
+  }
+  .demo .controls input[type=range] { width: 160px; accent-color: var(--pink); }
+  .demo .controls button {
+    background: var(--orange);
+    color: #000;
+    border: none;
+    padding: 0.45rem 0.9rem;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .demo .controls button:hover {
+    background: var(--yellow);
+    box-shadow: 0 0 12px rgba(255, 217, 61, 0.5);
+  }
+  .demo .readout {
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  .demo .readout strong { color: var(--lime); }
+  .demo .caption {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 0.6rem 0 0;
+  }
+
+  details.qa {
+    margin: 0.8rem 0;
+    padding: 0.8rem 1rem;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  details.qa summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--cyan);
+    padding: 0.2rem 0;
+    transition: color 0.2s;
+  }
+  details.qa summary:hover { color: var(--yellow); }
+  details.qa[open] summary {
+    margin-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+  }
+  details.qa .answer {
+    color: var(--lime);
+    font-style: italic;
+  }
+
+  .qnum {
+    display: inline-block;
+    background: var(--pink);
+    color: #000;
+    font-weight: bold;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-family: sans-serif;
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .highlight-box {
+    background: linear-gradient(135deg, #1a1400 0%, #2a2000 100%);
+    border: 2px solid var(--yellow);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--yellow);
+    box-shadow: 0 0 22px rgba(255, 217, 61, 0.12);
+  }
+  .highlight-box .MathJax { color: var(--yellow) !important; }
+
+  mjx-container { color: inherit; }
+
+  /* Explicit color styling for math in different contexts */
+  .formula mjx-container { color: var(--cyan); }
+  .proof mjx-container { color: var(--fg); }
+  .comment mjx-container { color: var(--fg); }
+  .highlight-box mjx-container { color: var(--yellow); }
+  table mjx-container { color: var(--fg); }
+  table th mjx-container { color: var(--yellow); }
+  h2 mjx-container, h3 mjx-container { color: inherit; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>The Differential Quotient</h1>
+  <p class="subtitle">Examples, closed forms, and the passage to the derivative</p>
+  <p class="author">Interactive notes for first-year undergraduates</p>
+</header>
+
+<nav class="toc">
+  <a href="#definition">Definition</a>
+  <a href="#linear">3x+2</a>
+  <a href="#quadratic">x²</a>
+  <a href="#cubic">x³</a>
+  <a href="#quartic">x⁴</a>
+  <a href="#power">xⁿ</a>
+  <a href="#reciprocal">1/x</a>
+  <a href="#recip2">1/x²</a>
+  <a href="#sqrt">√x</a>
+  <a href="#exp">eˣ</a>
+  <a href="#log">ln x</a>
+  <a href="#sin">sin x</a>
+  <a href="#cos">cos x</a>
+  <a href="#abs">|x|</a>
+  <a href="#summary">Summary</a>
+  <a href="#beauty">Why beautiful</a>
+  <a href="#assessment">Self-assessment</a>
+</nav>
+
+<main>
+
+<!-- =========================================================== -->
+<section id="definition">
+  <h2>1. The object of study</h2>
+
+  <p>
+    For a function $f$ and two distinct points $a \neq b$, the
+    <strong>differential quotient</strong> is
+  </p>
+
+  <div class="formula">
+    $$ \frac{f(b)-f(a)}{b-a}. $$
+  </div>
+
+  <p>
+    It is the <strong>slope of the secant line</strong> through the two points
+    $\bigl(a,f(a)\bigr)$ and $\bigl(b,f(b)\bigr)$. On the picture, the
+    horizontal leg is $b-a$ and the vertical leg is $f(b)-f(a)$.
+  </p>
+
+  <p>
+    The central idea of differential calculus is the passage
+  </p>
+
+  <div class="formula">
+    $$ \frac{f(b)-f(a)}{b-a} \;\xrightarrow[\;b\to a\;]{}\; f'(a). $$
+  </div>
+
+  <p>
+    The secant rotates into the tangent. The quotient is a two-point,
+    algebraic object; its limit is the local, infinitesimal object we call
+    the derivative.
+  </p>
+
+  <div class="demo">
+    <canvas id="c-demo"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-demo-a" min="-1.5" max="1.5" value="0.5" step="0.05">
+        <span class="readout" id="c-demo-a-out">0.50</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-demo-b" min="-1.5" max="3" value="2.5" step="0.05">
+        <span class="readout" id="c-demo-b-out">2.50</span>
+      </label>
+      <button id="c-demo-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-demo-slope">—</strong></span>
+    </div>
+    <p class="caption">
+      The blue line is the secant through $(a, f(a))$ and $(b, f(b))$.
+      The purple dashed line is the tangent at $a$. As $b \to a$, the secant
+      turns into the tangent.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="linear">
+  <h2>2. Linear function $f(x) = 3x + 2$</h2>
+
+  <div class="proof">
+    $$ \frac{f(b)-f(a)}{b-a}
+       = \frac{(3b+2)-(3a+2)}{b-a}
+       = \frac{3(b-a)}{b-a} = 3. $$
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>$a$</th><th>$b$</th><th>$b-a$</th>
+        <th>$f(b)-f(a)$</th><th>quotient</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>$0$</td><td>$2$</td><td>$2$</td><td>$6$</td><td>$3$</td></tr>
+      <tr><td>$1$</td><td>$4$</td><td>$3$</td><td>$9$</td><td>$3$</td></tr>
+      <tr><td>$2$</td><td>$5$</td><td>$3$</td><td>$9$</td><td>$3$</td></tr>
+      <tr><td>$-1$</td><td>$1$</td><td>$2$</td><td>$6$</td><td>$3$</td></tr>
+    </tbody>
+  </table>
+
+  <div class="demo">
+    <canvas id="c-linear"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-linear-a" min="-1" max="4" value="1" step="0.05">
+        <span class="readout" id="c-linear-a-out">1.00</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-linear-b" min="-1" max="5" value="4" step="0.05">
+        <span class="readout" id="c-linear-b-out">4.00</span>
+      </label>
+      <button id="c-linear-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-linear-slope">—</strong></span>
+    </div>
+  </div>
+
+  <div class="comment">
+    The quotient is <strong>constant</strong>: a line has the same slope
+    everywhere. Notice that the secant line through any two points on a line
+    <em>is</em> the line itself. So the secant and the tangent coincide.
+    This is why the algebra collapses to the number $3$.
+  </div>
+
+  <div class="formula">
+    $$ \lim_{b\to a}\frac{f(b)-f(a)}{b-a} = 3 = f'(a). $$
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="quadratic">
+  <h2>3. Quadratic $f(x) = x^{2}$</h2>
+
+  <div class="proof">
+    $$ \frac{f(b)-f(a)}{b-a}
+       = \frac{b^{2}-a^{2}}{b-a}
+       = \frac{(b-a)(a+b)}{b-a}
+       = a+b. $$
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>$a$</th><th>$b$</th><th>$b-a$</th>
+        <th>$f(b)-f(a)$</th><th>quotient</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>$1$</td><td>$4$</td><td>$3$</td><td>$15$</td><td>$5$</td></tr>
+      <tr><td>$2$</td><td>$5$</td><td>$3$</td><td>$21$</td><td>$7$</td></tr>
+      <tr><td>$-1$</td><td>$3$</td><td>$4$</td><td>$8$</td><td>$2$</td></tr>
+      <tr><td>$0$</td><td>$2$</td><td>$2$</td><td>$4$</td><td>$2$</td></tr>
+    </tbody>
+  </table>
+
+  <div class="demo">
+    <canvas id="c-quad"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-quad-a" min="-2" max="3" value="1" step="0.05">
+        <span class="readout" id="c-quad-a-out">1.00</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-quad-b" min="-2" max="5" value="4" step="0.05">
+        <span class="readout" id="c-quad-b-out">4.00</span>
+      </label>
+      <button id="c-quad-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-quad-slope">—</strong></span>
+    </div>
+  </div>
+
+  <div class="comment">
+    The quotient is a <strong>symmetric linear function</strong> of $a$ and $b$.
+    Symmetric because swapping $a$ and $b$ gives the same $a+b$; linear because
+    it is of first degree in each variable. Geometrically, the secant slope on
+    a parabola grows as you move the interval to the right. Only when the two
+    points coincide do we get the tangent slope:
+    $$ \lim_{b\to a}(a+b) = 2a = f'(a). $$
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="cubic">
+  <h2>4. Cubic $f(x) = x^{3}$</h2>
+
+  <div class="proof">
+    $$ \frac{b^{3}-a^{3}}{b-a} = a^{2}+ab+b^{2}. $$
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>$a$</th><th>$b$</th><th>$b-a$</th>
+        <th>$f(b)-f(a)$</th><th>quotient</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>$1$</td><td>$2$</td><td>$1$</td><td>$7$</td><td>$7$</td></tr>
+      <tr><td>$1$</td><td>$3$</td><td>$2$</td><td>$26$</td><td>$13$</td></tr>
+      <tr><td>$2$</td><td>$4$</td><td>$2$</td><td>$56$</td><td>$28$</td></tr>
+      <tr><td>$0$</td><td>$2$</td><td>$2$</td><td>$8$</td><td>$4$</td></tr>
+    </tbody>
+  </table>
+
+  <div class="demo">
+    <canvas id="c-cubic"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-cubic-a" min="-1" max="2.5" value="1" step="0.05">
+        <span class="readout" id="c-cubic-a-out">1.00</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-cubic-b" min="-1" max="3" value="2" step="0.05">
+        <span class="readout" id="c-cubic-b-out">2.00</span>
+      </label>
+      <button id="c-cubic-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-cubic-slope">—</strong></span>
+    </div>
+  </div>
+
+  <div class="comment">
+    The quotient is a <strong>symmetric homogeneous polynomial</strong> of
+    degree $2$ in $a,b$. Homogeneous because if you scale both $a$ and $b$ by
+    a factor $t$, the quotient scales by $t^{2}$ — matching the fact that
+    $x^{3}$ itself scales by $t^{3}$ and the quotient has one fewer power.
+    As $b\to a$, all three terms tend to $a^{2}$, and
+    $$ \lim_{b\to a}\bigl(a^{2}+ab+b^{2}\bigr) = 3a^{2} = f'(a). $$
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="quartic">
+  <h2>5. Quartic $f(x) = x^{4}$</h2>
+
+  <div class="proof">
+    $$ \frac{b^{4}-a^{4}}{b-a}
+       = a^{3}+a^{2}b+ab^{2}+b^{3}. $$
+  </div>
+
+  <p>
+    As $b\to a$, the four terms each tend to $a^{3}$, so
+    $$ \lim_{b\to a}\bigl(a^{3}+a^{2}b+ab^{2}+b^{3}\bigr) = 4a^{3} = f'(a). $$
+  </p>
+
+  <div class="comment">
+    The pattern is now unmistakable: the quotient has exactly as many terms as
+    the degree, and in the limit each term contributes the same amount
+    $a^{\,n-1}$.
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="power">
+  <h2>6. General power $f(x) = x^{n}$</h2>
+
+  <div class="formula">
+    $$ \frac{b^{n}-a^{n}}{b-a}
+       = a^{n-1}+a^{n-2}b+a^{n-3}b^{2}+\cdots+ab^{n-2}+b^{n-1}. $$
+  </div>
+
+  <p>
+    There are exactly $n$ terms, each homogeneous of degree $n-1$. As
+    $b\to a$, every term tends to $a^{n-1}$, so
+  </p>
+
+  <div class="highlight-box">
+    $$ \lim_{b\to a}\frac{b^{n}-a^{n}}{b-a} = n\,a^{n-1}. $$
+  </div>
+
+  <p>
+    This single computation gives the derivative of every monomial, and by
+    linearity, of every polynomial. It is the algebraic heart of the
+    <strong>power rule</strong>.
+  </p>
+</section>
+
+<!-- =========================================================== -->
+<section id="reciprocal">
+  <h2>7. Reciprocal $f(x) = \dfrac{1}{x}$</h2>
+
+  <p>For $a,b \neq 0$,</p>
+
+  <div class="proof">
+    $$ \frac{f(b)-f(a)}{b-a}
+       = \frac{\dfrac{1}{b}-\dfrac{1}{a}}{b-a}
+       = \frac{\dfrac{a-b}{ab}}{b-a}
+       = \frac{-(b-a)}{ab\,(b-a)}
+       = -\frac{1}{ab}. $$
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>$a$</th><th>$b$</th><th>$b-a$</th>
+        <th>$f(b)-f(a)$</th><th>quotient</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>$1$</td><td>$2$</td><td>$1$</td><td>$-\tfrac12$</td><td>$-\tfrac12$</td></tr>
+      <tr><td>$1$</td><td>$4$</td><td>$3$</td><td>$-\tfrac34$</td><td>$-\tfrac14$</td></tr>
+      <tr><td>$2$</td><td>$5$</td><td>$3$</td><td>$-\tfrac{3}{10}$</td><td>$-\tfrac{1}{10}$</td></tr>
+      <tr><td>$-1$</td><td>$1$</td><td>$2$</td><td>$-2$</td><td>$-1$</td></tr>
+    </tbody>
+  </table>
+
+  <div class="demo">
+    <canvas id="c-rec"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-rec-a" min="0.4" max="4" value="1" step="0.05">
+        <span class="readout" id="c-rec-a-out">1.00</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-rec-b" min="0.4" max="5" value="3" step="0.05">
+        <span class="readout" id="c-rec-b-out">3.00</span>
+      </label>
+      <button id="c-rec-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-rec-slope">—</strong></span>
+    </div>
+  </div>
+
+  <div class="comment">
+    <strong>Why is the slope always negative?</strong> Look at the algebraic
+    formula: $-1/(ab)$. On the positive side, both $a,b > 0$, so $ab > 0$ and
+    the quotient is negative. On the negative side, both $a,b < 0$, so again
+    $ab > 0$ and the quotient is negative. <em>Only if $a$ and $b$ straddle
+    zero</em> does $ab$ become negative — but then $1/x$ has a vertical
+    asymptote between them, and the secant becomes meaningless.
+
+    <p>
+      Geometrically: on each branch of the hyperbola, as $x$ increases, $y$
+      decreases. The graph goes down, so the secant slope is always negative.
+      The algebra $-1/(ab)$ encodes this fact perfectly.
+    </p>
+
+    <p>
+      As $b\to a$, the quotient tends to
+      $$ \lim_{b\to a}\left(-\frac{1}{ab}\right) = -\frac{1}{a^{2}}, $$
+      so $(1/x)' = -1/x^{2}$.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="recip2">
+  <h2>8. Reciprocal square $f(x) = \dfrac{1}{x^{2}}$</h2>
+
+  <div class="proof">
+    $$ \frac{1/b^{2}-1/a^{2}}{b-a}
+       = \frac{a^{2}-b^{2}}{a^{2}b^{2}(b-a)}
+       = \frac{-(b-a)(a+b)}{a^{2}b^{2}(b-a)}
+       = -\frac{a+b}{a^{2}b^{2}}. $$
+  </div>
+
+  <p>As $b\to a$,</p>
+
+  <div class="formula">
+    $$ \lim_{b\to a}\left(-\frac{a+b}{a^{2}b^{2}}\right)
+       = -\frac{2a}{a^{4}} = -\frac{2}{a^{3}}. $$
+  </div>
+
+  <p>So $(1/x^{2})' = -2/x^{3}$.</p>
+
+  <div class="comment">
+    Again the quotient is negative whenever $a$ and $b$ have the same sign —
+    the function is decreasing on each branch. The exponent rule
+    $(x^{p})' = p\,x^{p-1}$ extends from integers to $p = -2$.
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="sqrt">
+  <h2>9. Square root $f(x) = \sqrt{x}$, $a > 0$</h2>
+
+  <p>Rationalize the numerator:</p>
+
+  <div class="proof">
+    $$ \frac{\sqrt b-\sqrt a}{b-a}
+       = \frac{\sqrt b-\sqrt a}{(\sqrt b-\sqrt a)(\sqrt b+\sqrt a)}
+       = \frac{1}{\sqrt a+\sqrt b}. $$
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>$a$</th><th>$b$</th><th>$b-a$</th>
+        <th>$f(b)-f(a)$</th><th>quotient</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>$1$</td><td>$4$</td><td>$3$</td><td>$1$</td><td>$\tfrac13$</td></tr>
+      <tr><td>$1$</td><td>$9$</td><td>$8$</td><td>$2$</td><td>$\tfrac14$</td></tr>
+      <tr><td>$4$</td><td>$9$</td><td>$5$</td><td>$1$</td><td>$\tfrac15$</td></tr>
+    </tbody>
+  </table>
+
+  <div class="demo">
+    <canvas id="c-sqrt"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-sqrt-a" min="0.3" max="6" value="1" step="0.05">
+        <span class="readout" id="c-sqrt-a-out">1.00</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-sqrt-b" min="0.3" max="8" value="4" step="0.05">
+        <span class="readout" id="c-sqrt-b-out">4.00</span>
+      </label>
+      <button id="c-sqrt-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-sqrt-slope">—</strong></span>
+    </div>
+  </div>
+
+  <div class="comment">
+    The quotient is <strong>symmetric</strong> in $a,b$ and
+    <strong>homogeneous of degree $-1/2$</strong> — matching the exponent
+    $1/2$. As $b\to a$,
+    $$ \lim_{b\to a}\frac{1}{\sqrt a+\sqrt b} = \frac{1}{2\sqrt a}, $$
+    so $(\sqrt{x})' = 1/(2\sqrt{x})$.
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="exp">
+  <h2>10. Exponential $f(x) = e^{x}$</h2>
+
+  <div class="proof">
+    $$ \frac{e^{b}-e^{a}}{b-a} = e^{a}\cdot\frac{e^{\,b-a}-1}{b-a}. $$
+    Put $h = b-a$. Then
+    $$ \frac{e^{b}-e^{a}}{b-a} = e^{a}\cdot\frac{e^{h}-1}{h}. $$
+  </div>
+
+  <p>Using the standard limit</p>
+
+  <div class="formula">
+    $$ \lim_{h\to 0}\frac{e^{h}-1}{h} = 1, $$
+  </div>
+
+  <p>we obtain</p>
+
+  <div class="highlight-box">
+    $$ \lim_{b\to a}\frac{e^{b}-e^{a}}{b-a} = e^{a}. $$
+  </div>
+
+  <div class="demo">
+    <canvas id="c-exp"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-exp-a" min="-1.5" max="1.5" value="0" step="0.05">
+        <span class="readout" id="c-exp-a-out">0.00</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-exp-b" min="-1.5" max="2" value="1" step="0.05">
+        <span class="readout" id="c-exp-b-out">1.00</span>
+      </label>
+      <button id="c-exp-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-exp-slope">—</strong></span>
+    </div>
+  </div>
+
+  <div class="comment">
+    Thus $(e^{x})' = e^{x}$. The function is its own derivative — a
+    remarkable property that characterises the exponential among all
+    continuous functions. In the quotient, the factor $e^{a}$ carries the
+    “location,” and the factor $(e^{h}-1)/h$ is a universal function of the
+    gap $h$ that happens to tend to $1$.
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="log">
+  <h2>11. Logarithm $f(x) = \ln x$, $a > 0$</h2>
+
+  <div class="proof">
+    $$ \frac{\ln b-\ln a}{b-a} = \frac{\ln(b/a)}{b-a}. $$
+    Write $b = a+h$:
+    $$ = \frac{\ln\!\bigl(1+\tfrac{h}{a}\bigr)}{h}
+       = \frac{1}{a}\cdot\frac{\ln(1+u)}{u},
+       \qquad u = \frac{h}{a}. $$
+  </div>
+
+  <p>Using the standard limit</p>
+
+  <div class="formula">
+    $$ \lim_{u\to 0}\frac{\ln(1+u)}{u} = 1, $$
+  </div>
+
+  <p>we get</p>
+
+  <div class="highlight-box">
+    $$ \lim_{b\to a}\frac{\ln b-\ln a}{b-a} = \frac{1}{a}. $$
+  </div>
+
+  <div class="demo">
+    <canvas id="c-log"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-log-a" min="0.3" max="6" value="1" step="0.05">
+        <span class="readout" id="c-log-a-out">1.00</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-log-b" min="0.3" max="8" value="3" step="0.05">
+        <span class="readout" id="c-log-b-out">3.00</span>
+      </label>
+      <button id="c-log-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-log-slope">—</strong></span>
+    </div>
+  </div>
+
+  <div class="comment">
+    So $(\ln x)' = 1/x$. The reciprocal of $x$ appears again — the same
+    expression we found in Example 7, but now as a derivative. This is a
+    beautiful duality: the derivative of the logarithm is the reciprocal.
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="sin">
+  <h2>12. Sine $f(x) = \sin x$</h2>
+
+  <p>Use the sum-to-product identity</p>
+
+  <div class="proof">
+    $$ \sin b-\sin a = 2\sin\!\Bigl(\frac{b-a}{2}\Bigr)
+                        \cos\!\Bigl(\frac{a+b}{2}\Bigr). $$
+    Then
+    $$ \frac{\sin b-\sin a}{b-a}
+       = \cos\!\Bigl(\frac{a+b}{2}\Bigr)\cdot
+         \frac{\sin\!\bigl(\tfrac{b-a}{2}\bigr)}{\tfrac{b-a}{2}}. $$
+  </div>
+
+  <p>
+    As $b\to a$, the fraction tends to $1$ (standard limit
+    $\sin u/u\to 1$) and $\cos\!\bigl(\tfrac{a+b}{2}\bigr)\to\cos a$. Hence
+  </p>
+
+  <div class="highlight-box">
+    $$ (\sin x)' = \cos x. $$
+  </div>
+
+  <div class="demo">
+    <canvas id="c-sin"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-sin-a" min="-3" max="3" value="0.5" step="0.05">
+        <span class="readout" id="c-sin-a-out">0.50</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-sin-b" min="-3" max="4" value="2.5" step="0.05">
+        <span class="readout" id="c-sin-b-out">2.50</span>
+      </label>
+      <button id="c-sin-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-sin-slope">—</strong></span>
+    </div>
+  </div>
+
+  <div class="comment">
+    The quotient is symmetric in $a$ and $b$ — because swapping them does not
+    change the secant slope. The expression
+    $\cos\!\bigl(\tfrac{a+b}{2}\bigr)$ shows that the secant slope depends
+    only on the midpoint of the interval, not on the interval's width. As the
+    width shrinks to zero, the midpoint tends to $a$ and the secant slope
+    becomes $\cos a$.
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="cos">
+  <h2>13. Cosine $f(x) = \cos x$</h2>
+
+  <p>Similarly,</p>
+
+  <div class="proof">
+    $$ \cos b-\cos a
+       = -2\sin\!\Bigl(\frac{b-a}{2}\Bigr)
+            \sin\!\Bigl(\frac{a+b}{2}\Bigr), $$
+    so
+    $$ \frac{\cos b-\cos a}{b-a}
+       = -\sin\!\Bigl(\frac{a+b}{2}\Bigr)\cdot
+         \frac{\sin\!\bigl(\tfrac{b-a}{2}\bigr)}{\tfrac{b-a}{2}}
+       \;\longrightarrow\; -\sin a. $$
+  </div>
+
+  <div class="highlight-box">
+    $$ (\cos x)' = -\sin x. $$
+  </div>
+
+  <div class="comment">
+    The minus sign is not an accident: cosine is decreasing wherever sine is
+    positive, and vice versa. The algebra captures this through the factor
+    $-\sin\!\bigl(\tfrac{a+b}{2}\bigr)$.
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="abs">
+  <h2>14. A cautionary example: $f(x) = |x|$</h2>
+
+  <p><strong>At $a > 0$:</strong> for $b$ close to $a$, $b > 0$, so</p>
+  <div class="formula">
+    $$ \frac{|b|-|a|}{b-a} = \frac{b-a}{b-a} = 1. $$
+  </div>
+  <p>The one-sided limit as $b\to a^{+}$ is $1$.</p>
+
+  <p><strong>At $a < 0$:</strong> for $b$ close to $a$, $b < 0$, so</p>
+  <div class="formula">
+    $$ \frac{|b|-|a|}{b-a} = \frac{-b-(-a)}{b-a} = \frac{-(b-a)}{b-a} = -1. $$
+  </div>
+  <p>The limit is $-1$.</p>
+
+  <p><strong>At $a = 0$:</strong> the quotient is</p>
+  <div class="formula">
+    $$ \frac{|b|-|0|}{b-0} = \frac{|b|}{b} = \operatorname{sign}(b), $$
+  </div>
+  <p>
+    which is $1$ for $b > 0$ and $-1$ for $b < 0$. It has <strong>no
+    limit</strong> as $b\to 0$.
+  </p>
+
+  <div class="demo">
+    <canvas id="c-abs"></canvas>
+    <div class="controls">
+      <label>a:
+        <input type="range" id="c-abs-a" min="-2" max="2" value="-1" step="0.05">
+        <span class="readout" id="c-abs-a-out">-1.00</span>
+      </label>
+      <label>b:
+        <input type="range" id="c-abs-b" min="-2" max="3" value="1.5" step="0.05">
+        <span class="readout" id="c-abs-b-out">1.50</span>
+      </label>
+      <button id="c-abs-anim">Animate b → a</button>
+      <span class="readout">slope = <strong id="c-abs-slope">—</strong></span>
+    </div>
+    <p class="caption">
+      Drag the sliders to put $a$ and $b$ on either side of the corner at
+      $x = 0$. The secant slope jumps discontinuously.
+    </p>
+  </div>
+
+  <div class="comment">
+    Conclusion: $|x|$ is differentiable for every $x\neq 0$, with derivative
+    $$ (|x|)' = \begin{cases} 1, & x > 0,\\[2pt] -1, & x < 0,\end{cases} $$
+    but it is <strong>not differentiable at $0$</strong>. This is where the
+    differential quotient refuses to settle down — the graph has a corner,
+    and no tangent line exists. The differential quotient is thus a faithful
+    detector of differentiability.
+  </div>
+</section>
+
+<!-- =========================================================== -->
+<section id="summary">
+  <h2>15. Summary table</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>$f(x)$</th>
+        <th>$\dfrac{f(b)-f(a)}{b-a}$</th>
+        <th>$\displaystyle\lim_{b\to a}$</th>
+        <th>$f'(x)$</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>$c$</td><td>$0$</td><td>$0$</td><td>$0$</td></tr>
+      <tr><td>$3x+2$</td><td>$3$</td><td>$3$</td><td>$3$</td></tr>
+      <tr><td>$x^{2}$</td><td>$a+b$</td><td>$2a$</td><td>$2x$</td></tr>
+      <tr><td>$x^{3}$</td><td>$a^{2}+ab+b^{2}$</td><td>$3a^{2}$</td><td>$3x^{2}$</td></tr>
+      <tr><td>$x^{4}$</td><td>$a^{3}+a^{2}b+ab^{2}+b^{3}$</td><td>$4a^{3}$</td><td>$4x^{3}$</td></tr>
+      <tr>
+        <td>$x^{n}$</td>
+        <td>$\displaystyle\sum_{k=0}^{n-1}a^{\,n-1-k}b^{\,k}$</td>
+        <td>$n\,a^{\,n-1}$</td>
+        <td>$n\,x^{\,n-1}$</td>
+      </tr>
+      <tr><td>$\dfrac{1}{x}$</td><td>$-\dfrac{1}{ab}$</td><td>$-\dfrac{1}{a^{2}}$</td><td>$-\dfrac{1}{x^{2}}$</td></tr>
+      <tr><td>$\dfrac{1}{x^{2}}$</td><td>$-\dfrac{a+b}{a^{2}b^{2}}$</td><td>$-\dfrac{2}{a^{3}}$</td><td>$-\dfrac{2}{x^{3}}$</td></tr>
+      <tr><td>$\sqrt{x}$</td><td>$\dfrac{1}{\sqrt a+\sqrt b}$</td><td>$\dfrac{1}{2\sqrt a}$</td><td>$\dfrac{1}{2\sqrt x}$</td></tr>
+      <tr><td>$e^{x}$</td><td>$e^{a}\dfrac{e^{b-a}-1}{b-a}$</td><td>$e^{a}$</td><td>$e^{x}$</td></tr>
+      <tr><td>$\ln x$</td><td>$\dfrac{1}{a}\cdot\dfrac{\ln(1+u)}{u},\;u=\tfrac{b-a}{a}$</td><td>$\dfrac{1}{a}$</td><td>$\dfrac{1}{x}$</td></tr>
+      <tr>
+        <td>$\sin x$</td>
+        <td>$\cos\!\bigl(\tfrac{a+b}{2}\bigr)\dfrac{\sin((b-a)/2)}{(b-a)/2}$</td>
+        <td>$\cos a$</td>
+        <td>$\cos x$</td>
+      </tr>
+      <tr>
+        <td>$\cos x$</td>
+        <td>$-\sin\!\bigl(\tfrac{a+b}{2}\bigr)\dfrac{\sin((b-a)/2)}{(b-a)/2}$</td>
+        <td>$-\sin a$</td>
+        <td>$-\sin x$</td>
+      </tr>
+      <tr>
+        <td>$|x|$</td>
+        <td>$1$ if $a>0$; $-1$ if $a<0$</td>
+        <td>fails at $0$</td>
+        <td>not differentiable at $0$</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- =========================================================== -->
+<section id="beauty">
+  <h2>16. Why this is beautiful</h2>
+
+  <p>A few patterns stand out.</p>
+
+  <h3>Symmetry</h3>
+  <p>
+    For polynomials, $1/x$, $1/x^{2}$, $\sqrt{x}$, and the trigonometric
+    functions, the differential quotient is <strong>symmetric in $a$ and
+    $b$</strong>. That is, swapping the two points does not change the
+    quotient. This is exactly what we should expect, because the slope of the
+    secant is the same whether we traverse it from $a$ to $b$ or from $b$ to
+    $a$.
+  </p>
+
+  <h3>Homogeneity</h3>
+  <p>
+    For $f(x) = x^{p}$, the quotient is homogeneous of degree $p-1$ in
+    $(a,b)$. This is a fingerprint of the power function, and it passes to
+    the limit: $f'(x) = p\,x^{p-1}$ is homogeneous of degree $p-1$.
+  </p>
+
+  <h3>Elementary functions give elementary quotients</h3>
+  <p>
+    For each of the classical functions, the quotient has a closed form
+    involving the same building blocks as the function itself: polynomials,
+    powers, exponentials, logarithms, trigonometric functions. This is not an
+    accident — it reflects the fact that the derivative of an elementary
+    function is again elementary.
+  </p>
+
+  <h3>The limit reveals the derivative</h3>
+  <p>
+    For every function above except $|x|$, the quotient has a limit as
+    $b\to a$, and that limit is precisely the derivative. For $|x|$, the
+    limit fails at $0$, and the failure is exactly the corner in the graph.
+    The differential quotient is thus a faithful detector of
+    differentiability.
+  </p>
+
+  <h3>Two universal limits</h3>
+  <p>All the transcendental examples reduce to two standard limits:</p>
+  <div class="formula">
+    $$ \lim_{h\to 0}\frac{e^{h}-1}{h} = 1,
+       \qquad
+       \lim_{u\to 0}\frac{\ln(1+u)}{u} = 1, $$
+  </div>
+  <p>
+    together with the trigonometric limit $\sin u/u\to 1$. These three
+    constants are the seeds from which the derivatives of $e^{x}$, $\ln x$,
+    $\sin x$, and $\cos x$ grow.
+  </p>
+
+  <p>
+    The differential quotient is where differentiation begins: it is a
+    two-point object, algebraic and concrete, and its limit is the local,
+    infinitesimal object we call the derivative. Seen through the table
+    above, differentiation is not a collection of isolated rules but a
+    single coherent phenomenon.
+  </p>
+</section>
+
+<!-- =========================================================== -->
+<section id="assessment">
+  <h2>17. Self-assessment</h2>
+
+  <p>
+    Try each question first, then click to reveal the answer.
+  </p>
+
+  <details class="qa">
+    <summary><span class="qnum">Q1</span> For $f(x) = 5x - 7$, compute the differential quotient $\dfrac{f(b)-f(a)}{b-a}$ and simplify.</summary>
+    <p class="answer">
+      $\dfrac{(5b-7)-(5a-7)}{b-a} = \dfrac{5(b-a)}{b-a} = 5$.
+      The slope is constant, as expected for a line.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q2</span> For $f(x) = x^{2} + 3x$, compute the differential quotient.</summary>
+    <p class="answer">
+      $\dfrac{(b^{2}+3b)-(a^{2}+3a)}{b-a}
+       = \dfrac{(b^{2}-a^{2}) + 3(b-a)}{b-a}
+       = (a+b) + 3$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q3</span> Using Q2, find $f'(a)$.</summary>
+    <p class="answer">
+      $\displaystyle\lim_{b\to a}\bigl((a+b)+3\bigr) = 2a + 3$.
+      So $f'(x) = 2x + 3$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q4</span> For $f(x) = \dfrac{1}{x}$, explain in words why the quotient is always negative when $a$ and $b$ have the same sign.</summary>
+    <p class="answer">
+      The quotient equals $-1/(ab)$. If $a$ and $b$ have the same sign, then
+      $ab > 0$, so $-1/(ab) < 0$. Geometrically, on each branch of the
+      hyperbola the function is decreasing: as $x$ increases, $y$ decreases,
+      hence the secant slope is negative.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q5</span> Compute $\displaystyle\lim_{b\to a}\frac{\sqrt b - \sqrt a}{b-a}$ and state the derivative of $\sqrt x$.</summary>
+    <p class="answer">
+      $\dfrac{\sqrt b - \sqrt a}{b-a} = \dfrac{1}{\sqrt a + \sqrt b}$,
+      so the limit is $\dfrac{1}{2\sqrt a}$.
+      Hence $(\sqrt x)' = \dfrac{1}{2\sqrt x}$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q6</span> For $f(x) = e^{x}$, verify the quotient formula and compute the limit as $b\to a$.</summary>
+    <p class="answer">
+      $\dfrac{e^{b}-e^{a}}{b-a}
+       = e^{a}\cdot\dfrac{e^{b-a}-1}{b-a}$.
+      With $h = b-a$, the second factor tends to $1$, so the limit is
+      $e^{a}$. Hence $(e^{x})' = e^{x}$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q7</span> For $f(x) = \ln x$, show that the quotient equals $\dfrac{1}{a}\cdot\dfrac{\ln(1+u)}{u}$ with $u = (b-a)/a$, and compute the limit.</summary>
+    <p class="answer">
+      $\dfrac{\ln b - \ln a}{b-a}
+       = \dfrac{\ln(1+h/a)}{h}$ with $h = b-a$.
+      Putting $u = h/a$, this becomes
+      $\dfrac{1}{a}\cdot\dfrac{\ln(1+u)}{u}$.
+      As $u\to 0$, the fraction tends to $1$, so the limit is $1/a$.
+      Hence $(\ln x)' = 1/x$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q8</span> For $f(x) = |x|$ at $a = 0$, compute the one-sided quotients as $b\to 0^{+}$ and $b\to 0^{-}$.</summary>
+    <p class="answer">
+      For $b > 0$: $\dfrac{|b|-0}{b-0} = \dfrac{b}{b} = 1$.
+      For $b < 0$: $\dfrac{|b|-0}{b-0} = \dfrac{-b}{b} = -1$.
+      The two one-sided limits differ, so the limit does not exist and $|x|$
+      is not differentiable at $0$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q9</span> State the general power rule for $x^{n}$, and prove it using the factorisation $b^{n}-a^{n} = (b-a)(b^{n-1}+b^{n-2}a+\cdots+a^{n-1})$.</summary>
+    <p class="answer">
+      $\displaystyle\lim_{b\to a}\frac{b^{n}-a^{n}}{b-a} = n\,a^{n-1}$.
+      Proof: factor $b^{n}-a^{n} = (b-a)\sum_{k=0}^{n-1}a^{\,n-1-k}b^{\,k}$,
+      cancel $b-a$, then let $b\to a$: each of the $n$ terms becomes
+      $a^{n-1}$, giving $n\,a^{n-1}$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q10</span> For $f(x) = \sin x$, explain why the secant slope depends only on the midpoint of the interval.</summary>
+    <p class="answer">
+      The sum-to-product identity gives
+      $\dfrac{\sin b - \sin a}{b-a}
+       = \cos\!\bigl(\tfrac{a+b}{2}\bigr)\cdot
+         \dfrac{\sin((b-a)/2)}{(b-a)/2}$.
+      The first factor depends only on the midpoint $(a+b)/2$, and the second
+      only on the half-width $(b-a)/2$. So the midpoint controls the leading
+      behaviour, and the half-width controls the correction.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q11</span> Sketch (in words) the graphs of $f(x) = x^{3}$ and its secant line through $a = 1$, $b = 2$. Is the secant above or below the graph between the two points?</summary>
+    <p class="answer">
+      The secant has slope $7$ and passes through $(1,1)$ and $(2,8)$. Since
+      $x^{3}$ is convex on $x > 0$ (its second derivative is $6x > 0$), the
+      graph lies below the secant between the two points. The secant is
+      above the graph on $(1,2)$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q12</span> Suppose $f$ is differentiable at $a$ and $f'(a) > 0$. What can you say about the sign of $\dfrac{f(b)-f(a)}{b-a}$ for $b$ close to $a$?</summary>
+    <p class="answer">
+      Since the quotient tends to $f'(a) > 0$ as $b\to a$, for $b$ close
+      enough to $a$ the quotient must also be positive. In particular,
+      $f(b) > f(a)$ for $b$ close to $a$ on either side — the function is
+      locally increasing at $a$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q13</span> A student claims: “The differential quotient of $1/x$ is $1/(ab)$.” Where is the error?</summary>
+    <p class="answer">
+      The correct formula is $-1/(ab)$. The minus sign comes from
+      $a - b = -(b-a)$ in the numerator. Forgetting the sign would give a
+      positive slope everywhere, which contradicts the fact that $1/x$ is
+      decreasing on each branch.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q14</span> Compute the differential quotient of $f(x) = x^{2} - 4x + 1$ and take the limit $b\to a$.</summary>
+    <p class="answer">
+      $\dfrac{f(b)-f(a)}{b-a}
+       = \dfrac{(b^{2}-a^{2}) - 4(b-a)}{b-a}
+       = (a+b) - 4$.
+      Limit as $b\to a$: $2a - 4$. So $f'(x) = 2x - 4$.
+    </p>
+  </details>
+
+  <details class="qa">
+    <summary><span class="qnum">Q15</span> Why does the differential quotient of $\cos x$ have a minus sign, while the differential quotient of $\sin x$ does not?</summary>
+    <p class="answer">
+      From the identities
+      $\cos b - \cos a = -2\sin\!\bigl(\tfrac{b-a}{2}\bigr)
+                         \sin\!\bigl(\tfrac{a+b}{2}\bigr)$
+      and
+      $\sin b - \sin a = 2\sin\!\bigl(\tfrac{b-a}{2}\bigr)
+                         \cos\!\bigl(\tfrac{a+b}{2}\bigr)$,
+      the extra minus in the cosine case produces
+      $-\sin a$ instead of $\cos a$. Geometrically, the graph of cosine is
+      decreasing wherever sine is positive, and vice versa; the sign flip
+      encodes this relation.
+    </p>
+  </details>
+</section>
+
+</main>
+
+<footer>
+  Interactive notes prepared for first-year undergraduates.
+  Use the sliders to explore each example; the mathematics is in the text,
+  the intuition is in the pictures.
+</footer>
+
+<script>
+/* ============================================================
+   Secant plot engine — dark theme
+   ============================================================ */
+function drawSecantPlot(canvas, opts) {
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth;
+  const H = canvas.clientHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const padL = 55, padR = 35, padT = 35, padB = 40;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  const X = x => padL + (x - opts.xmin) / (opts.xmax - opts.xmin) * plotW;
+  const Y = y => padT + plotH - (y - opts.ymin) / (opts.ymax - opts.ymin) * plotH;
+
+  // background — black
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, W, H);
+
+  // grid — subtle dark gray
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1;
+  for (let x = Math.ceil(opts.xmin); x <= opts.xmax; x++) {
+    ctx.beginPath();
+    ctx.moveTo(X(x), padT);
+    ctx.lineTo(X(x), padT + plotH);
+    ctx.stroke();
+  }
+  for (let y = Math.ceil(opts.ymin); y <= opts.ymax; y++) {
+    ctx.beginPath();
+    ctx.moveTo(padL, Y(y));
+    ctx.lineTo(padL + plotW, Y(y));
+    ctx.stroke();
+  }
+
+  // axes — gray
+  ctx.strokeStyle = '#555555';
+  ctx.lineWidth = 1.5;
+  if (opts.ymin <= 0 && opts.ymax >= 0) {
+    ctx.beginPath();
+    ctx.moveTo(padL, Y(0));
+    ctx.lineTo(padL + plotW, Y(0));
+    ctx.stroke();
+  }
+  if (opts.xmin <= 0 && opts.xmax >= 0) {
+    ctx.beginPath();
+    ctx.moveTo(X(0), padT);
+    ctx.lineTo(X(0), padT + plotH);
+    ctx.stroke();
+  }
+
+  // tick labels — muted gray
+  ctx.fillStyle = '#888888';
+  ctx.font = '12px Georgia';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (let x = Math.ceil(opts.xmin); x <= opts.xmax; x++) {
+    if (x === 0) continue;
+    if (X(x) < padL || X(x) > padL + plotW) continue;
+    ctx.fillText(x.toString(), X(x), Y(0) + 5);
+  }
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (let y = Math.ceil(opts.ymin); y <= opts.ymax; y++) {
+    if (y === 0) continue;
+    if (Y(y) < padT || Y(y) > padT + plotH) continue;
+    ctx.fillText(y.toString(), X(0) - 5, Y(y));
+  }
+
+  // curve — lime
+  ctx.strokeStyle = opts.color || '#b6ff3d';
+  ctx.lineWidth = 2.5;
+  ctx.shadowColor = opts.color || '#b6ff3d';
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  const samples = 1000;
+  let started = false;
+  for (let i = 0; i <= samples; i++) {
+    const x = opts.xmin + (opts.xmax - opts.xmin) * i / samples;
+    let y;
+    try { y = opts.f(x); } catch(e) { y = NaN; }
+    if (!isFinite(y) || y < opts.ymin - 1 || y > opts.ymax + 1) {
+      started = false;
+      continue;
+    }
+    const px = X(x), py = Y(y);
+    if (!started) { ctx.moveTo(px, py); started = true; }
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // secant, points, legs
+  if (opts.a !== undefined && opts.b !== undefined) {
+    const a = opts.a, b = opts.b;
+    let fa, fb;
+    try { fa = opts.f(a); fb = opts.f(b); } catch(e) { fa = NaN; fb = NaN; }
+
+    if (isFinite(fa) && isFinite(fb)) {
+      // tangent at a — pink dashed
+      if (opts.showTangent && opts.b - opts.a > 1e-4) {
+        const hh = 1e-5;
+        let fpa;
+        try {
+          fpa = (opts.f(a + hh) - opts.f(a - hh)) / (2 * hh);
+        } catch(e) { fpa = NaN; }
+        if (isFinite(fpa)) {
+          const x0 = opts.xmin, x1 = opts.xmax;
+          const y0 = fa + fpa * (x0 - a);
+          const y1 = fa + fpa * (x1 - a);
+          ctx.strokeStyle = '#ff6ec7';
+          ctx.lineWidth = 1.8;
+          ctx.setLineDash([8, 5]);
+          ctx.shadowColor = '#ff6ec7';
+          ctx.shadowBlur = 6;
+          ctx.beginPath();
+          ctx.moveTo(X(x0), Y(y0));
+          ctx.lineTo(X(x1), Y(y1));
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.shadowBlur = 0;
+        }
+      }
+
+      // secant line — cyan
+      ctx.strokeStyle = '#4dd0e1';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#4dd0e1';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.moveTo(X(a), Y(fa));
+      ctx.lineTo(X(b), Y(fb));
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // horizontal leg (b - a) — cyan dashed
+      ctx.strokeStyle = '#4dd0e1';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.moveTo(X(a), Y(fa));
+      ctx.lineTo(X(b), Y(fa));
+      ctx.stroke();
+
+      // vertical leg (f(b) - f(a)) — orange dashed
+      ctx.strokeStyle = '#ff9f1c';
+      ctx.beginPath();
+      ctx.moveTo(X(b), Y(fa));
+      ctx.lineTo(X(b), Y(fb));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // points — pink with white ring
+      ctx.fillStyle = '#ff6ec7';
+      ctx.shadowColor = '#ff6ec7';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(X(a), Y(fa), 7, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(X(b), Y(fb), 7, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(X(a), Y(fa), 7, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(X(b), Y(fb), 7, 0, 2 * Math.PI);
+      ctx.stroke();
+
+      // labels a, b — white
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 14px Georgia';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      if (X(a) >= padL && X(a) <= padL + plotW) {
+        ctx.fillText('a', X(a), Math.min(Y(fa) + 12, padT + plotH - 18));
+      }
+      if (X(b) >= padL && X(b) <= padL + plotW) {
+        ctx.fillText('b', X(b), Math.min(Y(fb) + 12, padT + plotH - 18));
+      }
+
+      // b - a label — cyan
+      const midX = (a + b) / 2;
+      const midYfa = Y(fa);
+      ctx.fillStyle = '#4dd0e1';
+      ctx.font = 'bold 13px Georgia';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('b - a', X(midX), midYfa + 5);
+
+      // f(b) - f(a) label — orange
+      ctx.fillStyle = '#ff9f1c';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      const midY = (fa + fb) / 2;
+      ctx.fillText('f(b)-f(a)', X(b) + 10, Y(midY));
+
+      // slope display — yellow box with black text
+      const slope = (fb - fa) / (b - a);
+      const sStr = (Math.abs(slope) > 100 ? slope.toExponential(2) : slope.toFixed(3));
+      ctx.fillStyle = 'rgba(255, 217, 61, 0.95)';
+      ctx.fillRect(padL + 10, padT + 10, 200, 30);
+      ctx.fillStyle = '#000000';
+      ctx.font = 'bold 15px Georgia';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('slope = ' + sStr, padL + 20, padT + 25);
+    }
+  }
+
+  // function label — color-coded
+  if (opts.funcLabel) {
+    ctx.fillStyle = opts.color || '#b6ff3d';
+    ctx.font = 'bold 16px Georgia';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.shadowColor = opts.color || '#b6ff3d';
+    ctx.shadowBlur = 8;
+    ctx.fillText(opts.funcLabel, W - padR, padT + 5);
+    ctx.shadowBlur = 0;
+  }
+}
+
+/* ============================================================
+   Setup for each example
+   ============================================================ */
+function setupExample(canvasId, opts) {
+  const c = document.getElementById(canvasId);
+  if (!c) return;
+
+  const config = {
+    f: opts.f,
+    a: opts.a0,
+    b: opts.b0,
+    xmin: opts.xmin,
+    xmax: opts.xmax,
+    ymin: opts.ymin,
+    ymax: opts.ymax,
+    color: '#b6ff3d',
+    funcLabel: opts.label,
+    showTangent: opts.showTangent !== false,
+  };
+  c._plotConfig = config;
+
+  const sa = document.getElementById(canvasId + '-a');
+  const sb = document.getElementById(canvasId + '-b');
+  const outa = document.getElementById(canvasId + '-a-out');
+  const outb = document.getElementById(canvasId + '-b-out');
+  const slopeOut = document.getElementById(canvasId + '-slope');
+  const animBtn = document.getElementById(canvasId + '-anim');
+
+  function updateSlopeDisplay() {
+    if (!slopeOut) return;
+    let fa, fb;
+    try { fa = config.f(config.a); fb = config.f(config.b); } catch(e) { fa = NaN; fb = NaN; }
+    if (isFinite(fa) && isFinite(fb) && Math.abs(config.b - config.a) > 1e-6) {
+      const s = (fb - fa) / (config.b - config.a);
+      slopeOut.textContent = s.toFixed(3);
+    } else {
+      slopeOut.textContent = '—';
+    }
+  }
+
+  function redraw() {
+    drawSecantPlot(c, config);
+    updateSlopeDisplay();
+  }
+
+  redraw();
+
+  if (sa) {
+    sa.addEventListener('input', () => {
+      config.a = parseFloat(sa.value);
+      if (config.a >= config.b - 1e-3) {
+        config.b = config.a + 0.15;
+        if (sb) sb.value = config.b;
+        if (outb) outb.textContent = config.b.toFixed(2);
+      }
+      if (outa) outa.textContent = config.a.toFixed(2);
+      redraw();
+    });
+  }
+  if (sb) {
+    sb.addEventListener('input', () => {
+      config.b = parseFloat(sb.value);
+      if (config.b <= config.a + 1e-3) {
+        config.a = config.b - 0.15;
+        if (sa) sa.value = config.a;
+        if (outa) outa.textContent = config.a.toFixed(2);
+      }
+      if (outb) outb.textContent = config.b.toFixed(2);
+      redraw();
+    });
+  }
+  if (animBtn) {
+    animBtn.addEventListener('click', () => {
+      const bStart = config.b;
+      const bEnd = config.a;
+      const duration = 2800;
+      const t0 = performance.now();
+      function step(t) {
+        const u = Math.min(1, (t - t0) / duration);
+        const eased = 1 - Math.pow(1 - u, 3);
+        config.b = bStart + (bEnd - bStart) * eased;
+        if (sb) sb.value = config.b;
+        if (outb) outb.textContent = config.b.toFixed(2);
+        redraw();
+        if (u < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  window.addEventListener('resize', redraw);
+}
+
+/* ============================================================
+   Top interactive demo (sin)
+   ============================================================ */
+(function () {
+  const canvas = document.getElementById('c-demo');
+  if (!canvas) return;
+  const config = {
+    f: x => Math.sin(x),
+    a: 0.5,
+    b: 2.5,
+    xmin: -2,
+    xmax: 3.5,
+    ymin: -1.6,
+    ymax: 1.6,
+    color: '#b6ff3d',
+    funcLabel: 'f(x) = sin x',
+    showTangent: true,
+  };
+  canvas._plotConfig = config;
+
+  const sa = document.getElementById('c-demo-a');
+  const sb = document.getElementById('c-demo-b');
+  const outa = document.getElementById('c-demo-a-out');
+  const outb = document.getElementById('c-demo-b-out');
+  const slopeOut = document.getElementById('c-demo-slope');
+  const animBtn = document.getElementById('c-demo-anim');
+
+  function redraw() {
+    drawSecantPlot(canvas, config);
+    let fa = Math.sin(config.a), fb = Math.sin(config.b);
+    if (Math.abs(config.b - config.a) > 1e-6) {
+      const s = (fb - fa) / (config.b - config.a);
+      slopeOut.textContent = s.toFixed(3);
+    }
+  }
+
+  redraw();
+
+  sa.addEventListener('input', () => {
+    config.a = parseFloat(sa.value);
+    if (config.a >= config.b - 1e-3) {
+      config.b = config.a + 0.15;
+      sb.value = config.b;
+      outb.textContent = config.b.toFixed(2);
+    }
+    outa.textContent = config.a.toFixed(2);
+    redraw();
+  });
+  sb.addEventListener('input', () => {
+    config.b = parseFloat(sb.value);
+    if (config.b <= config.a + 1e-3) {
+      config.a = config.b - 0.15;
+      sa.value = config.a;
+      outa.textContent = config.a.toFixed(2);
+    }
+    outb.textContent = config.b.toFixed(2);
+    redraw();
+  });
+  animBtn.addEventListener('click', () => {
+    const bStart = config.b;
+    const bEnd = config.a;
+    const duration = 3000;
+    const t0 = performance.now();
+    function step(t) {
+      const u = Math.min(1, (t - t0) / duration);
+      const eased = 1 - Math.pow(1 - u, 3);
+      config.b = bStart + (bEnd - bStart) * eased;
+      sb.value = config.b;
+      outb.textContent = config.b.toFixed(2);
+      redraw();
+      if (u < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+  window.addEventListener('resize', redraw);
+})();
+
+/* ============================================================
+   Set up each example
+   ============================================================ */
+setupExample('c-linear', {
+  f: x => 3 * x + 2,
+  a0: 1, b0: 4,
+  xmin: -1.5, xmax: 5.5, ymin: -3, ymax: 20,
+  label: 'f(x) = 3x + 2',
+  showTangent: false,
+});
+
+setupExample('c-quad', {
+  f: x => x * x,
+  a0: 1, b0: 4,
+  xmin: -2.5, xmax: 5.5, ymin: -2, ymax: 26,
+  label: 'f(x) = x²',
+  showTangent: true,
+});
+
+setupExample('c-cubic', {
+  f: x => x * x * x,
+  a0: 1, b0: 2,
+  xmin: -1.2, xmax: 2.8, ymin: -2, ymax: 16,
+  label: 'f(x) = x³',
+  showTangent: true,
+});
+
+setupExample('c-rec', {
+  f: x => 1 / x,
+  a0: 1, b0: 3,
+  xmin: -0.5, xmax: 5.5, ymin: -0.5, ymax: 3.0,
+  label: 'f(x) = 1/x',
+  showTangent: true,
+});
+
+setupExample('c-sqrt', {
+  f: x => Math.sqrt(x),
+  a0: 1, b0: 4,
+  xmin: -0.5, xmax: 8.5, ymin: -0.5, ymax: 3.2,
+  label: 'f(x) = √x',
+  showTangent: true,
+});
+
+setupExample('c-exp', {
+  f: x => Math.exp(x),
+  a0: 0, b0: 1,
+  xmin: -2, xmax: 2.2, ymin: -0.5, ymax: 9,
+  label: 'f(x) = eˣ',
+  showTangent: true,
+});
+
+setupExample('c-log', {
+  f: x => Math.log(x),
+  a0: 1, b0: 3,
+  xmin: -0.2, xmax: 8, ymin: -1.5, ymax: 2.5,
+  label: 'f(x) = ln x',
+  showTangent: true,
+});
+
+setupExample('c-sin', {
+  f: x => Math.sin(x),
+  a0: 0.5, b0: 2.5,
+  xmin: -3.5, xmax: 4, ymin: -1.8, ymax: 1.8,
+  label: 'f(x) = sin x',
+  showTangent: true,
+});
+
+setupExample('c-abs', {
+  f: x => Math.abs(x),
+  a0: -1, b0: 1.5,
+  xmin: -2.5, xmax: 2.5, ymin: -0.5, ymax: 2.5,
+  label: 'f(x) = |x|',
+  showTangent: false,
+});
+
+/* ============================================================
+   Initial redraw after MathJax typesetting settles
+   ============================================================ */
+window.addEventListener('load', () => {
+  document.querySelectorAll('canvas[data-plot], .demo canvas').forEach(c => {
+    if (c._plotConfig) drawSecantPlot(c, c._plotConfig);
+  });
+});
+</script>
+
+</body>
+</html>
