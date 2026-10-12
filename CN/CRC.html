@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carathéodory's Criterion for Differentiation</title>
+    
+    <!-- MathJax Configuration -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --primary-dark: #1b5e20;
+            --light-green: #e8f5e9;
+            --bg-color: #f4fbf7;
+            --text-main: #1f2937;
+            --text-light: #4b5563;
+            --accent-blue: #1976d2;
+            --accent-orange: #f57c00;
+            --accent-red: #d32f2f;
+            --border-color: #cbd5e1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            max-width: 900px;
+            width: 100%;
+            padding: 3rem 4rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-top: 8px solid var(--primary-green);
+        }
+
+        h1 {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--primary-dark);
+            font-size: 1.4rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light-green);
+            padding-bottom: 0.5rem;
+        }
+
+        .box {
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .box h3 {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.15rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theorem-box {
+            background-color: var(--light-green);
+            border-left: 6px solid var(--primary-green);
+        }
+        .theorem-box h3 { color: var(--primary-green); }
+
+        .example-box {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-left: 6px solid var(--accent-blue);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        .example-box h3 { color: var(--accent-blue); }
+        .example-box.success { border-left-color: var(--primary-green); }
+        .example-box.success h3 { color: var(--primary-green); }
+        .example-box.failure { border-left-color: var(--accent-red); }
+        .example-box.failure h3 { color: var(--accent-red); }
+
+        .observation-box {
+            background-color: #fff8e1;
+            border-left: 4px solid var(--accent-orange);
+            padding: 1rem 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+        .observation-box strong {
+            color: var(--accent-orange);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .math-block {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+            font-size: 1.15rem;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .graph-container {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        svg { max-width: 100%; height: auto; }
+
+        .graph-caption {
+            text-align: center;
+            font-style: italic;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1.5rem; }
+            .math-block { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Carathéodory's Criterion for Differentiation</h1>
+
+    <p>While the standard definition of the derivative relies on the limit of a difference quotient, Constantin Carathéodory introduced an elegant equivalent condition. It shifts the focus from limits of fractions to the existence of a continuous "multiplier" function.</p>
+
+    <div class="box theorem-box">
+        <h3>Carathéodory's Criterion</h3>
+        <p>Let \( f: I \to \mathbb{R} \) be a function defined on an open interval \( I \), and let \( a \in I \). Then \( f \) is differentiable at \( a \) if and only if there exists a function \( h: I \to \mathbb{R} \) such that:</p>
+        <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+            <li>\( h \) is continuous at \( a \).</li>
+            <li>\( f(x) - f(a) = h(x)(x - a) \) for all \( x \in I \).</li>
+        </ul>
+        <p>Moreover, in this case, the derivative is simply \( f'(a) = h(a) \).</p>
+    </div>
+
+    <div class="box" style="background-color: #e3f2fd; border-left: 6px solid var(--accent-blue);">
+        <h3 style="color: var(--accent-blue);">Why does this work? (The Intuition)</h3>
+        <p>If \( f \) is differentiable at \( a \), we can define \( h(x) = \frac{f(x) - f(a)}{x - a} \) for \( x \neq a \), and \( h(a) = f'(a) \). Since \( f \) is differentiable, \( \lim_{x \to a} h(x) = f'(a) = h(a) \), so \( h \) is continuous at \( a \).</p>
+        <p>Conversely, if such a continuous \( h \) exists, then \( \frac{f(x) - f(a)}{x - a} = h(x) \) for \( x \neq a \). Taking the limit as \( x \to a \), we get \( f'(a) = \lim_{x \to a} h(x) = h(a) \) by continuity.</p>
+    </div>
+
+    <!-- Illustration 1: Secant to Tangent -->
+    <div class="graph-container">
+        <svg viewBox="0 0 500 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
+                </marker>
+            </defs>
+            <line x1="50" y1="250" x2="460" y2="250" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+            <line x1="50" y1="250" x2="50" y2="30" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+            <text x="465" y="255" fill="#64748b" font-family="Arial" font-size="12">x</text>
+            <text x="40" y="25" fill="#64748b" font-family="Arial" font-size="12">y</text>
+
+            <path d="M 50 250 C 150 200, 300 100, 450 50" fill="none" stroke="#2e7d32" stroke-width="3" />
+            <text x="420" y="40" fill="#2e7d32" font-family="Arial" font-size="14" font-weight="bold">y = f(x)</text>
+
+            <circle cx="150" cy="200" r="5" fill="#d81b60" />
+            <text x="100" y="190" fill="#d81b60" font-family="Arial" font-size="14" font-weight="bold">A (a, f(a))</text>
+
+            <circle cx="350" cy="100" r="5" fill="#1976d2" />
+            <text x="360" y="95" fill="#1976d2" font-family="Arial" font-size="14" font-weight="bold">X (x, f(x))</text>
+
+            <line x1="150" y1="200" x2="350" y2="100" stroke="#1976d2" stroke-width="2" stroke-dasharray="6" />
+            <text x="230" y="135" fill="#1976d2" font-family="Arial" font-size="12" font-style="italic">Secant slope = h(x)</text>
+
+            <line x1="80" y1="249" x2="250" y2="130" stroke="#d81b60" stroke-width="2" />
+            <text x="120" y="160" fill="#d81b60" font-family="Arial" font-size="12" font-style="italic">Tangent slope = f'(a)</text>
+        </svg>
+    </div>
+    <p class="graph-caption">Figure 1: As \( x \to a \), the secant line slope \( h(x) \) approaches the tangent line slope \( f'(a) \).</p>
+
+    <h2>Examples</h2>
+
+    <!-- Example 1 -->
+    <div class="example-box success">
+        <h3>Example 1: Polynomial (Success)</h3>
+        <p>Let \( f(x) = x^3 \) and \( a = 2 \). Find \( h(x) \) and \( f'(2) \).</p>
+        <p><strong>Step 1: Compute \( f(x) - f(a) \).</strong></p>
+        <div class="math-block">
+            \[ f(x) - f(2) = x^3 - 8 = (x - 2)(x^2 + 2x + 4) \]
+        </div>
+        <p><strong>Step 2: Extract \( h(x) \).</strong> We need \( f(x) - f(2) = h(x)(x - 2) \). Therefore, \( h(x) = x^2 + 2x + 4 \) for \( x \neq 2 \).</p>
+        <p><strong>Step 3: Check continuity at \( a = 2 \).</strong> Since \( h(x) \) is a polynomial, it is continuous everywhere.</p>
+        <p><strong>Step 4: Compute \( f'(2) \).</strong></p>
+        <div class="math-block">
+            \[ f'(2) = h(2) = (2)^2 + 2(2) + 4 = 12 \]
+        </div>
+        <div class="observation-box">
+            <strong>Observation:</strong> Because \( f \) is a polynomial, the multiplier \( h(x) \) is also a polynomial. Continuity is automatic, so the criterion is easily satisfied.
+        </div>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="example-box failure">
+        <h3>Example 2: Absolute Value (Failure)</h3>
+        <p>Let \( f(x) = |x| \) and \( a = 0 \). Try to find \( h(x) \) and \( f'(0) \).</p>
+        <p><strong>Step 1: Compute \( f(x) - f(0) \).</strong></p>
+        <div class="math-block">
+            \[ f(x) - f(0) = |x| \]
+        </div>
+        <p><strong>Step 2: Extract \( h(x) \).</strong> We need \( |x| = h(x) \cdot x \). For \( x \neq 0 \), \( h(x) = \frac{|x|}{x} \).</p>
+        <div class="math-block">
+            \[ h(x) = \begin{cases} 1 & \text{if } x > 0 \\ -1 & \text{if } x < 0 \end{cases} \]
+        </div>
+        <p><strong>Step 3: Check continuity at \( a = 0 \).</strong> As \( x \to 0^+ \), \( h(x) \to 1 \). As \( x \to 0^- \), \( h(x) \to -1 \). The limit does not exist.</p>
+        <p><strong>Step 4: Compute \( f'(0) \).</strong> Since no continuous \( h \) exists, \( f'(0) \) does not exist.</p>
+        <div class="observation-box">
+            <strong>Observation:</strong> The failure of differentiability is exactly the failure of the secant slope \( h(x) \) to have a continuous extension at \( a \). The "jump" in \( h(x) \) corresponds to the sharp corner in \( f(x) \).
+        </div>
+    </div>
+
+    <!-- Illustration 2: Absolute Value -->
+    <div class="graph-container">
+        <svg viewBox="0 0 500 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <line x1="50" y1="250" x2="460" y2="250" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+            <line x1="250" y1="280" x2="250" y2="30" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+            <text x="465" y="255" fill="#64748b" font-family="Arial" font-size="12">x</text>
+            <text x="240" y="25" fill="#64748b" font-family="Arial" font-size="12">y</text>
+
+            <path d="M 100 150 L 250 250 L 400 150" fill="none" stroke="#2e7d32" stroke-width="3" />
+            <text x="380" y="140" fill="#2e7d32" font-family="Arial" font-size="14" font-weight="bold">y = |x|</text>
+
+            <circle cx="250" cy="250" r="5" fill="#d81b60" />
+            <text x="260" y="245" fill="#d81b60" font-family="Arial" font-size="14" font-weight="bold">a = 0</text>
+
+            <text x="120" y="180" fill="#1976d2" font-family="Arial" font-size="14" font-weight="bold">Slope = -1</text>
+            <text x="330" y="180" fill="#1976d2" font-family="Arial" font-size="14" font-weight="bold">Slope = 1</text>
+        </svg>
+    </div>
+    <p class="graph-caption">Figure 2: The absolute value function has a sharp corner. The multiplier \( h(x) \) jumps from -1 to 1 at \( x=0 \).</p>
+
+    <!-- Example 3 -->
+    <div class="example-box success">
+        <h3>Example 3: Oscillatory Success (Subtle)</h3>
+        <p>Let \( f(x) = x^2 \sin\left(\frac{1}{x}\right) \) for \( x \neq 0 \), and \( f(0) = 0 \). Find \( h(x) \) and \( f'(0) \).</p>
+        <p><strong>Step 1: Compute \( f(x) - f(0) \).</strong></p>
+        <div class="math-block">
+            \[ f(x) - f(0) = x^2 \sin\left(\frac{1}{x}\right) \]
+        </div>
+        <p><strong>Step 2: Extract \( h(x) \).</strong> Dividing by \( x \):</p>
+        <div class="math-block">
+            \[ h(x) = x \sin\left(\frac{1}{x}\right) \]
+        </div>
+        <p><strong>Step 3: Check continuity at \( a = 0 \).</strong> Since \( -|x| \leq x \sin(1/x) \leq |x| \), the Squeeze Theorem gives:</p>
+        <div class="math-block">
+            \[ \lim_{x \to 0} h(x) = 0 \]
+        </div>
+        <p>We define \( h(0) = 0 \). Thus, \( h \) is continuous at \( 0 \).</p>
+        <p><strong>Step 4: Compute \( f'(0) \).</strong></p>
+        <div class="math-block">
+            \[ f'(0) = h(0) = 0 \]
+        </div>
+
+        <!-- Illustration 3: Oscillatory Success -->
+        <div class="graph-container">
+            <svg viewBox="0 0 500 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                <!-- Axes -->
+                <line x1="50" y1="150" x2="460" y2="150" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+                <line x1="250" y1="280" x2="250" y2="30" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+                <text x="465" y="155" fill="#64748b" font-family="Arial" font-size="12">x</text>
+                <text x="240" y="25" fill="#64748b" font-family="Arial" font-size="12">y</text>
+
+                <!-- Envelope y = x and y = -x (dashed light lines) -->
+                <line x1="100" y1="100" x2="400" y2="200" stroke="#a5d6a7" stroke-width="2" stroke-dasharray="5" />
+                <line x1="100" y1="200" x2="400" y2="100" stroke="#a5d6a7" stroke-width="2" stroke-dasharray="5" />
+                <text x="405" y="205" fill="#a5d6a7" font-family="Arial" font-size="13" font-weight="bold">y = x</text>
+                <text x="405" y="105" fill="#a5d6a7" font-family="Arial" font-size="13" font-weight="bold">y = −x</text>
+
+                <!-- The h(x) = x sin(1/x) curve: constructed as a polyline squeezed between the envelopes -->
+                <!-- Left side (x from -1 to -0.05) -->
+                <polyline points="
+                    100,150 105,147 110,153 115,144 120,156 125,142 130,158 135,140 140,160 145,138 
+                    150,162 155,136 160,164 165,134 170,166 175,132 180,168 185,130 190,170 195,128 
+                    200,172 205,130 210,168 215,135 220,162 225,140 230,158 235,143 240,155 243,146 
+                    246,150 249,148
+                " fill="none" stroke="#1976d2" stroke-width="2.5" />
+
+                <!-- Right side (x from 0.05 to 1) -->
+                <polyline points="
+                    251,152 254,150 257,146 260,155 263,143 266,158 270,140 275,162 280,135 285,168 
+                    290,130 295,172 300,128 305,170 310,132 315,166 320,134 325,164 330,136 335,162 
+                    340,138 345,160 350,140 355,158 360,142 365,156 370,144 375,153 380,147 385,152 
+                    390,148 395,151 400,150
+                " fill="none" stroke="#1976d2" stroke-width="2.5" />
+
+                <!-- Origin dot for h(0) = 0 -->
+                <circle cx="250" cy="150" r="5" fill="#d81b60" />
+                <text x="260" y="145" fill="#d81b60" font-family="Arial" font-size="14" font-weight="bold">h(0) = 0</text>
+
+                <!-- Labels -->
+                <text x="60" y="45" fill="#1976d2" font-family="Arial" font-size="13" font-style="italic">h(x) = x · sin(1/x)</text>
+            </svg>
+        </div>
+        <p class="graph-caption">Figure 3: The multiplier \( h(x) = x \sin(1/x) \) oscillates infinitely but is squeezed to 0 by the envelope lines \( y = \pm x \), so \( h \) is continuous at 0.</p>
+
+        <div class="observation-box">
+            <strong>Observation:</strong> This is a famous example. The derivative \( f'(x) \) for \( x \neq 0 \) is \( 2x \sin(1/x) - \cos(1/x) \), which has no limit as \( x \to 0 \) (it oscillates wildly). However, the <em>Carathéodory multiplier</em> \( h(x) \) is continuous at \( 0 \). This highlights that the criterion is about the existence of a continuous secant slope, not the continuity of the derivative itself.
+        </div>
+    </div>
+
+    <!-- Example 4 -->
+    <div class="example-box failure">
+        <h3>Example 4: Vertical Tangent (Failure)</h3>
+        <p>Let \( f(x) = x^{2/3} \) and \( a = 0 \). Try to find \( h(x) \) and \( f'(0) \).</p>
+        <p><strong>Step 1: Compute \( f(x) - f(0) \).</strong></p>
+        <div class="math-block">
+            \[ f(x) - f(0) = x^{2/3} \]
+        </div>
+        <p><strong>Step 2: Extract \( h(x) \).</strong> Dividing by \( x \):</p>
+        <div class="math-block">
+            \[ h(x) = \frac{x^{2/3}}{x} = x^{-1/3} = \frac{1}{\sqrt[3]{x}} \]
+        </div>
+        <p><strong>Step 3: Check continuity at \( a = 0 \).</strong> As \( x \to 0 \), \( h(x) \to \infty \). The function is unbounded near 0, so it cannot be continuous at 0.</p>
+        <p><strong>Step 4: Compute \( f'(0) \).</strong> Since no continuous \( h \) exists, \( f'(0) \) does not exist.</p>
+        <div class="observation-box">
+            <strong>Observation:</strong> The function \( f(x) = x^{2/3} \) has a vertical tangent at \( x=0 \). This corresponds to the multiplier \( h(x) \) blowing up to infinity. Carathéodory's criterion elegantly captures this failure mode.
+        </div>
+    </div>
+
+    <!-- Illustration 4: Vertical Tangent -->
+    <div class="graph-container">
+        <svg viewBox="0 0 500 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <line x1="50" y1="250" x2="460" y2="250" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+            <line x1="250" y1="280" x2="250" y2="30" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+            <text x="465" y="255" fill="#64748b" font-family="Arial" font-size="12">x</text>
+            <text x="240" y="25" fill="#64748b" font-family="Arial" font-size="12">y</text>
+
+            <path d="M 100 100 Q 200 180 250 250 Q 300 180 400 100" fill="none" stroke="#2e7d32" stroke-width="3" />
+            <text x="380" y="90" fill="#2e7d32" font-family="Arial" font-size="14" font-weight="bold">y = x^{2/3}</text>
+
+            <circle cx="250" cy="250" r="5" fill="#d81b60" />
+            <text x="260" y="245" fill="#d81b60" font-family="Arial" font-size="14" font-weight="bold">a = 0</text>
+
+            <line x1="250" y1="50" x2="250" y2="250" stroke="#d81b60" stroke-width="2" stroke-dasharray="6" />
+            <text x="260" y="70" fill="#d81b60" font-family="Arial" font-size="12" font-style="italic">Vertical Tangent</text>
+        </svg>
+    </div>
+    <p class="graph-caption">Figure 4: A vertical tangent corresponds to the multiplier \( h(x) \) becoming unbounded as \( x \to a \).</p>
+
+    <!-- Example 5 -->
+    <div class="example-box failure">
+        <h3>Example 5: Oscillatory Failure</h3>
+        <p>Let \( f(x) = x \sin\left(\frac{1}{x}\right) \) for \( x \neq 0 \), and \( f(0) = 0 \). Evaluate differentiability at \( a = 0 \).</p>
+        <p><strong>Step 1: Compute \( f(x) - f(0) \).</strong></p>
+        <div class="math-block">
+            \[ f(x) - f(0) = x \sin\left(\frac{1}{x}\right) \]
+        </div>
+        <p><strong>Step 2: Extract \( h(x) \).</strong> Dividing by \( x \):</p>
+        <div class="math-block">
+            \[ h(x) = \sin\left(\frac{1}{x}\right) \]
+        </div>
+        <p><strong>Step 3: Check continuity at \( a = 0 \).</strong> As \( x \to 0 \), \( \sin(1/x) \) oscillates infinitely often between \( -1 \) and \( 1 \). The limit does not exist, so no matter what value we assign to \( h(0) \), \( h \) cannot be continuous at \( 0 \).</p>
+        <p><strong>Step 4: Compute \( f'(0) \).</strong> Since no continuous \( h \) exists, \( f'(0) \) does not exist.</p>
+
+        <!-- Illustration 5: Oscillatory Failure -->
+        <div class="graph-container">
+            <svg viewBox="0 0 500 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                <!-- Axes -->
+                <line x1="50" y1="150" x2="460" y2="150" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+                <line x1="250" y1="280" x2="250" y2="30" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+                <text x="465" y="155" fill="#64748b" font-family="Arial" font-size="12">x</text>
+                <text x="240" y="25" fill="#64748b" font-family="Arial" font-size="12">y</text>
+
+                <!-- Bounds y = 1 and y = -1 -->
+                <line x1="60" y1="80" x2="440" y2="80" stroke="#a5d6a7" stroke-width="2" stroke-dasharray="5" />
+                <line x1="60" y1="220" x2="440" y2="220" stroke="#a5d6a7" stroke-width="2" stroke-dasharray="5" />
+                <text x="445" y="85" fill="#a5d6a7" font-family="Arial" font-size="13" font-weight="bold">y = 1</text>
+                <text x="445" y="225" fill="#a5d6a7" font-family="Arial" font-size="13" font-weight="bold">y = −1</text>
+
+                <!-- Wildly oscillating sin(1/x), frequency increases toward x=0 -->
+                <!-- Far from origin: sparse oscillation -->
+                <polyline points="
+                    60,150 75,80 90,220 105,80 120,220 135,80 150,220 160,80 170,220 180,80 
+                    190,220 198,80 206,220 212,80 218,220 223,80 228,220 232,80 236,220 240,80 
+                    243,220 245,80 247,220 248.5,80 249.5,220 250,150
+                " fill="none" stroke="#1976d2" stroke-width="2" />
+
+                <!-- Right side -->
+                <polyline points="
+                    250,150 250.5,80 251.5,220 252.5,80 254,220 255,80 257,220 259,80 262,220 
+                    265,80 268,220 272,80 277,220 282,80 288,220 295,80 302,220 310,80 320,220 
+                    330,80 340,220 350,80 365,220 380,80 395,220 415,80 440,150
+                " fill="none" stroke="#1976d2" stroke-width="2" />
+
+                <!-- Origin area marker -->
+                <circle cx="250" cy="150" r="4" fill="#d81b60" />
+
+                <!-- Labels -->
+                <text x="60" y="45" fill="#1976d2" font-family="Arial" font-size="13" font-style="italic">h(x) = sin(1/x)</text>
+                <text x="260" y="270" fill="#d81b60" font-family="Arial" font-size="12" font-weight="bold">No limit at 0</text>
+            </svg>
+        </div>
+        <p class="graph-caption">Figure 5: The multiplier \( h(x) = \sin(1/x) \) oscillates infinitely often between \( -1 \) and \( 1 \) as \( x \to 0 \). No limit exists, so \( h \) cannot be continuous at \( 0 \).</p>
+
+        <div class="observation-box">
+            <strong>Observation:</strong> Comparing this to Example 3 is crucial. In Example 3, multiplying by an extra factor of \( x \) "dampened" the oscillation enough to make the secant slope continuous at 0. Here, without that extra \( x \), the secant slope oscillates too wildly, and differentiability fails.
+        </div>
+    </div>
+
+    <!-- SUMMARY BOX -->
+    <div class="box" style="background-color: #f0fdf4; border: 4px solid var(--primary-dark); border-radius: 12px; padding: 2.5rem; margin-top: 3.5rem; box-shadow: 0 8px 20px rgba(27, 94, 32, 0.15);">
+        <h3 style="font-family: 'Helvetica Neue', Arial, sans-serif; color: var(--primary-dark); font-size: 1.4rem; margin-bottom: 1.5rem; text-align: center; border-bottom: 2px solid var(--primary-green); padding-bottom: 1rem; display: block;">Key Takeaways</h3>
+        <ul style="margin-left: 2rem; margin-top: 1rem; line-height: 2;">
+            <li><strong>Algebraic Equivalence:</strong> Carathéodory's criterion provides an algebraic equivalent to the analytic limit definition of the derivative.</li>
+            <li><strong>The Role of \( h(x) \):</strong> The function \( h(x) \) represents the slope of the secant line between \( a \) and \( x \). Differentiability is equivalent to this secant slope having a <em>continuous extension</em> at \( a \).</li>
+            <li><strong>Failure Modes:</strong> Differentiability fails when \( h(x) \) cannot be made continuous at \( a \). This happens in three common ways:
+                <ul>
+                    <li><strong>Jump Discontinuity:</strong> (e.g., \( |x| \)) The left and right slopes differ.</li>
+                    <li><strong>Infinite Discontinuity:</strong> (e.g., \( x^{2/3} \)) The slope becomes unbounded (vertical tangent).</li>
+                    <li><strong>Oscillatory Discontinuity:</strong> (e.g., \( \sin(1/x) \)) The slope oscillates without settling on a value.</li>
+                </ul>
+            </li>
+            <li><strong>Chain Rule:</strong> This criterion simplifies the proof of the Chain Rule. If \( f(x) - f(a) = h(x)(x-a) \) and \( g(y) - g(b) = k(y)(y-b) \), then \( g(f(x)) - g(f(a)) = k(f(x))h(x)(x-a) \), making the multiplier for the composition simply \( k(f(x)) \cdot h(x) \).</li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
