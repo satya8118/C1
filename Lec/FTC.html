@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fundamental Theorem of Calculus</title>
+    
+    <!-- MathJax Configuration -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --primary-dark: #1b5e20;
+            --light-green: #e8f5e9;
+            --bg-color: #f4fbf7;
+            --text-main: #1f2937;
+            --text-light: #4b5563;
+            --accent-pink: #d81b60;
+            --accent-blue: #1976d2;
+            --accent-orange: #f57c00;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            max-width: 900px;
+            width: 100%;
+            padding: 3rem 4rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-top: 8px solid var(--primary-green);
+        }
+
+        h1 {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        /* General Box Styles */
+        .box {
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .box h2 {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.15rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Theorem Box */
+        .theorem-box {
+            background-color: var(--light-green);
+            border-left: 6px solid var(--primary-green);
+        }
+        .theorem-box h2 { color: var(--primary-green); }
+
+        /* Key Step Box */
+        .key-step-box {
+            background-color: #e3f2fd;
+            border-left: 6px solid var(--accent-blue);
+        }
+        .key-step-box h2 { color: var(--accent-blue); }
+
+        /* Result Box */
+        .result-box {
+            background-color: #fff8e1;
+            border-left: 6px solid var(--accent-orange);
+        }
+        .result-box h2 { color: var(--accent-orange); }
+
+        /* Comment Box */
+        .comment-box {
+            background-color: #f3e5f5;
+            border-left: 6px solid #8e24aa;
+        }
+        .comment-box h2 { color: #8e24aa; }
+
+        /* Big Summary Box */
+        .summary-box {
+            background-color: #f0fdf4;
+            border: 4px solid var(--primary-dark);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-top: 3.5rem;
+            box-shadow: 0 8px 20px rgba(27, 94, 32, 0.15);
+        }
+        .summary-box h2 {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--primary-dark);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-green);
+            padding-bottom: 1rem;
+        }
+        .summary-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .summary-item {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .summary-item h3 {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--primary-green);
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Math Formatting */
+        .math-block {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+            font-size: 1.15rem;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        /* SVG Graph Styling */
+        .graph-container {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Layout Helpers */
+        .page-break {
+            border: 0;
+            border-top: 2px dashed var(--border-color);
+            margin: 3rem 0;
+            opacity: 0.5;
+        }
+
+        .float-right {
+            float: right;
+            width: 250px;
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-light);
+            clear: right;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .float-right strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+            font-size: 1rem;
+        }
+
+        .qed-square {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent-pink);
+            float: right;
+            margin-top: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 1.5rem; }
+            .float-right {
+                float: none;
+                width: 100%;
+                margin-left: 0;
+                margin-bottom: 1.5rem;
+            }
+            .math-block { font-size: 1rem; }
+            .summary-box { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>The Fundamental Theorem of Calculus</h1>
+
+    <p>We abbreviate the name of this theorem as FTC1. In words, it says that the derivative of a definite integral with respect to its upper limit is the integrand evaluated at the upper limit.</p>
+
+    <div class="box theorem-box">
+        <h2>The Fundamental Theorem of Calculus, Part 1</h2>
+        <p>If \( f \) is continuous on \( [a, b] \), then the function \( g \) defined by</p>
+        <div class="math-block">
+            \[ g(x) = \int_a^x f(t) \, dt \quad\quad a \leq x \leq b \]
+        </div>
+        <p>is continuous on \( [a, b] \) and differentiable on \( (a, b) \), and \( g'(x) = f(x) \).</p>
+    </div>
+
+    <p><strong>PROOF</strong> &nbsp; If \( x \) and \( x + h \) are in \( (a, b) \), then</p>
+
+    <div class="math-block" style="flex-direction: column; align-items: flex-start; padding-left: 2rem;">
+        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+            \( g(x + h) - g(x) = \int_a^{x+h} f(t) \, dt - \int_a^x f(t) \, dt \)
+        </div>
+        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+            \( = \left( \int_a^x f(t) \, dt + \int_x^{x+h} f(t) \, dt \right) - \int_a^x f(t) \, dt \)
+        </div>
+        <div style="display: flex; align-items: center;">
+            \( = \int_x^{x+h} f(t) \, dt \)
+        </div>
+    </div>
+
+    <div class="box key-step-box">
+        <h2>Key Step: The Difference Quotient</h2>
+        <p>Dividing the result by \( h \) (for \( h \neq 0 \)), we obtain the difference quotient for \( g(x) \):</p>
+        <div class="math-block">
+            \[ \frac{g(x + h) - g(x)}{h} = \frac{1}{h} \int_x^{x+h} f(t) \, dt \]
+        </div>
+    </div>
+
+    <p>For now let's assume that \( h > 0 \). Since \( f \) is continuous on \( [x, x + h] \), the Extreme Value Theorem says that there are numbers \( u \) and \( v \) in \( [x, x + h] \) such that \( f(u) = m \) and \( f(v) = M \), where \( m \) and \( M \) are the absolute minimum and maximum values of \( f \) on \( [x, x + h] \).</p>
+
+    <!-- Dynamic SVG Graph -->
+    <div class="graph-container">
+        <svg viewBox="0 0 500 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
+                </marker>
+            </defs>
+
+            <!-- Axes -->
+            <line x1="40" y1="200" x2="460" y2="200" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+            <line x1="40" y1="200" x2="40" y2="20" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+            <text x="465" y="205" fill="#64748b" font-family="Arial" font-size="12">x</text>
+            <text x="30" y="15" fill="#64748b" font-family="Arial" font-size="12">y</text>
+
+            <!-- Shaded Area under curve -->
+            <path d="M 150 200 L 150 100 Q 200 60 250 80 Q 300 100 350 130 L 350 200 Z" fill="rgba(46, 125, 50, 0.15)" stroke="none" />
+
+            <!-- The Curve f(x) -->
+            <path d="M 100 200 Q 200 40 300 100 Q 400 160 450 200" fill="none" stroke="#2e7d32" stroke-width="3" />
+            <text x="420" y="160" fill="#2e7d32" font-family="Arial" font-size="14" font-weight="bold">y = f(x)</text>
+
+            <!-- Vertical Lines for x and x+h -->
+            <line x1="150" y1="200" x2="150" y2="95" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4" />
+            <line x1="350" y1="200" x2="350" y2="125" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4" />
+
+            <!-- Rectangle m -->
+            <rect x="150" y="150" width="200" height="50" fill="rgba(216, 27, 96, 0.2)" stroke="#d81b60" stroke-width="1.5" />
+            <text x="160" y="180" fill="#d81b60" font-family="Arial" font-size="12" font-weight="bold">m</text>
+
+            <!-- Rectangle M -->
+            <rect x="150" y="70" width="200" height="130" fill="rgba(216, 27, 96, 0.2)" stroke="#d81b60" stroke-width="1.5" stroke-dasharray="4" />
+            <text x="160" y="90" fill="#d81b60" font-family="Arial" font-size="12" font-weight="bold">M</text>
+
+            <!-- Labels on x-axis -->
+            <text x="140" y="220" fill="#1f2937" font-family="Arial" font-size="14" font-style="italic">x</text>
+            <text x="335" y="220" fill="#1f2937" font-family="Arial" font-size="14" font-style="italic">x + h</text>
+
+            <!-- Bracket for h -->
+            <line x1="150" y1="235" x2="350" y2="235" stroke="#64748b" stroke-width="1.5" />
+            <line x1="150" y1="230" x2="150" y2="240" stroke="#64748b" stroke-width="1.5" />
+            <line x1="350" y1="230" x2="350" y2="240" stroke="#64748b" stroke-width="1.5" />
+            <text x="240" y="250" fill="#64748b" font-family="Arial" font-size="12" font-style="italic">h</text>
+        </svg>
+    </div>
+
+    <div class="box result-box">
+        <h2>Result: The Bounding Inequality</h2>
+        <p>By considering the areas of these rectangles, we have</p>
+        <div class="math-block">
+            \[ mh \leq \int_x^{x+h} f(t) \, dt \leq Mh \]
+        </div>
+        <p>that is,</p>
+        <div class="math-block">
+            \[ f(u)h \leq \int_x^{x+h} f(t) \, dt \leq f(v)h \]
+        </div>
+        <p>Since \( h > 0 \), we can divide this inequality by \( h \):</p>
+        <div class="math-block">
+            \[ f(u) \leq \frac{1}{h} \int_x^{x+h} f(t) \, dt \leq f(v) \]
+        </div>
+    </div>
+
+    <p>Now we use the difference quotient derived earlier to replace the middle part of this inequality:</p>
+
+    <div class="math-block">
+        \[ f(u) \leq \frac{g(x + h) - g(x)}{h} \leq f(v) \]
+    </div>
+
+    <div class="float-right">
+        <strong>Dynamic Visualization</strong>
+        The graph above illustrates how the area under the curve \( f(x) \) between \( x \) and \( x+h \) is bounded by the rectangles of height \( m \) and \( M \). As \( h \) approaches 0, these bounds squeeze the average rate of change towards \( f(x) \).
+    </div>
+
+    <p>This inequality can be proved in a similar manner for the case where \( h < 0 \). Now we let \( h \to 0 \). We then have \( u \to x \) and \( v \to x \), since \( u \) and \( v \) lie between \( x \) and \( x + h \). Therefore</p>
+
+    <!-- SPLIT INTO TWO LINES HERE -->
+    <div class="math-block">
+        \[ \lim_{h \to 0} f(u) = \lim_{u \to x} f(u) = f(x) \]
+    </div>
+    <div class="math-block">
+        \[ \text{and} \quad \lim_{h \to 0} f(v) = \lim_{v \to x} f(v) = f(x) \]
+    </div>
+
+    <p>because \( f \) is continuous at \( x \). We conclude, from the Squeeze Theorem, that</p>
+
+    <div class="box result-box">
+        <h2>Conclusion of Part 1</h2>
+        <div class="math-block">
+            \[ g'(x) = \lim_{h \to 0} \frac{g(x + h) - g(x)}{h} = f(x) \]
+        </div>
+    </div>
+
+    <p>If \( x = a \) or \( b \), then this equation can be interpreted as a one-sided limit. The properties of one-sided limits then show that \( g \) is continuous on \( [a, b] \).</p>
+
+    <hr class="page-break">
+
+    <div class="box theorem-box" style="border-left-color: var(--accent-pink);">
+        <h2 style="color: var(--accent-pink);">The Fundamental Theorem of Calculus, Part 2</h2>
+        <p>If \( f \) is continuous on \( [a, b] \), then</p>
+        <div class="math-block">
+            \[ \int_a^b f(x) \, dx = F(b) - F(a) \]
+        </div>
+        <p>where \( F \) is any antiderivative of \( f \), that is, a function such that \( F' = f \).</p>
+    </div>
+
+    <p><strong>PROOF</strong> &nbsp; Let \( g(x) = \int_a^x f(t) \, dt \). We know from Part 1 that \( g'(x) = f(x) \); that is, \( g \) is an antiderivative of \( f \). If \( F \) is any other antiderivative of \( f \) on \( [a, b] \), then \( F'(x) = f(x) \).</p>
+    
+    <div class="box comment-box">
+        <h2>Essential Result: Antiderivatives Differ by a Constant</h2>
+        <p>To prove that \( F \) and \( g \) differ by a constant, let \( H(x) = F(x) - g(x) \). Then</p>
+        <div class="math-block">
+            \[ H'(x) = F'(x) - g'(x) = f(x) - f(x) = 0 \]
+        </div>
+        <p>for all \( x \) in \( [a, b] \). Since a function with a zero derivative on an interval is constant, there exists a constant \( C \) such that \( H(x) = C \). Therefore, \( F \) and \( g \) differ by a constant:</p>
+        <div class="math-block">
+            \[ F(x) = g(x) + C \]
+        </div>
+    </div>
+
+    <p>for \( a < x < b \). But both \( F \) and \( g \) are continuous on \( [a, b] \) and so, by taking limits of both sides of this equation (as \( x \to a^+ \) and \( x \to b^- \)), we see that it also holds when \( x = a \) and \( x = b \).</p>
+    
+    <p>If we put \( x = a \) in the formula for \( g(x) \), we get</p>
+
+    <div class="math-block">
+        \[ g(a) = \int_a^a f(t) \, dt = 0 \]
+    </div>
+
+    <p>So, using the equation \( F(x) = g(x) + C \) with \( x = b \) and \( x = a \), we have</p>
+
+    <div class="box result-box">
+        <h2>Conclusion of Part 2</h2>
+        <div class="math-block" style="flex-direction: column; align-items: center;">
+            <div style="margin-bottom: 0.5rem;">
+                \[ F(b) - F(a) = [g(b) + C] - [g(a) + C] \]
+            </div>
+            <div style="display: flex; align-items: center;">
+                \[ = g(b) - g(a) = g(b) = \int_a^b f(t) \, dt \]
+            </div>
+        </div>
+    </div>
+    
+    <span class="qed-square"></span>
+
+    <!-- BIG SUMMARY BOX AT THE END -->
+    <div class="summary-box">
+        <h2>Summary: The Core Results</h2>
+        <div class="summary-content">
+            <div class="summary-item">
+                <h3>Part 1: Derivative of an Integral</h3>
+                <p>If \( f \) is continuous on \( [a, b] \), and \( g(x) = \int_a^x f(t) \, dt \), then \( g \) is continuous on \( [a, b] \), differentiable on \( (a, b) \), and its derivative is the original function:</p>
+                <div class="math-block">
+                    \[ g'(x) = f(x) \]
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <h3>Part 2: Evaluating a Definite Integral</h3>
+                <p>If \( f \) is continuous on \( [a, b] \), and \( F \) is any antiderivative of \( f \) (i.e., \( F' = f \)), then the definite integral of \( f \) from \( a \) to \( b \) is the difference in the antiderivative evaluated at the endpoints:</p>
+                <div class="math-block">
+                    \[ \int_a^b f(x) \, dx = F(b) - F(a) \]
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
