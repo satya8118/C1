@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Analysis Interactive Lab: Darboux Property & Continuity</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- KaTeX for beautiful math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        code, pre {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .tab-btn.active {
+            border-color: #6366f1;
+            color: #818cf8;
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+        canvas {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation / Header -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-indigo-600/20 rounded-xl border border-indigo-500/30 text-indigo-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-400">
+                        Real Analysis Lab: IVP & Continuity
+                    </h1>
+                    <p class="text-xs text-slate-400">Darboux Property, Topologist's Sine, Non-Additivity & Monotone Theorems</p>
+                </div>
+            </div>
+
+            <!-- Tab Navigation Buttons -->
+            <nav class="flex items-center space-x-1 bg-slate-950/60 p-1.5 rounded-xl border border-slate-800 text-xs sm:text-sm font-medium">
+                <button onclick="switchTab('sec1')" id="tab-sec1" class="tab-btn active px-3 py-1.5 rounded-lg border border-transparent transition-all hover:text-indigo-300 flex items-center space-x-1.5">
+                    <span>1. Topologist's Sine</span>
+                </button>
+                <button onclick="switchTab('sec2')" id="tab-sec2" class="tab-btn px-3 py-1.5 rounded-lg border border-transparent transition-all hover:text-indigo-300 flex items-center space-x-1.5">
+                    <span>2. Non-Additivity ($f+g$)</span>
+                </button>
+                <button onclick="switchTab('sec3')" id="tab-sec3" class="tab-btn px-3 py-1.5 rounded-lg border border-transparent transition-all hover:text-indigo-300 flex items-center space-x-1.5">
+                    <span>3. Monotone + IVP</span>
+                </button>
+                <button onclick="switchTab('sec4')" id="tab-sec4" class="tab-btn px-3 py-1.5 rounded-lg border border-transparent transition-all hover:text-indigo-300 flex items-center space-x-1.5">
+                    <span>4. Self-Check & Quiz</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+        <!-- SECTION 1: Topologist's Sine f(x) = sin(1/x) -->
+        <section id="sec1" class="tab-content space-y-6">
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4 mb-6">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-full border border-indigo-500/20">Module 1</span>
+                        <h2 class="text-2xl font-bold text-white mt-2">Oscillatory Discontinuity: $f(x) = \sin(1/x)$</h2>
+                        <p class="text-slate-400 text-sm mt-1">
+                            Demonstrating a function that satisfies the Intermediate Value Property (Darboux Property) on $\mathbb{R}$ but is <strong>discontinuous at $x=0$</strong>.
+                        </p>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-slate-950 p-2 rounded-xl border border-slate-800 text-xs">
+                        <span class="text-slate-400">Value at origin:</span>
+                        <select id="f0-val-select" onchange="updateSec1Plot()" class="bg-slate-800 text-indigo-300 font-semibold px-2 py-1 rounded border border-slate-700 focus:outline-none focus:border-indigo-500">
+                            <option value="0">f(0) = 0</option>
+                            <option value="1" selected>f(0) = 1</option>
+                            <option value="-1">f(0) = -1</option>
+                            <option value="0.5">f(0) = 0.5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Canvas Visualizer & Controls Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Left 2 Cols: Canvas Viewport -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="relative bg-slate-950 rounded-xl border border-slate-800 p-2 overflow-hidden group">
+                            <canvas id="canvas-sec1" width="700" height="420" class="w-full h-auto rounded-lg cursor-crosshair"></canvas>
+                            
+                            <!-- Mode Overlay Badge -->
+                            <div class="absolute top-4 left-4 bg-slate-900/90 border border-slate-700/80 rounded-lg px-3 py-1.5 text-xs text-slate-300 backdrop-blur-md shadow-lg flex items-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span id="sec1-mode-indicator">Mode: IVP Intermediate Value Explorer</span>
+                            </div>
+
+                            <!-- Canvas Zoom Controls -->
+                            <div class="absolute bottom-4 right-4 bg-slate-900/90 border border-slate-700/80 rounded-lg p-1.5 flex items-center space-x-1 shadow-lg backdrop-blur-md">
+                                <button onclick="zoomSec1(0.7)" title="Zoom In" class="p-1.5 hover:bg-slate-800 rounded text-slate-300 hover:text-white transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                </button>
+                                <button onclick="zoomSec1(1.4)" title="Zoom Out" class="p-1.5 hover:bg-slate-800 rounded text-slate-300 hover:text-white transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                                </button>
+                                <button onclick="resetSec1View()" title="Reset View" class="p-1.5 hover:bg-slate-800 rounded text-slate-300 hover:text-white transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Readout Banner -->
+                        <div id="sec1-readout" class="p-4 bg-slate-950/80 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-300 flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <span class="text-slate-400">Target value $y^*$:</span>
+                                <span id="y-star-val" class="font-bold text-amber-400 ml-1">0.50</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400">Found preimages in $(a,b)$:</span>
+                                <span id="preimage-count" class="font-bold text-indigo-400 ml-1">12 points</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400">Closest $c \in (a,b)$:</span>
+                                <span id="closest-c-val" class="font-mono text-emerald-400 ml-1">x ≈ 0.0318</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Col: Interactive Control Panel -->
+                    <div class="space-y-5 bg-slate-950/60 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        
+                        <!-- Toggle Mode Switch -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Exploration Mode</label>
+                            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-900 rounded-lg border border-slate-800">
+                                <button id="btn-mode-ivp" onclick="setSec1Mode('ivp')" class="py-2 text-xs font-semibold rounded-md bg-indigo-600 text-white shadow transition">
+                                    1. IVP Tester
+                                </button>
+                                <button id="btn-mode-eps" onclick="setSec1Mode('eps')" class="py-2 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200 transition">
+                                    2. $\epsilon$-$\delta$ Discontinuity
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- IVP Controls Container -->
+                        <div id="ivp-controls-group" class="space-y-4">
+                            <h4 class="text-xs font-semibold text-indigo-400 uppercase tracking-wider border-b border-slate-800 pb-1">Interval $[a, b]$ & Target $y^*$</h4>
+                            
+                            <!-- Slider a -->
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                    <span>Left endpoint $a$:</span>
+                                    <span id="slider-a-label" class="font-mono text-indigo-300">-0.20</span>
+                                </div>
+                                <input type="range" id="slider-a" min="-0.5" max="-0.001" step="0.001" value="-0.20" oninput="updateSec1Plot()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                            </div>
+
+                            <!-- Slider b -->
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                    <span>Right endpoint $b$:</span>
+                                    <span id="slider-b-label" class="font-mono text-indigo-300">0.20</span>
+                                </div>
+                                <input type="range" id="slider-b" min="0.001" max="0.5" step="0.001" value="0.20" oninput="updateSec1Plot()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                            </div>
+
+                            <!-- Slider y* -->
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                    <span>Target Intermediate Value $y^*$:</span>
+                                    <span id="slider-ystar-label" class="font-mono text-amber-400">0.50</span>
+                                </div>
+                                <input type="range" id="slider-ystar" min="-0.99" max="0.99" step="0.01" value="0.50" oninput="updateSec1Plot()" class="w-full accent-amber-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Epsilon Delta Controls Container -->
+                        <div id="eps-controls-group" class="space-y-4 hidden">
+                            <h4 class="text-xs font-semibold text-rose-400 uppercase tracking-wider border-b border-slate-800 pb-1">$\epsilon$-$\delta$ Failure Explorer</h4>
+                            
+                            <!-- Slider Epsilon -->
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                    <span>Fixed $\epsilon$:</span>
+                                    <span id="slider-eps-label" class="font-mono text-rose-400">1.00</span>
+                                </div>
+                                <input type="range" id="slider-eps" min="0.1" max="1.5" step="0.05" value="1.00" oninput="updateSec1Plot()" class="w-full accent-rose-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                            </div>
+
+                            <!-- Slider Delta -->
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                    <span>Challenge $\delta > 0$:</span>
+                                    <span id="slider-delta-label" class="font-mono text-sky-400">0.080</span>
+                                </div>
+                                <input type="range" id="slider-delta" min="0.002" max="0.30" step="0.001" value="0.080" oninput="updateSec1Plot()" class="w-full accent-sky-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                            </div>
+
+                            <div class="p-3 bg-rose-950/40 border border-rose-900/50 rounded-lg text-xs text-rose-200 leading-relaxed">
+                                <strong>Observation:</strong> No matter how small you shrink $\delta > 0$, the interval $(-\delta, \delta)$ contains points where $f(x) = 1$ and $f(x) = -1$. Thus $|f(x) - f(0)| \ge \epsilon$, breaking continuity!
+                            </div>
+                        </div>
+
+                        <!-- Preset Quick Buttons -->
+                        <div class="pt-2 border-t border-slate-800 flex gap-2">
+                            <button onclick="setSec1Preset('small')" class="flex-1 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-xs text-slate-300 transition">
+                                Close to 0
+                            </button>
+                            <button onclick="setSec1Preset('symm')" class="flex-1 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-xs text-slate-300 transition">
+                                Symmetric
+                            </button>
+                            <button onclick="setSec1Preset('positive')" class="flex-1 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-xs text-slate-300 transition">
+                                $0 < a < b$
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proof Accordion for Section 1 -->
+                <div class="mt-8 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        <span>Rigorous Mathematical Proofs</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        <!-- Card 1: IVP Proof -->
+                        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+                            <div class="flex justify-between items-center text-indigo-400 font-semibold text-sm">
+                                <span>Part A: Proof of Intermediate Value Property</span>
+                                <span class="text-xs bg-indigo-500/20 px-2 py-0.5 rounded border border-indigo-500/30">Darboux Function</span>
+                            </div>
+                            <div class="text-xs sm:text-sm text-slate-300 leading-relaxed space-y-2">
+                                <p>
+                                    Let $f(x) = \sin(1/x)$ for $x \neq 0$ and $f(0) = C \in [-1, 1]$. We prove that $f$ has the IVP on any interval $[a, b] \subset \mathbb{R}$.
+                                </p>
+                                <ul class="list-disc list-inside space-y-1 text-slate-400">
+                                    <li><strong>Case 1 ($0 < a < b$ or $a < b < 0$):</strong> $f(x)$ is continuous on $[a, b]$ as a composition of continuous functions ($x \mapsto 1/x$ and $\sin$). By classical IVT, $f$ satisfies IVP.</li>
+                                    <li><strong>Case 2 ($a \le 0 \le b$):</strong> Assume $b > 0$. By Archimedean property, choose $n \in \mathbb{N}$ large enough such that:
+                                        $$x_n^+ = \frac{1}{\frac{\pi}{2} + 2n\pi} \in (0, b), \quad x_n^- = \frac{1}{\frac{3\pi}{2} + 2n\pi} \in (0, b)$$
+                                    </li>
+                                    <li>Notice $f(x_n^+) = 1$ and $f(x_n^-) = -1$. On the closed subinterval $J = [\min(x_n^+, x_n^-), \max(x_n^+, x_n^-)] \subset (0, b)$, $f$ is continuous and range is $[-1, 1]$.</li>
+                                    <li>Since any intermediate value $y^* \in [\min(f(a), f(b)), \max(f(a), f(b))] \subseteq [-1, 1]$, IVT on $J$ guarantees $c \in J \subset (a, b)$ with $f(c) = y^*$. $\blacksquare$</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Discontinuity Proof -->
+                        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+                            <div class="flex justify-between items-center text-rose-400 font-semibold text-sm">
+                                <span>Part B: $\epsilon$-$\delta$ Proof of Discontinuity at $x=0$</span>
+                                <span class="text-xs bg-rose-500/20 px-2 py-0.5 rounded border border-rose-500/30">Discontinuous</span>
+                            </div>
+                            <div class="text-xs sm:text-sm text-slate-300 leading-relaxed space-y-2">
+                                <p>
+                                    To show $f$ is NOT continuous at $x=0$, we must negate the definition:
+                                    $$\exists \epsilon > 0, \, \forall \delta > 0, \, \exists x \in (-\delta, \delta) \text{ s.t. } |f(x) - f(0)| \ge \epsilon$$
+                                </p>
+                                <ul class="list-disc list-inside space-y-1 text-slate-400">
+                                    <li>Set $\epsilon_0 = 1$. Let $\delta > 0$ be arbitrary.</li>
+                                    <li>Choose $n \in \mathbb{N}$ large such that $x_1 = \frac{1}{\frac{\pi}{2} + 2n\pi} < \delta$ and $x_2 = \frac{1}{\frac{3\pi}{2} + 2n\pi} < \delta$.</li>
+                                    <li>Evaluating $f$: $f(x_1) = 1$ and $f(x_2) = -1$.</li>
+                                    <li>By triangle inequality:
+                                        $$2 = |f(x_1) - f(x_2)| \le |f(x_1) - f(0)| + |f(x_2) - f(0)|$$
+                                    </li>
+                                    <li>Hence at least one of $|f(x_1) - f(0)| \ge 1$ or $|f(x_2) - f(0)| \ge 1$ MUST hold! Thus $f$ cannot be continuous at $x=0$. $\blacksquare$</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Non-Additivity of IVP (f + g) -->
+        <section id="sec2" class="tab-content space-y-6 hidden">
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4 mb-6">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">Module 2</span>
+                        <h2 class="text-2xl font-bold text-white mt-2">Non-Additivity of IVP: $f + g$ Counterexample</h2>
+                        <p class="text-slate-400 text-sm mt-1">
+                            The sum of two functions possessing the Intermediate Value Property may <strong>fail drastically</strong> to satisfy IVP.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Plot and Mathematical Explanation -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Canvas Area -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="relative bg-slate-950 rounded-xl border border-slate-800 p-2 overflow-hidden">
+                            <canvas id="canvas-sec2" width="700" height="400" class="w-full h-auto rounded-lg"></canvas>
+                        </div>
+
+                        <!-- Interactive View Controls -->
+                        <div class="p-4 bg-slate-950/80 border border-slate-800 rounded-xl flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex items-center space-x-4 text-xs sm:text-sm">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" id="chk-show-f" checked onchange="updateSec2Plot()" class="accent-cyan-500 rounded">
+                                    <span class="text-cyan-400 font-semibold">$f(x) = \sin(1/x)$</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" id="chk-show-g" checked onchange="updateSec2Plot()" class="accent-purple-500 rounded">
+                                    <span class="text-purple-400 font-semibold">$g(x) = -\sin(1/x)$</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" id="chk-show-sum" checked onchange="updateSec2Plot()" class="accent-amber-500 rounded">
+                                    <span class="text-amber-400 font-bold">Sum $(f+g)(x)$</span>
+                                </label>
+                            </div>
+                            <div class="text-xs text-slate-400">
+                                Evaluated on interval <span class="text-white font-mono">[-1, 1]</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column Details -->
+                    <div class="space-y-4 bg-slate-950/60 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-white mb-3">Function Definitions</h3>
+                            
+                            <div class="space-y-3 text-xs sm:text-sm">
+                                <div class="p-3 bg-cyan-950/30 border border-cyan-800/40 rounded-lg">
+                                    <p class="font-bold text-cyan-300 mb-1">$f(x)$ Definition:</p>
+                                    $$f(x) = \begin{cases} \sin(1/x) & x \neq 0 \\ 1 & x = 0 \end{cases}$$
+                                    <p class="text-slate-400 text-xs mt-1">Satisfies IVP everywhere on $\mathbb{R}$.</p>
+                                </div>
+
+                                <div class="p-3 bg-purple-950/30 border border-purple-800/40 rounded-lg">
+                                    <p class="font-bold text-purple-300 mb-1">$g(x)$ Definition:</p>
+                                    $$g(x) = \begin{cases} -\sin(1/x) & x \neq 0 \\ 1 & x = 0 \end{cases}$$
+                                    <p class="text-slate-400 text-xs mt-1">Satisfies IVP everywhere on $\mathbb{R}$.</p>
+                                </div>
+
+                                <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg">
+                                    <p class="font-bold text-amber-300 mb-1">Sum $(f+g)(x)$ Behavior:</p>
+                                    $$(f+g)(x) = \begin{cases} 0 & x \neq 0 \\ 2 & x = 0 \end{cases}$$
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-rose-950/40 border border-rose-900/60 rounded-lg text-xs text-rose-200">
+                            <strong>Why IVP Fails for $f+g$:</strong> On interval $[-1, 1]$, $(f+g)(-1) = 0$ and $(f+g)(0) = 2$. However, $(f+g)([-1, 1]) = \{0, 2\}$. All intermediate values in $(0, 2)$ (like $y = 1$) are <strong>completely missed</strong>!
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Step-by-step rigorous proof section -->
+                <div class="mt-6 bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <span class="p-1 bg-amber-500/20 text-amber-400 rounded">Proof</span>
+                        <span>Rigorous Analysis: Non-Closure of Darboux Functions under Addition</span>
+                    </h3>
+                    <div class="text-xs sm:text-sm text-slate-300 leading-relaxed space-y-3">
+                        <p>
+                            <strong>1. Individual Functions Have IVP:</strong> For any interval $I = [a, b]$ containing $0$, $\sin(1/x)$ oscillates infinitely between $-1$ and $1$ on $I \setminus \{0\}$. Thus $f(I) = [-1, 1]$ and $g(I) = [-1, 1]$. Since $f(0) = 1 \in [-1, 1]$ and $g(0) = 1 \in [-1, 1]$, adding $x=0$ does not introduce any values outside $[-1, 1]$ nor create gaps. Both $f$ and $g$ map every subinterval containing $0$ onto $[-1, 1]$.
+                        </p>
+                        <p>
+                            <strong>2. Sum Function Calculation:</strong> For $x \neq 0$, $f(x) + g(x) = \sin(1/x) + (-\sin(1/x)) = 0$. At $x = 0$, $f(0) + g(0) = 1 + 1 = 2$. Thus, $(f+g)(x)$ is identical to $0$ everywhere except at the origin where it jumps to $2$.
+                        </p>
+                        <p>
+                            <strong>3. Breakdown of IVP:</strong> Choose interval $I = [-1, 1]$. The endpoints map to $(f+g)(-1) = 0$ and $(f+g)(0) = 2$. Pick intermediate value $y^* = 1 \in (0, 2)$. For $y^* = 1$ to satisfy IVP, there must exist $c \in [-1, 1]$ with $(f+g)(c) = 1$. But $(f+g)(x)$ only takes values $0$ and $2$. No such $c$ exists.
+                        </p>
+                        <p class="text-indigo-300 font-semibold">
+                            Conclusion: The set of Darboux (IVP) functions is NOT a vector space / module closed under addition.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- STREAMING_CHUNK:Rendering Section 3: Theorem Monotone + IVP => Continuous... -->
+        <!-- SECTION 3: Monotone + IVP => Continuous -->
+        <section id="sec3" class="tab-content space-y-6 hidden">
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4 mb-6">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">Module 3</span>
+                        <h2 class="text-2xl font-bold text-white mt-2">Theorem: Monotone + IVP $\implies$ Continuity</h2>
+                        <p class="text-slate-400 text-sm mt-1">
+                            If a monotonic function satisfies the Intermediate Value Property on an interval $I$, it <strong>must be continuous</strong> on $I$.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interactive Visualization -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Canvas Visualization -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="relative bg-slate-950 rounded-xl border border-slate-800 p-2 overflow-hidden">
+                            <canvas id="canvas-sec3" width="700" height="400" class="w-full h-auto rounded-lg"></canvas>
+                        </div>
+
+                        <!-- Readout for Jump Gap -->
+                        <div id="sec3-readout" class="p-4 bg-slate-950/80 border border-slate-800 rounded-xl flex flex-wrap items-center justify-between text-xs sm:text-sm text-slate-300">
+                            <div>Left limit $L = f(x_0^-)$: <span id="val-L" class="font-mono text-cyan-400 font-bold">1.00</span></div>
+                            <div>Right limit $R = f(x_0^+)$: <span id="val-R" class="font-mono text-purple-400 font-bold">2.50</span></div>
+                            <div>Jump gap height $J = R - L$: <span id="val-jump" class="font-mono text-rose-400 font-bold">1.50</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Jump Gap Control Panel -->
+                    <div class="space-y-5 bg-slate-950/60 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Jump Gap Simulator</h3>
+                            
+                            <!-- Slider Jump Height -->
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                        <span>Jump Height $J = R - L$:</span>
+                                        <span id="slider-jump-label" class="font-mono text-rose-400 font-bold">1.50</span>
+                                    </div>
+                                    <input type="range" id="slider-jump" min="0.0" max="3.0" step="0.05" value="1.50" oninput="updateSec3Plot()" class="w-full accent-rose-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                                </div>
+
+                                <!-- Target y* inside jump gap -->
+                                <div>
+                                    <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                        <span>Target Value $y^*$ in gap:</span>
+                                        <span id="slider-gap-ystar-label" class="font-mono text-amber-400 font-bold">1.75</span>
+                                    </div>
+                                    <input type="range" id="slider-gap-ystar" min="0" max="4" step="0.05" value="1.75" oninput="updateSec3Plot()" class="w-full accent-amber-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="sec3-status-box" class="p-3 bg-rose-950/40 border border-rose-900/60 rounded-lg text-xs text-rose-200">
+                            <strong>IVP Violated!</strong> The function misses all values in the jump interval $(L, R) = (1.00, 2.50)$. No $c$ satisfies $f(c) = y^*$. Slide $J \to 0$ to satisfy IVP!
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Structured Proof Card -->
+                <div class="mt-6 bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <span class="p-1 bg-emerald-500/20 text-emerald-400 rounded">Theorem & Proof</span>
+                        <span>Monotone + IVP $\implies$ Continuity</span>
+                    </h3>
+
+                    <div class="text-xs sm:text-sm text-slate-300 leading-relaxed space-y-4">
+                        <div class="p-4 bg-emerald-950/30 border border-emerald-800/40 rounded-xl text-emerald-200 font-medium">
+                            <strong>Theorem:</strong> Let $I \subseteq \mathbb{R}$ be an interval and let $f: I \to \mathbb{R}$ be a monotonic function. If $f$ satisfies the Intermediate Value Property on $I$, then $f$ is continuous on $I$.
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                                <h4 class="font-bold text-indigo-400 mb-1">Step 1: One-Sided Limits Exist</h4>
+                                <p class="text-slate-400">
+                                    Without loss of generality, assume $f$ is non-decreasing on $I$. At any interior point $x_0 \in I$, the left-hand limit $L = \lim_{x \to x_0^-} f(x) = \sup_{x < x_0} f(x)$ and right-hand limit $R = \lim_{x \to x_0^+} f(x) = \inf_{x > x_0} f(x)$ exist and satisfy:
+                                    $$L \le f(x_0) \le R$$
+                                </p>
+                            </div>
+
+                            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                                <h4 class="font-bold text-indigo-400 mb-1">Step 2: Proof by Contradiction (Assume Discontinuity)</h4>
+                                <p class="text-slate-400">
+                                    Suppose $f$ is discontinuous at $x_0$. Then $L < R$. The open gap $(L, R) \setminus \{f(x_0)\}$ is non-empty. Choose $y^*$ in this open gap such that $y^* \neq f(x_0)$.
+                                </p>
+                            </div>
+
+                            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                                <h4 class="font-bold text-indigo-400 mb-1">Step 3: Missing Value Contradiction</h4>
+                                <p class="text-slate-400">
+                                    Choose points $a < x_0 < b$ in $I$. Because $f$ is non-decreasing:
+                                    <br>• For all $x < x_0$: $f(x) \le L < y^*$
+                                    <br>• For $x = x_0$: $f(x_0) \neq y^*$
+                                    <br>• For all $x > x_0$: $f(x) \ge R > y^*$
+                                    <br>Therefore, there exists <strong>no $c \in [a, b]$</strong> such that $f(c) = y^*$.
+                                </p>
+                            </div>
+
+                            <div class="p-3 bg-emerald-950/20 border border-emerald-900/40 rounded-lg">
+                                <h4 class="font-bold text-emerald-400 mb-1">Step 4: Conclusion</h4>
+                                <p class="text-slate-300">
+                                    Since $y^*$ lies strictly between $f(a)$ and $f(b)$, IVP demands the existence of $c \in (a, b)$ with $f(c) = y^*$. Contradiction! Hence $L = f(x_0) = R$, proving $f$ is continuous at $x_0$. $\blacksquare$
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: Quiz & Self-Check -->
+        <section id="sec4" class="tab-content space-y-6 hidden">
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md space-y-6">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-sky-400 bg-sky-500/10 px-2.5 py-1 rounded-full border border-sky-500/20">Module 4</span>
+                    <h2 class="text-2xl font-bold text-white mt-2">Knowledge Self-Check & Interactive Sandbox</h2>
+                    <p class="text-slate-400 text-sm mt-1">Test your conceptual understanding of Darboux functions, IVP, continuity, and monotonic properties.</p>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-container" class="space-y-6">
+                    
+                    <!-- Question 1 -->
+                    <div class="p-5 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+                        <h3 class="text-sm font-bold text-white">Q1: Is the sum of two functions with the Intermediate Value Property always an IVP function?</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkQuiz(1, false, this)" class="q-btn p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-left text-slate-300 transition">
+                                A) Yes, IVP is closed under addition.
+                            </button>
+                            <button onclick="checkQuiz(1, true, this)" class="q-btn p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-left text-slate-300 transition">
+                                B) No, $f(x)=\sin(1/x)$ counterexample shows $f+g$ can fail IVP.
+                            </button>
+                        </div>
+                        <div id="quiz-feedback-1" class="hidden p-3 rounded-lg text-xs"></div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="p-5 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+                        <h3 class="text-sm font-bold text-white">Q2: Can a function satisfying IVP on $[a,b]$ have a jump discontinuity?</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkQuiz(2, true, this)" class="q-btn p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-left text-slate-300 transition">
+                                A) No! A jump discontinuity skips an open interval of values, violating IVP.
+                            </button>
+                            <button onclick="checkQuiz(2, false, this)" class="q-btn p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-left text-slate-300 transition">
+                                B) Yes, like $f(x)=\sin(1/x)$ at origin.
+                            </button>
+                        </div>
+                        <div id="quiz-feedback-2" class="hidden p-3 rounded-lg text-xs"></div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="p-5 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+                        <h3 class="text-sm font-bold text-white">Q3: If $f: I \to \mathbb{R}$ is monotonic and satisfies IVP, what must be true?</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkQuiz(3, false, this)" class="q-btn p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-left text-slate-300 transition">
+                                A) $f$ must be differentiable everywhere.
+                            </button>
+                            <button onclick="checkQuiz(3, true, this)" class="q-btn p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-left text-slate-300 transition">
+                                B) $f$ must be continuous everywhere on $I$.
+                            </button>
+                        </div>
+                        <div id="quiz-feedback-3" class="hidden p-3 rounded-lg text-xs"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 bg-slate-950 text-center text-xs text-slate-500">
+        Real Analysis Educational Interactive Visualizer &bull; Developed with Tailwind, KaTeX & HTML5 Canvas
+    </footer>
+
+    <script>
+        let currentTab = 'sec1';
+        let sec1Mode = 'ivp'; // 'ivp' or 'eps'
+
+        // Canvas element references
+        let canvas1, ctx1;
+        let canvas2, ctx2;
+        let canvas3, ctx3;
+
+        // View scale for Section 1
+        let sec1View = {
+            xMin: -0.4,
+            xMax: 0.4,
+            yMin: -1.6,
+            yMax: 1.6
+        };
+
+        window.onload = function() {
+            canvas1 = document.getElementById('canvas-sec1');
+            ctx1 = canvas1.getContext('2d');
+
+            canvas2 = document.getElementById('canvas-sec2');
+            ctx2 = canvas2.getContext('2d');
+
+            canvas3 = document.getElementById('canvas-sec3');
+            ctx3 = canvas3.getContext('2d');
+
+            // Initial render
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+
+            updateSec1Plot();
+            updateSec2Plot();
+            updateSec3Plot();
+        };
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            // Trigger re-render of canvases when switching tabs
+            if (tabId === 'sec1') updateSec1Plot();
+            if (tabId === 'sec2') updateSec2Plot();
+            if (tabId === 'sec3') updateSec3Plot();
+        }
+
+        /* =========================================================================
+           SECTION 1 RENDERING LOGIC: f(x) = sin(1/x)
+           ========================================================================= */
+        function setSec1Mode(mode) {
+            sec1Mode = mode;
+            const btnIvp = document.getElementById('btn-mode-ivp');
+            const btnEps = document.getElementById('btn-mode-eps');
+            const grpIvp = document.getElementById('ivp-controls-group');
+            const grpEps = document.getElementById('eps-controls-group');
+            const modeInd = document.getElementById('sec1-mode-indicator');
+
+            if (mode === 'ivp') {
+                btnIvp.className = "py-2 text-xs font-semibold rounded-md bg-indigo-600 text-white shadow transition";
+                btnEps.className = "py-2 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200 transition";
+                grpIvp.classList.remove('hidden');
+                grpEps.classList.add('hidden');
+                modeInd.textContent = "Mode: IVP Intermediate Value Explorer";
+            } else {
+                btnEps.className = "py-2 text-xs font-semibold rounded-md bg-rose-600 text-white shadow transition";
+                btnIvp.className = "py-2 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200 transition";
+                grpEps.classList.remove('hidden');
+                grpIvp.classList.add('hidden');
+                modeInd.textContent = "Mode: Epsilon-Delta Failure Visualizer";
+            }
+            updateSec1Plot();
+        }
+
+        function zoomSec1(factor) {
+            sec1View.xMin *= factor;
+            sec1View.xMax *= factor;
+            updateSec1Plot();
+        }
+
+        function resetSec1View() {
+            sec1View.xMin = -0.4;
+            sec1View.xMax = 0.4;
+            updateSec1Plot();
+        }
+
+        function setSec1Preset(type) {
+            if (type === 'small') {
+                document.getElementById('slider-a').value = -0.05;
+                document.getElementById('slider-b').value = 0.05;
+                sec1View.xMin = -0.08;
+                sec1View.xMax = 0.08;
+            } else if (type === 'symm') {
+                document.getElementById('slider-a').value = -0.20;
+                document.getElementById('slider-b').value = 0.20;
+                sec1View.xMin = -0.30;
+                sec1View.xMax = 0.30;
+            } else if (type === 'positive') {
+                document.getElementById('slider-a').value = 0.02;
+                document.getElementById('slider-b').value = 0.25;
+                sec1View.xMin = -0.05;
+                sec1View.xMax = 0.30;
+            }
+            updateSec1Plot();
+        }
+
+        function updateSec1Plot() {
+            if (!ctx1) return;
+
+            const w = canvas1.width;
+            const h = canvas1.height;
+            ctx1.clearRect(0, 0, w, h);
+
+            const a = parseFloat(document.getElementById('slider-a').value);
+            const b = parseFloat(document.getElementById('slider-b').value);
+            const yStar = parseFloat(document.getElementById('slider-ystar').value);
+            const f0Val = parseFloat(document.getElementById('f0-val-select').value);
+
+            const eps = parseFloat(document.getElementById('slider-eps').value);
+            const delta = parseFloat(document.getElementById('slider-delta').value);
+
+            document.getElementById('slider-a-label').textContent = a.toFixed(3);
+            document.getElementById('slider-b-label').textContent = b.toFixed(3);
+            document.getElementById('slider-ystar-label').textContent = yStar.toFixed(2);
+            document.getElementById('slider-eps-label').textContent = eps.toFixed(2);
+            document.getElementById('slider-delta-label').textContent = delta.toFixed(3);
+
+            // Coordinate mapping functions
+            const toX = x => ((x - sec1View.xMin) / (sec1View.xMax - sec1View.xMin)) * w;
+            const toY = y => h - ((y - sec1View.yMin) / (sec1View.yMax - sec1View.yMin)) * h;
+
+            // Draw grid & axes
+            ctx1.strokeStyle = '#1e293b';
+            ctx1.lineWidth = 1;
+            ctx1.beginPath();
+            
+            // X & Y Axes
+            ctx1.moveTo(0, toY(0)); ctx1.lineTo(w, toY(0));
+            ctx1.moveTo(toX(0), 0); ctx1.lineTo(toX(0), h);
+            
+            // Bounds y = 1 and y = -1
+            ctx1.moveTo(0, toY(1)); ctx1.lineTo(w, toY(1));
+            ctx1.moveTo(0, toY(-1)); ctx1.lineTo(w, toY(-1));
+            ctx1.stroke();
+
+            // Axis labels
+            ctx1.fillStyle = '#64748b';
+            ctx1.font = '10px Inter';
+            ctx1.fillText('y = 1', 10, toY(1) - 4);
+            ctx1.fillText('y = -1', 10, toY(-1) + 12);
+            ctx1.fillText('x = 0', toX(0) + 5, h - 10);
+
+            // MODE 2: Epsilon Delta Shading
+            if (sec1Mode === 'eps') {
+                // Delta strip
+                ctx1.fillStyle = 'rgba(56, 189, 248, 0.12)';
+                ctx1.fillRect(toX(-delta), 0, toX(delta) - toX(-delta), h);
+
+                // Delta boundary lines
+                ctx1.strokeStyle = '#38bdf8';
+                ctx1.setLineDash([4, 4]);
+                ctx1.beginPath();
+                ctx1.moveTo(toX(-delta), 0); ctx1.lineTo(toX(-delta), h);
+                ctx1.moveTo(toX(delta), 0); ctx1.lineTo(toX(delta), h);
+                ctx1.stroke();
+
+                // Epsilon strip around f(0)
+                ctx1.fillStyle = 'rgba(244, 63, 94, 0.12)';
+                ctx1.fillRect(0, toY(f0Val + eps), w, toY(f0Val - eps) - toY(f0Val + eps));
+
+                // Epsilon boundary lines
+                ctx1.strokeStyle = '#f43f5e';
+                ctx1.beginPath();
+                ctx1.moveTo(0, toY(f0Val + eps)); ctx1.lineTo(w, toY(f0Val + eps));
+                ctx1.moveTo(0, toY(f0Val - eps)); ctx1.lineTo(w, toY(f0Val - eps));
+                ctx1.stroke();
+                ctx1.setLineDash([]);
+            }
+
+            // MODE 1: Interval [a, b] Shading
+            if (sec1Mode === 'ivp') {
+                ctx1.fillStyle = 'rgba(99, 102, 241, 0.08)';
+                ctx1.fillRect(toX(a), 0, toX(b) - toX(a), h);
+
+                ctx1.strokeStyle = '#6366f1';
+                ctx1.setLineDash([4, 4]);
+                ctx1.beginPath();
+                ctx1.moveTo(toX(a), 0); ctx1.lineTo(toX(a), h);
+                ctx1.moveTo(toX(b), 0); ctx1.lineTo(toX(b), h);
+                ctx1.stroke();
+
+                // Target line y = yStar
+                ctx1.strokeStyle = '#f59e0b';
+                ctx1.lineWidth = 1.5;
+                ctx1.beginPath();
+                ctx1.moveTo(0, toY(yStar)); ctx1.lineTo(w, toY(yStar));
+                ctx1.stroke();
+                ctx1.setLineDash([]);
+            }
+
+            // DRAW FUNCTION f(x) = sin(1/x) adaptively
+            ctx1.strokeStyle = '#818cf8';
+            ctx1.lineWidth = 2;
+            ctx1.beginPath();
+
+            // Right side x > 0
+            let tStart = 1 / sec1View.xMax;
+            let tEnd = 1 / Math.max(0.0001, sec1View.xMin <= 0 ? 0.0001 : sec1View.xMin);
+            if (sec1View.xMax > 0) {
+                let first = true;
+                for (let t = tStart; t <= 1000; t += 0.04) {
+                    let x = 1 / t;
+                    if (x < Math.max(0.0001, sec1View.xMin)) break;
+                    let y = Math.sin(t);
+                    if (first) { ctx1.moveTo(toX(x), toY(y)); first = false; }
+                    else { ctx1.lineTo(toX(x), toY(y)); }
+                }
+            }
+            ctx1.stroke();
+
+            // Left side x < 0
+            ctx1.beginPath();
+            if (sec1View.xMin < 0) {
+                let first = true;
+                for (let t = 1 / Math.abs(sec1View.xMin); t <= 1000; t += 0.04) {
+                    let x = -1 / t;
+                    if (x > Math.min(-0.0001, sec1View.xMax)) break;
+                    let y = Math.sin(-t);
+                    if (first) { ctx1.moveTo(toX(x), toY(y)); first = false; }
+                    else { ctx1.lineTo(toX(x), toY(y)); }
+                }
+            }
+            ctx1.stroke();
+
+            // Point at Origin f(0)
+            ctx1.fillStyle = '#818cf8';
+            ctx1.beginPath();
+            ctx1.arc(toX(0), toY(f0Val), 5, 0, Math.PI * 2);
+            ctx1.fill();
+
+            // MODE 1 PREIMAGE CALCULATION
+            if (sec1Mode === 'ivp') {
+                let preimages = [];
+                let u1 = Math.asin(yStar);
+                let u2 = Math.PI - u1;
+
+                // Find k in range
+                for (let k = -200; k <= 200; k++) {
+                    let t1 = u1 + 2 * Math.PI * k;
+                    if (t1 !== 0) {
+                        let c1 = 1 / t1;
+                        if (c1 >= a && c1 <= b) preimages.push(c1);
+                    }
+                    let t2 = u2 + 2 * Math.PI * k;
+                    if (t2 !== 0) {
+                        let c2 = 1 / t2;
+                        if (c2 >= a && c2 <= b) preimages.push(c2);
+                    }
+                }
+
+                // Sort preimages
+                preimages.sort((p1, p2) => Math.abs(p1) - Math.abs(p2));
+
+                // Plot Preimages
+                preimages.forEach(c => {
+                    ctx1.fillStyle = '#f59e0b';
+                    ctx1.beginPath();
+                    ctx1.arc(toX(c), toY(yStar), 4, 0, Math.PI * 2);
+                    ctx1.fill();
+
+                    // Projection dot on x-axis
+                    ctx1.fillStyle = '#6366f1';
+                    ctx1.beginPath();
+                    ctx1.arc(toX(c), toY(0), 2.5, 0, Math.PI * 2);
+                    ctx1.fill();
+                });
+
+                document.getElementById('y-star-val').textContent = yStar.toFixed(2);
+                document.getElementById('preimage-count').textContent = preimages.length + " preimages";
+                document.getElementById('closest-c-val').textContent = preimages.length > 0 ? "c ≈ " + preimages[0].toFixed(5) : "None";
+            }
+
+            // MODE 2 DISCONTINUITY HIGHLIGHTS
+            if (sec1Mode === 'eps') {
+                // Find point x_1 inside (-delta, delta) where f(x_1) = 1
+                let k = Math.ceil((1 / delta - Math.PI / 2) / (2 * Math.PI));
+                let x1 = 1 / (Math.PI / 2 + 2 * Math.PI * k);
+                let x2 = 1 / (3 * Math.PI / 2 + 2 * Math.PI * k);
+
+                // Highlight x1 (f(x1) = 1)
+                ctx1.fillStyle = '#10b981';
+                ctx1.beginPath(); ctx1.arc(toX(x1), toY(1), 6, 0, Math.PI * 2); ctx1.fill();
+
+                // Highlight x2 (f(x2) = -1)
+                ctx1.fillStyle = '#f43f5e';
+                ctx1.beginPath(); ctx1.arc(toX(x2), toY(-1), 6, 0, Math.PI * 2); ctx1.fill();
+            }
+        }
+
+        /* =========================================================================
+           SECTION 2 RENDERING LOGIC: f + g Non-additivity
+           ========================================================================= */
+        function updateSec2Plot() {
+            if (!ctx2) return;
+
+            const w = canvas2.width;
+            const h = canvas2.height;
+            ctx2.clearRect(0, 0, w, h);
+
+            const showF = document.getElementById('chk-show-f').checked;
+            const showG = document.getElementById('chk-show-g').checked;
+            const showSum = document.getElementById('chk-show-sum').checked;
+
+            const xMin = -1.2, xMax = 1.2, yMin = -1.5, yMax = 2.5;
+            const toX = x => ((x - xMin) / (xMax - xMin)) * w;
+            const toY = y => h - ((y - yMin) / (yMax - yMin)) * h;
+
+            // Axes
+            ctx2.strokeStyle = '#1e293b';
+            ctx2.lineWidth = 1;
+            ctx2.beginPath();
+            ctx2.moveTo(0, toY(0)); ctx2.lineTo(w, toY(0));
+            ctx2.moveTo(toX(0), 0); ctx2.lineTo(toX(0), h);
+            ctx2.stroke();
+
+            // Draw f(x) in Cyan
+            if (showF) {
+                ctx2.strokeStyle = '#06b6d4';
+                ctx2.lineWidth = 1.5;
+                ctx2.beginPath();
+                for (let px = 0; px < w; px++) {
+                    let x = xMin + (px / w) * (xMax - xMin);
+                    if (Math.abs(x) < 0.001) continue;
+                    let y = Math.sin(1 / x);
+                    if (px === 0) ctx2.moveTo(px, toY(y));
+                    else ctx2.lineTo(px, toY(y));
+                }
+                ctx2.stroke();
+                // f(0) = 1 point
+                ctx2.fillStyle = '#06b6d4';
+                ctx2.beginPath(); ctx2.arc(toX(0), toY(1), 4, 0, Math.PI * 2); ctx2.fill();
+            }
+
+            // Draw g(x) in Purple
+            if (showG) {
+                ctx2.strokeStyle = '#a855f7';
+                ctx2.lineWidth = 1.5;
+                ctx2.beginPath();
+                for (let px = 0; px < w; px++) {
+                    let x = xMin + (px / w) * (xMax - xMin);
+                    if (Math.abs(x) < 0.001) continue;
+                    let y = -Math.sin(1 / x);
+                    if (px === 0) ctx2.moveTo(px, toY(y));
+                    else ctx2.lineTo(px, toY(y));
+                }
+                ctx2.stroke();
+                // g(0) = 1 point
+                ctx2.fillStyle = '#a855f7';
+                ctx2.beginPath(); ctx2.arc(toX(0), toY(1), 4, 0, Math.PI * 2); ctx2.fill();
+            }
+
+            // Draw (f+g)(x) in Amber
+            if (showSum) {
+                ctx2.strokeStyle = '#f59e0b';
+                ctx2.lineWidth = 3;
+
+                // Flat line at y = 0
+                ctx2.beginPath();
+                ctx2.moveTo(toX(-1), toY(0)); ctx2.lineTo(toX(0) - 4, toY(0));
+                ctx2.moveTo(toX(0) + 4, toY(0)); ctx2.lineTo(toX(1), toY(0));
+                ctx2.stroke();
+
+                // Open circle at (0,0)
+                ctx2.strokeStyle = '#f59e0b';
+                ctx2.fillStyle = '#090d16';
+                ctx2.lineWidth = 2;
+                ctx2.beginPath(); ctx2.arc(toX(0), toY(0), 5, 0, Math.PI * 2); ctx2.fill(); ctx2.stroke();
+
+                // Solid point at (0, 2)
+                ctx2.fillStyle = '#f59e0b';
+                ctx2.beginPath(); ctx2.arc(toX(0), toY(2), 6, 0, Math.PI * 2); ctx2.fill();
+
+                // Target missed line y = 1
+                ctx2.strokeStyle = '#f43f5e';
+                ctx2.setLineDash([4, 4]);
+                ctx2.beginPath(); ctx2.moveTo(toX(-1), toY(1)); ctx2.lineTo(toX(1), toY(1)); ctx2.stroke();
+                ctx2.setLineDash([]);
+
+                ctx2.fillStyle = '#f43f5e';
+                ctx2.font = '11px Inter';
+                ctx2.fillText('Target y = 1 (Never attained!)', toX(-0.9), toY(1) - 6);
+            }
+        }
+
+        /* =========================================================================
+           SECTION 3 RENDERING LOGIC: Monotone + IVP => Continuous
+           ========================================================================= */
+        function updateSec3Plot() {
+            if (!ctx3) return;
+
+            const w = canvas3.width;
+            const h = canvas3.height;
+            ctx3.clearRect(0, 0, w, h);
+
+            const jump = parseFloat(document.getElementById('slider-jump').value);
+            const yStar = parseFloat(document.getElementById('slider-gap-ystar').value);
+
+            document.getElementById('slider-jump-label').textContent = jump.toFixed(2);
+            document.getElementById('slider-gap-ystar-label').textContent = yStar.toFixed(2);
+
+            const L = 1.0;
+            const R = L + jump;
+            const x0 = 0.0;
+
+            document.getElementById('val-L').textContent = L.toFixed(2);
+            document.getElementById('val-R').textContent = R.toFixed(2);
+            document.getElementById('val-jump').textContent = jump.toFixed(2);
+
+            const xMin = -2.0, xMax = 2.0, yMin = -0.5, yMax = 4.5;
+            const toX = x => ((x - xMin) / (xMax - xMin)) * w;
+            const toY = y => h - ((y - yMin) / (yMax - yMin)) * h;
+
+            // Axes
+            ctx3.strokeStyle = '#1e293b';
+            ctx3.lineWidth = 1;
+            ctx3.beginPath();
+            ctx3.moveTo(0, toY(0)); ctx3.lineTo(w, toY(0));
+            ctx3.moveTo(toX(0), 0); ctx3.lineTo(toX(0), h);
+            ctx3.stroke();
+
+            // Draw Jump Gap Region
+            if (jump > 0.01) {
+                ctx3.fillStyle = 'rgba(244, 63, 94, 0.15)';
+                ctx3.fillRect(0, toY(R), w, toY(L) - toY(R));
+
+                ctx3.strokeStyle = 'rgba(244, 63, 94, 0.4)';
+                ctx3.setLineDash([2, 2]);
+                ctx3.beginPath();
+                ctx3.moveTo(0, toY(L)); ctx3.lineTo(w, toY(L));
+                ctx3.moveTo(0, toY(R)); ctx3.lineTo(w, toY(R));
+                ctx3.stroke();
+                ctx3.setLineDash([]);
+            }
+
+            // Draw Monotone Curve
+            ctx3.strokeStyle = '#10b981';
+            ctx3.lineWidth = 3;
+
+            // Left piece x < 0
+            ctx3.beginPath();
+            for (let px = 0; px < toX(x0); px++) {
+                let x = xMin + (px / w) * (xMax - xMin);
+                let y = L + 0.4 * x; // increasing
+                if (px === 0) ctx3.moveTo(px, toY(y));
+                else ctx3.lineTo(px, toY(y));
+            }
+            ctx3.stroke();
+
+            // Right piece x > 0
+            ctx3.beginPath();
+            for (let px = toX(x0) + 1; px < w; px++) {
+                let x = xMin + (px / w) * (xMax - xMin);
+                let y = R + 0.4 * x; // increasing
+                if (px === toX(x0) + 1) ctx3.moveTo(px, toY(y));
+                else ctx3.lineTo(px, toY(y));
+            }
+            ctx3.stroke();
+
+            // End points at jump
+            if (jump > 0.01) {
+                // Open circle at (x0, L)
+                ctx3.strokeStyle = '#10b981';
+                ctx3.fillStyle = '#090d16';
+                ctx3.lineWidth = 2;
+                ctx3.beginPath(); ctx3.arc(toX(x0), toY(L), 5, 0, Math.PI * 2); ctx3.fill(); ctx3.stroke();
+
+                // Open circle at (x0, R)
+                ctx3.beginPath(); ctx3.arc(toX(x0), toY(R), 5, 0, Math.PI * 2); ctx3.fill(); ctx3.stroke();
+
+                // Point at x0
+                ctx3.fillStyle = '#10b981';
+                ctx3.beginPath(); ctx3.arc(toX(x0), toY((L + R) / 2), 5, 0, Math.PI * 2); ctx3.fill();
+            } else {
+                // Continuous point
+                ctx3.fillStyle = '#10b981';
+                ctx3.beginPath(); ctx3.arc(toX(x0), toY(L), 6, 0, Math.PI * 2); ctx3.fill();
+            }
+
+            // Target y* line
+            ctx3.strokeStyle = '#f59e0b';
+            ctx3.lineWidth = 2;
+            ctx3.setLineDash([4, 4]);
+            ctx3.beginPath(); ctx3.moveTo(0, toY(yStar)); ctx3.lineTo(w, toY(yStar)); ctx3.stroke();
+            ctx3.setLineDash([]);
+
+            // Status message update
+            const statusBox = document.getElementById('sec3-status-box');
+            if (jump > 0.01 && yStar > L && yStar < R) {
+                statusBox.className = "p-3 bg-rose-950/40 border border-rose-900/60 rounded-lg text-xs text-rose-200";
+                statusBox.innerHTML = `<strong>IVP Violated!</strong> Target $y^* = ${yStar.toFixed(2)}$ falls in jump gap $(L, R) = (${L.toFixed(2)}, ${R.toFixed(2)})$. No $c$ satisfies $f(c) = y^*$.`;
+            } else if (jump <= 0.01) {
+                statusBox.className = "p-3 bg-emerald-950/40 border border-emerald-900/60 rounded-lg text-xs text-emerald-200";
+                statusBox.innerHTML = `<strong>Continuous & Satisfies IVP!</strong> Jump gap $J = 0$. $f$ is continuous everywhere!`;
+            } else {
+                statusBox.className = "p-3 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-300";
+                statusBox.innerHTML = `Target $y^* = ${yStar.toFixed(2)}$ is attained. Try dragging $y^*$ into the red gap $(L, R)$!`;
+            }
+        }
+
+        /* =========================================================================
+           SECTION 4: Quiz Logic
+           ========================================================================= */
+        function checkQuiz(qNum, isCorrect, btn) {
+            const feedbackEl = document.getElementById(`quiz-feedback-${qNum}`);
+            const parent = btn.parentElement;
+            
+            parent.querySelectorAll('button').forEach(b => {
+                b.classList.remove('border-indigo-500', 'bg-indigo-950', 'border-rose-500', 'bg-rose-950');
+            });
+
+            feedbackEl.classList.remove('hidden', 'bg-emerald-950/50', 'border-emerald-800', 'text-emerald-200', 'bg-rose-950/50', 'border-rose-800', 'text-rose-200');
+
+            if (isCorrect) {
+                btn.classList.add('border-emerald-500', 'bg-emerald-950/50');
+                feedbackEl.classList.add('bg-emerald-950/50', 'border', 'border-emerald-800', 'text-emerald-200');
+                feedbackEl.innerHTML = `<strong>Correct!</strong> ${getExplanation(qNum)}`;
+            } else {
+                btn.classList.add('border-rose-500', 'bg-rose-950/50');
+                feedbackEl.classList.add('bg-rose-950/50', 'border', 'border-rose-800', 'text-rose-200');
+                feedbackEl.innerHTML = `<strong>Incorrect.</strong> ${getExplanation(qNum)}`;
+            }
+        }
+
+        function getExplanation(qNum) {
+            if (qNum === 1) return "The sum $f+g$ of $f(x)=\\sin(1/x), f(0)=1$ and $g(x)=-\\sin(1/x), g(0)=1$ equals $0$ for $x \\neq 0$ and $2$ at $x=0$, completely missing all values in $(0, 2)$.";
+            if (qNum === 2) return "A jump discontinuity skips an open interval $(L, R)$. Any intermediate value in $(L, R)$ has no preimage, violating IVP.";
+            if (qNum === 3) return "Monotone functions can only have jump discontinuities. If a monotone function satisfies IVP, all jump gaps must be empty ($J=0$), so it must be continuous.";
+            return "";
+        }
+    </script>
+</body>
+</html>
