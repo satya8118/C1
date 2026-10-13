@@ -515,19 +515,19 @@
       <li>
         <span class="item-title">Establishing Interval Endpoints:</span>
         <ul>
-          <li>Set $M = \max\{1, a\}$.</li>
+          <li>Set $M = \max\{1, a\}$. By Archimedean Property, there is a natural number $N$ such that $N>M.$ </li>
           <li><span class="highlight-lime">Lower Bound Evaluation:</span> $g(0) = 0^n - a = -a < 0$.</li>
-          <li><span class="highlight-lime">Upper Bound Evaluation:</span> Since $M \ge 1$, we have $M^n \ge M$. Furthermore, $M \ge a$. Thus:
-            $$M^n \ge a \implies g(M) = M^n - a \ge 0$$
+          <li><span class="highlight-lime">Upper Bound Evaluation:</span> Since $N>1$, we have $N^n>N>a$.  Thus:
+            $$g(N) = N^n - a > 0$$
           </li>
         </ul>
       </li>
       <li>
         <span class="item-title">Applying Intermediate Value Theorem (IVT):</span>
         <ul>
-          <li>The function $g$ is continuous on the closed interval $[0, M]$.</li>
-          <li>The target value $0$ lies between $g(0) < 0$ and $g(M) \ge 0$.</li>
-          <li>By the IVT, there exists at least one $c \in [0, M]$ such that:
+          <li>The function $g$ is continuous on the closed interval $[0, N]$.</li>
+          <li>The target value $0$ lies between $g(0) < 0$ and $g(N) > 0$.</li>
+          <li>By the IVT, there exists at least one $c \in [0, N]$ such that:
             $$g(c) = 0 \implies c^n - a = 0 \implies c^n = a$$
           </li>
         </ul>
