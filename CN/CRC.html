@@ -448,6 +448,158 @@
             <strong>Observation:</strong> Comparing this to Example 3 is crucial. In Example 3, multiplying by an extra factor of \( x \) "dampened" the oscillation enough to make the secant slope continuous at 0. Here, without that extra \( x \), the secant slope oscillates too wildly, and differentiability fails.
         </div>
     </div>
+    <!-- ============================================================
+         NEW SECTION: Algebra of Differentiable Functions
+         ============================================================ -->
+
+    <h2>Algebra of Differentiable Functions via Carathéodory's Criterion</h2>
+
+    <p>The real power of Carathéodory's criterion is not just as a test for differentiability. It converts the <em>calculus</em> of derivatives into <em>algebra</em> of continuous functions. Once a function is written as a continuous "slope multiplier", the standard derivative rules — sum, scalar multiple, product, reciprocal, quotient, and composition — follow almost mechanically. The proofs avoid awkward divisions by quantities that may vanish.</p>
+
+    <div class="box theorem-box">
+        <h3>Setup: Two Multipliers</h3>
+        <p>Suppose \( f \) and \( g \) are differentiable at \( a \). By Carathéodory's criterion there exist functions \( h \) and \( k \), both continuous at \( a \), such that</p>
+        <div class="math-block">
+            \[ f(x) - f(a) = h(x)(x - a), \qquad g(x) - g(a) = k(x)(x - a) \]
+        </div>
+        <p>and moreover</p>
+        <div class="math-block">
+            \[ f'(a) = h(a), \qquad g'(a) = k(a). \]
+        </div>
+        <p>Every rule below is just a matter of rewriting the relevant difference as <em>(something continuous at \( a \))</em> \( \cdot (x-a) \).</p>
+    </div>
+
+    <!-- Rule 1: Sum -->
+    <div class="box" style="background-color: #f8fafc; border-left: 6px solid var(--accent-blue);">
+        <h3 style="color: var(--accent-blue);">1. Sum Rule</h3>
+        <p>Add the two representations:</p>
+        <div class="math-block">
+            \[ (f+g)(x) - (f+g)(a) = \bigl[h(x) + k(x)\bigr](x-a). \]
+        </div>
+        <p>The bracket \( h + k \) is continuous at \( a \), since \( h \) and \( k \) are. Therefore</p>
+        <div class="math-block">
+            \[ (f+g)'(a) = h(a) + k(a) = f'(a) + g'(a). \]
+        </div>
+    </div>
+
+    <!-- Rule 2: Scalar Multiple -->
+    <div class="box" style="background-color: #f8fafc; border-left: 6px solid var(--accent-blue);">
+        <h3 style="color: var(--accent-blue);">2. Scalar Multiple Rule</h3>
+        <p>For a constant \( c \in \mathbb{R} \),</p>
+        <div class="math-block">
+            \[ (cf)(x) - (cf)(a) = c\,h(x)(x-a). \]
+        </div>
+        <p>The function \( c\,h \) is continuous at \( a \), so</p>
+        <div class="math-block">
+            \[ (cf)'(a) = c\,h(a) = c\,f'(a). \]
+        </div>
+    </div>
+
+    <!-- Rule 3: Product -->
+    <div class="box" style="background-color: #f8fafc; border-left: 6px solid var(--accent-blue);">
+        <h3 style="color: var(--accent-blue);">3. Product Rule</h3>
+        <p>Start with the standard algebraic identity</p>
+        <div class="math-block">
+            \[ f(x)g(x) - f(a)g(a) = \bigl[f(x) - f(a)\bigr]g(x) + f(a)\bigl[g(x) - g(a)\bigr]. \]
+        </div>
+        <p>Substitute the two Carathéodory representations:</p>
+        <div class="math-block">
+            \[ f(x)g(x) - f(a)g(a) = h(x)(x-a)g(x) + f(a)k(x)(x-a). \]
+        </div>
+        <p>Factor out \( (x-a) \):</p>
+        <div class="math-block">
+            \[ f(x)g(x) - f(a)g(a) = \bigl[h(x)g(x) + f(a)k(x)\bigr](x-a). \]
+        </div>
+        <p>Since \( g \) is differentiable at \( a \), it is continuous at \( a \); and \( h, k \) are continuous at \( a \). Hence the bracket is continuous at \( a \), giving</p>
+        <div class="math-block">
+            \[ (fg)'(a) = h(a)g(a) + f(a)k(a) = f'(a)g(a) + f(a)g'(a). \]
+        </div>
+        <div class="observation-box">
+            <strong>Observation:</strong> Notice that no difference quotient is ever formed for the product. We never divide by \( f(x) - f(a) \) or \( g(x) - g(a) \), both of which may vanish for \( x \neq a \).
+        </div>
+    </div>
+
+    <!-- Rule 4: Reciprocal -->
+    <div class="box" style="background-color: #f8fafc; border-left: 6px solid var(--accent-blue);">
+        <h3 style="color: var(--accent-blue);">4. Reciprocal Rule</h3>
+        <p>Assume \( f(a) \neq 0 \). By continuity of \( f \) at \( a \), we have \( f(x) \neq 0 \) for all \( x \) sufficiently close to \( a \). Then</p>
+        <div class="math-block">
+            \[ \frac{1}{f(x)} - \frac{1}{f(a)} = \frac{f(a) - f(x)}{f(x)f(a)} = -\frac{f(x) - f(a)}{f(x)f(a)}. \]
+        </div>
+        <p>Substituting \( f(x) - f(a) = h(x)(x-a) \):</p>
+        <div class="math-block">
+            \[ \frac{1}{f(x)} - \frac{1}{f(a)} = \left[-\frac{h(x)}{f(x)f(a)}\right](x-a). \]
+        </div>
+        <p>The multiplier \( -\dfrac{h(x)}{f(x)f(a)} \) is continuous at \( a \), because \( h \) is continuous at \( a \), \( f \) is continuous at \( a \), and \( f(a) \neq 0 \). Hence</p>
+        <div class="math-block">
+            \[ \left(\frac{1}{f}\right)'(a) = -\frac{h(a)}{f(a)^2} = -\frac{f'(a)}{f(a)^2}. \]
+        </div>
+    </div>
+
+    <!-- Rule 5: Quotient -->
+    <div class="box" style="background-color: #f8fafc; border-left: 6px solid var(--accent-blue);">
+        <h3 style="color: var(--accent-blue);">5. Quotient Rule (Corollary)</h3>
+        <p>Combining the product rule with the reciprocal rule applied to \( g \), where \( g(a) \neq 0 \):</p>
+        <div class="math-block">
+            \[ \left(\frac{f}{g}\right)'(a) = f'(a)\cdot\frac{1}{g(a)} + f(a)\cdot\left(-\frac{g'(a)}{g(a)^2}\right) = \frac{f'(a)g(a) - f(a)g'(a)}{g(a)^2}. \]
+        </div>
+    </div>
+
+    <!-- Rule 6: Composition -->
+    <div class="box" style="background-color: #f8fafc; border-left: 6px solid var(--accent-blue);">
+        <h3 style="color: var(--accent-blue);">6. Chain Rule (Composition)</h3>
+        <p>Suppose \( g \) is differentiable at \( a \), and \( f \) is differentiable at \( g(a) \). Write</p>
+        <div class="math-block">
+            \[ g(x) - g(a) = k(x)(x-a) \]
+        </div>
+        <p>with \( k \) continuous at \( a \), and, with \( y_0 = g(a) \),</p>
+        <div class="math-block">
+            \[ f(y) - f(y_0) = h(y)(y - y_0) \]
+        </div>
+        <p>with \( h \) continuous at \( y_0 \). Now compose:</p>
+        <div class="math-block">
+            \[ f(g(x)) - f(g(a)) = h(g(x))\bigl[g(x) - g(a)\bigr] = h(g(x))\,k(x)\,(x-a). \]
+        </div>
+        <p>Since \( g \) is continuous at \( a \) and \( h \) is continuous at \( g(a) \), the composition \( h \circ g \) is continuous at \( a \). Hence the product \( \bigl[h(g(x))\bigr]k(x) \) is continuous at \( a \), and</p>
+        <div class="math-block">
+            \[ (f \circ g)'(a) = h(g(a))\,k(a) = f'(g(a))\,g'(a). \]
+        </div>
+        <div class="observation-box">
+            <strong>Observation:</strong> This is the cleanest known proof of the Chain Rule. The usual proof requires care because \( g(x) - g(a) \) may be zero for values of \( x \) arbitrarily close to \( a \). With Carathéodory's criterion, that division never occurs — the multiplier \( h(g(x)) \) is simply evaluated at \( g(x) \), whether or not \( g(x) = g(a) \).
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="box" style="background-color: #f0fdf4; border: 4px solid var(--primary-dark); border-radius: 12px; padding: 2.5rem; margin-top: 3.5rem; box-shadow: 0 8px 20px rgba(27, 94, 32, 0.15);">
+        <h3 style="font-family: 'Helvetica Neue', Arial, sans-serif; color: var(--primary-dark); font-size: 1.4rem; margin-bottom: 1.5rem; text-align: center; border-bottom: 2px solid var(--primary-green); padding-bottom: 1rem; display: block;">Summary: Why the Algebra Becomes Automatic</h3>
+        <p style="text-align: center;">If \( f(x) - f(a) = h(x)(x-a) \) and \( g(x) - g(a) = k(x)(x-a) \), with \( h, k \) continuous at \( a \), then:</p>
+        <div class="math-block">
+            \[ (f+g)' = f' + g', \qquad (cf)' = c\,f' \]
+        </div>
+        <div class="math-block">
+            \[ (fg)' = f'g + fg' \]
+        </div>
+        <div class="math-block">
+            \[ \left(\frac{1}{f}\right)' = -\frac{f'}{f^2}, \qquad \left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2} \]
+        </div>
+        <div class="math-block">
+            \[ (f \circ g)' = (f' \circ g)\,g' \]
+        </div>
+        <ul style="margin-left: 2rem; margin-top: 1.5rem; line-height: 2;">
+            <li><strong>Sum:</strong> no limit interchange is needed; we simply add the two continuous slope multipliers \( h \) and \( k \).</li>
+            <li><strong>Scalar multiple:</strong> linearity is inherited directly from continuity of \( h \).</li>
+            <li><strong>Product:</strong> no division by \( x-a \) occurs; the proof uses only continuity of \( g \) and the two multipliers.</li>
+            <li><strong>Reciprocal:</strong> because \( f(a)\neq 0 \), continuity keeps \( f(x) \) away from \( 0 \) near \( a \), so the new multiplier is continuous at \( a \).</li>
+            <li><strong>Quotient:</strong> immediate from the product rule and the reciprocal rule.</li>
+            <li><strong>Chain rule:</strong> the cleanest proof — we never divide by \( g(x)-g(a) \), which may vanish for \( x\neq a \). The composition multiplier is just \( h(g(x))k(x) \), and continuity of \( h\circ g \) and \( k \) gives the result.</li>
+            <li><strong>Overall:</strong> derivative rules become closure properties of continuous functions under addition, scalar multiplication, multiplication, and composition.</li>
+        </ul>
+    </div>
+
+    <!-- ============================================================
+         END NEW SECTION
+         ============================================================ -->
+
 
     <!-- SUMMARY BOX -->
     <div class="box" style="background-color: #f0fdf4; border: 4px solid var(--primary-dark); border-radius: 12px; padding: 2.5rem; margin-top: 3.5rem; box-shadow: 0 8px 20px rgba(27, 94, 32, 0.15);">
