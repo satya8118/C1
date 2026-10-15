@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mastering Rolle's Theorem: Geometry, Hypotheses & Interactive Visualizer</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- KaTeX CSS & JS for Mathematical Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            neonYellow: '#ffee00',
+            neonOrange: '#ff9900',
+            neonMagenta: '#ff00ff',
+            neonLime: '#00ff66',
+            neonCyan: '#00e5ff',
+            neonPink: '#ff66cc',
+            darkBg: '#0a0a0c',
+            cardBg: '#121216',
+            cardBgHover: '#181820',
+            cardBorder: '#22222e',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom High-Contrast Dark Theme & Glows */
+    body {
+      background-color: #0a0a0c;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0a0c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #22222e;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00e5ff;
+    }
+
+    /* Text Glow Effects */
+    .glow-yellow { text-shadow: 0 0 10px rgba(255, 238, 0, 0.5); }
+    .glow-cyan { text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+    .glow-magenta { text-shadow: 0 0 10px rgba(255, 0, 255, 0.5); }
+    .glow-lime { text-shadow: 0 0 10px rgba(0, 255, 102, 0.5); }
+    .glow-orange { text-shadow: 0 0 10px rgba(255, 153, 0, 0.5); }
+
+    /* Neon Borders & Shadows */
+    .border-glow-cyan {
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.15);
+      border: 1px solid rgba(0, 229, 255, 0.4);
+    }
+    .border-glow-yellow {
+      box-shadow: 0 0 15px rgba(255, 238, 0, 0.15);
+      border: 1px solid rgba(255, 238, 0, 0.4);
+    }
+    .border-glow-magenta {
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.15);
+      border: 1px solid rgba(255, 0, 255, 0.4);
+    }
+    .border-glow-lime {
+      box-shadow: 0 0 15px rgba(0, 255, 102, 0.15);
+      border: 1px solid rgba(0, 255, 102, 0.4);
+    }
+    .border-glow-orange {
+      box-shadow: 0 0 15px rgba(255, 153, 0, 0.15);
+      border: 1px solid rgba(255, 153, 0, 0.4);
+    }
+
+    /* Canvas styling */
+    canvas {
+      touch-action: none;
+    }
+
+    /* Accordion transitions */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+      opacity: 0;
+    }
+    .accordion-content.open {
+      max-height: 1000px;
+      opacity: 1;
+    }
+
+    /* SVG illustration styling */
+    .svg-diagram {
+      width: 100%;
+      height: auto;
+      max-height: 280px;
+    }
+  </style>
+</head>
+<body class="bg-darkBg text-white antialiased min-h-screen selection:bg-neonCyan selection:text-black">
+
+  <!-- ================= HEADER / HERO SECTION ================= -->
+  <header class="relative border-b border-cardBorder bg-gradient-to-b from-[#12121a] to-darkBg py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col items-center text-center">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cardBg border border-neonCyan/30 text-neonCyan text-xs sm:text-sm font-semibold mb-6 tracking-wide uppercase">
+          <i class="fa-solid fa-graduation-cap text-neonYellow"></i> First-Year University Calculus Deep-Dive
+        </div>
+        
+        <!-- Main Title -->
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4">
+          Mastering <span class="text-neonYellow glow-yellow">Rolle’s Theorem</span>
+        </h1>
+        <p class="text-lg sm:text-xl lg:text-2xl text-neonCyan font-medium max-w-4xl mb-8 leading-relaxed">
+          Geometry, Visual Diagrams, Mechanics, Rigorous Proofs & Interactive Visualizer
+        </p>
+
+        <!-- Stats Grid / Summary Pills -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl">
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-3 sm:p-4 text-center">
+            <span class="block text-neonYellow text-xl sm:text-2xl font-black">3</span>
+            <span class="text-xs text-gray-400 uppercase font-semibold">Strict Hypotheses</span>
+          </div>
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-3 sm:p-4 text-center">
+            <span class="block text-neonCyan text-xl sm:text-2xl font-black">12</span>
+            <span class="text-xs text-gray-400 uppercase font-semibold">Canvas Presets</span>
+          </div>
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-3 sm:p-4 text-center">
+            <span class="block text-neonLime text-xl sm:text-2xl font-black">5</span>
+            <span class="text-xs text-gray-400 uppercase font-semibold">Synthesis Tables</span>
+          </div>
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-3 sm:p-4 text-center">
+            <span class="block text-neonPink text-xl sm:text-2xl font-black">100%</span>
+            <span class="text-xs text-gray-400 uppercase font-semibold">Rigorous Proofs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+    <!-- ================= SECTION 1: EXECUTIVE INTRODUCTION & GEOMETRIC INTUITION ================= -->
+    <section id="introduction" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonYellow/30 rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl border-glow-yellow">
+        <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-neonYellow/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonYellow/10 text-neonYellow font-bold text-xl border border-neonYellow/30">1</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-neonYellow glow-yellow">Formal Statement & Geometric Intuition</h2>
+        </div>
+
+        <!-- Theorem Box -->
+        <div class="bg-[#181822] border-l-4 border-neonYellow p-5 sm:p-6 rounded-r-xl mb-8">
+          <h3 class="text-xs sm:text-sm uppercase tracking-wider text-neonYellow font-bold mb-2">
+            <i class="fa-solid fa-scroll mr-2"></i> Theorem Statement (Rolle’s Theorem)
+          </h3>
+          <p class="text-gray-200 text-base sm:text-lg leading-relaxed mb-4">
+            Let $f(x)$ be a real-valued function defined on a closed interval $[a, b]$. If $f$ satisfies the following three hypotheses:
+          </p>
+          <div class="space-y-3 font-medium text-sm sm:text-base">
+            <div class="flex items-start gap-3 bg-darkBg/60 p-3 rounded-lg border border-neonOrange/30">
+              <span class="text-neonOrange font-bold font-mono">H1:</span>
+              <p><strong class="text-neonOrange">Continuity:</strong> $f$ is continuous on the <strong class="text-neonYellow">closed interval $[a, b]$</strong>.</p>
+            </div>
+            <div class="flex items-start gap-3 bg-darkBg/60 p-3 rounded-lg border border-neonOrange/30">
+              <span class="text-neonOrange font-bold font-mono">H2:</span>
+              <p><strong class="text-neonOrange">Differentiability:</strong> $f$ is differentiable on the <strong class="text-neonYellow">open interval $(a, b)$</strong>.</p>
+            </div>
+            <div class="flex items-start gap-3 bg-darkBg/60 p-3 rounded-lg border border-neonOrange/30">
+              <span class="text-neonOrange font-bold font-mono">H3:</span>
+              <p><strong class="text-neonOrange">Equal Endpoints:</strong> The endpoint values match, i.e., <strong class="text-neonYellow">$f(a) = f(b)$</strong>.</p>
+            </div>
+          </div>
+          <div class="mt-4 p-4 bg-neonLime/10 border border-neonLime/40 rounded-lg">
+            <p class="text-neonLime font-bold text-base sm:text-lg text-center">
+              Then, there exists at least one point $c \in (a, b)$ such that $f'(c) = 0$.
+            </p>
+          </div>
+        </div>
+
+        <!-- GEOMETRIC DIAGRAM & ANALOGY GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          
+          <!-- Text Explanation -->
+          <div class="space-y-4">
+            <div class="bg-darkBg/80 border border-cardBorder p-5 rounded-xl space-y-3">
+              <h4 class="text-neonCyan font-bold text-lg flex items-center gap-2">
+                <i class="fa-solid fa-mountain-sun text-neonYellow"></i> The Mountain Hike Analogy
+              </h4>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                Imagine hiking across a mountain pass starting at location $a$ and ending at $b$. You start at an altitude of 500 meters ($f(a) = 500$) and finish at the exact same elevation ($f(b) = 500$).
+              </p>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                As long as you do not teleport (<strong class="text-neonOrange">Continuity</strong>) or drop off instantaneous vertical drop-offs (<strong class="text-neonOrange">Differentiability</strong>), you <strong class="text-neonLime">must</strong> hit at least one peak or valley where your direction is momentarily flat ($f'(c) = 0$).
+              </p>
+            </div>
+
+            <div class="bg-darkBg/80 border border-cardBorder p-5 rounded-xl space-y-3">
+              <h4 class="text-neonMagenta font-bold text-lg flex items-center gap-2">
+                <i class="fa-solid fa-compass-drafting text-neonMagenta"></i> Geometric Tangent Parallelism
+              </h4>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                Geometrically, the secant line connecting $(a, f(a))$ and $(b, f(b))$ is horizontal with slope $m = 0$. Rolle’s Theorem guarantees that somewhere in the interior $(a, b)$, the tangent line is <strong class="text-neonYellow">parallel to the secant line</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- VECTOR SVG DIAGRAM 1: GEOMETRIC INTUITION -->
+          <div class="bg-darkBg border border-neonCyan/40 p-4 rounded-xl flex flex-col items-center justify-center">
+            <span class="text-xs uppercase font-mono text-neonCyan font-bold mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-image text-neonYellow"></i> Figure 1: Geometric Representation of Rolle's Theorem
+            </span>
+            <svg class="svg-diagram" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+              <!-- Grid Background -->
+              <defs>
+                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#181824" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="500" height="300" fill="#0a0a0c" />
+              <rect width="500" height="300" fill="url(#grid)" />
+
+              <!-- Axes -->
+              <line x1="40" y1="260" x2="460" y2="260" stroke="#444455" stroke-width="2"/>
+              <line x1="60" y1="20" x2="60" y2="280" stroke="#444455" stroke-width="2"/>
+              <text x="450" y="250" fill="#888899" font-family="monospace" font-size="12">x</text>
+              <text x="70" y="35" fill="#888899" font-family="monospace" font-size="12">y</text>
+
+              <!-- Shaded Interior Region (a, b) -->
+              <rect x="120" y="30" width="260" height="230" fill="rgba(0, 229, 255, 0.03)" />
+
+              <!-- Vertical Dashed Lines at x=a, x=b, x=c -->
+              <line x1="120" y1="180" x2="120" y2="260" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4,4"/>
+              <line x1="380" y1="180" x2="380" y2="260" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4,4"/>
+              <line x1="250" y1="60" x2="250" y2="260" stroke="#ff00ff" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+              <!-- Secant Line f(a) = f(b) -->
+              <line x1="100" y1="180" x2="400" y2="180" stroke="#ffee00" stroke-width="1.5" stroke-dasharray="6,6" opacity="0.6"/>
+
+              <!-- Main Curve f(x) -->
+              <path d="M 120 180 C 170 40, 330 40, 380 180" fill="none" stroke="#00e5ff" stroke-width="3.5" filter="drop-shadow(0px 0px 8px rgba(0,229,255,0.6))"/>
+
+              <!-- Horizontal Tangent Line at c -->
+              <line x1="170" y1="60" x2="330" y2="60" stroke="#ff00ff" stroke-width="3" filter="drop-shadow(0px 0px 8px rgba(255,0,255,0.8))"/>
+
+              <!-- Points -->
+              <circle cx="120" cy="180" r="6" fill="#ffee00"/>
+              <circle cx="380" cy="180" r="6" fill="#ffee00"/>
+              <circle cx="250" cy="60" r="6" fill="#ffee00" stroke="#ff00ff" stroke-width="2"/>
+
+              <!-- Text Labels -->
+              <text x="110" y="280" fill="#00e5ff" font-family="monospace" font-weight="bold" font-size="13">x = a</text>
+              <text x="370" y="280" fill="#00e5ff" font-family="monospace" font-weight="bold" font-size="13">x = b</text>
+              <text x="242" y="280" fill="#ff00ff" font-family="monospace" font-weight="bold" font-size="13">x = c</text>
+              
+              <text x="70" y="175" fill="#ffee00" font-family="sans-serif" font-size="11">f(a) = f(b)</text>
+              <text x="210" y="45" fill="#ff00ff" font-family="monospace" font-weight="bold" font-size="13">f'(c) = 0 (Horizontal Tangent)</text>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= SECTION 2: INTERACTIVE CANVAS CURVE EXPLORER ================= -->
+    <section id="interactive-explorer" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonCyan/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-cyan">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonCyan/10 text-neonCyan font-bold text-xl border border-neonCyan/30">2</span>
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-bold text-neonCyan glow-cyan">Interactive Curve Explorer & Plotter</h2>
+              <p class="text-xs sm:text-sm text-gray-400">Test 12 distinct algebraic, trigonometric, failure, and edge cases in real time</p>
+            </div>
+          </div>
+
+          <!-- Preset Category Dropdown -->
+          <div class="w-full md:w-80">
+            <label for="presetSelect" class="block text-xs uppercase text-neonYellow font-bold mb-1">Select Curve Preset:</label>
+            <select id="presetSelect" class="w-full bg-darkBg border-2 border-neonCyan text-white text-sm rounded-xl p-3 focus:outline-none focus:border-neonYellow transition-colors">
+              <optgroup label="Sufficient Conditions Satisfied">
+                <option value="0" selected>1 Point c (Non-Trig): f(x) = 1 - x² on [-1, 1]</option>
+                <option value="1">2 Points c (Non-Trig): f(x) = x³/3 - x on [-√3, √3]</option>
+                <option value="2">3 Points c (Non-Trig): f(x) = x⁴/4 - 2x² on [-2√2, 2√2]</option>
+                <option value="3">1 Point c (Trig): f(x) = cos(x) on [-π/2, π/2]</option>
+                <option value="4">2 Points c (Trig): f(x) = sin(2x) on [0, π]</option>
+                <option value="5">3 Points c (Trig): f(x) = sin(3x) on [0, π]</option>
+              </optgroup>
+              <optgroup label="Hypothesis Violations (Failure Modes)">
+                <option value="6">Failure of Continuity: f(x)=x, f(1)=0 on [0, 1]</option>
+                <option value="7">Failure of Differentiability: f(x) = |x| on [-1, 1]</option>
+                <option value="8">Failure of Equal Endpoints: f(x) = x on [0, 1]</option>
+              </optgroup>
+              <optgroup label="Sufficient vs. Necessary Mechanics">
+                <option value="9">Endpoint Non-Diff (Rolle Holds!): f(x) = √(1-x²)</option>
+                <option value="10">Unequal Endpoints with f'(c)=0: f(x) = x² on [-1, 2]</option>
+                <option value="11">Non-Diff with f'(c)=0: f(x) = |x| + (x-2)² on [-1, 3]</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <!-- Canvas Container & Plotter -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          
+          <!-- Canvas Plot Column -->
+          <div class="lg:col-span-3 space-y-4">
+            <div class="relative bg-darkBg border border-cardBorder rounded-xl overflow-hidden p-2">
+              
+              <!-- Canvas Header Controls Overlay -->
+              <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-[#121218] rounded-lg mb-2 text-xs">
+                <div class="flex items-center gap-4">
+                  <label class="inline-flex items-center cursor-pointer text-gray-300">
+                    <input type="checkbox" id="toggleGrid" class="sr-only peer" checked>
+                    <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-neonCyan"></div>
+                    <span class="ml-2 font-medium">Grid & Axes</span>
+                  </label>
+                  <label class="inline-flex items-center cursor-pointer text-gray-300">
+                    <input type="checkbox" id="toggleTangents" class="sr-only peer" checked>
+                    <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-neonMagenta"></div>
+                    <span class="ml-2 font-medium">Tangents at c</span>
+                  </label>
+                  <label class="inline-flex items-center cursor-pointer text-gray-300">
+                    <input type="checkbox" id="toggleEndpoints" class="sr-only peer" checked>
+                    <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-neonYellow"></div>
+                    <span class="ml-2 font-medium">Endpoints x=a,b</span>
+                  </label>
+                </div>
+
+                <div id="canvasCoordinates" class="text-neonLime font-mono font-bold bg-black/60 px-2.5 py-1 rounded border border-neonLime/30">
+                  x: 0.00, y: 0.00
+                </div>
+              </div>
+
+              <!-- Canvas HTML5 Element -->
+              <div class="relative w-full aspect-[16/9] bg-black rounded-lg overflow-hidden cursor-crosshair">
+                <canvas id="rolleCanvas" class="w-full h-full block"></canvas>
+              </div>
+
+              <p class="text-xs text-center text-gray-400 mt-2">
+                <i class="fa-solid fa-mouse-pointer text-neonCyan mr-1"></i> Hover/Touch anywhere on the canvas to inspect coordinate values & local slope.
+              </p>
+            </div>
+          </div>
+
+          <!-- Canvas Active Information Panel Column -->
+          <div class="lg:col-span-1 space-y-4 flex flex-col justify-between">
+            <div class="bg-darkBg border border-cardBorder rounded-xl p-5 space-y-4">
+              <h3 class="text-sm uppercase tracking-wider text-neonYellow font-bold flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-neonYellow"></i> Active Preset Status
+              </h3>
+
+              <div id="infoTitle" class="text-lg font-bold text-neonCyan">Preset Title</div>
+              <div id="infoFormula" class="text-sm font-mono text-neonYellow bg-black/50 p-2 rounded border border-cardBorder">f(x) = ...</div>
+
+              <!-- Hypotheses Badges -->
+              <div class="space-y-2">
+                <div class="text-xs uppercase text-gray-400 font-semibold">Hypotheses Check:</div>
+                <div class="flex items-center justify-between text-xs p-2 rounded bg-cardBg border border-cardBorder">
+                  <span>H1: Continuous [a,b]</span>
+                  <span id="badgeH1" class="font-bold px-2 py-0.5 rounded text-black bg-neonLime">YES</span>
+                </div>
+                <div class="flex items-center justify-between text-xs p-2 rounded bg-cardBg border border-cardBorder">
+                  <span>H2: Diff (a,b)</span>
+                  <span id="badgeH2" class="font-bold px-2 py-0.5 rounded text-black bg-neonLime">YES</span>
+                </div>
+                <div class="flex items-center justify-between text-xs p-2 rounded bg-cardBg border border-cardBorder">
+                  <span>H3: f(a) = f(b)</span>
+                  <span id="badgeH3" class="font-bold px-2 py-0.5 rounded text-black bg-neonLime">YES</span>
+                </div>
+              </div>
+
+              <!-- Critical Points List -->
+              <div>
+                <div class="text-xs uppercase text-gray-400 font-semibold mb-1">Guaranteed Points c:</div>
+                <div id="cPointsList" class="text-xs font-mono text-neonMagenta bg-neonMagenta/10 p-2 rounded border border-neonMagenta/30 space-y-1">
+                  <!-- JS dynamically fills -->
+                </div>
+              </div>
+
+              <!-- Detailed Mathematical Analysis -->
+              <div>
+                <div class="text-xs uppercase text-gray-400 font-semibold mb-1">Mathematical Breakdown:</div>
+                <p id="infoDesc" class="text-xs text-gray-300 leading-relaxed">
+                  <!-- JS dynamically fills -->
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= SECTION 3: STRICT NECESSITY OF EACH HYPOTHESIS ================= -->
+    <section id="failure-modes" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonOrange/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-orange">
+        
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonOrange/10 text-neonOrange font-bold text-xl border border-neonOrange/30">3</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonOrange glow-orange">Strict Necessity of Each Hypothesis</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Why removing even one single hypothesis causes the entire theorem guarantee to collapse</p>
+          </div>
+        </div>
+
+        <p class="text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
+          Rolle’s Theorem is a precision instrument. Each of the three conditions is <strong class="text-neonOrange">strictly required</strong> to guarantee a horizontal tangent. If even a single condition is violated, counterexamples exist where <strong class="text-neonPink">no point $c$ exists with $f'(c) = 0$</strong>.
+        </p>
+
+        <!-- 3 Failure Case Cards with Embedded SVG Diagrams -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Failure 1: Continuity -->
+          <div class="bg-darkBg border border-neonOrange/40 rounded-xl p-5 flex flex-col justify-between hover:border-neonOrange transition-all">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-black bg-neonOrange px-2.5 py-1 rounded-full uppercase">Failure Mode 1</span>
+                <i class="fa-solid fa-link-slash text-neonOrange text-xl"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white">Discontinuity on $[a, b]$</h3>
+              
+              <!-- SVG DIAGRAM: Failure 1 -->
+              <div class="bg-black/60 border border-cardBorder rounded-lg p-2 flex justify-center">
+                <svg viewBox="0 0 200 130" class="w-full h-28">
+                  <line x1="20" y1="110" x2="180" y2="110" stroke="#444" stroke-width="1.5"/>
+                  <line x1="30" y1="10" x2="30" y2="120" stroke="#444" stroke-width="1.5"/>
+                  <!-- Discontinuous line -->
+                  <line x1="30" y1="110" x2="160" y2="20" stroke="#ff00ff" stroke-width="2.5"/>
+                  <circle cx="160" cy="20" r="4" fill="#0a0a0c" stroke="#ff00ff" stroke-width="2"/>
+                  <circle cx="160" cy="110" r="4" fill="#00ff66"/>
+                  <text x="25" y="125" fill="#888" font-size="10">a=0</text>
+                  <text x="155" y="125" fill="#888" font-size="10">b=1</text>
+                  <text x="80" y="45" fill="#ff9900" font-size="10" font-weight="bold">Slope = 1 (Never 0)</text>
+                </svg>
+              </div>
+
+              <div class="text-xs font-mono text-neonYellow bg-black/60 p-2 rounded">
+                $f(x) = x$ for $0 \le x < 1$<br>
+                $f(1) = 0$ on $[0, 1]$
+              </div>
+              <ul class="text-xs space-y-1.5 text-gray-300">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Endpoint Match: $f(0) = 0 = f(1)$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Differentiable on $(0, 1)$ ($f'(x) = 1$)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-xmark text-neonPink mt-0.5"></i>
+                  <span><strong class="text-neonOrange">Discontinuous jump</strong> at $x = 1$.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-cardBorder text-xs text-neonPink font-medium">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> $f'(x) = 1$ everywhere. Slope NEVER equals 0!
+            </div>
+          </div>
+
+          <!-- Failure 2: Differentiability -->
+          <div class="bg-darkBg border border-neonOrange/40 rounded-xl p-5 flex flex-col justify-between hover:border-neonOrange transition-all">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-black bg-neonOrange px-2.5 py-1 rounded-full uppercase">Failure Mode 2</span>
+                <i class="fa-solid fa-slash-back text-neonOrange text-xl"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white">Non-Diff on $(a, b)$</h3>
+              
+              <!-- SVG DIAGRAM: Failure 2 -->
+              <div class="bg-black/60 border border-cardBorder rounded-lg p-2 flex justify-center">
+                <svg viewBox="0 0 200 130" class="w-full h-28">
+                  <line x1="20" y1="110" x2="180" y2="110" stroke="#444" stroke-width="1.5"/>
+                  <line x1="100" y1="10" x2="100" y2="120" stroke="#444" stroke-width="1.5"/>
+                  <!-- V-shape -->
+                  <path d="M 30 20 L 100 110 L 170 20" fill="none" stroke="#ff00ff" stroke-width="2.5"/>
+                  <circle cx="100" cy="110" r="5" fill="#ff00ff" stroke="#ffee00" stroke-width="1.5"/>
+                  <text x="25" y="125" fill="#888" font-size="10">a=-1</text>
+                  <text x="165" y="125" fill="#888" font-size="10">b=1</text>
+                  <text x="75" y="100" fill="#ff9900" font-size="10" font-weight="bold">Sharp Cusp at x=0</text>
+                </svg>
+              </div>
+
+              <div class="text-xs font-mono text-neonYellow bg-black/60 p-2 rounded">
+                $f(x) = |x|$ on $[-1, 1]$
+              </div>
+              <ul class="text-xs space-y-1.5 text-gray-300">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Continuous on $[-1, 1]$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Endpoint Match: $f(-1) = 1 = f(1)$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-xmark text-neonPink mt-0.5"></i>
+                  <span><strong class="text-neonOrange">Corner/Cusp</strong> at $x=0$ ($f'(0)$ undefined).</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-cardBorder text-xs text-neonPink font-medium">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> Slopes are $-1$ or $+1$. Slope NEVER equals 0!
+            </div>
+          </div>
+
+          <!-- Failure 3: Equal Endpoints -->
+          <div class="bg-darkBg border border-neonOrange/40 rounded-xl p-5 flex flex-col justify-between hover:border-neonOrange transition-all">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-black bg-neonOrange px-2.5 py-1 rounded-full uppercase">Failure Mode 3</span>
+                <i class="fa-solid fa-equals text-neonOrange text-xl"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white">Unequal Endpoints</h3>
+              
+              <!-- SVG DIAGRAM: Failure 3 -->
+              <div class="bg-black/60 border border-cardBorder rounded-lg p-2 flex justify-center">
+                <svg viewBox="0 0 200 130" class="w-full h-28">
+                  <line x1="20" y1="110" x2="180" y2="110" stroke="#444" stroke-width="1.5"/>
+                  <line x1="30" y1="10" x2="30" y2="120" stroke="#444" stroke-width="1.5"/>
+                  <!-- Straight slanted line -->
+                  <line x1="30" y1="110" x2="170" y2="20" stroke="#ff00ff" stroke-width="2.5"/>
+                  <circle cx="30" cy="110" r="4" fill="#ffee00"/>
+                  <circle cx="170" cy="20" r="4" fill="#ffee00"/>
+                  <text x="25" y="125" fill="#888" font-size="10">f(a)=0</text>
+                  <text x="145" y="15" fill="#ffee00" font-size="10">f(b)=1</text>
+                  <text x="70" y="55" fill="#ff9900" font-size="10" font-weight="bold">f(a) ≠ f(b)</text>
+                </svg>
+              </div>
+
+              <div class="text-xs font-mono text-neonYellow bg-black/60 p-2 rounded">
+                $f(x) = x$ on $[0, 1]$
+              </div>
+              <ul class="text-xs space-y-1.5 text-gray-300">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Continuous on $[0, 1]$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Differentiable on $(0, 1)$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-xmark text-neonPink mt-0.5"></i>
+                  <span><strong class="text-neonOrange">Endpoints fail:</strong> $f(0) = 0 \neq 1 = f(1)$.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-cardBorder text-xs text-neonPink font-medium">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> Derivative $f'(x) = 1$ constant. Slope NEVER equals 0!
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= SECTION 4: SUFFICIENCY VS. NECESSITY MECHANICS ================= -->
+    <section id="sufficiency-vs-necessity" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonPink/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-magenta">
+        
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonPink/10 text-neonPink font-bold text-xl border border-neonPink/30">4</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonPink glow-magenta">Sufficiency vs. Necessity Mechanics</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Logical breakdown: Why Rolle's hypotheses are Sufficient but NOT Necessary</p>
+          </div>
+        </div>
+
+        <!-- Logic Card -->
+        <div class="bg-darkBg border border-cardBorder p-6 rounded-xl space-y-4 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-4 bg-[#181822] rounded-lg border-l-4 border-neonLime">
+              <h4 class="text-neonLime font-bold text-base mb-1">
+                <i class="fa-solid fa-shield-check mr-2"></i> Sufficient Conditions
+              </h4>
+              <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                If all three hypotheses hold ($H1 \land H2 \land H3$), then the conclusion ($\exists c \in (a,b), f'(c) = 0$) is <strong class="text-neonLime">100% guaranteed</strong> to occur.
+              </p>
+            </div>
+
+            <div class="p-4 bg-[#181822] rounded-lg border-l-4 border-neonPink">
+              <h4 class="text-neonPink font-bold text-base mb-1">
+                <i class="fa-solid fa-circle-xmark mr-2"></i> NOT Necessary Conditions
+              </h4>
+              <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                Failing one or more conditions does <strong class="text-neonOrange">NOT</strong> mean $f'(c) = 0$ is impossible! It only means Rolle's Theorem cannot be used to guarantee it.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Concrete Counter-Examples -->
+        <h3 class="text-lg font-bold text-neonYellow mb-4">Concrete Proofs of Non-Necessity</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Example 1 -->
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl space-y-3">
+            <span class="text-xs text-neonCyan font-bold uppercase tracking-wider">Example 1: Unequal Endpoints with $f'(c) = 0$</span>
+            <h4 class="text-base font-mono font-bold text-neonYellow">$f(x) = x^2$ on interval $[-1, 2]$</h4>
+            <ul class="text-xs space-y-1 text-gray-300">
+              <li>• <strong class="text-neonLime">H1 & H2:</strong> Continuous on $[-1, 2]$ and differentiable on $(-1, 2)$.</li>
+              <li>• <strong class="text-neonPink">H3 Fails:</strong> $f(-1) = 1$, but $f(2) = 4$ ($1 \neq 4$).</li>
+            </ul>
+            <div class="p-3 bg-neonLime/10 border border-neonLime/30 rounded-lg text-xs text-neonLime">
+              <strong>Outcome:</strong> Derivative $f'(x) = 2x = 0$ yields <strong class="text-neonYellow font-mono">$c = 0 \in (-1, 2)$</strong>. A horizontal tangent exists inside the interval despite unequal endpoints!
+            </div>
+          </div>
+
+          <!-- Example 2 -->
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl space-y-3">
+            <span class="text-xs text-neonCyan font-bold uppercase tracking-wider">Example 2: Non-Differentiable with $f'(c) = 0$</span>
+            <h4 class="text-base font-mono font-bold text-neonYellow">$f(x) = |x| + (x - 2)^2$ on $[-1, 3]$</h4>
+            <ul class="text-xs space-y-1 text-gray-300">
+              <li>• <strong class="text-neonPink">H2 Fails:</strong> Has a sharp corner at $x = 0$ ($f'(0)$ undefined).</li>
+              <li>• <strong class="text-neonPink">H3 Fails:</strong> $f(-1) = 10$, but $f(3) = 4$ ($10 \neq 4$).</li>
+            </ul>
+            <div class="p-3 bg-neonLime/10 border border-neonLime/30 rounded-lg text-xs text-neonLime">
+              <strong>Outcome:</strong> On $x > 0$, $f(x) = x + (x-2)^2$. Then $f'(x) = 2x - 3 = 0$ yields <strong class="text-neonYellow font-mono">$c = 1.5 \in (-1, 3)$</strong>. Sharp corners elsewhere do not prevent flat spots!
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= SECTION 5: SPECIAL DEEP DIVE: WHY ENDPOINT DIFFERENTIABILITY IS NOT REQUIRED ================= -->
+    <section id="endpoint-differentiability-deepdive" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonLime/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-lime">
+        
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonLime/10 text-neonLime font-bold text-xl border border-neonLime/30">5</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonLime glow-lime">Special Deep Dive: Boundary Differentiability is NOT Required!</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Why $f$ is required to be differentiable ONLY on the open interval $(a, b)$ and NOT closed $[a, b]$</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          
+          <div class="space-y-4 text-sm text-gray-300 leading-relaxed">
+            <p>
+              Students often ask: <em class="text-neonYellow">"Why is continuity required on the closed interval $[a, b]$, but differentiability is only required on the open interval $(a, b)$?"</em>
+            </p>
+            <div class="p-4 bg-darkBg border border-cardBorder rounded-xl space-y-3">
+              <h4 class="text-neonCyan font-bold text-base">Key Mathematical Reasons:</h4>
+              <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm">
+                <li>
+                  <strong class="text-neonYellow">Location of $c$ is strictly Interior:</strong> The guaranteed point $c$ lies strictly inside $(a, b)$, i.e., $a < c < b$. It is never located at the boundary endpoints $x = a$ or $x = b$.
+                </li>
+                <li>
+                  <strong class="text-neonYellow">Local Extrema are Interior:</strong> Stationary points ($f'(c) = 0$) depend only on two-sided open neighborhoods around $c$. Derivative behavior right at the boundary edges (such as vertical tangents or infinite slopes) cannot prevent an interior turning point!
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Counter-Proof Classic Function & SVG Diagram -->
+          <div class="bg-darkBg border border-neonLime/40 p-6 rounded-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs uppercase text-black bg-neonLime font-bold px-2.5 py-1 rounded-full">Classic Textbook Example</span>
+              <span class="text-xs font-mono text-neonCyan">Semicircle Function</span>
+            </div>
+            <h3 class="text-lg font-bold font-mono text-neonYellow">$f(x) = \sqrt{1 - x^2}$ on $[-1, 1]$</h3>
+
+            <!-- SVG DIAGRAM: Semicircle with Vertical Tangents -->
+            <div class="bg-black/60 border border-cardBorder rounded-lg p-2 flex justify-center">
+              <svg viewBox="0 0 260 140" class="w-full h-32">
+                <line x1="20" y1="120" x2="240" y2="120" stroke="#444" stroke-width="1.5"/>
+                <line x1="130" y1="10" x2="130" y2="130" stroke="#444" stroke-width="1.5"/>
+                <!-- Semicircle Arc -->
+                <path d="M 50 120 A 80 80 0 0 1 210 120" fill="none" stroke="#00e5ff" stroke-width="3"/>
+                <!-- Vertical Tangent Lines at -1 and +1 -->
+                <line x1="50" y1="40" x2="50" y2="135" stroke="#ff00ff" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="210" y1="40" x2="210" y2="135" stroke="#ff00ff" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <!-- Horizontal Tangent at c = 0 -->
+                <line x1="80" y1="40" x2="180" y2="40" stroke="#ffee00" stroke-width="2.5"/>
+                <circle cx="130" cy="40" r="5" fill="#ffee00"/>
+                
+                <text x="35" y="135" fill="#ff00ff" font-size="9" font-weight="bold">f'(-1)=+∞</text>
+                <text x="195" y="135" fill="#ff00ff" font-size="9" font-weight="bold">f'(1)=-∞</text>
+                <text x="100" y="30" fill="#ffee00" font-size="10" font-weight="bold">c=0: f'(0)=0</text>
+              </svg>
+            </div>
+
+            <div class="space-y-2 text-xs font-mono">
+              <div class="p-2 bg-cardBg rounded border border-cardBorder flex justify-between">
+                <span>Endpoints:</span>
+                <span class="text-neonLime">$f(-1) = 0 = f(1)$ (Match!)</span>
+              </div>
+              <div class="p-2 bg-cardBg rounded border border-cardBorder flex justify-between">
+                <span>Derivative $f'(x)$:</span>
+                <span class="text-neonCyan">$-x / \sqrt{1 - x^2}$</span>
+              </div>
+              <div class="p-2 bg-cardBg rounded border border-cardBorder flex justify-between">
+                <span>Boundary Slopes:</span>
+                <span class="text-neonPink">$f'(-1^+) = +\infty, f'(1^-) = -\infty$</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-gray-300 leading-relaxed">
+              $f'(x)$ is undefined at endpoints $x = -1$ and $x = 1$ due to vertical tangents. However, $f$ is differentiable on the <strong class="text-neonYellow">OPEN interval $(-1, 1)$</strong>.
+            </p>
+
+            <div class="p-3 bg-neonLime/10 border border-neonLime/40 rounded-lg text-xs text-neonLime font-bold text-center">
+              Rolle’s Theorem holds! Setting $f'(c) = 0$ yields $c = 0 \in (-1, 1)$.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= SECTION 6: FORMAL RIGOROUS PROOF OF ROLLE'S THEOREM ================= -->
+    <section id="rigorous-proof" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonYellow/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-yellow">
+        
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonYellow/10 text-neonYellow font-bold text-xl border border-neonYellow/30">6</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonYellow glow-yellow">Formal Rigorous Proof of Rolle’s Theorem</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Step-by-step mathematical proof utilizing EVT and Fermat's Theorem on Stationary Points</p>
+          </div>
+        </div>
+
+        <!-- PROOF LOGIC FLOWCHART DIAGRAM -->
+        <div class="bg-darkBg border border-cardBorder p-4 rounded-xl mb-8 flex flex-col items-center">
+          <span class="text-xs uppercase font-mono text-neonYellow font-bold mb-3">
+            <i class="fa-solid fa-sitemap mr-1"></i> Proof Logic Architecture Flowchart
+          </span>
+          <svg viewBox="0 0 700 160" class="w-full max-w-3xl h-auto">
+            <!-- Node 1: EVT -->
+            <rect x="20" y="55" width="160" height="50" rx="8" fill="#181822" stroke="#00e5ff" stroke-width="2"/>
+            <text x="100" y="78" fill="#00e5ff" font-family="sans-serif" font-weight="bold" font-size="11" text-anchor="middle">Hypothesis 1 (Continuous)</text>
+            <text x="100" y="94" fill="#ffee00" font-family="sans-serif" font-size="10" text-anchor="middle">EVT ⇒ Max M, Min m</text>
+
+            <!-- Arrow 1 to split -->
+            <path d="M 180 80 L 230 80" fill="none" stroke="#ffee00" stroke-width="2" marker-end="url(#arrow)"/>
+
+            <!-- Node 2: Case 1 (Constant) -->
+            <rect x="250" y="10" width="180" height="50" rx="8" fill="#181822" stroke="#00ff66" stroke-width="2"/>
+            <text x="340" y="32" fill="#00ff66" font-family="sans-serif" font-weight="bold" font-size="11" text-anchor="middle">Case 1: M = m (Constant)</text>
+            <text x="340" y="48" fill="#ffffff" font-family="sans-serif" font-size="10" text-anchor="middle">f'(c) = 0 for all c ∈ (a,b)</text>
+
+            <!-- Node 3: Case 2 (Non-constant) -->
+            <rect x="250" y="100" width="180" height="50" rx="8" fill="#181822" stroke="#ff00ff" stroke-width="2"/>
+            <text x="340" y="122" fill="#ff00ff" font-family="sans-serif" font-weight="bold" font-size="11" text-anchor="middle">Case 2: M ≠ m (Non-Constant)</text>
+            <text x="340" y="138" fill="#ffffff" font-family="sans-serif" font-size="10" text-anchor="middle">Interior extremum c ∈ (a,b)</text>
+
+            <!-- Arrows to Conclusion -->
+            <path d="M 430 35 L 500 65" fill="none" stroke="#00ff66" stroke-width="2"/>
+            <path d="M 430 125 L 500 95" fill="none" stroke="#ff00ff" stroke-width="2"/>
+
+            <!-- Node 4: Conclusion -->
+            <rect x="510" y="55" width="170" height="50" rx="8" fill="#181822" stroke="#ffee00" stroke-width="2.5"/>
+            <text x="595" y="78" fill="#ffee00" font-family="sans-serif" font-weight="bold" font-size="12" text-anchor="middle">Fermat's Theorem</text>
+            <text x="595" y="94" fill="#00ff66" font-family="monospace" font-weight="bold" font-size="12" text-anchor="middle">f'(c) = 0 ■ Q.E.D.</text>
+          </svg>
+        </div>
+
+        <div class="space-y-6">
+          
+          <!-- Proof Step 1 -->
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl border-l-4 border-neonCyan">
+            <h3 class="text-base sm:text-lg font-bold text-neonCyan mb-2">
+              Step 1: Application of Extreme Value Theorem (EVT)
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              By <strong class="text-neonOrange">Hypothesis 1</strong>, $f$ is continuous on the closed interval $[a, b]$. Because $[a, b]$ is compact (closed and bounded), the <strong class="text-neonYellow">Extreme Value Theorem (EVT)</strong> guarantees that $f$ attains an absolute maximum value $M$ and an absolute minimum value $m$ somewhere in $[a, b]$:
+            </p>
+            <div class="mt-2 text-xs sm:text-sm font-mono text-neonYellow bg-black/60 p-3 rounded text-center">
+              $$M = f(x_M) \quad \text{and} \quad m = f(x_m) \quad \text{for some } x_M, x_m \in [a, b]$$
+            </div>
+          </div>
+
+          <!-- Proof Step 2 -->
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl border-l-4 border-neonLime">
+            <h3 class="text-base sm:text-lg font-bold text-neonLime mb-2">
+              Step 2: Case 1 — Trivial Constant Function ($M = m$)
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              If $M = m$, then the maximum and minimum values are identical. This implies that $f(x)$ is a <strong class="text-neonLime">constant function</strong> on $[a, b]$ (i.e., $f(x) = M$ for all $x \in [a, b]$).
+            </p>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mt-2">
+              The derivative of any constant function is identically zero everywhere. Therefore, $f'(c) = 0$ for <strong class="text-neonLime">EVERY</strong> interior point $c \in (a, b)$.
+            </p>
+          </div>
+
+          <!-- Proof Step 3 -->
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl border-l-4 border-neonOrange">
+            <h3 class="text-base sm:text-lg font-bold text-neonOrange mb-2">
+              Step 3: Case 2 — Non-Constant Function ($M \neq m$)
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              If $M \neq m$, then at least one of these extreme values must differ from the endpoint value $f(a) = f(b)$.
+            </p>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mt-2">
+              By <strong class="text-neonOrange">Hypothesis 3</strong>, $f(a) = f(b)$. Suppose $M > f(a)$. Then the absolute maximum $M$ cannot occur at $x = a$ or $x = b$. Consequently, $x_M$ MUST be an <strong class="text-neonCyan">interior point</strong>:
+            </p>
+            <div class="mt-2 text-xs sm:text-sm font-mono text-neonCyan bg-black/60 p-3 rounded text-center">
+              $$c = x_M \in (a, b)$$
+            </div>
+          </div>
+
+          <!-- Proof Step 4 -->
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl border-l-4 border-neonMagenta">
+            <h3 class="text-base sm:text-lg font-bold text-neonMagenta mb-2">
+              Step 4: Applying Fermat’s Theorem on Stationary Points
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mb-3">
+              We have established that $c \in (a, b)$ is an interior local maximum. By <strong class="text-neonOrange">Hypothesis 2</strong>, $f$ is differentiable at $c$. Consider the difference quotient limit from both sides:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono mb-3">
+              <div class="p-3 bg-black/60 rounded border border-neonMagenta/30 space-y-1">
+                <span class="text-neonMagenta font-bold block mb-1">Right-Hand Limit ($h > 0$):</span>
+                Since $f(c)$ is maximum, $f(c+h) - f(c) \le 0$.<br>
+                Dividing by $h > 0$ gives quotient $\le 0$.<br>
+                $$\lim_{h \to 0^+} \frac{f(c+h) - f(c)}{h} \le 0$$
+              </div>
+              <div class="p-3 bg-black/60 rounded border border-neonMagenta/30 space-y-1">
+                <span class="text-neonMagenta font-bold block mb-1">Left-Hand Limit ($h < 0$):</span>
+                Since $f(c)$ is maximum, $f(c+h) - f(c) \le 0$.<br>
+                Dividing by $h < 0$ flips inequality to $\ge 0$.<br>
+                $$\lim_{h \to 0^-} \frac{f(c+h) - f(c)}{h} \ge 0$$
+              </div>
+            </div>
+
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              Because $f'(c)$ exists, the left-hand and right-hand limits must be equal. Therefore:
+            </p>
+            <div class="mt-3 p-3 bg-neonLime/10 border border-neonLime/40 rounded-lg text-center font-mono text-neonLime text-base font-bold">
+              $$0 \le f'(c) \le 0 \implies f'(c) = 0 \quad \blacksquare \text{ (Q.E.D.)}$$
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= SECTION 7: SYNTHESIS TABLES ================= -->
+    <section id="synthesis-tables" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonCyan/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-cyan space-y-12">
+        
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonCyan/10 text-neonCyan font-bold text-xl border border-neonCyan/30">7</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonCyan glow-cyan">Synthesis & Comparative Tables</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Complete summary matrices dissecting hypotheses, proofs, and critical point counts</p>
+          </div>
+        </div>
+
+        <!-- Table 1 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonYellow flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonYellow"></i> Table 1: Role of Continuity on Closed Interval $[a, b]$
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonYellow uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">Mathematical Aspect</th>
+                  <th class="p-3 border-b border-cardBorder">Theoretical Justification</th>
+                  <th class="p-3 border-b border-cardBorder">Consequence if Violated</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300">
+                <tr>
+                  <td class="p-3 font-semibold text-neonCyan">Extreme Value Theorem (EVT)</td>
+                  <td class="p-3">Requires domain to be compact (closed and bounded) to guarantee global extrema exist.</td>
+                  <td class="p-3 text-neonPink">Function can approach bounds via asymptotic jumps without ever attaining a maximum.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-neonCyan">Boundary Inclusion $[a, b]$</td>
+                  <td class="p-3">Guarantees function values at endpoints $f(a)$ and $f(b)$ are well-defined limits.</td>
+                  <td class="p-3 text-neonPink">Jump discontinuity at boundary allows curve to escape without leveling off.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 2 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonOrange flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonOrange"></i> Table 2: Role of Differentiability on Open Interval $(a, b)$
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonOrange uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">Mathematical Aspect</th>
+                  <th class="p-3 border-b border-cardBorder">Theoretical Justification</th>
+                  <th class="p-3 border-b border-cardBorder">Consequence if Violated</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300">
+                <tr>
+                  <td class="p-3 font-semibold text-neonCyan">Fermat's Theorem</td>
+                  <td class="p-3">Equates left-hand and right-hand difference quotients at interior local extremum.</td>
+                  <td class="p-3 text-neonPink">Sharp corner/cusp allows left slope $< 0$ and right slope $> 0$ without zero slope.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-neonCyan">Open Interval $(a, b)$ Sufficiency</td>
+                  <td class="p-3">Point $c$ is interior, so only two-sided neighborhood inside $(a,b)$ is required.</td>
+                  <td class="p-3 text-neonLime">Vertical slopes at endpoints $x=a,b$ do NOT invalidate Rolle's Theorem!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 3 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonLime flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonLime"></i> Table 3: Role of Equal Endpoints $f(a) = f(b)$
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonLime uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">Endpoint Scenario</th>
+                  <th class="p-3 border-b border-cardBorder">Extremum Location</th>
+                  <th class="p-3 border-b border-cardBorder">Rolle's Guarantee</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300">
+                <tr>
+                  <td class="p-3 font-semibold text-neonYellow">$f(a) = f(b)$ with Non-Constant Curve</td>
+                  <td class="p-3 text-neonLime">Forced into Interior $(a, b)$</td>
+                  <td class="p-3 text-neonLime">100% Guaranteed at least one $c$ with $f'(c) = 0$</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-neonYellow">$f(a) \neq f(b)$ with Monotonic Slope</td>
+                  <td class="p-3 text-neonOrange">Located strictly at Endpoints $x=a$ or $x=b$</td>
+                  <td class="p-3 text-neonPink">Guaranteed to FAIL (e.g., $f(x) = x$ on $[0,1]$)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 4 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonMagenta flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonMagenta"></i> Table 4: Complete Hypotheses vs. Conclusion Matrix
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonMagenta uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">H1: Cont $[a,b]$</th>
+                  <th class="p-3 border-b border-cardBorder">H2: Diff $(a,b)$</th>
+                  <th class="p-3 border-b border-cardBorder">H3: $f(a)=f(b)$</th>
+                  <th class="p-3 border-b border-cardBorder">Is $f'(c) = 0$ Guaranteed?</th>
+                  <th class="p-3 border-b border-cardBorder">Can $f'(c) = 0$ Still Exist?</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300 font-mono">
+                <tr class="bg-neonLime/10">
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonLime font-bold">YES (100% Guaranteed)</td>
+                  <td class="p-3 text-neonLime">YES</td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-neonPink">✗ NO</td>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonPink font-bold">NO Guarantee</td>
+                  <td class="p-3 text-neonYellow">Possible, but not guaranteed</td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonPink">✗ NO</td>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonPink font-bold">NO Guarantee</td>
+                  <td class="p-3 text-neonYellow">Possible (e.g. $f(x)=|x|+(x-2)^2$)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonPink">✗ NO</td>
+                  <td class="p-3 text-neonPink font-bold">NO Guarantee</td>
+                  <td class="p-3 text-neonYellow">Possible (e.g. $f(x)=x^2$ on $[-1,2]$)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 5 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonPink flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonPink"></i> Table 5: Summary of 1, 2, and 3 Critical Points (Trig vs. Non-Trig)
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonPink uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">Count</th>
+                  <th class="p-3 border-b border-cardBorder">Non-Trigonometric Example</th>
+                  <th class="p-3 border-b border-cardBorder">Trigonometric Example</th>
+                  <th class="p-3 border-b border-cardBorder">Interior Critical Points $c$</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300 font-mono">
+                <tr>
+                  <td class="p-3 font-bold text-neonYellow">1 Point $c$</td>
+                  <td class="p-3 text-neonCyan">$f(x) = 1 - x^2$ on $[-1, 1]$</td>
+                  <td class="p-3 text-neonCyan">$f(x) = \cos(x)$ on $[-\pi/2, \pi/2]$</td>
+                  <td class="p-3 text-neonLime">$c = 0$</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-neonYellow">2 Points $c$</td>
+                  <td class="p-3 text-neonCyan">$f(x) = x^3/3 - x$ on $[-\sqrt{3}, \sqrt{3}]$</td>
+                  <td class="p-3 text-neonCyan">$f(x) = \sin(2x)$ on $[0, \pi]$</td>
+                  <td class="p-3 text-neonLime">Non-Trig: $c = \pm 1$<br>Trig: $c = \pi/4, 3\pi/4$</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-neonYellow">3 Points $c$</td>
+                  <td class="p-3 text-neonCyan">$f(x) = x^4/4 - 2x^2$ on $[-2\sqrt{2}, 2\sqrt{2}]$</td>
+                  <td class="p-3 text-neonCyan">$f(x) = \sin(3x)$ on $[0, \pi]$</td>
+                  <td class="p-3 text-neonLime">Non-Trig: $c = -2, 0, 2$<br>Trig: $c = \pi/6, \pi/2, 5\pi/6$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================= SECTION 8: EXPERT Q&A & INTERACTIVE SELF-CHECK QUIZ ================= -->
+    <section id="dissection-and-quiz" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonYellow/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-yellow space-y-12">
+        
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonYellow/10 text-neonYellow font-bold text-xl border border-neonYellow/30">8</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonYellow glow-yellow">Dissecting Rolle’s Theorem & Self-Check Quiz</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Deep-dive expert Q&A accordions followed by an interactive quiz with instant scoring</p>
+          </div>
+        </div>
+
+        <!-- Part A: Dissection Accordions -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-neonCyan mb-2">
+            <i class="fa-solid fa-circle-question text-neonCyan mr-2"></i> Expert Conceptual Dissection (Click to Expand)
+          </h3>
+
+          <!-- FAQ Item 1 -->
+          <div class="bg-darkBg border border-cardBorder rounded-xl overflow-hidden">
+            <button class="accordion-btn w-full p-4 text-left font-semibold text-sm sm:text-base text-white flex justify-between items-center hover:bg-cardBgHover transition-colors">
+              <span>Q1: What is the primary difference between Rolle’s Theorem and the Mean Value Theorem (MVT)?</span>
+              <i class="fa-solid fa-chevron-down text-neonCyan transition-transform"></i>
+            </button>
+            <div class="accordion-content px-4 pb-4 text-xs sm:text-sm text-gray-300 border-t border-cardBorder/50">
+              <p class="pt-3">
+                Rolle’s Theorem is a <strong>special case</strong> of the Mean Value Theorem (MVT). Rolle’s Theorem requires $f(a) = f(b)$, yielding a secant slope of 0 and guaranteeing $f'(c) = 0$. MVT generalizes this to cases where $f(a) \neq f(b)$, guaranteeing $f'(c) = \frac{f(b) - f(a)}{b - a}$.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="bg-darkBg border border-cardBorder rounded-xl overflow-hidden">
+            <button class="accordion-btn w-full p-4 text-left font-semibold text-sm sm:text-base text-white flex justify-between items-center hover:bg-cardBgHover transition-colors">
+              <span>Q2: Why does Rolle's Theorem guarantee "at least one" point $c$ instead of "exactly one"?</span>
+              <i class="fa-solid fa-chevron-down text-neonCyan transition-transform"></i>
+            </button>
+            <div class="accordion-content px-4 pb-4 text-xs sm:text-sm text-gray-300 border-t border-cardBorder/50">
+              <p class="pt-3">
+                Functions can oscillate multiple times across an interval (like high-degree polynomials or trigonometric waves such as $\sin(3x)$). Rolle's Theorem guarantees the existence of minimum 1 turning point, but places no upper bound on how many interior stationary points can occur.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="bg-darkBg border border-cardBorder rounded-xl overflow-hidden">
+            <button class="accordion-btn w-full p-4 text-left font-semibold text-sm sm:text-base text-white flex justify-between items-center hover:bg-cardBgHover transition-colors">
+              <span>Q3: Can Rolle's Theorem be applied to $\tan(x)$ on $[0, \pi]$?</span>
+              <i class="fa-solid fa-chevron-down text-neonCyan transition-transform"></i>
+            </button>
+            <div class="accordion-content px-4 pb-4 text-xs sm:text-sm text-gray-300 border-t border-cardBorder/50">
+              <p class="pt-3">
+                <strong class="text-neonPink">NO!</strong> Even though $\tan(0) = 0 = \tan(\pi)$, $\tan(x)$ has an infinite vertical asymptote at $x = \pi/2 \in (0, \pi)$. It violates continuity (H1) and differentiability (H2). Its derivative $\sec^2(x) \ge 1$ is NEVER zero!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Part B: Interactive Self-Check Quiz -->
+        <div class="space-y-6 pt-6 border-t border-cardBorder">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold text-neonLime">
+              <i class="fa-solid fa-list-check text-neonLime mr-2"></i> Interactive Self-Check Quiz
+            </h3>
+            <span id="quizScore" class="text-xs font-mono font-bold text-neonYellow bg-black/60 px-3 py-1 rounded border border-neonYellow/30">
+              Score: 0 / 5
+            </span>
+          </div>
+
+          <form id="quizForm" class="space-y-6">
+            
+            <!-- Question 1 -->
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                1. Which interval requires differentiability in Rolle’s Theorem?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q1" value="a" class="accent-neonCyan"> Closed interval $[a, b]$
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q1" value="b" class="accent-neonCyan"> Open interval $(a, b)$
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q1" value="c" class="accent-neonCyan"> Half-open interval $[a, b)$
+                </label>
+              </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                2. If a function violates the equal endpoints condition $f(a) = f(b)$, what can we conclude?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q2" value="a" class="accent-neonCyan"> A point with $f'(c) = 0$ cannot possibly exist anywhere inside $(a,b)$.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q2" value="b" class="accent-neonCyan"> Rolle’s Theorem cannot guarantee $f'(c) = 0$, but a horizontal tangent might still exist.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q2" value="c" class="accent-neonCyan"> The function must be discontinuous.
+                </label>
+              </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                3. For $f(x) = \sin(2x)$ on $[0, \pi]$, how many interior points $c$ satisfy $f'(c) = 0$?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q3" value="a" class="accent-neonCyan"> Exactly 1 point
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q3" value="b" class="accent-neonCyan"> Exactly 2 points ($c = \pi/4$ and $c = 3\pi/4$)
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q3" value="c" class="accent-neonCyan"> Exactly 3 points
+                </label>
+              </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                4. Why does $f(x) = \sqrt{1 - x^2}$ on $[-1, 1]$ satisfy Rolle’s Theorem even though $f'(-1)$ and $f'(1)$ are infinite?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q4" value="a" class="accent-neonCyan"> Because endpoint derivatives are irrelevant; differentiability is only needed on the open interval $(-1, 1)$.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q4" value="b" class="accent-neonCyan"> Because infinity is equal to zero in calculus limits.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q4" value="c" class="accent-neonCyan"> It actually does not satisfy Rolle's theorem.
+                </label>
+              </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                5. Which fundamental calculus theorem is used in Step 1 of proving Rolle’s Theorem?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q5" value="a" class="accent-neonCyan"> Intermediate Value Theorem (IVT)
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q5" value="b" class="accent-neonCyan"> Extreme Value Theorem (EVT)
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q5" value="c" class="accent-neonCyan"> Fundamental Theorem of Calculus (FTC)
+                </label>
+              </div>
+            </div>
+
+            <button type="button" id="submitQuizBtn" class="w-full py-3 bg-neonYellow text-black font-extrabold rounded-xl hover:bg-yellow-300 transition-colors shadow-lg shadow-neonYellow/20">
+              Submit Quiz & Check Score
+            </button>
+          </form>
+
+          <div id="quizFeedback" class="hidden p-4 rounded-xl bg-darkBg border border-neonCyan text-xs sm:text-sm text-gray-200">
+            <!-- JS Feedback -->
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="border-t border-cardBorder bg-darkBg py-8 text-center text-xs text-gray-500 space-y-2">
+    <p class="text-neonCyan font-mono">Mastering Rolle’s Theorem • University Mathematics Educational Suite</p>
+    <p>Designed for First-Year Calculus • Pure Dark Theme with Neon High-Contrast Styling</p>
+  </footer>
+
+
+  <!-- ================= JAVASCRIPT LOGIC & CANVAS ENGINE ================= -->
+  <script>
+    // -------------------------------------------------------------
+    // DATA PRESETS ARRAY FOR CANVAS EXPLORER (12 PRESETS)
+    // -------------------------------------------------------------
+    const PRESETS = [
+      {
+        id: '1c-nontrig',
+        title: '1 Point c (Non-Trig)',
+        formula: 'f(x) = 1 - x²',
+        domain: [-1.2, 1.2],
+        activeInterval: [-1, 1],
+        fn: (x) => 1 - x * x,
+        dfn: (x) => -2 * x,
+        cPoints: [0],
+        h1: true, h2: true, h3: true,
+        fa: 0, fb: 0,
+        desc: 'Classic parabola on [-1, 1]. All 3 hypotheses are met. The derivative f\'(x) = -2x vanishes at exactly one interior point c = 0.'
+      },
+      {
+        id: '2c-nontrig',
+        title: '2 Points c (Non-Trig)',
+        formula: 'f(x) = x³/3 - x',
+        domain: [-2.0, 2.0],
+        activeInterval: [-Math.sqrt(3), Math.sqrt(3)],
+        fn: (x) => (x * x * x) / 3 - x,
+        dfn: (x) => x * x - 1,
+        cPoints: [-1, 1],
+        h1: true, h2: true, h3: true,
+        fa: 0, fb: 0,
+        desc: 'Cubic curve on [-√3, √3]. f(-√3) = f(√3) = 0. Roots of f\'(x) = x² - 1 yield TWO critical points: c₁ = -1 (local peak) and c₂ = 1 (local valley).'
+      },
+      {
+        id: '3c-nontrig',
+        title: '3 Points c (Non-Trig)',
+        formula: 'f(x) = x⁴/4 - 2x²',
+        domain: [-3.2, 3.2],
+        activeInterval: [-2 * Math.SQRT2, 2 * Math.SQRT2],
+        fn: (x) => Math.pow(x, 4) / 4 - 2 * x * x,
+        dfn: (x) => Math.pow(x, 3) - 4 * x,
+        cPoints: [-2, 0, 2],
+        h1: true, h2: true, h3: true,
+        fa: 0, fb: 0,
+        desc: 'W-shaped quartic curve on [-2√2, 2√2]. Roots of f\'(c) = c(c² - 4) = 0 yield THREE critical points: c₁ = -2, c₂ = 0, and c₃ = 2.'
+      },
+      {
+        id: '1c-trig',
+        title: '1 Point c (Trig)',
+        formula: 'f(x) = cos(x)',
+        domain: [-2.0, 2.0],
+        activeInterval: [-Math.PI / 2, Math.PI / 2],
+        fn: (x) => Math.cos(x),
+        dfn: (x) => -Math.sin(x),
+        cPoints: [0],
+        h1: true, h2: true, h3: true,
+        fa: 0, fb: 0,
+        desc: 'Symmetric cosine wave on [-π/2, π/2]. Endpoints match at 0. Derivative -sin(x) = 0 at c = 0.'
+      },
+      {
+        id: '2c-trig',
+        title: '2 Points c (Trig)',
+        formula: 'f(x) = sin(2x)',
+        domain: [-0.3, Math.PI + 0.3],
+        activeInterval: [0, Math.PI],
+        fn: (x) => Math.sin(2 * x),
+        dfn: (x) => 2 * Math.cos(2 * x),
+        cPoints: [Math.PI / 4, (3 * Math.PI) / 4],
+        h1: true, h2: true, h3: true,
+        fa: 0, fb: 0,
+        desc: 'Double frequency sine wave on [0, π]. Peak at c₁ = π/4 and valley at c₂ = 3π/4 both give horizontal tangents.'
+      },
+      {
+        id: '3c-trig',
+        title: '3 Points c (Trig)',
+        formula: 'f(x) = sin(3x)',
+        domain: [-0.3, Math.PI + 0.3],
+        activeInterval: [0, Math.PI],
+        fn: (x) => Math.sin(3 * x),
+        dfn: (x) => 3 * Math.cos(3 * x),
+        cPoints: [Math.PI / 6, Math.PI / 2, (5 * Math.PI) / 6],
+        h1: true, h2: true, h3: true,
+        fa: 0, fb: 0,
+        desc: 'Triple frequency sine wave on [0, π]. Yields THREE interior horizontal tangents at c₁ = π/6, c₂ = π/2, and c₃ = 5π/6.'
+      },
+      {
+        id: 'fail-cont',
+        title: 'Failure of Continuity',
+        formula: 'f(x) = x for x∈[0,1), f(1)=0',
+        domain: [-0.2, 1.2],
+        activeInterval: [0, 1],
+        fn: (x) => (x >= 0.999 ? 0 : x),
+        dfn: (x) => 1,
+        cPoints: [],
+        h1: false, h2: true, h3: true,
+        fa: 0, fb: 0,
+        isDiscontinuous: true,
+        desc: 'Endpoint condition f(0) = 0 = f(1) holds! Differentiable on (0, 1) with slope 1. But jump discontinuity at x = 1 breaks H1. NO point c exists with f\'(c) = 0!'
+      },
+      {
+        id: 'fail-diff',
+        title: 'Failure of Differentiability',
+        formula: 'f(x) = |x|',
+        domain: [-1.3, 1.3],
+        activeInterval: [-1, 1],
+        fn: (x) => Math.abs(x),
+        dfn: (x) => (x < 0 ? -1 : x > 0 ? 1 : NaN),
+        cPoints: [],
+        h1: true, h2: false, h3: true,
+        fa: 1, fb: 1,
+        isCorner: true,
+        desc: 'Continuous everywhere and f(-1) = 1 = f(1). Sharp V-corner at x = 0 makes f\'(0) undefined. Slopes are -1 or +1, NEVER 0!'
+      },
+      {
+        id: 'fail-endpoints',
+        title: 'Failure of Equal Endpoints',
+        formula: 'f(x) = x',
+        domain: [-0.2, 1.2],
+        activeInterval: [0, 1],
+        fn: (x) => x,
+        dfn: (x) => 1,
+        cPoints: [],
+        h1: true, h2: true, h3: false,
+        fa: 0, fb: 1,
+        desc: 'Continuous and differentiable everywhere, but f(0) = 0 ≠ 1 = f(1). Derivative is f\'(x) = 1 everywhere. Slope NEVER equals 0!'
+      },
+      {
+        id: 'endpoint-nondiff',
+        title: 'Endpoint Non-Diff (Rolle Holds!)',
+        formula: 'f(x) = √(1 - x²)',
+        domain: [-1.3, 1.3],
+        activeInterval: [-1, 1],
+        fn: (x) => Math.sqrt(Math.max(0, 1 - x * x)),
+        dfn: (x) => -x / Math.sqrt(Math.max(1e-6, 1 - x * x)),
+        cPoints: [0],
+        h1: true, h2: true, h3: true,
+        fa: 0, fb: 0,
+        isEndpointNonDiff: true,
+        desc: 'Semicircle curve on [-1, 1]. Slopes at endpoints are vertical (±∞). Yet f is differentiable on OPEN interval (-1, 1). Rolle\'s Theorem holds perfectly at c = 0!'
+      },
+      {
+        id: 'unequal-endpoints-c',
+        title: 'Unequal Endpoints with f\'(c)=0',
+        formula: 'f(x) = x²',
+        domain: [-1.3, 2.3],
+        activeInterval: [-1, 2],
+        fn: (x) => x * x,
+        dfn: (x) => 2 * x,
+        cPoints: [0],
+        h1: true, h2: true, h3: false,
+        fa: 1, fb: 4,
+        desc: 'f(-1) = 1 ≠ 4 = f(2). Equal endpoints condition fails! Yet f\'(0) = 0 at c = 0 ∈ (-1, 2). Proves equal endpoints are SUFFICIENT but NOT NECESSARY.'
+      },
+      {
+        id: 'nondiff-c',
+        title: 'Non-Diff with f\'(c)=0',
+        formula: 'f(x) = |x| + (x-2)²',
+        domain: [-1.3, 3.3],
+        activeInterval: [-1, 3],
+        fn: (x) => Math.abs(x) + Math.pow(x - 2, 2),
+        dfn: (x) => (x > 0 ? 1 + 2 * (x - 2) : -1 + 2 * (x - 2)),
+        cPoints: [1.5],
+        h1: true, h2: false, h3: false,
+        fa: 10, fb: 4,
+        isCorner: true,
+        desc: 'Non-differentiable sharp corner at x = 0. Fails H2 and H3. Yet smooth parabolic section on x > 0 yields f\'(1.5) = 0 at c = 1.5 ∈ (-1, 3)!'
+      }
+    ];
+
+    // -------------------------------------------------------------
+    // CANVAS ENGINE STATE & ELEMENTS
+    // -------------------------------------------------------------
+    let canvas, ctx;
+    let currentPresetIndex = 0;
+    let mousePos = { x: 0, y: 0, active: false };
+
+    // Canvas Options Toggles
+    const toggleGrid = document.getElementById('toggleGrid');
+    const toggleTangents = document.getElementById('toggleTangents');
+    const toggleEndpoints = document.getElementById('toggleEndpoints');
+
+    // DOM Elements for Active Info
+    const presetSelect = document.getElementById('presetSelect');
+    const infoTitle = document.getElementById('infoTitle');
+    const infoFormula = document.getElementById('infoFormula');
+    const badgeH1 = document.getElementById('badgeH1');
+    const badgeH2 = document.getElementById('badgeH2');
+    const badgeH3 = document.getElementById('badgeH3');
+    const cPointsList = document.getElementById('cPointsList');
+    const infoDesc = document.getElementById('infoDesc');
+    const canvasCoordinates = document.getElementById('canvasCoordinates');
+
+    // Init Engine on Load
+    window.onload = function() {
+      // Auto Render KaTeX Formulas across page
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ]
+        });
+      }
+
+      canvas = document.getElementById('rolleCanvas');
+      ctx = canvas.getContext('2d');
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      // Mouse/Touch Inspection Listeners
+      canvas.addEventListener('mousemove', handlePointerMove);
+      canvas.addEventListener('mouseleave', () => { mousePos.active = false; drawCanvas(); });
+      canvas.addEventListener('touchmove', (e) => {
+        if(e.touches.length > 0) {
+          const rect = canvas.getBoundingClientRect();
+          mousePos.x = e.touches[0].clientX - rect.left;
+          mousePos.y = e.touches[0].clientY - rect.top;
+          mousePos.active = true;
+          drawCanvas();
+        }
+      });
+
+      // Controls Listeners
+      presetSelect.addEventListener('change', (e) => {
+        currentPresetIndex = parseInt(e.target.value);
+        updatePresetUI();
+        drawCanvas();
+      });
+
+      toggleGrid.addEventListener('change', drawCanvas);
+      toggleTangents.addEventListener('change', drawCanvas);
+      toggleEndpoints.addEventListener('change', drawCanvas);
+
+      // Accordion Listeners
+      document.querySelectorAll('.accordion-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const content = btn.nextElementSibling;
+          const icon = btn.querySelector('.fa-chevron-down');
+          content.classList.toggle('open');
+          if(icon) icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+      });
+
+      // Quiz Submit Listener
+      document.getElementById('submitQuizBtn').addEventListener('click', gradeQuiz);
+
+      // Initial Render
+      updatePresetUI();
+      drawCanvas();
+    };
+
+    function resizeCanvas() {
+      if(!canvas) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      drawCanvas();
+    }
+
+    function updatePresetUI() {
+      const p = PRESETS[currentPresetIndex];
+      infoTitle.innerText = p.title;
+      infoFormula.innerText = p.formula;
+
+      // Badges
+      badgeH1.innerText = p.h1 ? 'YES' : 'FAIL';
+      badgeH1.className = `font-bold px-2 py-0.5 rounded text-black ${p.h1 ? 'bg-neonLime' : 'bg-neonPink'}`;
+
+      badgeH2.innerText = p.h2 ? 'YES' : 'FAIL';
+      badgeH2.className = `font-bold px-2 py-0.5 rounded text-black ${p.h2 ? 'bg-neonLime' : 'bg-neonPink'}`;
+
+      badgeH3.innerText = p.h3 ? 'YES' : 'FAIL';
+      badgeH3.className = `font-bold px-2 py-0.5 rounded text-black ${p.h3 ? 'bg-neonLime' : 'bg-neonPink'}`;
+
+      // C points list
+      if(p.cPoints.length === 0) {
+        cPointsList.innerHTML = '<span class="text-neonPink">None guaranteed / Exists = 0</span>';
+      } else {
+        cPointsList.innerHTML = p.cPoints.map((c, i) => `<div>c${i+1} = ${c.toFixed(3)} (f'(c) = 0)</div>`).join('');
+      }
+
+      infoDesc.innerText = p.desc;
+    }
+
+    function handlePointerMove(e) {
+      const rect = canvas.getBoundingClientRect();
+      mousePos.x = e.clientX - rect.left;
+      mousePos.y = e.clientY - rect.top;
+      mousePos.active = true;
+      drawCanvas();
+    }
+
+    // -------------------------------------------------------------
+    // MAIN DRAW ENGINE FOR CANVAS
+    // -------------------------------------------------------------
+    function drawCanvas() {
+      if(!canvas || !ctx) return;
+
+      const p = PRESETS[currentPresetIndex];
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      // Clear Canvas
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#0a0a0c';
+      ctx.fillRect(0, 0, w, h);
+
+      // World Bounds Computation
+      const xMin = p.domain[0];
+      const xMax = p.domain[1];
+
+      // Sample Y range to compute dynamic scale
+      let yMin = Infinity, yMax = -Infinity;
+      const sampleSteps = 200;
+      for(let i = 0; i <= sampleSteps; i++) {
+        const x = xMin + (i / sampleSteps) * (xMax - xMin);
+        const y = p.fn(x);
+        if(!isNaN(y) && isFinite(y)) {
+          if(y < yMin) yMin = y;
+          if(y > yMax) yMax = y;
+        }
+      }
+      if(yMin === yMax) { yMin -= 1; yMax += 1; }
+      const yMargin = (yMax - yMin) * 0.25 || 0.5;
+      yMin -= yMargin;
+      yMax += yMargin;
+
+      // Mapping Helpers
+      const toScreenX = (x) => ((x - xMin) / (xMax - xMin)) * (w - 80) + 40;
+      const toScreenY = (y) => h - 40 - ((y - yMin) / (yMax - yMin)) * (h - 80);
+      const toMathX = (sx) => xMin + ((sx - 40) / (w - 80)) * (xMax - xMin);
+      const toMathY = (sy) => yMin + ((h - 40 - sy) / (h - 80)) * (yMax - yMin);
+
+      const originX = toScreenX(0);
+      const originY = toScreenY(0);
+
+      // 1. DRAW GRID & AXES
+      if(toggleGrid.checked) {
+        ctx.strokeStyle = '#1a1a24';
+        ctx.lineWidth = 1;
+
+        // Vertical Grid lines
+        const xStep = (xMax - xMin) / 8;
+        for(let x = Math.ceil(xMin / xStep) * xStep; x <= xMax; x += xStep) {
+          const sx = toScreenX(x);
+          ctx.beginPath();
+          ctx.moveTo(sx, 0);
+          ctx.lineTo(sx, h);
+          ctx.stroke();
+        }
+
+        // Horizontal Grid lines
+        const yStep = (yMax - yMin) / 6;
+        for(let y = Math.ceil(yMin / yStep) * yStep; y <= yMax; y += yStep) {
+          const sy = toScreenY(y);
+          ctx.beginPath();
+          ctx.moveTo(0, sy);
+          ctx.lineTo(w, sy);
+          ctx.stroke();
+        }
+
+        // Main Axes X and Y
+        ctx.strokeStyle = '#333344';
+        ctx.lineWidth = 2;
+
+        // X-Axis
+        ctx.beginPath();
+        ctx.moveTo(0, originY);
+        ctx.lineTo(w, originY);
+        ctx.stroke();
+
+        // Y-Axis
+        ctx.beginPath();
+        ctx.moveTo(originX, 0);
+        ctx.lineTo(originX, h);
+        ctx.stroke();
+
+        // Axis Labels
+        ctx.fillStyle = '#888899';
+        ctx.font = '10px Fira Code';
+        ctx.fillText('x', w - 20, originY - 8);
+        ctx.fillText('y', originX + 8, 15);
+      }
+
+      // 2. DRAW ACTIVE INTERVAL REGION [a, b]
+      const a = p.activeInterval[0];
+      const b = p.activeInterval[1];
+      const saX = toScreenX(a);
+      const sbX = toScreenX(b);
+
+      // Shaded Region
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.04)';
+      ctx.fillRect(saX, 0, sbX - saX, h);
+
+      if(toggleEndpoints.checked) {
+        // Vertical dashed boundary lines at x=a and x=b
+        ctx.strokeStyle = '#00e5ff';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 5]);
+
+        ctx.beginPath();
+        ctx.moveTo(saX, 0); ctx.lineTo(saX, h);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(sbX, 0); ctx.lineTo(sbX, h);
+        ctx.stroke();
+
+        ctx.setLineDash([]); // Reset dash
+
+        // Labels x=a and x=b
+        ctx.fillStyle = '#00e5ff';
+        ctx.font = '11px Fira Code';
+        ctx.fillText(`a = ${a.toFixed(2)}`, saX + 5, h - 15);
+        ctx.fillText(`b = ${b.toFixed(2)}`, sbX - 45, h - 15);
+      }
+
+      // 3. DRAW FUNCTION CURVE
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 3;
+      ctx.shadowColor = '#00e5ff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+
+      const curveSteps = 600;
+      let started = false;
+
+      for(let i = 0; i <= curveSteps; i++) {
+        const x = xMin + (i / curveSteps) * (xMax - xMin);
+        
+        // Handle discontinuity drawing for preset 6
+        if(p.isDiscontinuous && Math.abs(x - 1.0) < 0.005) {
+          ctx.stroke();
+          ctx.beginPath();
+          started = false;
+          continue;
+        }
+
+        const y = p.fn(x);
+        if(!isNaN(y) && isFinite(y)) {
+          const sx = toScreenX(x);
+          const sy = toScreenY(y);
+          if(!started) {
+            ctx.moveTo(sx, sy);
+            started = true;
+          } else {
+            ctx.lineTo(sx, sy);
+          }
+        }
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0; // reset blur
+
+      // Special Discontinuity Dots for preset 6
+      if(p.isDiscontinuous) {
+        const s1X = toScreenX(1);
+        const s1Y_top = toScreenY(1);
+        const s1Y_bot = toScreenY(0);
+
+        // Open Circle at (1, 1)
+        ctx.strokeStyle = '#ff00ff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(s1X, s1Y_top, 5, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        // Solid Circle at (1, 0)
+        ctx.fillStyle = '#00ff66';
+        ctx.beginPath();
+        ctx.arc(s1X, s1Y_bot, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+
+      // 4. DRAW TANGENTS AND POINTS AT c
+      if(toggleTangents.checked && p.cPoints) {
+        p.cPoints.forEach((c) => {
+          const scX = toScreenX(c);
+          const fc = p.fn(c);
+          const scY = toScreenY(fc);
+
+          // Vertical dashed guide line from x-axis
+          ctx.strokeStyle = '#ff00ff';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(scX, originY);
+          ctx.lineTo(scX, scY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Horizontal Tangent Line (Slope = 0)
+          const tangentLength = 60;
+          ctx.strokeStyle = '#ff00ff';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#ff00ff';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.moveTo(scX - tangentLength, scY);
+          ctx.lineTo(scX + tangentLength, scY);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          // Marker Dot at (c, f(c))
+          ctx.fillStyle = '#ffee00';
+          ctx.beginPath();
+          ctx.arc(scX, scY, 6, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.strokeStyle = '#ff00ff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Label text
+          ctx.fillStyle = '#ffee00';
+          ctx.font = 'bold 11px Fira Code';
+          ctx.fillText(`c = ${c.toFixed(2)}`, scX + 8, scY - 12);
+          ctx.fillText(`f'(c) = 0`, scX + 8, scY + 18);
+        });
+      }
+
+      // 5. DRAW ENDPOINT DOTS AND HEIGHT LEVEL
+      if(toggleEndpoints.checked) {
+        const faVal = p.fn(a);
+        const fbVal = p.fn(b);
+        const saY = toScreenY(faVal);
+        const sbY = toScreenY(fbVal);
+
+        // Draw horizontal height line if f(a) == f(b)
+        if(p.h3) {
+          ctx.strokeStyle = 'rgba(255, 238, 0, 0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(saX, saY);
+          ctx.lineTo(sbX, sbY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Dot A
+        ctx.fillStyle = '#ffee00';
+        ctx.beginPath();
+        ctx.arc(saX, saY, 5, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // Dot B
+        ctx.fillStyle = '#ffee00';
+        ctx.beginPath();
+        ctx.arc(sbX, sbY, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+
+      // 6. MOUSE/TOUCH HOVER INSPECTION
+      if(mousePos.active) {
+        const mX = toMathX(mousePos.x);
+        const mY = toMathY(mousePos.y);
+
+        // Update Coordinate Header readout
+        canvasCoordinates.innerText = `x: ${mX.toFixed(2)}, y: ${mY.toFixed(2)}`;
+
+        // Draw crosshair
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(mousePos.x, 0); ctx.lineTo(mousePos.x, h);
+        ctx.moveTo(0, mousePos.y); ctx.lineTo(w, mousePos.y);
+        ctx.stroke();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // QUIZ GRADING ENGINE
+    // -------------------------------------------------------------
+    function gradeQuiz() {
+      const answers = {
+        q1: 'b',
+        q2: 'b',
+        q3: 'b',
+        q4: 'a',
+        q5: 'b'
+      };
+
+      let score = 0;
+      const form = document.getElementById('quizForm');
+      const feedback = document.getElementById('quizFeedback');
+
+      for(let key in answers) {
+        const selected = form.querySelector(`input[name="${key}"]:checked`);
+        if(selected && selected.value === answers[key]) {
+          score++;
+        }
+      }
+
+      document.getElementById('quizScore').innerText = `Score: ${score} / 5`;
+      feedback.classList.remove('hidden');
+
+      if(score === 5) {
+        feedback.className = 'p-4 rounded-xl bg-neonLime/10 border border-neonLime text-neonLime text-xs sm:text-sm font-bold';
+        feedback.innerHTML = '<i class="fa-solid fa-trophy text-neonYellow text-lg mr-2"></i> Perfect Score 5/5! You have mastered Rolle’s Theorem mechanics, hypotheses, and proofs!';
+      } else {
+        feedback.className = 'p-4 rounded-xl bg-neonYellow/10 border border-neonYellow text-neonYellow text-xs sm:text-sm font-semibold';
+        feedback.innerHTML = `<i class="fa-solid fa-circle-info text-neonYellow text-lg mr-2"></i> You scored ${score}/5. Review the failure modes and proof sections above to get a 5/5!`;
+      }
+    }
+  </script>
+</body>
+</html>
