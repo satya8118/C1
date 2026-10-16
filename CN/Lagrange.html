@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mastering Lagrange's Mean Value Theorem: Geometry, Hypotheses & Interactive Visualizer</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            neonYellow: '#ffee00', neonOrange: '#ff9900', neonMagenta: '#ff00ff',
+            neonLime: '#00ff66', neonCyan: '#00e5ff', neonPink: '#ff66cc',
+            darkBg: '#0a0a0c', cardBg: '#121216', cardBgHover: '#181820', cardBorder: '#22222e',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Fira Code', 'monospace'] }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #0a0a0c; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a0c; }
+    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00e5ff; }
+    .glow-yellow { text-shadow: 0 0 10px rgba(255,238,0,.5); }
+    .glow-cyan { text-shadow: 0 0 10px rgba(0,229,255,.5); }
+    .glow-magenta { text-shadow: 0 0 10px rgba(255,0,255,.5); }
+    .glow-lime { text-shadow: 0 0 10px rgba(0,255,102,.5); }
+    .glow-orange { text-shadow: 0 0 10px rgba(255,153,0,.5); }
+    .border-glow-cyan { box-shadow: 0 0 15px rgba(0,229,255,.15); border: 1px solid rgba(0,229,255,.4); }
+    .border-glow-yellow { box-shadow: 0 0 15px rgba(255,238,0,.15); border: 1px solid rgba(255,238,0,.4); }
+    .border-glow-magenta { box-shadow: 0 0 15px rgba(255,0,255,.15); border: 1px solid rgba(255,0,255,.4); }
+    .border-glow-lime { box-shadow: 0 0 15px rgba(0,255,102,.15); border: 1px solid rgba(0,255,102,.4); }
+    .border-glow-orange { box-shadow: 0 0 15px rgba(255,153,0,.15); border: 1px solid rgba(255,153,0,.4); }
+    canvas { touch-action: none; }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height .35s ease-out, opacity .35s ease-out; opacity: 0; }
+    .accordion-content.open { max-height: 1000px; opacity: 1; }
+    .svg-diagram { width: 100%; height: auto; max-height: 300px; }
+  </style>
+</head>
+<body class="bg-darkBg text-white antialiased min-h-screen selection:bg-neonCyan selection:text-black">
+
+  <!-- HEADER -->
+  <header class="relative border-b border-cardBorder bg-gradient-to-b from-[#12121a] to-darkBg py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col items-center text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cardBg border border-neonCyan/30 text-neonCyan text-xs sm:text-sm font-semibold mb-6 tracking-wide uppercase">
+          <i class="fa-solid fa-graduation-cap text-neonYellow"></i> First-Year University Calculus Deep-Dive
+        </div>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4">
+          Mastering <span class="text-neonCyan glow-cyan">Lagrange’s Mean Value Theorem</span>
+        </h1>
+        <p class="text-lg sm:text-xl lg:text-2xl text-neonYellow font-medium max-w-4xl mb-8 leading-relaxed">
+          Geometry, Visual Diagrams, Mechanics, Rigorous Proofs & Interactive Visualizer
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl">
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-3 sm:p-4 text-center">
+            <span class="block text-neonYellow text-xl sm:text-2xl font-black">2</span>
+            <span class="text-xs text-gray-400 uppercase font-semibold">Strict Hypotheses</span>
+          </div>
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-3 sm:p-4 text-center">
+            <span class="block text-neonCyan text-xl sm:text-2xl font-black">12</span>
+            <span class="text-xs text-gray-400 uppercase font-semibold">Canvas Presets</span>
+          </div>
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-3 sm:p-4 text-center">
+            <span class="block text-neonLime text-xl sm:text-2xl font-black">5</span>
+            <span class="text-xs text-gray-400 uppercase font-semibold">Synthesis Tables</span>
+          </div>
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-3 sm:p-4 text-center">
+            <span class="block text-neonPink text-xl sm:text-2xl font-black">100%</span>
+            <span class="text-xs text-gray-400 uppercase font-semibold">Rigorous Proofs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+    <!-- SECTION 1 -->
+    <section id="introduction" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonCyan/30 rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl border-glow-cyan">
+        <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-neonCyan/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonCyan/10 text-neonCyan font-bold text-xl border border-neonCyan/30">1</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-neonCyan glow-cyan">Formal Statement & Geometric Intuition</h2>
+        </div>
+
+        <div class="bg-[#181822] border-l-4 border-neonCyan p-5 sm:p-6 rounded-r-xl mb-8">
+          <h3 class="text-xs sm:text-sm uppercase tracking-wider text-neonCyan font-bold mb-2">
+            <i class="fa-solid fa-scroll mr-2"></i> Theorem Statement (Lagrange’s Mean Value Theorem)
+          </h3>
+          <p class="text-gray-200 text-base sm:text-lg leading-relaxed mb-4">
+            Let $f(x)$ be a real-valued function defined on a closed interval $[a, b]$. If $f$ satisfies the following two hypotheses:
+          </p>
+          <div class="space-y-3 font-medium text-sm sm:text-base">
+            <div class="flex items-start gap-3 bg-darkBg/60 p-3 rounded-lg border border-neonOrange/30">
+              <span class="text-neonOrange font-bold font-mono">H1:</span>
+              <p><strong class="text-neonOrange">Continuity:</strong> $f$ is continuous on the <strong class="text-neonYellow">closed interval $[a, b]$</strong>.</p>
+            </div>
+            <div class="flex items-start gap-3 bg-darkBg/60 p-3 rounded-lg border border-neonOrange/30">
+              <span class="text-neonOrange font-bold font-mono">H2:</span>
+              <p><strong class="text-neonOrange">Differentiability:</strong> $f$ is differentiable on the <strong class="text-neonYellow">open interval $(a, b)$</strong>.</p>
+            </div>
+          </div>
+          <div class="mt-4 p-4 bg-neonLime/10 border border-neonLime/40 rounded-lg">
+            <p class="text-neonLime font-bold text-base sm:text-lg text-center leading-relaxed">
+              Then there exists at least one point $c \in (a, b)$ such that
+              $$f'(c) = \frac{f(b) - f(a)}{b - a}$$
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div class="space-y-4">
+            <div class="bg-darkBg/80 border border-cardBorder p-5 rounded-xl space-y-3">
+              <h4 class="text-neonCyan font-bold text-lg flex items-center gap-2">
+                <i class="fa-solid fa-car-side text-neonYellow"></i> The Average Speed Analogy
+              </h4>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                Suppose you drive 180 km in exactly 2 hours. Your <strong class="text-neonYellow">average speed</strong> is 90 km/h. Common sense says that at some instant during the trip, your speedometer must have read <em>exactly</em> 90 km/h — you cannot average 90 without touching 90.
+              </p>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                Here $f(t)$ is position, $\frac{f(b)-f(a)}{b-a}$ is average velocity, and $f'(c)$ is instantaneous velocity. As long as you did not teleport (<strong class="text-neonOrange">Continuity</strong>) or undergo an instantaneous velocity jump (<strong class="text-neonOrange">Differentiability</strong>), the instantaneous rate <strong class="text-neonLime">must</strong> equal the average rate somewhere.
+              </p>
+            </div>
+            <div class="bg-darkBg/80 border border-cardBorder p-5 rounded-xl space-y-3">
+              <h4 class="text-neonMagenta font-bold text-lg flex items-center gap-2">
+                <i class="fa-solid fa-compass-drafting text-neonMagenta"></i> Geometric Tangent Parallelism
+              </h4>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                Geometrically, the secant line connecting $(a, f(a))$ and $(b, f(b))$ has slope $m = \frac{f(b)-f(a)}{b-a}$. Lagrange's MVT guarantees that somewhere in the interior $(a, b)$, the tangent line is <strong class="text-neonYellow">parallel to this secant line</strong>.
+              </p>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                Rolle’s Theorem is precisely the special case where the secant is horizontal ($m = 0$).
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-darkBg border border-neonCyan/40 p-4 rounded-xl flex flex-col items-center justify-center">
+            <span class="text-xs uppercase font-mono text-neonCyan font-bold mb-3 flex items-center gap-2 text-center">
+              <i class="fa-solid fa-image text-neonYellow"></i> Figure 1: Geometric Representation of Lagrange's MVT
+            </span>
+            <svg class="svg-diagram" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="grid1" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#181824" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="500" height="300" fill="#0a0a0c" />
+              <rect width="500" height="300" fill="url(#grid1)" />
+              <line x1="40" y1="260" x2="470" y2="260" stroke="#444455" stroke-width="2"/>
+              <line x1="60" y1="20" x2="60" y2="280" stroke="#444455" stroke-width="2"/>
+              <text x="458" y="250" fill="#888899" font-family="monospace" font-size="12">x</text>
+              <text x="70" y="35" fill="#888899" font-family="monospace" font-size="12">y</text>
+              <rect x="100" y="30" width="320" height="230" fill="rgba(0, 229, 255, 0.03)" />
+              <line x1="100" y1="220" x2="100" y2="260" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4,4"/>
+              <line x1="420" y1="100" x2="420" y2="260" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4,4"/>
+              <line x1="260" y1="100" x2="260" y2="260" stroke="#ff00ff" stroke-width="1.5" stroke-dasharray="4,4"/>
+              <line x1="80" y1="227" x2="440" y2="93" stroke="#ffee00" stroke-width="2" stroke-dasharray="7,6" opacity="0.85"/>
+              <path d="M 100 220 Q 260 40 420 100" fill="none" stroke="#00e5ff" stroke-width="3.5" filter="drop-shadow(0px 0px 8px rgba(0,229,255,0.6))"/>
+              <line x1="180" y1="130" x2="340" y2="70" stroke="#ff00ff" stroke-width="3" filter="drop-shadow(0px 0px 8px rgba(255,0,255,0.8))"/>
+              <circle cx="100" cy="220" r="6" fill="#ffee00"/>
+              <circle cx="420" cy="100" r="6" fill="#ffee00"/>
+              <circle cx="260" cy="100" r="6" fill="#ffee00" stroke="#ff00ff" stroke-width="2"/>
+              <text x="92" y="280" fill="#00e5ff" font-family="monospace" font-weight="bold" font-size="13">x = a</text>
+              <text x="412" y="280" fill="#00e5ff" font-family="monospace" font-weight="bold" font-size="13">x = b</text>
+              <text x="252" y="280" fill="#ff00ff" font-family="monospace" font-weight="bold" font-size="13">x = c</text>
+              <text x="20" y="215" fill="#ffee00" font-family="sans-serif" font-size="11">f(a)</text>
+              <text x="428" y="95" fill="#ffee00" font-family="sans-serif" font-size="11">f(b)</text>
+              <text x="120" y="150" fill="#ffee00" font-family="monospace" font-size="11" font-weight="bold">Secant slope</text>
+              <text x="120" y="165" fill="#ffee00" font-family="monospace" font-size="11">= (f(b)−f(a))/(b−a)</text>
+              <text x="300" y="55" fill="#ff00ff" font-family="monospace" font-size="12" font-weight="bold">f′(c) = same slope</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Interactive Explorer -->
+    <section id="interactive-explorer" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonLime/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-lime">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonLime/10 text-neonLime font-bold text-xl border border-neonLime/30">2</span>
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-bold text-neonLime glow-lime">Interactive Curve Explorer & Plotter</h2>
+              <p class="text-xs sm:text-sm text-gray-400">Test 12 distinct algebraic, transcendental, failure, and edge cases in real time</p>
+            </div>
+          </div>
+          <div class="w-full md:w-96">
+            <label for="presetSelect" class="block text-xs uppercase text-neonYellow font-bold mb-1">Select Curve Preset:</label>
+            <select id="presetSelect" class="w-full bg-darkBg border-2 border-neonLime text-white text-sm rounded-xl p-3 focus:outline-none focus:border-neonYellow transition-colors">
+              <optgroup label="Sufficient Conditions Satisfied (MVT Guarantees c)">
+                <option value="0" selected>Quadratic: f(x) = x² on [0, 2]</option>
+                <option value="1">Cubic: f(x) = x³ on [0, 2]</option>
+                <option value="2">Radical: f(x) = √x on [0, 4]</option>
+                <option value="3">Trig: f(x) = sin(x) on [0, π/2]</option>
+                <option value="4">Exponential: f(x) = eˣ on [0, 1]</option>
+                <option value="5">Logarithmic: f(x) = ln(x) on [1, e]</option>
+              </optgroup>
+              <optgroup label="Special & Degenerate Cases">
+                <option value="6">Rolle as Special Case: f(x) = 1 − x² on [−1, 1]</option>
+                <option value="7">Linear: f(x) = 2x + 1 on [−1, 2] (Every c Works)</option>
+              </optgroup>
+              <optgroup label="Hypothesis Violations (Failure Modes)">
+                <option value="8">Failure of Continuity: Endpoint Jump on [0, 1]</option>
+                <option value="9">Failure of Differentiability: f(x) = |x| on [−1, 1]</option>
+                <option value="10">Vertical Cusp: f(x) = x^(2/3) on [−1, 1]</option>
+              </optgroup>
+              <optgroup label="Sufficient vs. Necessary Mechanics">
+                <option value="11">Non-Diff but MVT Holds: f(x) = x² + |x| on [−1, 2]</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div class="lg:col-span-3 space-y-4">
+            <div class="relative bg-darkBg border border-cardBorder rounded-xl overflow-hidden p-2">
+              <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-[#121218] rounded-lg mb-2 text-xs">
+                <div class="flex flex-wrap items-center gap-4">
+                  <label class="inline-flex items-center cursor-pointer text-gray-300">
+                    <input type="checkbox" id="toggleGrid" class="sr-only peer" checked>
+                    <div class="relative w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-neonCyan"></div>
+                    <span class="ml-2 font-medium">Grid & Axes</span>
+                  </label>
+                  <label class="inline-flex items-center cursor-pointer text-gray-300">
+                    <input type="checkbox" id="toggleSecant" class="sr-only peer" checked>
+                    <div class="relative w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-neonYellow"></div>
+                    <span class="ml-2 font-medium">Secant Line</span>
+                  </label>
+                  <label class="inline-flex items-center cursor-pointer text-gray-300">
+                    <input type="checkbox" id="toggleTangents" class="sr-only peer" checked>
+                    <div class="relative w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-neonMagenta"></div>
+                    <span class="ml-2 font-medium">Parallel Tangents at c</span>
+                  </label>
+                  <label class="inline-flex items-center cursor-pointer text-gray-300">
+                    <input type="checkbox" id="toggleEndpoints" class="sr-only peer" checked>
+                    <div class="relative w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-neonCyan"></div>
+                    <span class="ml-2 font-medium">Endpoints x=a, b</span>
+                  </label>
+                </div>
+                <div id="canvasCoordinates" class="text-neonLime font-mono font-bold bg-black/60 px-2.5 py-1 rounded border border-neonLime/30">
+                  x: 0.00, y: 0.00
+                </div>
+              </div>
+              <div class="relative w-full aspect-[16/9] bg-black rounded-lg overflow-hidden cursor-crosshair">
+                <canvas id="mvtCanvas" class="w-full h-full block"></canvas>
+              </div>
+              <p class="text-xs text-center text-gray-400 mt-2">
+                <i class="fa-solid fa-mouse-pointer text-neonCyan mr-1"></i> Hover/Touch anywhere on the canvas to inspect coordinate values & local slope.
+              </p>
+            </div>
+          </div>
+
+          <div class="lg:col-span-1 space-y-4 flex flex-col justify-between">
+            <div class="bg-darkBg border border-cardBorder rounded-xl p-5 space-y-4">
+              <h3 class="text-sm uppercase tracking-wider text-neonYellow font-bold flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-neonYellow"></i> Active Preset Status
+              </h3>
+              <div id="infoTitle" class="text-lg font-bold text-neonCyan">Preset Title</div>
+              <div id="infoFormula" class="text-sm font-mono text-neonYellow bg-black/50 p-2 rounded border border-cardBorder">f(x) = ...</div>
+              <div class="space-y-2">
+                <div class="text-xs uppercase text-gray-400 font-semibold">Hypotheses Check:</div>
+                <div class="flex items-center justify-between text-xs p-2 rounded bg-cardBg border border-cardBorder">
+                  <span>H1: Continuous [a,b]</span>
+                  <span id="badgeH1" class="font-bold px-2 py-0.5 rounded text-black bg-neonLime">YES</span>
+                </div>
+                <div class="flex items-center justify-between text-xs p-2 rounded bg-cardBg border border-cardBorder">
+                  <span>H2: Diff (a,b)</span>
+                  <span id="badgeH2" class="font-bold px-2 py-0.5 rounded text-black bg-neonLime">YES</span>
+                </div>
+                <div class="flex items-center justify-between text-xs p-2 rounded bg-cardBg border border-cardBorder">
+                  <span>Secant Slope m</span>
+                  <span id="badgeSlope" class="font-bold px-2 py-0.5 rounded text-black bg-neonCyan font-mono">0.00</span>
+                </div>
+              </div>
+              <div>
+                <div class="text-xs uppercase text-gray-400 font-semibold mb-1">Guaranteed Points c:</div>
+                <div id="cPointsList" class="text-xs font-mono text-neonMagenta bg-neonMagenta/10 p-2 rounded border border-neonMagenta/30 space-y-1"></div>
+              </div>
+              <div>
+                <div class="text-xs uppercase text-gray-400 font-semibold mb-1">Mathematical Breakdown:</div>
+                <p id="infoDesc" class="text-xs text-gray-300 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Failure Modes -->
+    <section id="failure-modes" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonOrange/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-orange">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonOrange/10 text-neonOrange font-bold text-xl border border-neonOrange/30">3</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonOrange glow-orange">Strict Necessity of Each Hypothesis</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Why removing even one single hypothesis causes the entire theorem guarantee to collapse</p>
+          </div>
+        </div>
+
+        <p class="text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
+          Lagrange’s MVT is a precision instrument. Each condition is <strong class="text-neonOrange">strictly required</strong> to guarantee a tangent parallel to the secant. If a single condition is violated, counterexamples exist where <strong class="text-neonPink">no point $c$ exists with $f'(c) = \frac{f(b)-f(a)}{b-a}$</strong>.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <!-- Failure 1: Continuity (ENDPOINT JUMP) -->
+          <div class="bg-darkBg border border-neonOrange/40 rounded-xl p-5 flex flex-col justify-between hover:border-neonOrange transition-all">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-black bg-neonOrange px-2.5 py-1 rounded-full uppercase">Failure Mode 1</span>
+                <i class="fa-solid fa-link-slash text-neonOrange text-xl"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white">Endpoint Jump on $[a, b]$</h3>
+
+              <div class="bg-black/60 border border-cardBorder rounded-lg p-2 flex justify-center">
+                <svg viewBox="0 0 200 130" class="w-full h-28">
+                  <line x1="20" y1="110" x2="185" y2="110" stroke="#444" stroke-width="1.5"/>
+                  <line x1="30" y1="10" x2="30" y2="120" stroke="#444" stroke-width="1.5"/>
+                  <!-- Secant from (0,0) to (1,3) -->
+                  <line x1="30" y1="110" x2="170" y2="20" stroke="#ffee00" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.75"/>
+                  <!-- Curve y=x on [0,1) -->
+                  <line x1="30" y1="110" x2="170" y2="80" stroke="#00e5ff" stroke-width="2.5"/>
+                  <!-- Open circle at (1, 1) -->
+                  <circle cx="170" cy="80" r="4" fill="#0a0a0c" stroke="#00e5ff" stroke-width="2"/>
+                  <!-- Solid dot at (1, 3) -->
+                  <circle cx="170" cy="20" r="4" fill="#00e5ff"/>
+                  <text x="26" y="125" fill="#888" font-size="10">a=0</text>
+                  <text x="162" y="125" fill="#888" font-size="10">b=1</text>
+                  <text x="38" y="98" fill="#00e5ff" font-size="9" font-weight="bold">f(x)=x</text>
+                  <text x="38" y="108" fill="#00e5ff" font-size="9">slope 1</text>
+                  <text x="115" y="35" fill="#ffee00" font-size="9" font-weight="bold">secant slope 3</text>
+                </svg>
+              </div>
+
+              <div class="text-xs font-mono text-neonYellow bg-black/60 p-2 rounded">
+                $f(x) = x$ for $0 \le x < 1$<br>
+                $f(1) = 3$ on $[0, 1]$
+              </div>
+              <ul class="text-xs space-y-1.5 text-gray-300">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Differentiable on $(0, 1)$: $f'(x) = 1$. <strong class="text-neonLime">H2 holds!</strong></span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-xmark text-neonPink mt-0.5"></i>
+                  <span><strong class="text-neonOrange">Jump discontinuity</strong> at the endpoint $x = 1$: $\lim_{x \to 1^-} f(x) = 1$ but $f(1) = 3$.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-xmark text-neonPink mt-0.5"></i>
+                  <span>Secant slope $= \frac{3 - 0}{1 - 0} = 3$, but $f'(c) = 1$ for every $c \in (0, 1)$.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-cardBorder text-xs text-neonPink font-medium">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> $f'(x) = 1$ everywhere on $(0,1)$. Slope NEVER equals 3!
+            </div>
+          </div>
+
+          <!-- Failure 2: Corner -->
+          <div class="bg-darkBg border border-neonOrange/40 rounded-xl p-5 flex flex-col justify-between hover:border-neonOrange transition-all">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-black bg-neonOrange px-2.5 py-1 rounded-full uppercase">Failure Mode 2</span>
+                <i class="fa-solid fa-slash-back text-neonOrange text-xl"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white">Corner (Non-Diff on $(a,b)$)</h3>
+
+              <div class="bg-black/60 border border-cardBorder rounded-lg p-2 flex justify-center">
+                <svg viewBox="0 0 200 130" class="w-full h-28">
+                  <line x1="20" y1="110" x2="185" y2="110" stroke="#444" stroke-width="1.5"/>
+                  <line x1="100" y1="10" x2="100" y2="120" stroke="#444" stroke-width="1.5"/>
+                  <line x1="30" y1="30" x2="170" y2="30" stroke="#ffee00" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.8"/>
+                  <path d="M 30 30 L 100 110 L 170 30" fill="none" stroke="#00e5ff" stroke-width="2.5"/>
+                  <circle cx="100" cy="110" r="5" fill="#ff00ff" stroke="#ffee00" stroke-width="1.5"/>
+                  <text x="25" y="125" fill="#888" font-size="10">a=-1</text>
+                  <text x="165" y="125" fill="#888" font-size="10">b=1</text>
+                  <text x="62" y="100" fill="#ff9900" font-size="10" font-weight="bold">Sharp Corner x=0</text>
+                </svg>
+              </div>
+
+              <div class="text-xs font-mono text-neonYellow bg-black/60 p-2 rounded">
+                $f(x) = |x|$ on $[-1, 1]$
+              </div>
+              <ul class="text-xs space-y-1.5 text-gray-300">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Continuous on $[-1, 1]$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Secant slope $= \frac{1 - 1}{1 - (-1)} = 0$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-xmark text-neonPink mt-0.5"></i>
+                  <span><strong class="text-neonOrange">Corner</strong> at $x=0$ ($f'(0)$ undefined).</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-cardBorder text-xs text-neonPink font-medium">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> Slopes are $-1$ or $+1$. Slope NEVER equals $0$!
+            </div>
+          </div>
+
+          <!-- Failure 3: Vertical Cusp -->
+          <div class="bg-darkBg border border-neonOrange/40 rounded-xl p-5 flex flex-col justify-between hover:border-neonOrange transition-all">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-black bg-neonOrange px-2.5 py-1 rounded-full uppercase">Failure Mode 3</span>
+                <i class="fa-solid fa-arrows-up-down text-neonOrange text-xl"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white">Vertical Cusp (Infinite Slope)</h3>
+
+              <div class="bg-black/60 border border-cardBorder rounded-lg p-2 flex justify-center">
+                <svg viewBox="0 0 200 130" class="w-full h-28">
+                  <line x1="20" y1="110" x2="185" y2="110" stroke="#444" stroke-width="1.5"/>
+                  <line x1="100" y1="10" x2="100" y2="120" stroke="#444" stroke-width="1.5"/>
+                  <line x1="30" y1="30" x2="170" y2="30" stroke="#ffee00" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.8"/>
+                  <path d="M 30 30 C 70 95, 90 110, 100 110 C 110 110, 130 95, 170 30" fill="none" stroke="#00e5ff" stroke-width="2.5"/>
+                  <circle cx="100" cy="110" r="5" fill="#ff00ff" stroke="#ffee00" stroke-width="1.5"/>
+                  <text x="25" y="125" fill="#888" font-size="10">a=-1</text>
+                  <text x="165" y="125" fill="#888" font-size="10">b=1</text>
+                  <text x="55" y="98" fill="#ff9900" font-size="10" font-weight="bold">Vertical tangent x=0</text>
+                </svg>
+              </div>
+
+              <div class="text-xs font-mono text-neonYellow bg-black/60 p-2 rounded">
+                $f(x) = x^{2/3}$ on $[-1, 1]$
+              </div>
+              <ul class="text-xs space-y-1.5 text-gray-300">
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Continuous on $[-1, 1]$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-check text-neonLime mt-0.5"></i>
+                  <span>Secant slope $= \frac{1 - 1}{1 - (-1)} = 0$</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fa-solid fa-xmark text-neonPink mt-0.5"></i>
+                  <span><strong class="text-neonOrange">Vertical cusp</strong> at $x=0$; $f'(0)$ is infinite.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-cardBorder text-xs text-neonPink font-medium">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> $f'(x) = \frac{2}{3}x^{-1/3}$ is never $0$ — it blows up!
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Sufficiency vs Necessity -->
+    <section id="sufficiency-vs-necessity" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonPink/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-magenta">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonPink/10 text-neonPink font-bold text-xl border border-neonPink/30">4</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonPink glow-magenta">Sufficiency vs. Necessity Mechanics</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Logical breakdown: Why MVT's hypotheses are Sufficient but NOT Necessary</p>
+          </div>
+        </div>
+
+        <div class="bg-darkBg border border-cardBorder p-6 rounded-xl space-y-4 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-4 bg-[#181822] rounded-lg border-l-4 border-neonLime">
+              <h4 class="text-neonLime font-bold text-base mb-1">
+                <i class="fa-solid fa-shield-check mr-2"></i> Sufficient Conditions
+              </h4>
+              <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                If both hypotheses hold ($H1 \land H2$), then the conclusion ($\exists c \in (a,b),\; f'(c) = \frac{f(b)-f(a)}{b-a}$) is <strong class="text-neonLime">100% guaranteed</strong> to occur.
+              </p>
+            </div>
+            <div class="p-4 bg-[#181822] rounded-lg border-l-4 border-neonPink">
+              <h4 class="text-neonPink font-bold text-base mb-1">
+                <i class="fa-solid fa-circle-xmark mr-2"></i> NOT Necessary Conditions
+              </h4>
+              <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                Failing one or more conditions does <strong class="text-neonOrange">NOT</strong> mean the conclusion is impossible! It only means MVT cannot be used to <em>guarantee</em> it.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-bold text-neonYellow mb-4">Concrete Proofs of Non-Necessity</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Example 1 -->
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl space-y-3">
+            <span class="text-xs text-neonCyan font-bold uppercase tracking-wider">Example 1: Non-Differentiable yet MVT Holds</span>
+            <h4 class="text-base font-mono font-bold text-neonYellow">$f(x) = x^2 + |x|$ on $[-1, 2]$</h4>
+            <ul class="text-xs space-y-1 text-gray-300">
+              <li>• <strong class="text-neonLime">H1:</strong> Continuous on $[-1, 2]$.</li>
+              <li>• <strong class="text-neonPink">H2 Fails:</strong> Sharp corner at $x = 0$ ($f'(0)$ undefined).</li>
+              <li>• Secant slope $= \frac{f(2) - f(-1)}{2 - (-1)} = \frac{6 - 2}{3} = \frac{4}{3}$.</li>
+            </ul>
+            <div class="p-3 bg-neonLime/10 border border-neonLime/30 rounded-lg text-xs text-neonLime">
+              <strong>Outcome:</strong> On $x > 0$, $f(x) = x^2 + x$, so $f'(x) = 2x + 1 = \frac{4}{3}$ yields <strong class="text-neonYellow font-mono">$c = \frac{1}{6} \in (-1, 2)$</strong>. A parallel tangent exists despite the corner!
+            </div>
+          </div>
+
+          <!-- Example 2 (updated note about H2) -->
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl space-y-3">
+            <span class="text-xs text-neonCyan font-bold uppercase tracking-wider">Example 2: Discontinuous yet MVT Holds</span>
+            <h4 class="text-base font-mono font-bold text-neonYellow">$f(x) = x^2$ on $[-1, 1)$, $\;f(x) = x^2 - 1$ on $[1, 2]$</h4>
+            <ul class="text-xs space-y-1 text-gray-300">
+              <li>• <strong class="text-neonPink">H1 Fails:</strong> Jump discontinuity at $x = 1$.</li>
+              <li>• <strong class="text-neonPink">H2 Also Fails:</strong> Differentiability implies continuity, so $f$ is also non-differentiable at $x=1$.</li>
+              <li>• Secant slope $= \frac{f(2) - f(-1)}{3} = \frac{3 - 1}{3} = \frac{2}{3}$.</li>
+              <li>• On $(-1, 1)$: $f'(x) = 2x = \frac{2}{3} \Rightarrow x = \frac{1}{3}$.</li>
+            </ul>
+            <div class="p-3 bg-neonLime/10 border border-neonLime/30 rounded-lg text-xs text-neonLime">
+              <strong>Outcome:</strong> <strong class="text-neonYellow font-mono">$c = \frac{1}{3} \in (-1, 2)$</strong> works perfectly. Even a total failure of hypotheses does not forbid the MVT conclusion from holding by coincidence!
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: Deep Dive — Auxiliary Function -->
+    <section id="deepdive" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonLime/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-lime">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonLime/10 text-neonLime font-bold text-xl border border-neonLime/30">5</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonLime glow-lime">Special Deep Dive: Tilt the World Until Rolle Applies</h2>
+            <p class="text-xs sm:text-sm text-gray-400">How subtracting the secant line transforms MVT into Rolle’s Theorem — and why differentiability is required only on the open interval</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div class="space-y-4 text-sm text-gray-300 leading-relaxed">
+            <p>
+              Students often ask: <em class="text-neonYellow">"Rolle’s Theorem only handles horizontal secants. How does MVT handle slanted ones?"</em>
+            </p>
+            <div class="p-4 bg-darkBg border border-cardBorder rounded-xl space-y-3">
+              <h4 class="text-neonCyan font-bold text-base">The Auxiliary Gap Function:</h4>
+              <p class="text-xs sm:text-sm">
+                Define the vertical gap between the curve and the secant line:
+              </p>
+              <div class="p-3 bg-black/60 rounded-lg text-center font-mono text-neonYellow text-xs sm:text-sm">
+                $$h(x) = f(x) - \left[ f(a) + \frac{f(b)-f(a)}{b-a}(x - a) \right]$$
+              </div>
+              <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm">
+                <li><strong class="text-neonYellow">Endpoints vanish:</strong> $h(a) = 0$ and $h(b) = 0$, so $h(a) = h(b)$ automatically. The equal-endpoint condition is <em>manufactured</em>!</li>
+                <li><strong class="text-neonYellow">Rolle applies:</strong> $h$ inherits continuity on $[a,b]$ and differentiability on $(a,b)$ from $f$.</li>
+                <li><strong class="text-neonYellow">Conclusion:</strong> $\exists c$ with $h'(c) = 0$, i.e. $f'(c) = \frac{f(b)-f(a)}{b-a}$.</li>
+              </ol>
+            </div>
+            <div class="p-4 bg-darkBg border border-cardBorder rounded-xl space-y-2">
+              <h4 class="text-neonMagenta font-bold text-base">Why $c$ is Strictly Interior</h4>
+              <p class="text-xs sm:text-sm">
+                The guaranteed point $c$ lies in the <strong class="text-neonYellow">open</strong> interval $(a,b)$, never at the boundary. Fermat’s Theorem on stationary points requires a <em>two-sided</em> neighbourhood — a requirement that only makes sense in the interior. This is exactly why differentiability is demanded only on $(a,b)$: vertical tangents or corners at the endpoints cannot obstruct an interior parallel tangent.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-darkBg border border-neonLime/40 p-6 rounded-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs uppercase text-black bg-neonLime font-bold px-2.5 py-1 rounded-full">Gap Function Visualized</span>
+              <span class="text-xs font-mono text-neonCyan">h(x) = curve − secant</span>
+            </div>
+            <div class="bg-black/60 border border-cardBorder rounded-lg p-2 flex justify-center">
+              <svg viewBox="0 0 500 300" class="w-full h-auto">
+                <defs>
+                  <pattern id="grid2" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#141420" stroke-width="1"/>
+                  </pattern>
+                </defs>
+                <rect width="500" height="300" fill="#0a0a0c"/>
+                <rect width="500" height="300" fill="url(#grid2)"/>
+                <line x1="80" y1="220" x2="440" y2="120" stroke="#ffee00" stroke-width="2" stroke-dasharray="7,5"/>
+                <path d="M 80 220 Q 260 -20 440 120" fill="none" stroke="#00e5ff" stroke-width="3" filter="drop-shadow(0px 0px 6px rgba(0,229,255,0.6))"/>
+                <line x1="125" y1="166" x2="125" y2="207" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="170" y1="124" x2="170" y2="195" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="260" y1="75"  x2="260" y2="170" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="350" y1="74"  x2="350" y2="145" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="395" y1="91"  x2="395" y2="132" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <circle cx="80" cy="220" r="5" fill="#ffee00"/>
+                <circle cx="440" cy="120" r="5" fill="#ffee00"/>
+                <text x="96" y="200" fill="#00ff66" font-family="monospace" font-size="11">h(x) &gt; 0</text>
+                <text x="30" y="240" fill="#00e5ff" font-family="monospace" font-size="11" font-weight="bold">a</text>
+                <text x="450" y="115" fill="#00e5ff" font-family="monospace" font-size="11" font-weight="bold">b</text>
+                <text x="140" y="290" fill="#888899" font-family="sans-serif" font-size="11">h(a) = h(b) = 0 ⇒ Rolle applies to h</text>
+              </svg>
+            </div>
+            <div class="space-y-2 text-xs font-mono">
+              <div class="p-2 bg-cardBg rounded border border-cardBorder flex justify-between">
+                <span>h(a)</span><span class="text-neonLime">$= 0$</span>
+              </div>
+              <div class="p-2 bg-cardBg rounded border border-cardBorder flex justify-between">
+                <span>h(b)</span><span class="text-neonLime">$= 0$</span>
+              </div>
+              <div class="p-2 bg-cardBg rounded border border-cardBorder flex justify-between">
+                <span>h′(x)</span><span class="text-neonCyan">$f'(x) - \frac{f(b)-f(a)}{b-a}$</span>
+              </div>
+            </div>
+            <div class="p-3 bg-neonLime/10 border border-neonLime/40 rounded-lg text-xs text-neonLime font-bold text-center">
+              Rolle gives $h'(c) = 0 \;\Longrightarrow\; f'(c) = \frac{f(b)-f(a)}{b-a}$
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: Proof -->
+    <section id="rigorous-proof" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonYellow/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-yellow">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonYellow/10 text-neonYellow font-bold text-xl border border-neonYellow/30">6</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonYellow glow-yellow">Formal Rigorous Proof of Lagrange’s MVT</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Step-by-step mathematical proof by reduction to Rolle’s Theorem</p>
+          </div>
+        </div>
+
+        <div class="bg-darkBg border border-cardBorder p-4 rounded-xl mb-8 flex flex-col items-center">
+          <span class="text-xs uppercase font-mono text-neonYellow font-bold mb-3">
+            <i class="fa-solid fa-sitemap mr-1"></i> Proof Logic Architecture Flowchart
+          </span>
+          <svg viewBox="0 0 760 170" class="w-full max-w-4xl h-auto">
+            <defs>
+              <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#ffee00"/>
+              </marker>
+            </defs>
+            <rect x="10" y="60" width="150" height="55" rx="8" fill="#181822" stroke="#00e5ff" stroke-width="2"/>
+            <text x="85" y="82" fill="#00e5ff" font-family="sans-serif" font-weight="bold" font-size="11" text-anchor="middle">Define Auxiliary h(x)</text>
+            <text x="85" y="99" fill="#ffee00" font-family="monospace" font-size="9" text-anchor="middle">= f(x) − secant(x)</text>
+            <path d="M 160 87 L 200 87" fill="none" stroke="#ffee00" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <rect x="205" y="60" width="150" height="55" rx="8" fill="#181822" stroke="#00ff66" stroke-width="2"/>
+            <text x="280" y="82" fill="#00ff66" font-family="sans-serif" font-weight="bold" font-size="11" text-anchor="middle">Verify Rolle on h</text>
+            <text x="280" y="99" fill="#ffffff" font-family="monospace" font-size="9" text-anchor="middle">h(a) = h(b) = 0</text>
+            <path d="M 355 87 L 395 87" fill="none" stroke="#ffee00" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <rect x="400" y="60" width="150" height="55" rx="8" fill="#181822" stroke="#ff00ff" stroke-width="2"/>
+            <text x="475" y="82" fill="#ff00ff" font-family="sans-serif" font-weight="bold" font-size="11" text-anchor="middle">Rolle ⇒ h′(c) = 0</text>
+            <text x="475" y="99" fill="#ffffff" font-family="monospace" font-size="9" text-anchor="middle">for some c ∈ (a, b)</text>
+            <path d="M 550 87 L 590 87" fill="none" stroke="#ffee00" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <rect x="595" y="55" width="155" height="65" rx="8" fill="#181822" stroke="#ffee00" stroke-width="2.5"/>
+            <text x="672" y="78" fill="#ffee00" font-family="sans-serif" font-weight="bold" font-size="11" text-anchor="middle">Conclude</text>
+            <text x="672" y="98" fill="#00ff66" font-family="monospace" font-weight="bold" font-size="11" text-anchor="middle">f′(c) = Δf/Δx ■</text>
+          </svg>
+        </div>
+
+        <div class="space-y-6">
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl border-l-4 border-neonCyan">
+            <h3 class="text-base sm:text-lg font-bold text-neonCyan mb-2">Step 1: Construct the Auxiliary Function</h3>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mb-3">
+              Define a new function $h$ on $[a, b]$ that measures the vertical distance between the graph of $f$ and the secant line joining $(a, f(a))$ and $(b, f(b))$:
+            </p>
+            <div class="text-xs sm:text-sm font-mono text-neonYellow bg-black/60 p-3 rounded text-center">
+              $$h(x) = f(x) - f(a) - \frac{f(b) - f(a)}{b - a}\,(x - a)$$
+            </div>
+          </div>
+
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl border-l-4 border-neonLime">
+            <h3 class="text-base sm:text-lg font-bold text-neonLime mb-2">Step 2: Verify Rolle’s Hypotheses for $h$</h3>
+            <ul class="text-xs sm:text-sm text-gray-300 leading-relaxed space-y-2">
+              <li><strong class="text-neonCyan">Continuity on $[a, b]$:</strong> $h$ is a sum of $f$ (continuous by H1) and a linear polynomial (always continuous). Thus $h$ is continuous on $[a, b]$.</li>
+              <li><strong class="text-neonCyan">Differentiability on $(a, b)$:</strong> $h$ is a sum of $f$ (differentiable by H2) and a linear polynomial. Thus $h$ is differentiable on $(a, b)$ with $h'(x) = f'(x) - \frac{f(b) - f(a)}{b - a}$.</li>
+              <li><strong class="text-neonCyan">Equal endpoints:</strong> $h(a) = 0$ and $h(b) = 0$, hence $h(a) = h(b)$.</li>
+            </ul>
+          </div>
+
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl border-l-4 border-neonMagenta">
+            <h3 class="text-base sm:text-lg font-bold text-neonMagenta mb-2">Step 3: Apply Rolle’s Theorem to $h$</h3>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              Since all three hypotheses of Rolle’s Theorem are satisfied by $h$ on $[a, b]$, there exists at least one point $c \in (a, b)$ such that:
+            </p>
+            <div class="mt-2 text-xs sm:text-sm font-mono text-neonMagenta bg-black/60 p-3 rounded text-center">
+              $$h'(c) = 0$$
+            </div>
+          </div>
+
+          <div class="bg-darkBg border border-cardBorder p-5 rounded-xl border-l-4 border-neonYellow">
+            <h3 class="text-base sm:text-lg font-bold text-neonYellow mb-2">Step 4: Unwind the Derivative and Conclude</h3>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mb-3">
+              Substituting the expression for $h'(c)$ obtained in Step 2:
+            </p>
+            <div class="text-xs sm:text-sm font-mono text-neonYellow bg-black/60 p-3 rounded text-center space-y-2">
+              $$h'(c) = f'(c) - \frac{f(b) - f(a)}{b - a} = 0$$
+              $$\Downarrow$$
+              $$f'(c) = \frac{f(b) - f(a)}{b - a}$$
+            </div>
+            <div class="mt-3 p-3 bg-neonLime/10 border border-neonLime/40 rounded-lg text-center font-mono text-neonLime text-base font-bold">
+              $$\therefore \;\exists\, c \in (a,b) \text{ with } f'(c) = \frac{f(b)-f(a)}{b-a} \quad \blacksquare \text{ (Q.E.D.)}$$
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: Tables -->
+    <section id="synthesis-tables" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonCyan/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-cyan space-y-12">
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonCyan/10 text-neonCyan font-bold text-xl border border-neonCyan/30">7</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonCyan glow-cyan">Synthesis & Comparative Tables</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Complete summary matrices dissecting hypotheses, corollaries, and comparative structure</p>
+          </div>
+        </div>
+
+        <!-- Table 1 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonYellow flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonYellow"></i> Table 1: Rolle’s Theorem vs. Lagrange’s MVT — Structural Comparison
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonYellow uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">Structural Aspect</th>
+                  <th class="p-3 border-b border-cardBorder">Rolle’s Theorem</th>
+                  <th class="p-3 border-b border-cardBorder">Lagrange’s MVT</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300">
+                <tr><td class="p-3 font-semibold text-neonCyan">Endpoint Condition</td><td class="p-3 text-neonOrange">Requires $f(a) = f(b)$</td><td class="p-3 text-neonLime">No restriction — $f(a) \neq f(b)$ allowed</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Secant Slope</td><td class="p-3 text-neonOrange">Always $0$ (horizontal)</td><td class="p-3 text-neonLime">$\dfrac{f(b)-f(a)}{b-a}$ (arbitrary)</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Conclusion</td><td class="p-3 text-neonOrange">$\exists c: f'(c) = 0$</td><td class="p-3 text-neonLime">$\exists c: f'(c) = \dfrac{f(b)-f(a)}{b-a}$</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Logical Relationship</td><td class="p-3 text-neonMagenta">Special case of MVT</td><td class="p-3 text-neonMagenta">Generalization of Rolle</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 2 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonOrange flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonOrange"></i> Table 2: Role of Continuity on the Closed Interval $[a, b]$
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonOrange uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">Mathematical Aspect</th>
+                  <th class="p-3 border-b border-cardBorder">Theoretical Justification</th>
+                  <th class="p-3 border-b border-cardBorder">Consequence if Violated</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300">
+                <tr><td class="p-3 font-semibold text-neonCyan">Extreme Value Theorem</td><td class="p-3">Rolle’s Theorem (used in the proof) requires EVT, which needs a compact domain.</td><td class="p-3 text-neonPink">Auxiliary function $h$ may never attain an interior extremum.</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Endpoint Values Well-Defined</td><td class="p-3">Guarantees $f(a)$ and $f(b)$ exist so the secant slope is finite and meaningful.</td><td class="p-3 text-neonPink">Secant slope undefined; a jump can hide the required instantaneous rate.</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Connected Graph</td><td class="p-3">Prevents the curve from "skipping over" the required parallel slope value.</td><td class="p-3 text-neonPink">Function can leap across the target slope without ever achieving it.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 3 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonLime flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonLime"></i> Table 3: Role of Differentiability on the Open Interval $(a, b)$
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonLime uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">Mathematical Aspect</th>
+                  <th class="p-3 border-b border-cardBorder">Theoretical Justification</th>
+                  <th class="p-3 border-b border-cardBorder">Consequence if Violated</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300">
+                <tr><td class="p-3 font-semibold text-neonCyan">Fermat’s Stationary Point Theorem</td><td class="p-3">At an interior extremum of $h$, the two-sided derivative must be zero.</td><td class="p-3 text-neonPink">Corner/cusp lets left slope $\neq$ right slope, avoiding zero.</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Open Interval Sufficiency</td><td class="p-3">The point $c$ is interior, so only a two-sided neighbourhood inside $(a,b)$ is needed.</td><td class="p-3 text-neonLime">Vertical tangents at endpoints $x=a,b$ do NOT invalidate MVT.</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Mean Value Identity</td><td class="p-3">Guarantees $f(b) - f(a) = f'(c)(b-a)$ — the workhorse "increment formula".</td><td class="p-3 text-neonPink">The increment formula $f(b)-f(a) = f'(c)(b-a)$ can fail.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 4 (updated example in row 2) -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonMagenta flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonMagenta"></i> Table 4: Complete Hypotheses vs. Conclusion Matrix
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonMagenta uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">H1: Cont $[a,b]$</th>
+                  <th class="p-3 border-b border-cardBorder">H2: Diff $(a,b)$</th>
+                  <th class="p-3 border-b border-cardBorder">Is $c$ Guaranteed?</th>
+                  <th class="p-3 border-b border-cardBorder">Can Such $c$ Still Exist?</th>
+                  <th class="p-3 border-b border-cardBorder">Illustrative Example</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300 font-mono">
+                <tr class="bg-neonLime/10">
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonLime font-bold">YES (100% Guaranteed)</td>
+                  <td class="p-3 text-neonLime">YES</td>
+                  <td class="p-3 text-neonCyan">$f(x)=x^2$ on $[0,2]$</td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-neonPink">✗ NO</td>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonPink font-bold">NO Guarantee</td>
+                  <td class="p-3 text-neonYellow">Possible, but not guaranteed</td>
+                  <td class="p-3 text-neonCyan">Endpoint jump: $f(x)=x$ on $[0,1)$, $f(1)=3$</td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-neonLime">✓ YES</td>
+                  <td class="p-3 text-neonPink">✗ NO</td>
+                  <td class="p-3 text-neonPink font-bold">NO Guarantee</td>
+                  <td class="p-3 text-neonYellow">Possible (e.g. $x^2+|x|$)</td>
+                  <td class="p-3 text-neonCyan">$f(x)=|x|$ on $[-1,1]$</td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-neonPink">✗ NO</td>
+                  <td class="p-3 text-neonPink">✗ NO</td>
+                  <td class="p-3 text-neonPink font-bold">NO Guarantee</td>
+                  <td class="p-3 text-neonYellow">Possible, but not guaranteed</td>
+                  <td class="p-3 text-neonCyan">$f(x)=x^{2/3}$ with a jump</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 5 -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-neonPink flex items-center gap-2">
+            <i class="fa-solid fa-table text-neonPink"></i> Table 5: Fundamental Corollaries & Applications of MVT
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-cardBorder">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-[#181822] text-neonPink uppercase font-mono">
+                <tr>
+                  <th class="p-3 border-b border-cardBorder">Corollary</th>
+                  <th class="p-3 border-b border-cardBorder">Statement</th>
+                  <th class="p-3 border-b border-cardBorder">Practical Consequence</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cardBorder bg-darkBg text-gray-300">
+                <tr><td class="p-3 font-semibold text-neonCyan">Zero Derivative</td><td class="p-3 font-mono">$f'(x) = 0 \;\forall x \in I \Rightarrow f$ constant on $I$</td><td class="p-3">Justifies antiderivative "+ C" notation.</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Equal Derivatives</td><td class="p-3 font-mono">$f' = g'$ on $I \Rightarrow f = g + C$</td><td class="p-3">Two functions differing by a constant share all slopes.</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Monotonicity</td><td class="p-3 font-mono">$f' > 0 \Rightarrow f$ strictly increasing</td><td class="p-3">The derivative sign test for increasing/decreasing functions.</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Lipschitz Bound</td><td class="p-3 font-mono">$|f'| \le M \Rightarrow |f(b)-f(a)| \le M|b-a|$</td><td class="p-3">Error bounds in numerical analysis and physics.</td></tr>
+                <tr><td class="p-3 font-semibold text-neonCyan">Uniqueness of Roots</td><td class="p-3 font-mono">$f' \neq 0$ on $I \Rightarrow f$ has at most one root</td><td class="p-3">Used to prove equations have a single solution.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 8: Q&A + Quiz -->
+    <section id="dissection-and-quiz" class="scroll-mt-6">
+      <div class="bg-cardBg border border-neonYellow/30 rounded-2xl p-6 sm:p-8 shadow-2xl border-glow-yellow space-y-12">
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-neonYellow/10 text-neonYellow font-bold text-xl border border-neonYellow/30">8</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-neonYellow glow-yellow">Dissecting Lagrange’s MVT & Self-Check Quiz</h2>
+            <p class="text-xs sm:text-sm text-gray-400">Deep-dive expert Q&A accordions followed by an interactive quiz with instant scoring</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-neonCyan mb-2">
+            <i class="fa-solid fa-circle-question text-neonCyan mr-2"></i> Expert Conceptual Dissection (Click to Expand)
+          </h3>
+
+          <div class="bg-darkBg border border-cardBorder rounded-xl overflow-hidden">
+            <button class="accordion-btn w-full p-4 text-left font-semibold text-sm sm:text-base text-white flex justify-between items-center hover:bg-cardBgHover transition-colors">
+              <span>Q1: What is the precise relationship between Rolle’s Theorem and the Mean Value Theorem?</span>
+              <i class="fa-solid fa-chevron-down text-neonCyan transition-transform"></i>
+            </button>
+            <div class="accordion-content px-4 pb-4 text-xs sm:text-sm text-gray-300 border-t border-cardBorder/50">
+              <p class="pt-3">
+                Rolle’s Theorem is the <strong class="text-neonYellow">special case</strong> of MVT where the secant line happens to be horizontal ($f(a) = f(b)$). MVT is <em>proved</em> by reducing it to Rolle’s Theorem via the auxiliary gap function $h(x) = f(x) - f(a) - \frac{f(b)-f(a)}{b-a}(x-a)$. Conversely, MVT is the generalisation that removes the equal-endpoint restriction.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-darkBg border border-cardBorder rounded-xl overflow-hidden">
+            <button class="accordion-btn w-full p-4 text-left font-semibold text-sm sm:text-base text-white flex justify-between items-center hover:bg-cardBgHover transition-colors">
+              <span>Q2: Why does MVT guarantee "at least one" point $c$ instead of "exactly one"?</span>
+              <i class="fa-solid fa-chevron-down text-neonCyan transition-transform"></i>
+            </button>
+            <div class="accordion-content px-4 pb-4 text-xs sm:text-sm text-gray-300 border-t border-cardBorder/50">
+              <p class="pt-3">
+                A function can oscillate many times across an interval. Consider $f(x) = \sin(3x)$ on $[0, \pi]$: the secant slope is $0$, and there are three interior points ($\pi/6$, $\pi/2$, $5\pi/6$) where $f'(c) = 0$. MVT guarantees a <strong class="text-neonLime">minimum of one</strong> such point but places no upper bound. In the degenerate case of a linear function, <em>every</em> point works.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-darkBg border border-cardBorder rounded-xl overflow-hidden">
+            <button class="accordion-btn w-full p-4 text-left font-semibold text-sm sm:text-base text-white flex justify-between items-center hover:bg-cardBgHover transition-colors">
+              <span>Q3: Can MVT be applied to $f(x) = \frac{1}{x}$ on $[-1, 1]$?</span>
+              <i class="fa-solid fa-chevron-down text-neonCyan transition-transform"></i>
+            </button>
+            <div class="accordion-content px-4 pb-4 text-xs sm:text-sm text-gray-300 border-t border-cardBorder/50">
+              <p class="pt-3">
+                <strong class="text-neonPink">NO!</strong> The interval $[-1,1]$ contains $x = 0$ where $1/x$ is undefined. The function is not continuous on $[-1,1]$, so H1 fails completely. A valid application requires the entire closed interval to lie in the domain of $f$.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-darkBg border border-cardBorder rounded-xl overflow-hidden">
+            <button class="accordion-btn w-full p-4 text-left font-semibold text-sm sm:text-base text-white flex justify-between items-center hover:bg-cardBgHover transition-colors">
+              <span>Q4: How does MVT relate to Taylor’s Theorem and Cauchy’s MVT?</span>
+              <i class="fa-solid fa-chevron-down text-neonCyan transition-transform"></i>
+            </button>
+            <div class="accordion-content px-4 pb-4 text-xs sm:text-sm text-gray-300 border-t border-cardBorder/50">
+              <p class="pt-3">
+                Both are direct descendants of MVT. <strong class="text-neonCyan">Cauchy’s MVT</strong> generalises the slope formula to a ratio of two functions: $\frac{f'(c)}{g'(c)} = \frac{f(b)-f(a)}{g(b)-g(a)}$, and is the key ingredient in proving L’Hôpital’s Rule. <strong class="text-neonCyan">Taylor’s Theorem</strong> applies MVT repeatedly to obtain polynomial approximations with remainder terms, making MVT the foundational "increment estimate" of all of calculus.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-darkBg border border-cardBorder rounded-xl overflow-hidden">
+            <button class="accordion-btn w-full p-4 text-left font-semibold text-sm sm:text-base text-white flex justify-between items-center hover:bg-cardBgHover transition-colors">
+              <span>Q5: If MVT fails to apply, does that mean no parallel tangent exists?</span>
+              <i class="fa-solid fa-chevron-down text-neonCyan transition-transform"></i>
+            </button>
+            <div class="accordion-content px-4 pb-4 text-xs sm:text-sm text-gray-300 border-t border-cardBorder/50">
+              <p class="pt-3">
+                <strong class="text-neonLime">Absolutely not!</strong> Failing a hypothesis only removes the <em>guarantee</em>, not the possibility. For example, $f(x) = x^2 + |x|$ on $[-1, 2]$ is not differentiable at $x=0$, yet $c = 1/6$ still satisfies $f'(c) = \frac{f(2)-f(-1)}{3} = \frac{4}{3}$. This is the essence of <strong class="text-neonYellow">sufficient vs. necessary</strong> conditions.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6 pt-6 border-t border-cardBorder">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold text-neonLime">
+              <i class="fa-solid fa-list-check text-neonLime mr-2"></i> Interactive Self-Check Quiz
+            </h3>
+            <span id="quizScore" class="text-xs font-mono font-bold text-neonYellow bg-black/60 px-3 py-1 rounded border border-neonYellow/30">
+              Score: 0 / 5
+            </span>
+          </div>
+
+          <form id="quizForm" class="space-y-6">
+
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                1. What exactly does Lagrange’s Mean Value Theorem guarantee?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q1" value="a" class="accent-neonCyan"> There exists $c$ with $f'(c) = 0$.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q1" value="b" class="accent-neonCyan"> There exists $c$ with $f'(c) = \dfrac{f(b)-f(a)}{b-a}$.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q1" value="c" class="accent-neonCyan"> There exists $c$ with $f(c) = \dfrac{f(a)+f(b)}{2}$.
+                </label>
+              </div>
+            </div>
+
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                2. MVT is proved by applying Rolle’s Theorem to which function?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q2" value="a" class="accent-neonCyan"> $f(x)$ itself
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q2" value="b" class="accent-neonCyan"> $h(x) = f(x) - f(a) - \dfrac{f(b)-f(a)}{b-a}(x-a)$
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q2" value="c" class="accent-neonCyan"> The derivative $f'(x)$
+                </label>
+              </div>
+            </div>
+
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                3. For $f(x) = x^2$ on $[0, 2]$, which point $c$ satisfies the MVT conclusion?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q3" value="a" class="accent-neonCyan"> $c = \frac{2}{3}$
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q3" value="b" class="accent-neonCyan"> $c = 1$
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q3" value="c" class="accent-neonCyan"> $c = \frac{4}{3}$
+                </label>
+              </div>
+            </div>
+
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                4. Which statement about the MVT hypotheses is logically correct?
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q4" value="a" class="accent-neonCyan"> They are necessary and sufficient.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q4" value="b" class="accent-neonCyan"> They are sufficient but not necessary.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q4" value="c" class="accent-neonCyan"> They are necessary but not sufficient.
+                </label>
+              </div>
+            </div>
+
+            <div class="bg-darkBg border border-cardBorder p-4 rounded-xl space-y-3">
+              <p class="text-sm font-semibold text-white">
+                5. A classic corollary of MVT states that if $f'(x) = 0$ for all $x \in (a,b)$ and $f$ is continuous on $[a,b]$, then:
+              </p>
+              <div class="space-y-2 text-xs text-gray-300">
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q5" value="a" class="accent-neonCyan"> $f$ is strictly increasing on $[a,b]$.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q5" value="b" class="accent-neonCyan"> $f$ is constant on $[a,b]$.
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded bg-cardBg hover:bg-cardBgHover cursor-pointer">
+                  <input type="radio" name="q5" value="c" class="accent-neonCyan"> $f$ has a local maximum at $c$.
+                </label>
+              </div>
+            </div>
+
+            <button type="button" id="submitQuizBtn" class="w-full py-3 bg-neonYellow text-black font-extrabold rounded-xl hover:bg-yellow-300 transition-colors shadow-lg shadow-neonYellow/20">
+              Submit Quiz & Check Score
+            </button>
+          </form>
+
+          <div id="quizFeedback" class="hidden p-4 rounded-xl bg-darkBg border border-neonCyan text-xs sm:text-sm text-gray-200"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-cardBorder bg-darkBg py-8 text-center text-xs text-gray-500 space-y-2">
+    <p class="text-neonCyan font-mono">Mastering Lagrange’s Mean Value Theorem • University Mathematics Educational Suite</p>
+    <p>Designed for First-Year Calculus • Pure Dark Theme with Neon High-Contrast Styling</p>
+  </footer>
+
+  <script>
+    // -------------------------------------------------------------
+    // PRESETS — verified counterexamples
+    // -------------------------------------------------------------
+    const PRESETS = [
+      {
+        id: 'quad', title: 'Quadratic — 1 Point c',
+        formula: 'f(x) = x²  on  [0, 2]',
+        domain: [-0.4, 2.4], activeInterval: [0, 2],
+        fn: (x) => x * x, dfn: (x) => 2 * x,
+        cPoints: [1], h1: true, h2: true,
+        desc: 'Both hypotheses hold on [0,2]. Secant slope = (4 − 0)/(2 − 0) = 2. Setting f′(c) = 2c = 2 gives the unique interior point c = 1.'
+      },
+      {
+        id: 'cubic', title: 'Cubic — 1 Point c',
+        formula: 'f(x) = x³  on  [0, 2]',
+        domain: [-0.4, 2.4], activeInterval: [0, 2],
+        fn: (x) => x * x * x, dfn: (x) => 3 * x * x,
+        cPoints: [2 / Math.sqrt(3)], h1: true, h2: true,
+        desc: 'Monotone cubic rise. Secant slope = 8/2 = 4. Setting f′(c) = 3c² = 4 yields c = 2/√3 ≈ 1.1547 inside (0,2).'
+      },
+      {
+        id: 'sqrt', title: 'Radical — 1 Point c',
+        formula: 'f(x) = √x  on  [0, 4]',
+        domain: [-0.5, 4.5], activeInterval: [0, 4],
+        fn: (x) => Math.sqrt(Math.max(0, x)),
+        dfn: (x) => 1 / (2 * Math.sqrt(Math.max(1e-9, x))),
+        cPoints: [1], h1: true, h2: true,
+        desc: 'Concave-down radical curve. Secant slope = 0.5. Setting f′(c) = 1/(2√c) = 0.5 gives c = 1. Note f′(0⁺) = +∞ at the endpoint, which is harmless!'
+      },
+      {
+        id: 'sine', title: 'Trigonometric — 1 Point c',
+        formula: 'f(x) = sin(x)  on  [0, π/2]',
+        domain: [-0.35, 1.95], activeInterval: [0, Math.PI / 2],
+        fn: (x) => Math.sin(x), dfn: (x) => Math.cos(x),
+        cPoints: [Math.acos(2 / Math.PI)], h1: true, h2: true,
+        desc: 'Rising sine arc. Secant slope = 2/π ≈ 0.6366. Setting f′(c) = cos(c) = 2/π gives c = arccos(2/π) ≈ 0.8807.'
+      },
+      {
+        id: 'exp', title: 'Exponential — 1 Point c',
+        formula: 'f(x) = eˣ  on  [0, 1]',
+        domain: [-0.3, 1.3], activeInterval: [0, 1],
+        fn: (x) => Math.exp(x), dfn: (x) => Math.exp(x),
+        cPoints: [Math.log(Math.E - 1)], h1: true, h2: true,
+        desc: 'Exponential growth. Secant slope = e − 1 ≈ 1.7183. Setting f′(c) = e^c = e − 1 gives c = ln(e − 1) ≈ 0.5413.'
+      },
+      {
+        id: 'log', title: 'Logarithmic — 1 Point c',
+        formula: 'f(x) = ln(x)  on  [1, e]',
+        domain: [0.6, 3.1], activeInterval: [1, Math.E],
+        fn: (x) => Math.log(Math.max(1e-9, x)),
+        dfn: (x) => 1 / Math.max(1e-9, x),
+        cPoints: [Math.E - 1], h1: true, h2: true,
+        desc: 'Logarithmic growth. Secant slope = 1/(e − 1) ≈ 0.5820. Setting f′(c) = 1/c = 1/(e − 1) gives c = e − 1 ≈ 1.7183 ∈ (1, e).'
+      },
+      {
+        id: 'rolle-special', title: 'Rolle as Special Case',
+        formula: 'f(x) = 1 − x²  on  [−1, 1]',
+        domain: [-1.3, 1.3], activeInterval: [-1, 1],
+        fn: (x) => 1 - x * x, dfn: (x) => -2 * x,
+        cPoints: [0], h1: true, h2: true,
+        desc: 'Here f(−1) = 0 = f(1), so the secant is horizontal with slope 0. MVT reduces exactly to Rolle’s Theorem. Setting f′(c) = −2c = 0 gives c = 0.'
+      },
+      {
+        id: 'linear', title: 'Linear — Every c Works',
+        formula: 'f(x) = 2x + 1  on  [−1, 2]',
+        domain: [-1.4, 2.4], activeInterval: [-1, 2],
+        fn: (x) => 2 * x + 1, dfn: (x) => 2,
+        cPoints: [0.5], cNote: 'Every c in (−1, 2) works!',
+        h1: true, h2: true,
+        desc: 'Degenerate case: the curve IS its own secant. Secant slope = 2, and f′(x) = 2 identically. Every interior point c satisfies the MVT conclusion.'
+      },
+      {
+        id: 'fail-cont', title: 'Failure of Continuity (Endpoint Jump)',
+        formula: 'f(x) = x (0 ≤ x < 1);  f(1) = 3',
+        domain: [-0.25, 1.25], activeInterval: [0, 1],
+        fn: (x) => (x >= 1 ? 3 : x),
+        dfn: (x) => (x >= 1 ? NaN : 1),
+        cPoints: [], h1: false, h2: true,
+        jumpAt: 1, jumpLeftValue: 1,
+        desc: 'Endpoint values f(0) = 0 and f(1) = 3 give secant slope 3. On the open interval (0,1), f(x) = x so f′(x) = 1 — H2 holds. But no c satisfies f′(c) = 3. The jump discontinuity sits at the endpoint x = 1, so H1 fails while H2 still holds on (0,1) — isolating the role of continuity.'
+      },
+      {
+        id: 'fail-corner', title: 'Failure of Differentiability (Corner)',
+        formula: 'f(x) = |x|  on  [−1, 1]',
+        domain: [-1.3, 1.3], activeInterval: [-1, 1],
+        fn: (x) => Math.abs(x),
+        dfn: (x) => (x < 0 ? -1 : x > 0 ? 1 : NaN),
+        cPoints: [], h1: true, h2: false,
+        desc: 'Continuous everywhere, and the secant slope is (1 − 1)/2 = 0. But the sharp corner at x = 0 makes f′(0) undefined. Slopes are only −1 or +1 — the required slope 0 is never attained!'
+      },
+      {
+        id: 'fail-cusp', title: 'Failure of Differentiability (Vertical Cusp)',
+        formula: 'f(x) = x^(2/3)  on  [−1, 1]',
+        domain: [-1.3, 1.3], activeInterval: [-1, 1],
+        fn: (x) => Math.pow(Math.abs(x), 2 / 3),
+        dfn: (x) => x === 0 ? NaN : (2 / 3) * Math.sign(x) * Math.pow(Math.abs(x), -1 / 3),
+        cPoints: [], h1: true, h2: false,
+        desc: 'Continuous on [−1, 1] and f(−1) = f(1) = 1, so the secant slope is 0. But f′(x) = (2/3)x^(−1/3) is never zero — it blows up to ±∞ at the vertical cusp x = 0. No parallel tangent exists!'
+      },
+      {
+        id: 'nondiff-c', title: 'Non-Diff yet MVT Holds',
+        formula: 'f(x) = x² + |x|  on  [−1, 2]',
+        domain: [-1.4, 2.4], activeInterval: [-1, 2],
+        fn: (x) => x * x + Math.abs(x),
+        dfn: (x) => (x > 0 ? 2 * x + 1 : 2 * x - 1),
+        cPoints: [1 / 6], h1: true, h2: false,
+        desc: 'Corner at x = 0 breaks H2, so MVT cannot be applied. Yet f(−1) = 2 and f(2) = 6 give secant slope 4/3, and on x > 0 we have f′(x) = 2x + 1 = 4/3 at c = 1/6 ∈ (−1, 2). Proof that H2 is sufficient but NOT necessary!'
+      }
+    ];
+
+    // -------------------------------------------------------------
+    let canvas, ctx;
+    let currentPresetIndex = 0;
+    let mousePos = { x: 0, y: 0, active: false };
+
+    const toggleGrid = document.getElementById('toggleGrid');
+    const toggleSecant = document.getElementById('toggleSecant');
+    const toggleTangents = document.getElementById('toggleTangents');
+    const toggleEndpoints = document.getElementById('toggleEndpoints');
+
+    const presetSelect = document.getElementById('presetSelect');
+    const infoTitle = document.getElementById('infoTitle');
+    const infoFormula = document.getElementById('infoFormula');
+    const badgeH1 = document.getElementById('badgeH1');
+    const badgeH2 = document.getElementById('badgeH2');
+    const badgeSlope = document.getElementById('badgeSlope');
+    const cPointsList = document.getElementById('cPointsList');
+    const infoDesc = document.getElementById('infoDesc');
+    const canvasCoordinates = document.getElementById('canvasCoordinates');
+
+    window.onload = function () {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ]
+        });
+      }
+
+      canvas = document.getElementById('mvtCanvas');
+      ctx = canvas.getContext('2d');
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      canvas.addEventListener('mousemove', handlePointerMove);
+      canvas.addEventListener('mouseleave', () => { mousePos.active = false; drawCanvas(); });
+      canvas.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          const rect = canvas.getBoundingClientRect();
+          mousePos.x = e.touches[0].clientX - rect.left;
+          mousePos.y = e.touches[0].clientY - rect.top;
+          mousePos.active = true;
+          drawCanvas();
+        }
+      }, { passive: true });
+
+      presetSelect.addEventListener('change', (e) => {
+        currentPresetIndex = parseInt(e.target.value);
+        updatePresetUI();
+        drawCanvas();
+      });
+
+      toggleGrid.addEventListener('change', drawCanvas);
+      toggleSecant.addEventListener('change', drawCanvas);
+      toggleTangents.addEventListener('change', drawCanvas);
+      toggleEndpoints.addEventListener('change', drawCanvas);
+
+      document.querySelectorAll('.accordion-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const content = btn.nextElementSibling;
+          const icon = btn.querySelector('.fa-chevron-down');
+          content.classList.toggle('open');
+          if (icon) icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+      });
+
+      document.getElementById('submitQuizBtn').addEventListener('click', gradeQuiz);
+
+      updatePresetUI();
+      drawCanvas();
+    };
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawCanvas();
+    }
+
+    function secantSlopeOf(p) {
+      const a = p.activeInterval[0];
+      const b = p.activeInterval[1];
+      return (p.fn(b) - p.fn(a)) / (b - a);
+    }
+
+    function updatePresetUI() {
+      const p = PRESETS[currentPresetIndex];
+      infoTitle.innerText = p.title;
+      infoFormula.innerText = p.formula;
+
+      badgeH1.innerText = p.h1 ? 'YES' : 'FAIL';
+      badgeH1.className = `font-bold px-2 py-0.5 rounded text-black ${p.h1 ? 'bg-neonLime' : 'bg-neonPink'}`;
+
+      badgeH2.innerText = p.h2 ? 'YES' : 'FAIL';
+      badgeH2.className = `font-bold px-2 py-0.5 rounded text-black ${p.h2 ? 'bg-neonLime' : 'bg-neonPink'}`;
+
+      const m = secantSlopeOf(p);
+      badgeSlope.innerText = m.toFixed(3);
+      badgeSlope.className = `font-bold px-2 py-0.5 rounded text-black font-mono bg-neonCyan`;
+
+      if (p.cPoints.length === 0) {
+        cPointsList.innerHTML = '<span class="text-neonPink">None guaranteed / Exists = 0</span>';
+      } else {
+        cPointsList.innerHTML = p.cPoints.map((c, i) =>
+          `<div>c${i + 1} = ${c.toFixed(4)} (f′(c) = ${m.toFixed(3)})</div>`
+        ).join('') + (p.cNote ? `<div class="text-neonYellow pt-1">${p.cNote}</div>` : '');
+      }
+
+      infoDesc.innerText = p.desc;
+    }
+
+    function handlePointerMove(e) {
+      const rect = canvas.getBoundingClientRect();
+      mousePos.x = e.clientX - rect.left;
+      mousePos.y = e.clientY - rect.top;
+      mousePos.active = true;
+      drawCanvas();
+    }
+
+    function drawCanvas() {
+      if (!canvas || !ctx) return;
+
+      const p = PRESETS[currentPresetIndex];
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#0a0a0c';
+      ctx.fillRect(0, 0, w, h);
+
+      const xMin = p.domain[0];
+      const xMax = p.domain[1];
+
+      let yMin = Infinity, yMax = -Infinity;
+      const sampleSteps = 240;
+      for (let i = 0; i <= sampleSteps; i++) {
+        const x = xMin + (i / sampleSteps) * (xMax - xMin);
+        const y = p.fn(x);
+        if (!isNaN(y) && isFinite(y)) {
+          if (y < yMin) yMin = y;
+          if (y > yMax) yMax = y;
+        }
+      }
+      if (!isFinite(yMin) || !isFinite(yMax)) { yMin = -1; yMax = 1; }
+      if (yMin === yMax) { yMin -= 1; yMax += 1; }
+      const yMargin = (yMax - yMin) * 0.22 || 0.5;
+      yMin -= yMargin;
+      yMax += yMargin;
+
+      const toScreenX = (x) => ((x - xMin) / (xMax - xMin)) * (w - 80) + 40;
+      const toScreenY = (y) => h - 45 - ((y - yMin) / (yMax - yMin)) * (h - 85);
+      const toMathX = (sx) => xMin + ((sx - 40) / (w - 80)) * (xMax - xMin);
+      const toMathY = (sy) => yMin + ((h - 45 - sy) / (h - 85)) * (yMax - yMin);
+
+      const originX = toScreenX(0);
+      const originY = toScreenY(0);
+
+      if (toggleGrid.checked) {
+        ctx.strokeStyle = '#1a1a24';
+        ctx.lineWidth = 1;
+
+        const xStep = (xMax - xMin) / 8;
+        for (let x = Math.ceil(xMin / xStep) * xStep; x <= xMax; x += xStep) {
+          const sx = toScreenX(x);
+          ctx.beginPath();
+          ctx.moveTo(sx, 0);
+          ctx.lineTo(sx, h);
+          ctx.stroke();
+        }
+
+        const yStep = (yMax - yMin) / 6;
+        for (let y = Math.ceil(yMin / yStep) * yStep; y <= yMax; y += yStep) {
+          const sy = toScreenY(y);
+          ctx.beginPath();
+          ctx.moveTo(0, sy);
+          ctx.lineTo(w, sy);
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#333344';
+        ctx.lineWidth = 2;
+
+        if (originY >= 0 && originY <= h) {
+          ctx.beginPath();
+          ctx.moveTo(0, originY);
+          ctx.lineTo(w, originY);
+          ctx.stroke();
+        }
+        if (originX >= 0 && originX <= w) {
+          ctx.beginPath();
+          ctx.moveTo(originX, 0);
+          ctx.lineTo(originX, h);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = '#888899';
+        ctx.font = '10px Fira Code';
+        if (originY >= 0 && originY <= h) ctx.fillText('x', w - 20, originY - 8);
+        if (originX >= 0 && originX <= w) ctx.fillText('y', originX + 8, 15);
+      }
+
+      const a = p.activeInterval[0];
+      const b = p.activeInterval[1];
+      const saX = toScreenX(a);
+      const sbX = toScreenX(b);
+      const m = secantSlopeOf(p);
+      const fa = p.fn(a);
+      const fb = p.fn(b);
+
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.04)';
+      ctx.fillRect(saX, 0, sbX - saX, h);
+
+      if (toggleEndpoints.checked) {
+        ctx.strokeStyle = '#00e5ff';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 5]);
+
+        ctx.beginPath();
+        ctx.moveTo(saX, 0); ctx.lineTo(saX, h);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(sbX, 0); ctx.lineTo(sbX, h);
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#00e5ff';
+        ctx.font = '11px Fira Code';
+        ctx.fillText(`a = ${a.toFixed(2)}`, saX + 5, h - 15);
+        ctx.fillText(`b = ${b.toFixed(2)}`, sbX - 45, h - 15);
+      }
+
+      // Curve
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 3;
+      ctx.shadowColor = '#00e5ff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+
+      const curveSteps = 700;
+      let started = false;
+      let prevX = null;
+
+      for (let i = 0; i <= curveSteps; i++) {
+        const x = xMin + (i / curveSteps) * (xMax - xMin);
+
+        if (p.jumpAt !== undefined && prevX !== null) {
+          const crossed = (prevX < p.jumpAt && x >= p.jumpAt) || (prevX >= p.jumpAt && x < p.jumpAt);
+          if (crossed) {
+            ctx.stroke();
+            ctx.beginPath();
+            started = false;
+          }
+        }
+
+        const y = p.fn(x);
+        if (!isNaN(y) && isFinite(y)) {
+          const sx = toScreenX(x);
+          const sy = toScreenY(y);
+          if (!started) {
+            ctx.moveTo(sx, sy);
+            started = true;
+          } else {
+            ctx.lineTo(sx, sy);
+          }
+        }
+        prevX = x;
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Discontinuity markers
+      if (p.jumpAt !== undefined) {
+        const jx = toScreenX(p.jumpAt);
+        const yTop = toScreenY(p.jumpLeftValue);
+        const yBot = toScreenY(p.fn(p.jumpAt));
+
+        ctx.strokeStyle = '#00e5ff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(jx, yTop, 5, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        ctx.fillStyle = '#00ff66';
+        ctx.beginPath();
+        ctx.arc(jx, yBot, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+
+      // Secant
+      if (toggleSecant.checked) {
+        const saY = toScreenY(fa);
+        const sbY = toScreenY(fb);
+        const ext = 0.12 * (b - a);
+        const x1 = a - ext, x2 = b + ext;
+        const y1 = fa + m * (x1 - a);
+        const y2 = fa + m * (x2 - a);
+
+        ctx.strokeStyle = '#ffee00';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([8, 6]);
+        ctx.shadowColor = '#ffee00';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.moveTo(toScreenX(x1), toScreenY(y1));
+        ctx.lineTo(toScreenX(x2), toScreenY(y2));
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.shadowBlur = 0;
+      }
+
+      // Tangents
+      if (toggleTangents.checked && p.cPoints && p.cPoints.length > 0) {
+        p.cPoints.forEach((c) => {
+          if (c < a || c > b) return;
+          const scX = toScreenX(c);
+          const fc = p.fn(c);
+          const scY = toScreenY(fc);
+
+          ctx.strokeStyle = 'rgba(255, 0, 255, 0.5)';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(scX, toScreenY(0));
+          ctx.lineTo(scX, scY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          const halfSpan = 0.30 * (b - a);
+          const tx1 = c - halfSpan, tx2 = c + halfSpan;
+          const ty1 = fc + m * (tx1 - c);
+          const ty2 = fc + m * (tx2 - c);
+
+          ctx.strokeStyle = '#ff00ff';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#ff00ff';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.moveTo(toScreenX(tx1), toScreenY(ty1));
+          ctx.lineTo(toScreenX(tx2), toScreenY(ty2));
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          ctx.fillStyle = '#ffee00';
+          ctx.beginPath();
+          ctx.arc(scX, scY, 6, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.strokeStyle = '#ff00ff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffee00';
+          ctx.font = 'bold 11px Fira Code';
+          ctx.fillText(`c = ${c.toFixed(3)}`, scX + 8, scY - 12);
+          ctx.fillStyle = '#ff66cc';
+          ctx.fillText(`f′(c) = ${m.toFixed(3)}`, scX + 8, scY + 20);
+        });
+      }
+
+      // Endpoints
+      if (toggleEndpoints.checked) {
+        const saY = toScreenY(fa);
+        const sbY = toScreenY(fb);
+
+        ctx.fillStyle = '#ffee00';
+        ctx.beginPath();
+        ctx.arc(saX, saY, 5.5, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(sbX, sbY, 5.5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+
+      // Hover
+      if (mousePos.active) {
+        const mX = toMathX(mousePos.x);
+        const mY = toMathY(mousePos.y);
+
+        let slopeTxt = '';
+        try {
+          const d = p.dfn(mX);
+          if (isFinite(d)) slopeTxt = `, f′≈${d.toFixed(2)}`;
+        } catch (e) { /* ignore */ }
+
+        canvasCoordinates.innerText = `x: ${mX.toFixed(2)}, y: ${mY.toFixed(2)}${slopeTxt}`;
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(mousePos.x, 0); ctx.lineTo(mousePos.x, h);
+        ctx.moveTo(0, mousePos.y); ctx.lineTo(w, mousePos.y);
+        ctx.stroke();
+      }
+    }
+
+    function gradeQuiz() {
+      const answers = { q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b' };
+      let score = 0;
+      const form = document.getElementById('quizForm');
+      const feedback = document.getElementById('quizFeedback');
+
+      for (let key in answers) {
+        const selected = form.querySelector(`input[name="${key}"]:checked`);
+        if (selected && selected.value === answers[key]) score++;
+      }
+
+      document.getElementById('quizScore').innerText = `Score: ${score} / 5`;
+      feedback.classList.remove('hidden');
+
+      if (score === 5) {
+        feedback.className = 'p-4 rounded-xl bg-neonLime/10 border border-neonLime text-neonLime text-xs sm:text-sm font-bold';
+        feedback.innerHTML = '<i class="fa-solid fa-trophy text-neonYellow text-lg mr-2"></i> Perfect Score 5/5! You have mastered the Mean Value Theorem!';
+      } else if (score >= 3) {
+        feedback.className = 'p-4 rounded-xl bg-neonYellow/10 border border-neonYellow text-neonYellow text-xs sm:text-sm font-semibold';
+        feedback.innerHTML = `<i class="fa-solid fa-circle-info text-neonYellow text-lg mr-2"></i> You scored ${score}/5. Solid effort! Re-read the failure modes and proof to reach 5/5.`;
+      } else {
+        feedback.className = 'p-4 rounded-xl bg-neonPink/10 border border-neonPink text-neonPink text-xs sm:text-sm font-semibold';
+        feedback.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-neonPink text-lg mr-2"></i> You scored ${score}/5. Review Section 1, Section 3, and Section 6 before retrying.`;
+      }
+    }
+  </script>
+</body>
+</html>
