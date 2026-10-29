@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculus Master Problem Set: Continuity, Differentiation & Integration</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --card-bg: #0a0a0a;
+    --border: #222222;
+    --yellow: #ffd700;
+    --orange: #ff8c00;
+    --cyan: #00e5ff;
+    --lime: #76ff03;
+    --pink: #ff4081;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--white);
+    font-family: "IBM Plex Sans", -apple-system, sans-serif;
+    line-height: 1.75;
+    padding-bottom: 5rem;
+  }
+
+  header {
+    background: #050505;
+    border-bottom: 2px solid var(--border);
+    padding: 2.5rem 1.5rem 1.8rem;
+    text-align: center;
+  }
+
+  header h1 {
+    color: var(--yellow);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+
+  header p {
+    color: var(--cyan);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .toolbar {
+    text-align: center;
+    margin: 1.8rem 0 2.2rem;
+  }
+
+  button.btn-main {
+    background: #0a0a0a;
+    color: var(--cyan);
+    border: 2px solid var(--cyan);
+    padding: 0.65rem 1.4rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: "IBM Plex Sans", sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    margin: 0.3rem;
+  }
+
+  button.btn-main:hover {
+    background: var(--cyan);
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+  }
+
+  button.btn-main.open {
+    background: var(--cyan);
+    color: #000;
+  }
+
+  .page {
+    max-width: 920px;
+    margin: 1.5rem auto 0;
+    padding: 0 1.2rem;
+  }
+
+  section.question {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--yellow);
+    border-radius: 8px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.05);
+  }
+
+  .qtag {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--pink);
+    background: #180008;
+    border: 1px solid var(--pink);
+    padding: 0.2rem 0.7rem;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+  }
+
+  h2.qtitle {
+    font-size: 1.45rem;
+    margin: 0 0 1.2rem;
+    color: var(--yellow);
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.5rem;
+  }
+
+  .qbody {
+    color: var(--white);
+    font-size: 1.05rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .btn-sol {
+    background: transparent;
+    color: var(--lime);
+    border: 2px solid var(--lime);
+    padding: 0.5rem 1.1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+  }
+
+  .btn-sol:hover {
+    background: var(--lime);
+    color: #000;
+    box-shadow: 0 0 12px rgba(118, 255, 3, 0.5);
+  }
+
+  .btn-sol.open {
+    background: var(--lime);
+    color: #000;
+  }
+
+  .sol {
+    display: none;
+    background: #060a06;
+    border: 1px solid rgba(118, 255, 3, 0.3);
+    border-left: 5px solid var(--lime);
+    padding: 1.5rem 1.8rem;
+    margin-top: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(118, 255, 3, 0.06);
+  }
+
+  .sol h3 {
+    color: var(--lime);
+    font-size: 1.15rem;
+    margin: 1.2rem 0 0.5rem;
+  }
+
+  .sol h3:first-child { margin-top: 0; }
+
+  .highlight-box {
+    background-color: rgba(0, 229, 255, 0.08);
+    border-left: 4px solid var(--cyan);
+    padding: 1rem 1.2rem;
+    margin-top: 1.2rem;
+    border-radius: 4px;
+    color: #e0f2fe;
+  }
+
+  .highlight-box strong { color: var(--cyan); }
+
+  ul, ol { padding-left: 1.5rem; margin: 0.8rem 0; }
+  li { margin-bottom: 0.6rem; }
+
+  .item-title { color: var(--lime); font-weight: 600; }
+
+  figure { margin: 1.8rem 0; text-align: center; }
+  figcaption { font-size: 0.9rem; color: var(--cyan); margin-top: 0.8rem; font-style: italic; }
+
+  svg {
+    max-width: 100%;
+    height: auto;
+    background: #050505;
+    border: 1px solid #333;
+    border-radius: 8px;
+  }
+
+  .mjx-chtml { color: var(--white) !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Calculus Master Problem Set</h1>
+  <p>Continuity, Differentiation & Integration — Complete Solutions & Visualizations</p>
+</header>
+
+<div class="toolbar">
+  <button class="btn-main" onclick="toggleAll()" id="allBtn">Show All Solutions</button>
+</div>
+
+<div class="page">
+
+  <!-- ==================== SAQ 1 ==================== -->
+  <section class="question" id="saq1">
+    <span class="qtag">PROBLEM 1</span>
+    <h2 class="qtitle">Injectivity and Monotonicity of Continuous Functions</h2>
+    <div class="qbody">
+      Let $I \subseteq \mathbb{R}$ be an interval and $f: I \to \mathbb{R}$ be a continuous function. 
+      Prove that $f$ is <strong>injective</strong> if and only if $f$ is <strong>strictly monotone</strong>.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq1', this)">Show Solution</button>
+    <div class="sol" id="sol-saq1">
+      <h3>Proof ($\Leftarrow$ Direction):</h3>
+      <p>Assume $f$ is strictly increasing. Let $x_1, x_2 \in I$ with $x_1 \neq x_2$. Assuming $x_1 < x_2$, strict monotonicity gives $f(x_1) < f(x_2)$, so $f(x_1) \neq f(x_2)$. Thus $f$ is injective.</p>
+      
+      <h3>Proof ($\Rightarrow$ Direction):</h3>
+      <p>Suppose $f$ is continuous and injective but not strictly monotone. Then there exist $a, b, c \in I$ with $a < b < c$ such that $f(b)$ does not lie strictly between $f(a)$ and $f(c)$. By injectivity, $f(a), f(b), f(c)$ are distinct.</p>
+      <p>Hence, either $f(b) > \max\{f(a), f(c)\}$ or $f(b) < \min\{f(a), f(c)\}$. Assume $f(b) > f(a)$ and $f(b) > f(c)$. Pick $y$ such that $\max\{f(a), f(c)\} < y < f(b)$. By the Intermediate Value Theorem (IVT):</p>
+      <ul>
+        <li>There exists $x_1 \in (a, b)$ such that $f(x_1) = y$.</li>
+        <li>There exists $x_2 \in (b, c)$ such that $f(x_2) = y$.</li>
+      </ul>
+      <p>Since $x_1 < b < x_2$, we have $x_1 \neq x_2$ while $f(x_1) = f(x_2) = y$, contradicting injectivity.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> A continuous function on an interval is injective if and only if it is strictly monotone. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 2 ==================== -->
+  <section class="question" id="saq2">
+    <span class="qtag">PROBLEM 2</span>
+    <h2 class="qtitle">Interlacing Zeros via Rolle's Theorem</h2>
+    <div class="qbody">
+      Suppose that $f, g: \mathbb{R} \to \mathbb{R}$ both have continuous derivatives and the Wronskian determinant $\phi(x) = f(x)g'(x) - f'(x)g(x)$ is never zero. Show that between any two zeros of $f$, there must be a zero of $g$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq2', this)">Show Solution</button>
+    <div class="sol" id="sol-saq2">
+      <h3>Proof:</h3>
+      <p>Let $a < b$ be consecutive zeros of $f$, so $f(a) = f(b) = 0$. Assume for contradiction that $g(x) \neq 0$ for all $x \in [a, b]$.</p>
+      <p>Define $h(x) = \frac{f(x)}{g(x)}$ on $[a, b]$. Then $h(a) = \frac{f(a)}{g(a)} = 0$ and $h(b) = \frac{f(b)}{g(b)} = 0$. Since $h$ is differentiable on $(a, b)$, Rolle's Theorem implies there exists $c \in (a, b)$ such that $h'(c) = 0$.</p>
+      <p>Calculating the derivative:</p>
+      $$h'(x) = \frac{f'(x)g(x) - f(x)g'(x)}{[g(x)]^2} = -\frac{\phi(x)}{[g(x)]^2}$$
+      <p>Thus $h'(c) = 0 \implies \phi(c) = 0$, which contradicts the hypothesis that $\phi(x) \neq 0$ everywhere.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> $g(x)$ must have at least one zero between any two consecutive zeros of $f(x)$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 3 ==================== -->
+  <section class="question" id="saq3">
+    <span class="qtag">PROBLEM 3</span>
+    <h2 class="qtitle">Cauchy's Exponential Functional Equation</h2>
+    <div class="qbody">
+      Let $f: \mathbb{R} \to \mathbb{R}$ be a continuous function such that $f(1) = a > 0$. If $f(x + y) = f(x)f(y)$ for all $x, y \in \mathbb{R}$, find $f(x)$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq3', this)">Show Solution</button>
+    <div class="sol" id="sol-saq3">
+      <h3>Solution:</h3>
+      <ol>
+        <li>For $n \in \mathbb{N}$, induction gives $f(n) = f(1)^n = a^n$.</li>
+        <li>$f(0) = f(0+0) = f(0)^2 \implies f(0) = 1$. Also $f(x)f(-x) = f(0) = 1 \implies f(-x) = \frac{1}{f(x)}$, so $f(k) = a^k$ for all $k \in \mathbb{Z}$.</li>
+        <li>For rational $q = \frac{m}{n}$, $[f(q)]^n = f(nq) = f(m) = a^m \implies f(q) = a^{m/n} = a^q$.</li>
+        <li>Since $\mathbb{Q}$ is dense in $\mathbb{R}$ and $f$ is continuous, for any real $x$, choosing rational $q_k \to x$ gives:
+          $$f(x) = \lim_{k \to \infty} f(q_k) = \lim_{k \to \infty} a^{q_k} = a^x$$
+        </li>
+      </ol>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> The unique continuous solution is <strong>$f(x) = a^x$</strong>. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 4 ==================== -->
+  <section class="question" id="saq4">
+    <span class="qtag">PROBLEM 4</span>
+    <h2 class="qtitle">Double Zeros & Rolle's Theorem</h2>
+    <div class="qbody">
+      Let $f$ be a polynomial with double zeros at $a$ and $b$ ($a < b$). Show that $f'(x)$ has at least three roots in $[a, b]$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq4', this)">Show Solution</button>
+    <div class="sol" id="sol-saq4">
+      <h3>Solution:</h3>
+      <p>Since $a$ and $b$ are double zeros of $f(x)$, we have $f(a) = f'(a) = 0$ and $f(b) = f'(b) = 0$.</p>
+      <p>Applying Rolle's Theorem to $f(x)$ on $[a, b]$ (since $f(a) = f(b) = 0$), there exists $c \in (a, b)$ such that $f'(c) = 0$.</p>
+      <p>The three distinct roots of $f'(x)$ in $[a, b]$ are $x = a$, $x = c$, and $x = b$.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> $f'(x)$ has at least three roots in $[a, b]$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 5 ==================== -->
+  <section class="question" id="saq5">
+    <span class="qtag">PROBLEM 5</span>
+    <h2 class="qtitle">Parallel Tangent Lines via Auxiliary Functions</h2>
+    <div class="qbody">
+      Suppose $f$ and $g$ are continuous on $[a, b]$ and differentiable on $(a, b)$ with $f(a) = g(a)$ and $f(b) = g(b)$. Prove that there is $c \in (a, b)$ where the tangent line to $f$ is parallel to the tangent line to $g$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq5', this)">Show Solution</button>
+    <div class="sol" id="sol-saq5">
+      <h3>Solution:</h3>
+      <p>Define the auxiliary function $h(x) = f(x) - g(x)$.</p>
+      <ul>
+        <li>$h(a) = f(a) - g(a) = 0$</li>
+        <li>$h(b) = f(b) - g(b) = 0$</li>
+      </ul>
+      <p>By Rolle's Theorem, there exists $c \in (a, b)$ such that $h'(c) = 0 \implies f'(c) - g'(c) = 0 \implies f'(c) = g'(c)$. Equal derivatives mean the tangent lines at $x = c$ are parallel.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> There exists $c \in (a, b)$ such that $f'(c) = g'(c)$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 6 ==================== -->
+  <section class="question" id="saq6">
+    <span class="qtag">PROBLEM 6</span>
+    <h2 class="qtitle">Second Derivative Zeros</h2>
+    <div class="qbody">
+      Let $f$ be twice differentiable on $(a, b)$ and $f(x) = 0$ at three distinct points in $(a, b)$. Prove that $f''(x_0) = 0$ for some $x_0 \in (a, b)$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq6', this)">Show Solution</button>
+    <div class="sol" id="sol-saq6">
+      <h3>Solution:</h3>
+      <p>Let the three zeros be $x_1 < x_2 < x_3$.</p>
+      <ol>
+        <li>Apply Rolle's Theorem on $[x_1, x_2]$ and $[x_2, x_3]$: there exist $c_1 \in (x_1, x_2)$ and $c_2 \in (x_2, x_3)$ with $f'(c_1) = 0$ and $f'(c_2) = 0$.</li>
+        <li>Apply Rolle's Theorem to $f'(x)$ on $[c_1, c_2]$: there exists $x_0 \in (c_1, c_2)$ such that $f''(x_0) = 0$.</li>
+      </ol>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> $f''(x_0) = 0$ for some $x_0 \in (a, b)$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 7 ==================== -->
+  <section class="question" id="saq7">
+    <span class="qtag">PROBLEM 7</span>
+    <h2 class="qtitle">Strictly Increasing Functions via MVT</h2>
+    <div class="qbody">
+      Prove that if $f$ is continuous on $[a, b]$ and $f'(x) > 0$ on $(a, b)$, then $f$ is strictly increasing on $[a, b]$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq7', this)">Show Solution</button>
+    <div class="sol" id="sol-saq7">
+      <h3>Solution:</h3>
+      <p>For any $x_1 < x_2$ in $[a, b]$, MVT guarantees $c \in (x_1, x_2)$ such that:</p>
+      $$f(x_2) - f(x_1) = f'(c)(x_2 - x_1)$$
+      <p>Since $f'(c) > 0$ and $x_2 - x_1 > 0$, we have $f(x_2) - f(x_1) > 0 \implies f(x_1) < f(x_2)$.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> $f$ is strictly increasing on $[a, b]$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 8 ==================== -->
+  <section class="question" id="saq8">
+    <span class="qtag">PROBLEM 8</span>
+    <h2 class="qtitle">Constant Derivative Implies Linearity</h2>
+    <div class="qbody">
+      Suppose $f$ is differentiable on $(-\infty, \infty)$ and $f'(x) = m$ (constant). Prove $f$ is linear.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq8', this)">Show Solution</button>
+    <div class="sol" id="sol-saq8">
+      <h3>Solution:</h3>
+      <p>For any $x \neq 0$, applying MVT on $[0, x]$ gives:</p>
+      $$\frac{f(x) - f(0)}{x - 0} = f'(c) = m \implies f(x) = mx + f(0)$$
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> $f(x) = mx + C$ where $C = f(0)$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 9 ==================== -->
+  <section class="question" id="saq9">
+    <span class="qtag">PROBLEM 9</span>
+    <h2 class="qtitle">Optimization — Minimal Perimeter</h2>
+    <div class="qbody">
+      Of all rectangles with area 1, which has the smallest perimeter?
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq9', this)">Show Solution</button>
+    <div class="sol" id="sol-saq9">
+      <h3>Solution:</h3>
+      <p>Let side lengths be $x$ and $y$ with $xy = 1 \implies y = 1/x$. Perimeter $P(x) = 2x + \frac{2}{x}$.</p>
+      <p>$P'(x) = 2 - \frac{2}{x^2} = 0 \implies x = 1$. $P''(1) = 4 > 0$ (minimum). Corresponding $y = 1$.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> The square with dimensions $1 \times 1$ minimizes perimeter. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 10 ==================== -->
+  <section class="question" id="saq10">
+    <span class="qtag">PROBLEM 10</span>
+    <h2 class="qtitle">Curve Sketching & Complete Function Analysis</h2>
+    <div class="qbody">
+      Perform a complete calculus analysis for $f(x) = \frac{(2 + x)^2}{1 + x}$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq10', this)">Show Solution</button>
+    <div class="sol" id="sol-saq10">
+      <h3>Solution & Analysis:</h3>
+      <ul>
+        <li><strong>Domain:</strong> $\mathbb{R} \setminus \{-1\}$</li>
+        <li><strong>Form:</strong> $f(x) = \frac{x^2 + 4x + 4}{x + 1} = x + 3 + \frac{1}{x + 1}$</li>
+        <li><strong>Derivatives:</strong> $f'(x) = 1 - \frac{1}{(x+1)^2} = \frac{x(x+2)}{(x+1)^2}$, $f''(x) = \frac{2}{(x+1)^3}$</li>
+        <li><strong>Critical Points:</strong> $x = 0 \implies (0, 4)$ (Local Min), $x = -2 \implies (-2, 0)$ (Local Max)</li>
+        <li><strong>Asymptotes:</strong> Vertical asymptote $x = -1$; Slant asymptote $y = x + 3$</li>
+      </ul>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> Local max at $(-2, 0)$, local min at $(0, 4)$, vertical asymptote $x = -1$, slant asymptote $y = x + 3$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 11 (ENHANCED TRAPEZOID) ==================== -->
+  <section class="question" id="saq11">
+    <span class="qtag">PROBLEM 11</span>
+    <h2 class="qtitle">Optimization — Maximizing Trapezoid Area</h2>
+    <div class="qbody">
+      Three sides of a trapezoid each have length $L = 1$. What should be the length of the fourth side (the larger base) if the area of the trapezoid is to be as large as possible?
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq11', this)">Show Solution</button>
+    <div class="sol" id="sol-saq11">
+      <h3>Step-by-Step Derivation & Geometry:</h3>
+      <figure>
+        <svg viewBox="0 0 500 240" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="100,180 170,60 330,60 400,180" fill="rgba(0, 229, 255, 0.1)" stroke="#00e5ff" stroke-width="2.5"/>
+          <line x1="170" y1="60" x2="170" y2="180" stroke="#ff8c00" stroke-dasharray="5 5" stroke-width="2"/>
+          <line x1="330" y1="60" x2="330" y2="180" stroke="#ff8c00" stroke-dasharray="5 5" stroke-width="2"/>
+          
+          <text x="250" y="50" fill="#ffd700" font-size="16" text-anchor="middle" font-weight="bold">Top Base = 1</text>
+          <text x="125" y="110" fill="#ffd700" font-size="16" text-anchor="middle" font-weight="bold">Side = 1</text>
+          <text x="375" y="110" fill="#ffd700" font-size="16" text-anchor="middle" font-weight="bold">Side = 1</text>
+          
+          <text x="135" y="200" fill="#76ff03" font-size="15" text-anchor="middle">x</text>
+          <text x="250" y="200" fill="#76ff03" font-size="15" text-anchor="middle">1</text>
+          <text x="365" y="200" fill="#76ff03" font-size="15" text-anchor="middle">x</text>
+          
+          <text x="185" y="125" fill="#ff8c00" font-size="15" text-anchor="middle">h</text>
+          <path d="M 100,180 L 140,180 A 40,40 0 0,0 125,155 Z" fill="rgba(255,64,129,0.3)"/>
+          <text x="142" y="172" fill="#ff4081" font-size="14">θ</text>
+        </svg>
+        <figcaption>Trapezoid with three sides of length 1, base $b = 1 + 2x$, height $h = \sqrt{1 - x^2}$, and base angle $\theta$.</figcaption>
+      </figure>
+
+      <h3>Method 1: Algebraic Base Optimization</h3>
+      <p>Let the bottom base be $b = 1 + 2x$, where $x$ is the horizontal projection of each slanted side ($0 < x < 1$). The height is $h = \sqrt{1 - x^2}$.</p>
+      <p>The area of the trapezoid is:</p>
+      $$A(x) = \frac{\text{top base} + \text{bottom base}}{2} \cdot h = \frac{1 + (1 + 2x)}{2} \sqrt{1 - x^2} = (1 + x)\sqrt{1 - x^2}$$
+      <p>Differentiating $A(x)$ with respect to $x$ using the Product and Chain Rules:</p>
+      $$A'(x) = 1 \cdot \sqrt{1 - x^2} + (1 + x) \cdot \frac{-2x}{2\sqrt{1 - x^2}} = \frac{(1 - x^2) - x(1 + x)}{\sqrt{1 - x^2}} = \frac{1 - x - 2x^2}{\sqrt{1 - x^2}}$$
+      <p>Setting $A'(x) = 0$ gives $2x^2 + x - 1 = 0 \implies (2x - 1)(x + 1) = 0$. Since $x > 0$, we select $x = \frac{1}{2}$.</p>
+      <p>The length of the bottom base is $b = 1 + 2\left(\frac{1}{2}\right) = 2$.</p>
+
+      <h3>Method 2: Trigonometric Optimization</h3>
+      <p>Let $\theta$ be the base angle ($0 < \theta < \frac{\pi}{2}$). Then $h = \sin\theta$ and $x = \cos\theta$.</p>
+      $$A(\theta) = (1 + \cos\theta)\sin\theta = \sin\theta + \frac{1}{2}\sin(2\theta)$$
+      $$A'(\theta) = \cos\theta + \cos(2\theta) = \cos\theta + 2\cos^2\theta - 1 = (2\cos\theta - 1)(\cos\theta + 1) = 0$$
+      <p>For $\theta \in \left(0, \frac{\pi}{2}\right)$, $\cos\theta = \frac{1}{2} \implies \theta = \frac{\pi}{3} (60^\circ)$. Thus the bottom base is $1 + 2\cos(60^\circ) = 2$.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> The length of the fourth side (larger base) must be <strong>2</strong> (yielding a regular semi-hexagon). $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 12 ==================== -->
+  <section class="question" id="saq12">
+    <span class="qtag">PROBLEM 12</span>
+    <h2 class="qtitle">Tangent Line Equation & Linear Approximation</h2>
+    <div class="qbody">
+      Let $f(x) = \frac{2x}{x^2 + 3}$.
+      <ol type="a">
+        <li>Find the tangent line equation at $x = 1$.</li>
+        <li>Estimate $f(1.2)$ using linear approximation.</li>
+      </ol>
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq12', this)">Show Solution</button>
+    <div class="sol" id="sol-saq12">
+      <h3>Solution:</h3>
+      <p>$f(1) = \frac{2}{4} = \frac{1}{2}$. Derivatives: $f'(x) = \frac{2(x^2+3) - 2x(2x)}{(x^2+3)^2} = \frac{6 - 2x^2}{(x^2+3)^2} \implies f'(1) = \frac{4}{16} = \frac{1}{4}$.</p>
+      <ul>
+        <li><strong>Tangent Line:</strong> $y - \frac{1}{2} = \frac{1}{4}(x - 1) \implies y = \frac{1}{4}x + \frac{1}{4}$.</li>
+        <li><strong>Linear Approximation:</strong> $f(1.2) \approx \frac{1}{2} + \frac{1}{4}(0.2) = 0.5 + 0.05 = 0.55$.</li>
+      </ul>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> Tangent line is $y = \frac{1}{4}x + \frac{1}{4}$; $f(1.2) \approx 0.55$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 13 ==================== -->
+  <section class="question" id="saq13">
+    <span class="qtag">PROBLEM 13</span>
+    <h2 class="qtitle">Limit Involving Derivatives and Conjugates</h2>
+    <div class="qbody">
+      Suppose $f'(2) = 3$. Find the limit: $\lim_{x \to 2} \frac{f(x) - f(2)}{\sqrt{x} - \sqrt{2}}$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq13', this)">Show Solution</button>
+    <div class="sol" id="sol-saq13">
+      <h3>Solution:</h3>
+      $$\lim_{x \to 2} \frac{f(x) - f(2)}{\sqrt{x} - \sqrt{2}} = \lim_{x \to 2} \left[ \frac{f(x) - f(2)}{x - 2} \cdot (\sqrt{x} + \sqrt{2}) \right] = f'(2) \cdot 2\sqrt{2} = 3 \cdot 2\sqrt{2} = 6\sqrt{2}$$
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> The limit value is <strong>$6\sqrt{2}$</strong>. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 14 ==================== -->
+  <section class="question" id="saq14">
+    <span class="qtag">PROBLEM 14</span>
+    <h2 class="qtitle">Distance Optimization to a Parabola</h2>
+    <div class="qbody">
+      Find the point on the parabola $y = x^2$ for $0 < x < 1$ nearest to $(0, 1)$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq14', this)">Show Solution</button>
+    <div class="sol" id="sol-saq14">
+      <h3>Solution:</h3>
+      <p>Square distance from $(x, x^2)$ to $(0, 1)$ is $D(x) = x^2 + (x^2 - 1)^2 = x^4 - x^2 + 1$.</p>
+      <p>$D'(x) = 4x^3 - 2x = 2x(2x^2 - 1) = 0 \implies x = \frac{1}{\sqrt{2}}$. Corresponding $y = \left(\frac{1}{\sqrt{2}}\right)^2 = \frac{1}{2}$.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> The nearest point is <strong>$\left(\frac{1}{\sqrt{2}}, \frac{1}{2}\right)$</strong>. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 15 ==================== -->
+  <section class="question" id="saq15">
+    <span class="qtag">PROBLEM 15</span>
+    <h2 class="qtitle">Least Squares Optimization</h2>
+    <div class="qbody">
+      Given numbers $a_1, a_2, \dots, a_n$, find $x$ minimizing $S(x) = \sum_{i=1}^n (x - a_i)^2$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq15', this)">Show Solution</button>
+    <div class="sol" id="sol-saq15">
+      <h3>Solution:</h3>
+      <p>$S'(x) = \sum_{i=1}^n 2(x - a_i) = 2nx - 2\sum_{i=1}^n a_i = 0 \implies x = \frac{1}{n}\sum_{i=1}^n a_i$.</p>
+      <p>Since $S''(x) = 2n > 0$, this yields a global minimum.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> The optimal value is the arithmetic mean $x = \bar{a}$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 16 ==================== -->
+  <section class="question" id="saq16">
+    <span class="qtag">PROBLEM 16</span>
+    <h2 class="qtitle">Arc Length Derivation & Calculation</h2>
+    <div class="qbody">
+      Find the arc length of $f(x) = \frac{2}{3}x^{3/2}$ from $x = 0$ to $x = 3$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq16', this)">Show Solution</button>
+    <div class="sol" id="sol-saq16">
+      <h3>Solution:</h3>
+      <p>$f'(x) = \sqrt{x} \implies \sqrt{1 + [f'(x)]^2} = \sqrt{1 + x}$.</p>
+      $$L = \int_0^3 \sqrt{1 + x} \, dx = \left[ \frac{2}{3}(1 + x)^{3/2} \right]_0^3 = \frac{2}{3}(8 - 1) = \frac{14}{3}$$
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> Arc length is <strong>$\frac{14}{3}$</strong> units. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 17 (ENHANCED ASTROID) ==================== -->
+  <section class="question" id="saq17">
+    <span class="qtag">PROBLEM 17</span>
+    <h2 class="qtitle">Total Arc Length of an Astroid</h2>
+    <div class="qbody">
+      Use symmetry to find the total arc length of the astroid curve given by $x^{2/3} + y^{2/3} = 1$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq17', this)">Show Solution</button>
+    <div class="sol" id="sol-saq17">
+      <h3>Detailed Geometric Explanation & Visualization:</h3>
+      <figure>
+        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="160" x2="300" y2="160" stroke="#333" stroke-width="1.5"/>
+          <line x1="160" y1="20" x2="160" y2="300" stroke="#333" stroke-width="1.5"/>
+          <path d="M 260,160 Q 160,160 160,60 Q 160,160 60,160 Q 160,160 160,260 Q 160,160 260,160 Z" fill="rgba(255, 140, 0, 0.15)" stroke="#ff8c00" stroke-width="3"/>
+          <path d="M 260,160 Q 160,160 160,60" fill="none" stroke="#76ff03" stroke-width="4"/>
+          <text x="220" y="90" fill="#76ff03" font-size="14" font-weight="bold">Quadrant I Arc (L₁)</text>
+          <text x="270" y="180" fill="#00e5ff" font-size="14">(1,0)</text>
+          <text x="165" y="50" fill="#00e5ff" font-size="14">(0,1)</text>
+        </svg>
+        <figcaption>The Astroid $x^{2/3} + y^{2/3} = 1$. Due to fourfold symmetry, Total Arc Length $L = 4 \times L_1$.</figcaption>
+      </figure>
+
+      <h3>Step-by-Step Integration:</h3>
+      <p>1. In Quadrant 1 ($0 \le x \le 1$), explicit form is $y = (1 - x^{2/3})^{3/2}$.</p>
+      <p>2. Differentiating with respect to $x$:</p>
+      $$\frac{dy}{dx} = \frac{3}{2}(1 - x^{2/3})^{1/2} \cdot \left(-\frac{2}{3}x^{-1/3}\right) = -\frac{(1 - x^{2/3})^{1/2}}{x^{1/3}}$$
+      <p>3. Arc length integrand element:</p>
+      $$1 + \left(\frac{dy}{dx}\right)^2 = 1 + \frac{1 - x^{2/3}}{x^{2/3}} = \frac{x^{2/3} + 1 - x^{2/3}}{x^{2/3}} = \frac{1}{x^{2/3}} = x^{-2/3}$$
+      $$\sqrt{1 + (y')^2} = x^{-1/3}$$
+      <p>4. Integrating over Quadrant I:</p>
+      $$L_1 = \int_0^1 x^{-1/3} \, dx = \left[ \frac{3}{2} x^{2/3} \right]_0^1 = \frac{3}{2}$$
+      <p>5. Multiplying by 4 for total symmetric length: $L = 4 \times \frac{3}{2} = 6$.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> Total arc length of the astroid is <strong>6</strong>. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 18 (ENHANCED PARABOLA TRIANGLE) ==================== -->
+  <section class="question" id="saq18">
+    <span class="qtag">PROBLEM 18</span>
+    <h2 class="qtitle">Optimization — Maximizing Inscribed Triangle Area</h2>
+    <div class="qbody">
+      The line $y = mx + b$ intersects the parabola $y = x^2$ at points $A$ and $B$. Find the point $P$ on the parabolic arc $AOB$ maximizing the area of triangle $PAB$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq18', this)">Show Solution</button>
+    <div class="sol" id="sol-saq18">
+      <h3>Geometric Principle & Visualization:</h3>
+      <figure>
+        <svg viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 60,40 Q 180,280 300,40" fill="none" stroke="#00e5ff" stroke-width="2.5"/>
+          <line x1="80" y1="70" x2="280" y2="170" stroke="#ff8c00" stroke-width="2"/>
+          <line x1="100" y1="130" x2="260" y2="210" stroke="#76ff03" stroke-width="2" stroke-dasharray="4 4"/>
+          <polygon points="80,70 280,170 180,170" fill="rgba(255, 64, 129, 0.25)" stroke="#ff4081" stroke-width="2"/>
+          
+          <circle cx="80" cy="70" r="5" fill="#ffd700"/>
+          <text x="65" y="65" fill="#ffd700" font-size="14" font-weight="bold">A</text>
+          
+          <circle cx="280" cy="170" r="5" fill="#ffd700"/>
+          <text x="290" y="175" fill="#ffd700" font-size="14" font-weight="bold">B</text>
+          
+          <circle cx="180" cy="170" r="5" fill="#76ff03"/>
+          <text x="180" y="195" fill="#76ff03" font-size="14" font-weight="bold">P (m/2, m²/4)</text>
+        </svg>
+        <figcaption>Triangle $PAB$ area is maximized where the tangent line at $P$ is parallel to the chord $AB$ (Slope $= m$).</figcaption>
+      </figure>
+
+      <h3>Geometric Proof:</h3>
+      <p>The base length $AB$ is fixed. The area of triangle $PAB$ is $\frac{1}{2} \times \text{base} \times \text{height}$. Thus, maximum area occurs when the perpendicular distance (height) from $P$ to the secant line $y = mx + b$ is maximized.</p>
+      <p>The point of maximum perpendicular distance on a smooth curve to a secant line occurs precisely where the tangent line to the curve is <strong>parallel</strong> to the secant line.</p>
+      <p>Secant line slope $= m$. Tangent line slope $= \frac{d}{dx}(x^2) = 2x$.</p>
+      $$2x = m \implies x = \frac{m}{2}$$
+      <p>Substituting into the parabola $y = x^2$ yields $y = \left(\frac{m}{2}\right)^2 = \frac{m^2}{4}$.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> The optimal point is <strong>$P = \left(\frac{m}{2}, \frac{m^2}{4}\right)$</strong>. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 20 ==================== -->
+  <section class="question" id="saq20">
+    <span class="qtag">PROBLEM 19</span>
+    <h2 class="qtitle">Symmetry Properties of Integrals</h2>
+    <div class="qbody">
+      Let $s : [-a, a] \to \mathbb{R}$ be integrable. Prove:
+      <ol type="a">
+        <li>If $s$ is even ($s(-t) = s(t)$), then $\int_{-a}^a s(t) \, dt = 2\int_0^a s(t) \, dt$.</li>
+        <li>If $s$ is odd ($s(-t) = -s(t)$), then $\int_{-a}^a s(t) \, dt = 0$.</li>
+      </ol>
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq20', this)">Show Solution</button>
+    <div class="sol" id="sol-saq20">
+      <h3>Proof:</h3>
+      <p>Split: $\int_{-a}^a s(t)dt = \int_{-a}^0 s(t)dt + \int_0^a s(t)dt$. Using $u = -t$ on the first integral yields $\int_0^a s(-u)du$.</p>
+      <ul>
+        <li>Even: $\int_0^a s(u)du + \int_0^a s(t)dt = 2\int_0^a s(t)dt$.</li>
+        <li>Odd: $-\int_0^a s(u)du + \int_0^a s(t)dt = 0$. $\blacksquare$</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 21 ==================== -->
+  <section class="question" id="saq21">
+    <span class="qtag">PROBLEM 20</span>
+    <h2 class="qtitle">Polynomial Approximations via Taylor Series</h2>
+    <div class="qbody">
+      Let $f(x) = \sin(4x) + \cos(x)$. Find the linear and quadratic approximations at $x = 0$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq21', this)">Show Solution</button>
+    <div class="sol" id="sol-saq21">
+      <h3>Solution:</h3>
+      <p>$f(0) = 1$, $f'(x) = 4\cos(4x) - \sin(x) \implies f'(0) = 4$, $f''(x) = -16\sin(4x) - \cos(x) \implies f''(0) = -1$.</p>
+      <div class="highlight-box">
+        <strong>Linear:</strong> $L(x) = 1 + 4x$; <strong>Quadratic:</strong> $g(x) = 1 + 4x - \frac{1}{2}x^2$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 22 ==================== -->
+  <section class="question" id="saq22">
+    <span class="qtag">PROBLEM 21</span>
+    <h2 class="qtitle">Integrals of Step/Greatest Integer Functions</h2>
+    <div class="qbody">
+      Prove for $n \in \mathbb{N}$:
+      <ol type="a">
+        <li>$\int_0^n \lfloor x \rfloor \, dx = \frac{n(n - 1)}{2}$</li>
+        <li>$\int_0^{n^2} \lfloor \sqrt{x} \rfloor \, dx = \frac{n(n - 1)(4n + 1)}{6}$</li>
+      </ol>
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq22', this)">Show Solution</button>
+    <div class="sol" id="sol-saq22">
+      <h3>Proof:</h3>
+      <p>a) $\int_0^n \lfloor x \rfloor dx = \sum_{k=0}^{n-1} \int_k^{k+1} k \, dx = \sum_{k=0}^{n-1} k = \frac{n(n-1)}{2}$.</p>
+      <p>b) $\int_0^{n^2} \lfloor \sqrt{x} \rfloor dx = \sum_{k=0}^{n-1} \int_{k^2}^{(k+1)^2} k \, dx = \sum_{k=0}^{n-1} k(2k + 1) = 2\sum k^2 + \sum k = \frac{n(n-1)(4n+1)}{6}$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 23 ==================== -->
+  <section class="question" id="saq23">
+    <span class="qtag">PROBLEM 22</span>
+    <h2 class="qtitle">Riemann Sum Bounds for $\pi$</h2>
+    <div class="qbody">
+      Let $f(t) = \frac{1}{1+t^2}$ on $[-1, 1]$. Using partition $P = \{-1, -0.5, 0, 0.5, 1\}$, show that $\frac{13}{5} \le \pi \le \frac{18}{5}$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq23', this)">Show Solution</button>
+    <div class="sol" id="sol-saq23">
+      <h3>Solution:</h3>
+      <p>$L(P, f) = \frac{1}{2}(0.5 + 0.8 + 0.8 + 0.5) = \frac{13}{10}$. $U(P, f) = \frac{1}{2}(0.8 + 1 + 1 + 0.8) = \frac{18}{10}$.</p>
+      $$\frac{13}{10} \le \int_{-1}^1 \frac{dt}{1+t^2} = \frac{\pi}{2} \le \frac{18}{10} \implies \frac{13}{5} \le \pi \le \frac{18}{5} \quad (2.6 \le \pi \le 3.6) \quad \blacksquare$$
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 24 ==================== -->
+  <section class="question" id="saq24">
+    <span class="qtag">PROBLEM 23</span>
+    <h2 class="qtitle">Uniqueness of Real Roots via Calculus</h2>
+    <div class="qbody">
+      Show that $x^3 + 2x - 5 = 0$ has exactly one real root.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq24', this)">Show Solution</button>
+    <div class="sol" id="sol-saq24">
+      <h3>Proof:</h3>
+      <p>1. <strong>Existence:</strong> $f(0) = -5 < 0$ and $f(2) = 7 > 0$. By IVT, a root exists in $(0, 2)$.</p>
+      <p>2. <strong>Uniqueness:</strong> $f'(x) = 3x^2 + 2 \ge 2 > 0$ everywhere. Strict monotonicity guarantees at most one root.</p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> Exactly one real root exists. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 25 ==================== -->
+  <section class="question" id="saq25">
+    <span class="qtag">PROBLEM 24</span>
+    <h2 class="qtitle">Application of MVT to Bounded Derivatives</h2>
+    <div class="qbody">
+      Suppose $f(2) = -3$ and $1 < f'(x) < 2$ for $x \in (2, 5)$. Show $0 < f(5) < 3$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq25', this)">Show Solution</button>
+    <div class="sol" id="sol-saq25">
+      <h3>Proof:</h3>
+      <p>By MVT on $[2, 5]$, $f(5) - f(2) = 3f'(c) \implies f(5) + 3 = 3f'(c)$.</p>
+      <p>Since $1 < f'(c) < 2$, we have $3 < f(5) + 3 < 6 \implies 0 < f(5) < 3$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 27 ==================== -->
+  <section class="question" id="saq27">
+    <span class="qtag">PROBLEM 25</span>
+    <h2 class="qtitle">Absolute Maximum of $f(x) = x^a (1-x)^b$</h2>
+    <div class="qbody">
+      For $a, b > 0$, find the maximum value of $f(x) = x^a (1-x)^b$ on $[0, 1]$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq27', this)">Show Solution</button>
+    <div class="sol" id="sol-saq27">
+      <h3>Solution:</h3>
+      <p>$f'(x) = x^{a-1}(1-x)^{b-1}[a - (a+b)x] = 0 \implies x = \frac{a}{a+b}$.</p>
+      $$f\left(\frac{a}{a+b}\right) = \left(\frac{a}{a+b}\right)^a \left(\frac{b}{a+b}\right)^b = \frac{a^a b^b}{(a+b)^{a+b}}$$
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> Maximum value is <strong>$\frac{a^a b^b}{(a+b)^{a+b}}$</strong>. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 28 ==================== -->
+  <section class="question" id="saq28">
+    <span class="qtag">PROBLEM 26</span>
+    <h2 class="qtitle">Rolle's Theorem & Real Roots of Polynomial Derivatives</h2>
+    <div class="qbody">
+      Let $p(x)$ be a polynomial of degree $n$ with $n$ real roots. Show that all roots of $p'(x)$ are real.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq28', this)">Show Solution</button>
+    <div class="sol" id="sol-saq28">
+      <h3>Proof:</h3>
+      <p>Let $p(x)$ have $k$ distinct real roots with multiplicities $e_1, \dots, e_k$ where $\sum e_i = n$.</p>
+      <ol>
+        <li>Multiplicities contribute $\sum(e_i - 1) = n - k$ real roots for $p'$.</li>
+        <li>Rolle's Theorem between adjacent distinct roots gives $k - 1$ real roots for $p'$.</li>
+      </ol>
+      <p>Total real roots = $(n - k) + (k - 1) = n - 1 = \deg(p')$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <!-- ==================== SAQ 29 ==================== -->
+  <section class="question" id="saq29">
+    <span class="qtag">PROBLEM 27</span>
+    <h2 class="qtitle">Differential-Functional Scaling Analysis</h2>
+    <div class="qbody">
+      Consider $f'(x)f''(x) = f(2x)$. Find polynomial and trigonometric solutions.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq29', this)">Show Solution</button>
+    <div class="sol" id="sol-saq29">
+      <h3>Solution:</h3>
+      <p>1. Polynomial degree $n$: $(n-1) + (n-2) = n \implies n = 3$. Testing $f(x) = Ax^3$ gives $A = \frac{4}{9} \implies f(x) = \frac{4}{9}x^3$.</p>
+      <p>2. Trigonometric form $f(x) = A\sin(kx)$ yields $f'(x)f''(x) = -\frac{1}{2}A^2 k^3 \sin(2kx) = A\sin(2kx) \implies A = -\frac{2}{k^3}$.</p>
+      <div class="highlight-box">
+        <strong>Solutions:</strong> $f(x) = \frac{4}{9}x^3$ and $f(x) = -\frac{2}{k^3}\sin(kx)$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== QUIZ-1 MERGED (Q28-Q32) ==================== -->
+  <section class="question" id="q1-1">
+    <span class="qtag">QUIZ 1 — Q1</span>
+    <h2 class="qtitle">Closure of the Unit Interval under Multiplication</h2>
+    <div class="qbody">Theorem: If $a, b \in [0,1]$, then their product satisfies $a \cdot b \in [0,1]$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q1-1', this)">Show Solution</button>
+    <div class="sol" id="sol-q1-1">
+      <h3>Part 1: Squaring Lemma</h3>
+      <p>If $a=0 \implies a^2=0 \in [0,1]$. If $a=1 \implies a^2=1 \in [0,1]$. If $0 < a < 1 \implies 0 < a^2 < a < 1$. Thus $a^2 \in [0,1]$.</p>
+      <h3>Part 2: Exhaustive Case Analysis</h3>
+      <p>If $a=0$ or $b=0$, $ab=0 \in [0,1]$. If $a=1$, $ab=b \in [0,1]$. If $0 < a < b < 1$, $0 < ab < b < 1 \implies ab \in (0,1) \subset [0,1]$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q1-2">
+    <span class="qtag">QUIZ 1 — Q2</span>
+    <h2 class="qtitle">Discontinuity of the Dirichlet Function</h2>
+    <div class="qbody">Show that the Dirichlet function $D(x) = 1$ ($x \in \mathbb{Q}$) and $0$ ($x \notin \mathbb{Q}$) is discontinuous at every point $a \in \mathbb{R}$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q1-2', this)">Show Solution</button>
+    <div class="sol" id="sol-q1-2">
+      <h3>Proof:</h3>
+      <p>Set $\varepsilon = 1/2$. By density of rationals and irrationals, every interval $(a - \delta, a + \delta)$ contains points where $D(x)$ takes values $0$ and $1$. Hence $|D(x) - D(a)| = 1 \ge 1/2 = \varepsilon$, so $D$ is discontinuous everywhere. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q1-3">
+    <span class="qtag">QUIZ 1 — Q3</span>
+    <h2 class="qtitle">Continuity of $f(x) = x^2$ via $\varepsilon$–$\delta$ Definition</h2>
+    <div class="qbody">Prove using $\varepsilon$–$\delta$ that $\lim_{x \to a} x^2 = a^2$ for any $a \in \mathbb{R}$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q1-3', this)">Show Solution</button>
+    <div class="sol" id="sol-q1-3">
+      <h3>Proof:</h3>
+      <p>|x^2 - a^2| = |x - a||x + a|. Constrain $\delta \le 1 \implies |x + a| < 1 + 2|a|$. Choose $\delta = \min\left\{1, \frac{\varepsilon}{1 + 2|a|}\right\}$. Then $|x^2 - a^2| < \left(\frac{\varepsilon}{1 + 2|a|}\right)(1 + 2|a|) = \varepsilon$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q1-4">
+    <span class="qtag">QUIZ 1 — Q4</span>
+    <h2 class="qtitle">Existence of $n$th Roots via Intermediate Value Theorem</h2>
+    <div class="qbody">Prove that given $a \ge 0$ and $n \in \mathbb{N}$, there exists a unique real number $c \ge 0$ such that $c^n = a$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q1-4', this)">Show Solution</button>
+    <div class="sol" id="sol-q1-4">
+      <h3>Proof:</h3>
+      <p>For $a > 0$, define $g(x) = x^n - a$ on $[0, M]$ where $M = \max\{1, a\}$. $g(0) = -a < 0$ and $g(M) \ge 0$. By IVT, $g(c) = 0 \implies c^n = a$. Uniqueness follows from strict monotonicity of $x^n$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q1-5">
+    <span class="qtag">QUIZ 1 — Q5</span>
+    <h2 class="qtitle">Bounded Functions and Riemann Integrability</h2>
+    <div class="qbody">a) Is every bounded function integrable? b) Is every bounded, increasing function integrable?</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q1-5', this)">Show Solution</button>
+    <div class="sol" id="sol-q1-5">
+      <h3>Solution:</h3>
+      <p>a) <strong>False.</strong> The Dirichlet function on $[a, b]$ is bounded but $U(D, P) - L(D, P) = b - a \neq 0$.</p>
+      <p>b) <strong>True.</strong> For a uniform partition with $\Delta x = \frac{b-a}{n}$, $U(f, P) - L(f, P) = \Delta x [f(b) - f(a)] = \frac{(b-a)[f(b)-f(a)]}{n} < \varepsilon$ for large $n$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <!-- ==================== QUIZ-2 MERGED (Q33-Q37) ==================== -->
+  <section class="question" id="q2-1">
+    <span class="qtag">QUIZ 2 — Q1</span>
+    <h2 class="qtitle">Rolle's Theorem Evaluation</h2>
+    <div class="qbody">Verify Rolle's theorem for $f(x) = x^3 - 6x^2 + 11x - 6$ on $[1, 3]$ and find all valid $c \in (1, 3)$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q2-1', this)">Show Solution</button>
+    <div class="sol" id="sol-q2-1">
+      <h3>Solution:</h3>
+      <p>$f(1) = f(3) = 0$. $f'(x) = 3x^2 - 12x + 11 = 0 \implies x = 2 \pm \frac{1}{\sqrt{3}}$.</p>
+      <div class="highlight-box">
+        <strong>Values:</strong> $c_1 \approx 1.423$ and $c_2 \approx 2.577$ (both in $(1, 3)$). $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <section class="question" id="q2-2">
+    <span class="qtag">QUIZ 2 — Q2</span>
+    <h2 class="qtitle">Lagrange's Mean Value Theorem Inequality</h2>
+    <div class="qbody">Prove $\frac{x}{1+x} < \ln(1+x) < x$ for $x > 0$ and find $c$ for $x = 0.2$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q2-2', this)">Show Solution</button>
+    <div class="sol" id="sol-q2-2">
+      <h3>Solution:</h3>
+      <p>MVT on $[0, x]$ for $f(t) = \ln(1+t) \implies \frac{\ln(1+x)}{x} = \frac{1}{1+c}$. Since $0 < c < x \implies \frac{1}{1+x} < \frac{1}{1+c} < 1$.</p>
+      <p>For $x = 0.2$: $\frac{\ln(1.2)}{0.2} = \frac{1}{1+c} \implies c \approx 0.0970$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q2-3">
+    <span class="qtag">QUIZ 2 — Q3</span>
+    <h2 class="qtitle">Optimization — Box with Square Base</h2>
+    <div class="qbody">An open rectangular box with square base has volume $32 \text{ m}^3$. Base costs ₹3/m$^2$, sides ₹2/m$^2$. Find optimal dimensions and minimum cost.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q2-3', this)">Show Solution</button>
+    <div class="sol" id="sol-q2-3">
+      <h3>Solution:</h3>
+      <p>$h = \frac{32}{x^2}$. Cost $C(x) = 3x^2 + 8xh = 3x^2 + \frac{256}{x}$.</p>
+      <p>$C'(x) = 6x - \frac{256}{x^2} = 0 \implies x = (128/3)^{1/3} \approx 3.49 \text{ m}$, $h \approx 2.62 \text{ m}$. Minimum cost $\approx ₹109.89$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q2-4">
+    <span class="qtag">QUIZ 2 — Q4</span>
+    <h2 class="qtitle">Curve Tracing: $y = \frac{x^2 - 1}{x^2 - 4}$</h2>
+    <div class="qbody">Perform complete curve analysis for $y = 1 + \frac{3}{x^2 - 4}$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q2-4', this)">Show Solution</button>
+    <div class="sol" id="sol-q2-4">
+      <h3>Solution:</h3>
+      <p>Domain $\mathbb{R} \setminus \{\pm 2\}$, even symmetry. Intercepts $(\pm 1, 0)$ and $(0, 0.25)$. Vertical asymptotes $x = \pm 2$, horizontal asymptote $y = 1$. Local max at $(0, 0.25)$. Concave up on $|x| > 2$, concave down on $|x| < 2$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q2-5">
+    <span class="qtag">QUIZ 2 — Q5</span>
+    <h2 class="qtitle">Taylor Polynomial for $\sqrt{1+x}$</h2>
+    <div class="qbody">Find degree 3 Taylor polynomial $P_3(x)$ for $f(x) = \sqrt{1+x}$ about $x = 0$ and estimate $\sqrt{1.2}$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q2-5', this)">Show Solution</button>
+    <div class="sol" id="sol-q2-5">
+      <h3>Solution:</h3>
+      <p>$P_3(x) = 1 + \frac{x}{2} - \frac{x^2}{8} + \frac{x^3}{16}$.</p>
+      <p>$P_3(0.2) = 1 + 0.1 - 0.005 + 0.0005 = 1.0955$. Actual $\sqrt{1.2} \approx 1.095445$ (Error $\approx 5.49 \times 10^{-5}$). $\blacksquare$</p>
+    </div>
+  </section>
+
+  <!-- ==================== QUIZ-3 MERGED (Q38-Q42) ==================== -->
+  <section class="question" id="q3-1">
+    <span class="qtag">QUIZ 3 — Q1</span>
+    <h2 class="qtitle">Riemann Integrability of Infinite Spike Function</h2>
+    <div class="qbody">
+      Define $f: [0,1] \to \mathbb{R}$ by:
+      $$f(x) = \begin{cases} 1, & x = \frac{1}{n} \text{ for some } n \in \{1, 2, 3, \dots\} \\ 0, & \text{otherwise} \end{cases}$$
+      (a) Show directly from the definition (using upper and lower Darboux sums) that $f$ is Riemann integrable on $[0,1]$.<br>
+      (b) Compute $\displaystyle\int_0^1 f(x)\,dx$.
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-q3-1', this)">Show Solution</button>
+    <div class="sol" id="sol-q3-1">
+      <h3>Step 1 — Lower Sum Evaluation and Strategy</h3>
+      <p>
+        On every subinterval $[x_{i-1}, x_i] \subseteq [0,1]$, there exist irrational numbers and non-reciprocal rationals where $f(x) = 0$. 
+        Thus, the infimum (glb) on any subinterval is always $m_i = \inf_{x \in [x_{i-1}, x_i]} f(x) = 0$. 
+        Consequently, for <strong>any partition</strong> $P$, the lower Darboux sum is:
+        \[
+          L(f,P) = \sum_{i=1}^k m_i \Delta x_i = 0 \implies \underline{\int_0^1} f(x)\,dx = 0
+        \]
+        Therefore, to establish Riemann integrability via Darboux's criterion ($U(f,P) - L(f,P) < \varepsilon$), <strong>it is sufficient to show that we can construct a partition $P$ such that $U(f,P) < \varepsilon$</strong> for any arbitrary $\varepsilon > 0$.
+      </p>
+
+      <h3>Step 2 — Partition Construction</h3>
+      <p>
+        Given any challenge threshold $\varepsilon > 0$:
+      </p>
+      <ol>
+        <li>Choose an integer $N$ sufficiently large such that $\frac{1}{N} < \frac{\varepsilon}{2}$.</li>
+        <li>On the interval $[\frac{1}{N}, 1]$, the points where $f(x) = 1$ are strictly finite: $S = \{1, \frac{1}{2}, \frac{1}{3}, \dots, \frac{1}{N}\}$.</li>
+        <li>Around each point $y_k = \frac{1}{k} \in S$, construct a tiny subinterval of width $2\delta_k$ such that the total sum of widths of all $N$ boxes is less than $\frac{\varepsilon}{2}$.</li>
+      </ol>
+
+      <div class="graphwrap">
+        <svg id="riemannGraph" viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="figcap">
+          Spikes at $x = 1, \frac{1}{2}, \frac{1}{3}, \dots$; pink strips enclose each spike with arbitrarily small total length.
+        </div>
+      </div>
+
+      <h3>Step 3 — Bounding Upper Sum $U(f,P)$</h3>
+      <p>
+        We partition $[0,1]$ and evaluate the upper sum $U(f,P) = \sum M_i \Delta x_i$ by grouping the subintervals:
+      </p>
+      <ul>
+        <li>
+          <span class="key">Tail interval $[0, \frac{1}{N}]$:</span> Here $M_1 = 1$, and its width is $\Delta x_1 = \frac{1}{N} < \frac{\varepsilon}{2}$. Its contribution to $U(f,P)$ is $< \frac{\varepsilon}{2}$.
+        </li>
+        <li>
+          <span class="key">The $N$ tiny spike boxes:</span> On each box, $M_i = 1$. The sum of widths of all $N$ boxes is chosen to be $< \frac{\varepsilon}{2}$. Their contribution is $< \frac{\varepsilon}{2}$.
+        </li>
+        <li>
+          <span class="key">Remaining gap subintervals:</span> $f(x) \equiv 0$, so $M_i = 0$ with zero contribution.
+        </li>
+      </ul>
+      <p>
+        Summing these up gives $U(f,P) < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon$. 
+        Since $L(f,P) = 0$, $U(f,P) - L(f,P) < \varepsilon$. Thus, <strong>$f$ is Riemann integrable on $[0,1]$</strong>.
+      </p>
+
+      <h3>Step 4 — Value of the Integral (Part b)</h3>
+      <p>
+        Since both the lower integral ($\underline{\int_0^1} f(x)\,dx = 0$) and upper integral ($\overline{\int_0^1} f(x)\,dx = 0$) coincide:
+      </p>
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> $\displaystyle\int_0^1 f(x)\,dx = 0$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+  <section class="question" id="q3-2">
+    <span class="qtag">QUIZ 3 — Q2</span>
+    <h2 class="qtitle">Area Between Two Curves</h2>
+    <div class="qbody">Find area between $y = x^3$ and $y = 3x^2 - 2x$ for $x \in [0, 2]$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q3-2', this)">Show Solution</button>
+    <div class="sol" id="sol-q3-2">
+      <h3>Solution:</h3>
+      <p>Intersections at $x = 0, 1, 2$. Area $= \int_0^1 (x^3 - 3x^2 + 2x)dx + \int_1^2 (-x^3 + 3x^2 - 2x)dx = \frac{1}{4} + \frac{1}{4} = \frac{1}{2}$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q3-3">
+    <span class="qtag">QUIZ 3 — Q3</span>
+    <h2 class="qtitle">Arc Length, Volume and Surface of $y = x^2$</h2>
+    <div class="qbody">For $y = x^2$ on $[0, 1]$, compute: a) Arc length, b) Volume of revolution about $x$-axis, c) Surface area.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q3-3', this)">Show Solution</button>
+    <div class="sol" id="sol-q3-3">
+      <h3>Solution:</h3>
+      <ul>
+        <li><strong>Arc Length:</strong> $L = \int_0^1 \sqrt{1+4x^2} dx = \frac{2\sqrt{5} + \ln(2+\sqrt{5})}{4} \approx 1.4789$.</li>
+        <li><strong>Volume:</strong> $V = \pi \int_0^1 x^4 dx = \frac{\pi}{5} \approx 0.6283$.</li>
+        <li><strong>Surface Area:</strong> $S = 2\pi \int_0^1 x^2\sqrt{1+4x^2} dx = \frac{\pi}{32}[18\sqrt{5} - \ln(2+\sqrt{5})] \approx 3.8098$. $\blacksquare$</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="question" id="q3-4">
+    <span class="qtag">QUIZ 3 — Q4</span>
+    <h2 class="qtitle">Fundamental Theorem of Calculus in Action</h2>
+    <div class="qbody">Let $f(t) = 1$ on $[0, 1]$ and $2$ on $(1, 2]$. Find $F(x) = \int_0^x f(t) dt$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q3-4', this)">Show Solution</button>
+    <div class="sol" id="sol-q3-4">
+      <h3>Solution:</h3>
+      <p>$F(x) = x$ for $0 \le x \le 1$, and $2x - 1$ for $1 < x \le 2$. $F(x)$ is continuous everywhere on $[0, 2]$, but fails to be differentiable at $x = 1$ due to jump in $f(t)$. $\blacksquare$</p>
+    </div>
+  </section>
+
+  <section class="question" id="q3-5">
+    <span class="qtag">QUIZ 3 — Q5</span>
+    <h2 class="qtitle">Quadratic Polynomial from Integral Conditions</h2>
+    <div class="qbody">Find $P(x) = ax^2 + bx + c$ such that $P(0) = P(1) = 0$ and $\int_0^1 P(x) dx = 1$.</div>
+    <button class="btn-sol" onclick="toggleSol('sol-q3-5', this)">Show Solution</button>
+    <div class="sol" id="sol-q3-5">
+      <h3>Solution:</h3>
+      <p>$P(0) = 0 \implies c = 0$. $P(1) = 0 \implies b = -a \implies P(x) = a(x^2 - x)$.</p>
+      <p>$\int_0^1 a(x^2 - x) dx = a(1/3 - 1/2) = -a/6 = 1 \implies a = -6$.</p>
+      <div class="highlight-box">
+        <strong>Result:</strong> $P(x) = 6x(1 - x) = -6x^2 + 6x$. $\blacksquare$
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  function toggleSol(id, btn) {
+    const el = document.getElementById(id);
+    if (el.style.display === "block") {
+      el.style.display = "none";
+      btn.textContent = "Show Solution";
+      btn.classList.remove("open");
+    } else {
+      el.style.display = "block";
+      btn.textContent = "Hide Solution";
+      btn.classList.add("open");
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([el]);
+      }
+    }
+  }
+
+  function toggleAll() {
+    const sols = document.querySelectorAll('.sol');
+    const btns = document.querySelectorAll('.btn-sol');
+    const allBtn = document.getElementById('allBtn');
+    let anyHidden = false;
+
+    sols.forEach(s => { if (s.style.display !== 'block') anyHidden = true; });
+
+    sols.forEach((s, i) => {
+      if (anyHidden) {
+        s.style.display = 'block';
+        btns[i].textContent = 'Hide Solution';
+        btns[i].classList.add('open');
+      } else {
+        s.style.display = 'none';
+        btns[i].textContent = 'Show Solution';
+        btns[i].classList.remove('open');
+      }
+    });
+
+    if (anyHidden) {
+      allBtn.textContent = 'Hide All Solutions';
+      allBtn.classList.add('open');
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+      }
+    } else {
+      allBtn.textContent = 'Show All Solutions';
+      allBtn.classList.remove('open');
+    }
+  }
+
+  // Draw Riemann spike visualization for Q3-1
+  window.addEventListener('load', function() {
+    const svg = document.getElementById('riemannGraph');
+    if(!svg) return;
+    const L=55, R=490, T=30, B=210;
+    function X(x){ return L + x * (R - L); }
+    function Y(y){ return B - y * (B - T); }
+
+    svg.appendChild(mkNS('line', {x1:L-10, y1:Y(0), x2:R+10, y2:Y(0), stroke:'#aaa', 'stroke-width':1.5}));
+    svg.appendChild(mkNS('line', {x1:X(0), y1:B+10, x2:X(0), y2:T-10, stroke:'#aaa', 'stroke-width':1.5}));
+
+    const spikes = [1, 1/2, 1/3, 1/4, 1/5];
+    spikes.forEach(function(xs){
+      svg.appendChild(mkNS('rect', {x: X(xs-0.015), y: Y(1), width: X(0.03)-X(0), height: Y(0)-Y(1), fill:'#ff69b4', 'fill-opacity':0.35}));
+      svg.appendChild(mkNS('line', {x1:X(xs), y1:Y(0), x2:X(xs), y2:Y(1), stroke:'#ffd400', 'stroke-width':2}));
+      svg.appendChild(mkNS('circle', {cx:X(xs), cy:Y(1), r:3, fill:'#ffd400'}));
+    });
+  });
+
+  function mkNS(n, a){
+    var e = document.createElementNS('http://www.w3.org/2000/svg', n);
+    for(var k in a) e.setAttribute(k, a[k]);
+    return e;
+  }
+</script>
+
+</body>
+</html>
