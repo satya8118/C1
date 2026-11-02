@@ -825,6 +825,52 @@
       </div>
     </div>
   </section>
+  <!-- ==================== MEAN VALUE THEOREM FOR INTEGRALS ==================== -->
+  <section class="question" id="saq30">
+    <span class="qtag">PROBLEM 28</span>
+    <h2 class="qtitle">First Mean Value Theorem for Definite Integrals</h2>
+    <div class="qbody">
+      Let $f: [a, b] \to \mathbb{R}$ be a continuous function.
+      <ol type="a">
+        <li>Prove that there exists at least one point $c \in (a, b)$ such that:
+          $$f(c) = \frac{1}{b - a} \int_a^b f(x) \, dx$$
+        </li>
+        <li>Find the exact value(s) of $c \in (0, 3)$ guaranteed by the theorem for $f(x) = x^2 - x + 1$ on $[0, 3]$.</li>
+      </ol>
+    </div>
+    <button class="btn-sol" onclick="toggleSol('sol-saq30', this)">Show Solution</button>
+    <div class="sol" id="sol-saq30">
+      <h3>Part (a) — Theoretical Proof:</h3>
+      <p><strong>Method 1 (Extreme Value Theorem & IVT):</strong></p>
+      <p>Since $f$ is continuous on the compact interval $[a, b]$, by the Extreme Value Theorem (EVT), $f$ attains an absolute minimum $m$ and an absolute maximum $M$ on $[a, b]$:
+        $$m \le f(x) \le M \quad \forall x \in [a, b]$$
+      Integrating each term across $[a, b]$:
+        $$\int_a^b m \, dx \le \int_a^b f(x) \, dx \le \int_a^b M \, dx \implies m(b - a) \le \int_a^b f(x) \, dx \le M(b - a)$$
+      Dividing by $(b - a) > 0$:
+        $$m \le \frac{1}{b - a} \int_a^b f(x) \, dx \le M$$
+      By the Intermediate Value Theorem (IVT), continuous function $f$ takes every value between its minimum $m$ and maximum $M$. Therefore, there exists $c \in [a, b]$ where $f(c) = \frac{1}{b - a} \int_a^b f(x) \, dx$.
+      </p>
+      <p><strong>Method 2 (Fundamental Theorem of Calculus & Rolle's / MVT):</strong></p>
+      <p>Define $F(x) = \int_a^x f(t) \, dt$ on $[a, b]$. By the Fundamental Theorem of Calculus, $F$ is continuous on $[a, b]$ and differentiable on $(a, b)$ with $F'(x) = f(x)$. Applying Lagrange's Mean Value Theorem to $F(x)$ on $[a, b]$:
+        $$\exists c \in (a, b) \quad \text{such that} \quad F'(c) = \frac{F(b) - F(a)}{b - a} \implies f(c) = \frac{1}{b - a}\int_a^b f(x) \, dx$$
+      </p>
+
+      <h3>Part (b) — Computation for $f(x) = x^2 - x + 1$ on $[0, 3]$:</h3>
+      <p>1. Compute the average value of the integral on $[0, 3]$:</p>
+      $$\frac{1}{3 - 0} \int_0^3 (x^2 - x + 1) \, dx = \frac{1}{3} \left[ \frac{x^3}{3} - \frac{x^2}{2} + x \right]_0^3 = \frac{1}{3} \left( 9 - \frac{9}{2} + 3 \right) = \frac{1}{3} \left( \frac{15}{2} \right) = \frac{5}{2}$$
+
+      <p>2. Equate $f(c) = \frac{5}{2}$ and solve for $c$:</p>
+      $$c^2 - c + 1 = \frac{5}{2} \implies c^2 - c - \frac{3}{2} = 0 \implies 2c^2 - 2c - 3 = 0$$
+      $$c = \frac{2 \pm \sqrt{4 - 4(2)(-3)}}{4} = \frac{2 \pm \sqrt{28}}{4} = \frac{1 \pm \sqrt{7}}{2}$$
+
+      <p>3. Select the root in $(0, 3)$:</p>
+      $$\text{Since } \sqrt{7} \approx 2.6458, \quad c_1 = \frac{1 + \sqrt{7}}{2} \approx 1.823 \in (0, 3), \quad c_2 = \frac{1 - \sqrt{7}}{2} \approx -0.823 \notin (0, 3)$$
+
+      <div class="highlight-box">
+        <strong>Conclusion:</strong> $f(c) = \frac{1}{b-a}\int_a^b f(x)dx$ is proven via IVT/FTC; the guaranteed point in $(0, 3)$ is <strong>$c = \frac{1 + \sqrt{7}}{2} \approx 1.823$</strong>. $\blacksquare$
+      </div>
+    </div>
+  </section>
 
   <!-- ==================== QUIZ-1 MERGED (Q28-Q32) ==================== -->
   <section class="question" id="q1-1">
