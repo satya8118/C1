@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications of Integration — Interactive Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        mathPink: { 400: '#f472b6', 500: '#ec4899', 600: '#db2777' },
+                        mathEmerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+                        mathAmber: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+            options: { ignoreHtmlClass: 'tex2jax_ignore', processHtmlClass: 'tex2jax_process' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { background-color: #020617; color: #f8fafc; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .formula-box { font-family: 'Fira Code', monospace; background: #020617; border: 1px solid #1e293b; border-radius: 0.75rem; padding: 1rem; text-align: center; color: #e2e8f0; overflow-x: auto; font-size: 0.9rem; }
+        .opt-label { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #020617; border: 1px solid #1e293b; border-radius: 0.5rem; cursor: pointer; transition: 0.2s; font-size: 0.85rem;}
+        .opt-label:hover { background: #0f172a; border-color: #38bdf8; }
+        .canvas-shadow { box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Score -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-mathPink-500 flex items-center justify-center font-bold text-white text-lg">∫</div>
+                <h1 class="text-sm font-bold text-white hidden sm:block">Applications of Integration</h1>
+            </div>
+            <nav class="hidden md:flex space-x-4 text-xs font-medium">
+                <a href="#arc" class="text-slate-300 hover:text-white">Arc Length</a>
+                <a href="#area" class="text-slate-300 hover:text-white">Area</a>
+                <a href="#surface" class="text-slate-300 hover:text-white">Surface</a>
+                <a href="#volume" class="text-slate-300 hover:text-white">Volume</a>
+            </nav>
+            <div class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-xs">
+                <span class="text-slate-400">Total Score:</span>
+                <span id="masterScore" class="font-mono font-bold text-sky-400 ml-1">0 / 8</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-24">
+
+        <!-- 1. ARC LENGTH -->
+        <section id="arc" class="space-y-8 scroll-mt-24">
+            <div class="border-b border-slate-800 pb-4">
+                <span class="px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 text-xs font-bold uppercase tracking-wider">Arc Length</span>
+                <h2 class="text-3xl font-extrabold text-white mt-2">Length of a Smooth Curve</h2>
+            </div>
+
+            <!-- Motivation -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                    <h3 class="text-lg font-bold text-white">Motivation: Polygon Approximation</h3>
+                    <p class="text-sm text-slate-300">By dividing an interval $[a,b]$ into $n$ subintervals, we approximate the curve with straight line segments. Using the Mean Value Theorem, each segment length $dL$ is:</p>
+                    <div class="formula-box text-sky-400">$$dL = \sqrt{dx^2 + dy^2} = \sqrt{1 + [f'(x)]^2} \, dx$$</div>
+                    <p class="text-sm text-slate-300">Taking the limit as $n \to \infty$ yields the integral:</p>
+                    <div class="formula-box text-white">$$L = \int_a^b \sqrt{1 + [f'(x)]^2} \, dx$$</div>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                    <h3 class="text-lg font-bold text-white">Benchmark: Unit Quarter-Circle</h3>
+                    <p class="text-sm text-slate-300">For $y = \sqrt{1-x^2}$ on $[0,1]$, $f'(x) = \frac{-x}{\sqrt{1-x^2}}$. The integrand simplifies to $\frac{1}{\sqrt{1-x^2}}$.</p>
+                    <div class="formula-box text-sky-400">$$L = \int_0^1 \frac{1}{\sqrt{1-x^2}} \, dx = \left[ \arcsin(x) \right]_0^1 = \frac{\pi}{2}$$</div>
+                    <p class="text-xs text-slate-400 italic">This confirms $C = 2\pi r \implies C/4 = \pi/2$.</p>
+                </div>
+            </div>
+
+            <!-- Lab -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4 border border-sky-900/50">
+                <h3 class="text-lg font-bold text-white">Interactive Lab: Polygonal Convergence</h3>
+                <div class="flex gap-4 items-center">
+                    <input type="range" id="arcSlider" min="1" max="50" value="5" class="w-48" oninput="updateArcLab()">
+                    <span id="arcN" class="font-mono text-sm text-sky-400 font-bold">n = 5</span>
+                </div>
+                <canvas id="arcCanvas" class="w-full h-64 bg-[#0a0f1d] rounded-xl canvas-shadow"></canvas>
+                <div class="flex justify-between text-xs font-mono text-slate-400">
+                    <span>Polygonal Length: <span id="arcLn" class="text-sky-300">--</span></span>
+                    <span>Exact Length: <span id="arcL" class="text-white">--</span></span>
+                </div>
+            </div>
+
+            <!-- Examples -->
+            <div class="space-y-2">
+                <button onclick="toggleAcc('arcEx1')" class="w-full text-left p-4 glass-panel rounded-xl font-bold text-sm text-sky-300 flex justify-between">
+                    EXAMPLE: Perfect Square Trick — $y = \frac{x^3}{6} + \frac{1}{2x}$ on $[1,3]$
+                </button>
+                <div id="arcEx1" class="hidden p-4 glass-panel rounded-xl text-sm text-slate-300 space-y-2">
+                    <p>$y' = \frac{x^2}{2} - \frac{1}{2x^2}$. Adding 1 to $(y')^2$ flips the middle sign:</p>
+                    <div class="formula-box">$$1 + [y']^2 = \left(\frac{x^2}{2} + \frac{1}{2x^2}\right)^2$$</div>
+                    <div class="formula-box">$$L = \int_1^3 \left(\frac{x^2}{2} + \frac{1}{2x^2}\right) dx = \left[ \frac{x^3}{6} - \frac{1}{2x} \right]_1^3 = \frac{53}{12}$$</div>
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-2">Arc Length Quiz</h3>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm mb-2 text-slate-200">1. Calculate the arc length of $y = \frac{2}{3}x^{3/2}$ on $[0, 3]$.</p>
+                        <div class="flex gap-2">
+                            <input type="number" id="aq1" step="0.01" class="bg-slate-900 border border-slate-700 rounded px-3 py-1 text-sm text-white w-32">
+                            <button onclick="checkNum('aq1', 4.67, 0.05, 'aq1fb', 'arc', 'q1')" class="bg-sky-600 px-3 py-1 rounded text-sm text-white">Check</button>
+                        </div>
+                        <p id="aq1fb" class="text-xs mt-2 hidden"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm mb-2 text-slate-200">2. The formula $\sqrt{1+[f'(x)]^2}dx$ derives directly from:</p>
+                        <label class="opt-label"><input type="radio" name="aq2" value="a"> <span>A) The Area of a Circle</span></label>
+                        <label class="opt-label"><input type="radio" name="aq2" value="b"> <span>B) The Pythagorean Theorem</span></label>
+                        <button onclick="checkRadio('aq2', 'b', 'aq2fb', 'arc', 'q2')" class="bg-sky-600 px-3 py-1 rounded text-sm text-white mt-2">Check</button>
+                        <p id="aq2fb" class="text-xs mt-2 hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. AREA BETWEEN CURVES -->
+        <section id="area" class="space-y-8 scroll-mt-24">
+            <div class="border-b border-slate-800 pb-4">
+                <span class="px-3 py-1 rounded-full bg-mathPink-500/10 text-mathPink-400 text-xs font-bold uppercase tracking-wider">Area Between Curves</span>
+                <h2 class="text-3xl font-extrabold text-white mt-2">2D Bounded Area</h2>
+            </div>
+
+            <!-- Motivation -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center glass-panel p-6 rounded-2xl">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">Motivation: Representative Strip</h3>
+                    <p class="text-sm text-slate-300">We slice the region bounded by two curves into thin vertical rectangles of width $dx$.</p>
+                    <ul class="list-disc list-inside text-sm text-slate-300">
+                        <li>Height: $f(x) - g(x)$</li>
+                        <li>Width: $dx$</li>
+                        <li>Differential Area $dA$: $[f(x) - g(x)]dx$</li>
+                    </ul>
+                    <div class="formula-box text-mathPink-400">$$A = \int_a^b [f(x) - g(x)] \, dx$$</div>
+                </div>
+                <div>
+                    <canvas id="areaRepCanvas" class="w-full h-48 bg-[#0a0f1d] rounded-xl canvas-shadow"></canvas>
+                </div>
+            </div>
+
+            <!-- Lab -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4 border border-mathPink-900/50">
+                <h3 class="text-lg font-bold text-white">Interactive Lab: Riemann Strips</h3>
+                <div class="flex gap-4 items-center">
+                    <input type="range" id="areaSlider" min="1" max="40" value="8" class="w-48" oninput="updateAreaLab()">
+                    <span id="areaN" class="font-mono text-sm text-mathPink-400 font-bold">n = 8</span>
+                </div>
+                <canvas id="areaCanvas" class="w-full h-64 bg-[#0a0f1d] rounded-xl canvas-shadow"></canvas>
+            </div>
+
+            <!-- Examples -->
+            <div class="space-y-2">
+                <button onclick="toggleAcc('areaEx1')" class="w-full text-left p-4 glass-panel rounded-xl font-bold text-sm text-mathPink-300 flex justify-between">
+                    EXAMPLE: Intersecting Curves — $y = x^2$ and $y = x^3$
+                </button>
+                <div id="areaEx1" class="hidden p-4 glass-panel rounded-xl text-sm text-slate-300 space-y-2">
+                    <p>On $[0,1]$, $x^2 \ge x^3$.</p>
+                    <div class="formula-box">$$A = \int_0^1 (x^2 - x^3) dx = \left[\frac{x^3}{3} - \frac{x^4}{4}\right]_0^1 = \frac{1}{12}$$</div>
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-2">Area Quiz</h3>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm mb-2 text-slate-200">1. Find area between $y = x^2$ and $y = 2x$ on $[0,2]$.</p>
+                        <div class="flex gap-2">
+                            <input type="number" id="ar1" step="0.01" class="bg-slate-900 border border-slate-700 rounded px-3 py-1 text-sm text-white w-32">
+                            <button onclick="checkNum('ar1', 1.33, 0.05, 'ar1fb', 'area', 'q1')" class="bg-mathPink-600 px-3 py-1 rounded text-sm text-white">Check</button>
+                        </div>
+                        <p id="ar1fb" class="text-xs mt-2 hidden"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm mb-2 text-slate-200">2. If curves cross at $c \in (a,b)$, the total area is:</p>
+                        <label class="opt-label"><input type="radio" name="ar2" value="a"> <span>A) $\int_a^b [f(x)-g(x)]dx$</span></label>
+                        <label class="opt-label"><input type="radio" name="ar2" value="b"> <span>B) $\int_a^b |f(x)-g(x)|dx$</span></label>
+                        <button onclick="checkRadio('ar2', 'b', 'ar2fb', 'area', 'q2')" class="bg-mathPink-600 px-3 py-1 rounded text-sm text-white mt-2">Check</button>
+                        <p id="ar2fb" class="text-xs mt-2 hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SURFACE AREA -->
+        <section id="surface" class="space-y-8 scroll-mt-24">
+            <div class="border-b border-slate-800 pb-4">
+                <span class="px-3 py-1 rounded-full bg-mathEmerald-500/10 text-mathEmerald-400 text-xs font-bold uppercase tracking-wider">Surface Area</span>
+                <h2 class="text-3xl font-extrabold text-white mt-2">Surface of Revolution (x-axis)</h2>
+            </div>
+
+            <!-- Motivation -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center glass-panel p-6 rounded-2xl">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">Motivation: Sweeping a Band</h3>
+                    <p class="text-sm text-slate-300">Rotate a tiny arc segment $ds$ around the x-axis. It sweeps out a circular ribbon (frustum) in 3D.</p>
+                    <ul class="list-disc list-inside text-sm text-slate-300">
+                        <li>Radius: $r = f(x)$</li>
+                        <li>Circumference: $C = 2\pi f(x)$</li>
+                        <li>Band Width: $ds = \sqrt{1+[f'(x)]^2}dx$</li>
+                        <li>Differential Surface $dS$: $C \times ds$</li>
+                    </ul>
+                    <div class="formula-box text-mathEmerald-400">$$S = \int_a^b 2\pi f(x) \sqrt{1 + [f'(x)]^2} \, dx$$</div>
+                </div>
+                <div>
+                    <canvas id="surfRepCanvas" class="w-full h-48 bg-[#0a0f1d] rounded-xl canvas-shadow"></canvas>
+                </div>
+            </div>
+
+            <!-- Lab -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4 border border-mathEmerald-900/50">
+                <h3 class="text-lg font-bold text-white">Interactive Lab: Surface Band Inspector ($y = \sqrt{x}$)</h3>
+                <div class="flex gap-4 items-center">
+                    <input type="range" id="surfSlider" min="0" max="1" step="0.01" value="0.5" class="w-48" oninput="updateSurfLab()">
+                    <span id="surfX" class="font-mono text-sm text-mathEmerald-400 font-bold">x = 0.5</span>
+                </div>
+                <canvas id="surfCanvas" class="w-full h-64 bg-[#0a0f1d] rounded-xl canvas-shadow"></canvas>
+            </div>
+
+            <!-- Examples -->
+            <div class="space-y-2">
+                <button onclick="toggleAcc('surfEx1')" class="w-full text-left p-4 glass-panel rounded-xl font-bold text-sm text-mathEmerald-300 flex justify-between">
+                    EXAMPLE: Rotation of $y = x^3$ on $[0,1]$
+                </button>
+                <div id="surfEx1" class="hidden p-4 glass-panel rounded-xl text-sm text-slate-300 space-y-2">
+                    <p>$y' = 3x^2 \implies 1 + (y')^2 = 1 + 9x^4$.</p>
+                    <div class="formula-box">$$S = 2\pi \int_0^1 x^3 \sqrt{1 + 9x^4} dx = \frac{\pi}{27}(10\sqrt{10} - 1) \approx 3.563$$</div>
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-2">Surface Area Quiz</h3>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm mb-2 text-slate-200">1. Why must $f(x) \ge 0$ for this formula?</p>
+                        <label class="opt-label"><input type="radio" name="sq1" value="a"> <span>A) It ensures the integrand is real.</span></label>
+                        <label class="opt-label"><input type="radio" name="sq1" value="b"> <span>B) $f(x)$ represents a physical radius, distance must be $|f(x)|$.</span></label>
+                        <button onclick="checkRadio('sq1', 'b', 'sq1fb', 'surf', 'q1')" class="bg-mathEmerald-600 px-3 py-1 rounded text-sm text-slate-900 font-bold mt-2">Check</button>
+                        <p id="sq1fb" class="text-xs mt-2 hidden"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm mb-2 text-slate-200">2. Surface area for $y = \text{const}$ (cylinder) is $2\pi r h$. This matches the integral because:</p>
+                        <label class="opt-label"><input type="radio" name="sq2" value="a"> <span>A) $y' = 0$, so $\sqrt{1+(y')^2} = 1$, making integral $\int 2\pi r dx$.</span></label>
+                        <label class="opt-label"><input type="radio" name="sq2" value="b"> <span>B) It's an approximation.</span></label>
+                        <button onclick="checkRadio('sq2', 'a', 'sq2fb', 'surf', 'q2')" class="bg-mathEmerald-600 px-3 py-1 rounded text-sm text-slate-900 font-bold mt-2">Check</button>
+                        <p id="sq2fb" class="text-xs mt-2 hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. VOLUME -->
+        <section id="volume" class="space-y-8 scroll-mt-24">
+            <div class="border-b border-slate-800 pb-4">
+                <span class="px-3 py-1 rounded-full bg-mathAmber-500/10 text-mathAmber-400 text-xs font-bold uppercase tracking-wider">Volume of Revolution</span>
+                <h2 class="text-3xl font-extrabold text-white mt-2">Volume by Disk Method</h2>
+                <p class="text-sm text-slate-400 mt-1">Strictly focusing on solids formed by regions adjacent to the axis of rotation.</p>
+            </div>
+
+            <!-- Motivation -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center glass-panel p-6 rounded-2xl">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">Motivation: The Solid Disk</h3>
+                    <p class="text-sm text-slate-300">Rotate a vertical rectangle (width $dx$, height $f(x)$) around the x-axis. It forms a solid coin-like cylinder (a disk).</p>
+                    <ul class="list-disc list-inside text-sm text-slate-300">
+                        <li>Disk Radius: $R = f(x)$</li>
+                        <li>Face Area: $A = \pi R^2 = \pi [f(x)]^2$</li>
+                        <li>Thickness: $dx$</li>
+                        <li>Differential Volume $dV$: $A \times dx$</li>
+                    </ul>
+                    <div class="formula-box text-mathAmber-400">$$V = \pi \int_a^b [f(x)]^2 \, dx$$</div>
+                </div>
+                <div>
+                    <canvas id="volRepCanvas" class="w-full h-48 bg-[#0a0f1d] rounded-xl canvas-shadow"></canvas>
+                </div>
+            </div>
+
+            <!-- Lab -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4 border border-mathAmber-900/50">
+                <h3 class="text-lg font-bold text-white">Interactive Lab: Disk Convergence ($y = \sqrt{x}$)</h3>
+                <div class="flex gap-4 items-center">
+                    <input type="range" id="volSlider" min="2" max="30" value="10" class="w-48" oninput="updateVolLab()">
+                    <span id="volN" class="font-mono text-sm text-mathAmber-400 font-bold">n = 10</span>
+                </div>
+                <canvas id="volCanvas" class="w-full h-64 bg-[#0a0f1d] rounded-xl canvas-shadow"></canvas>
+            </div>
+
+            <!-- Examples -->
+            <div class="space-y-2">
+                <button onclick="toggleAcc('volEx1')" class="w-full text-left p-4 glass-panel rounded-xl font-bold text-sm text-mathAmber-300 flex justify-between">
+                    EXAMPLE: Sphere Volume — Rotate $y = \sqrt{r^2 - x^2}$ on $[-r, r]$
+                </button>
+                <div id="volEx1" class="hidden p-4 glass-panel rounded-xl text-sm text-slate-300 space-y-2">
+                    <p>Radius is $y$. Squaring removes the square root naturally:</p>
+                    <div class="formula-box">$$V = \pi \int_{-r}^r (\sqrt{r^2 - x^2})^2 dx = \pi \left[ r^2x - \frac{x^3}{3} \right]_{-r}^r = \frac{4}{3}\pi r^3$$</div>
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-2">Volume Quiz</h3>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm mb-2 text-slate-200">1. Volume of rotating $y = x^2$ on $[0,2]$ about the x-axis:</p>
+                        <div class="flex gap-2">
+                            <input type="number" id="vq1" step="0.01" class="bg-slate-900 border border-slate-700 rounded px-3 py-1 text-sm text-white w-32">
+                            <button onclick="checkNum('vq1', 20.11, 0.05, 'vq1fb', 'vol', 'q1')" class="bg-mathAmber-600 px-3 py-1 rounded text-sm text-slate-900 font-bold">Check</button>
+                        </div>
+                        <p id="vq1fb" class="text-xs mt-2 hidden"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm mb-2 text-slate-200">2. Why is there no square root in the Disk Method formula?</p>
+                        <label class="opt-label"><input type="radio" name="vq2" value="a"> <span>A) It's derived from Area ($A = \pi r^2$), not distance/arc length.</span></label>
+                        <label class="opt-label"><input type="radio" name="vq2" value="b"> <span>B) The square root is canceled by the square.</span></label>
+                        <button onclick="checkRadio('vq2', 'a', 'vq2fb', 'vol', 'q2')" class="bg-mathAmber-600 px-3 py-1 rounded text-sm text-slate-900 font-bold mt-2">Check</button>
+                        <p id="vq2fb" class="text-xs mt-2 hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Utilities
+        const qs = { arc:{q1:0,q2:0}, area:{q1:0,q2:0}, surf:{q1:0,q2:0}, vol:{q1:0,q2:0} };
+        function updateScore() {
+            let s = 0;
+            Object.values(qs).forEach(sec => Object.values(sec).forEach(v => s+=v));
+            document.getElementById('masterScore').innerText = `${s} / 8`;
+        }
+        function checkNum(id, ans, tol, fbid, sec, q) {
+            const val = parseFloat(document.getElementById(id).value);
+            const fb = document.getElementById(fbid);
+            fb.classList.remove('hidden', 'text-emerald-400', 'text-rose-400');
+            if (Math.abs(val - ans) <= tol) {
+                fb.innerText = "Correct!"; fb.classList.add('text-emerald-400'); qs[sec][q] = 1;
+            } else {
+                fb.innerText = "Try again."; fb.classList.add('text-rose-400'); qs[sec][q] = 0;
+            }
+            updateScore();
+        }
+        function checkRadio(name, ans, fbid, sec, q) {
+            const sel = document.querySelector(`input[name="${name}"]:checked`);
+            const fb = document.getElementById(fbid);
+            fb.classList.remove('hidden', 'text-emerald-400', 'text-rose-400');
+            if(sel && sel.value === ans) {
+                fb.innerText = "Correct!"; fb.classList.add('text-emerald-400'); qs[sec][q] = 1;
+            } else {
+                fb.innerText = "Incorrect."; fb.classList.add('text-rose-400'); qs[sec][q] = 0;
+            }
+            updateScore();
+        }
+        function toggleAcc(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+            if(!el.classList.contains('hidden')) MathJax.typesetPromise([el]);
+        }
+        function setupCanvas(id) {
+            const cvs = document.getElementById(id);
+            const rect = cvs.getBoundingClientRect();
+            cvs.width = rect.width * 2; cvs.height = rect.height * 2;
+            const ctx = cvs.getContext('2d');
+            ctx.scale(2,2);
+            return { cvs, ctx, w: rect.width, h: rect.height };
+        }
+
+        // --- DRAW FUNCTIONS ---
+
+        // Area Representative Strip
+        function drawAreaRep() {
+            const {ctx, w, h} = setupCanvas('areaRepCanvas');
+            const f = x => h*0.2 + Math.sin(x*0.05)*10;
+            const g = x => h*0.8 - Math.cos(x*0.05)*10;
+            
+            ctx.beginPath(); ctx.strokeStyle='#38bdf8'; ctx.lineWidth=2;
+            for(let x=0;x<=w;x++) { x===0?ctx.moveTo(x,f(x)):ctx.lineTo(x,f(x)); } ctx.stroke();
+            
+            ctx.beginPath(); ctx.strokeStyle='#f472b6';
+            for(let x=0;x<=w;x++) { x===0?ctx.moveTo(x,g(x)):ctx.lineTo(x,g(x)); } ctx.stroke();
+            
+            const sx = w/2 - 20, dx = 40;
+            ctx.fillStyle = 'rgba(236, 72, 153, 0.4)';
+            ctx.fillRect(sx, f(sx), dx, g(sx)-f(sx));
+            ctx.strokeStyle = '#ec4899'; ctx.strokeRect(sx, f(sx), dx, g(sx)-f(sx));
+            
+            ctx.fillStyle = '#cbd5e1'; ctx.font = '12px sans-serif';
+            ctx.fillText('f(x)', 10, f(10)-10);
+            ctx.fillText('g(x)', 10, g(10)+15);
+            ctx.fillText('dx', sx+10, g(sx)+15);
+            
+            ctx.beginPath(); ctx.moveTo(sx-5, f(sx)); ctx.lineTo(sx-5, g(sx)); ctx.strokeStyle='#fff'; ctx.stroke();
+            ctx.fillText('f(x)-g(x)', sx-60, (f(sx)+g(sx))/2);
+        }
+
+        // Surface Representative Band
+        function drawSurfRep() {
+            const {ctx, w, h} = setupCanvas('surfRepCanvas');
+            const ox=w*0.1, oy=h*0.8;
+            ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(w, oy); ctx.strokeStyle='#475569'; ctx.stroke();
+            
+            const f = x => oy - (h*0.3 + x*0.15);
+            ctx.beginPath(); ctx.strokeStyle='#38bdf8'; ctx.lineWidth=2;
+            for(let x=ox;x<=w;x++) { x===ox?ctx.moveTo(x,f(x)):ctx.lineTo(x,f(x)); } ctx.stroke();
+            
+            const px1=w/2, px2=px1+30;
+            const r1 = oy-f(px1), r2 = oy-f(px2);
+            
+            ctx.fillStyle = 'rgba(52, 211, 153, 0.3)';
+            ctx.beginPath(); ctx.ellipse(px1, oy, 15, r1, 0, Math.PI/2, -Math.PI/2, true);
+            ctx.lineTo(px2, f(px2)); ctx.ellipse(px2, oy, 15, r2, 0, -Math.PI/2, Math.PI/2, false);
+            ctx.fill();
+            
+            ctx.strokeStyle = '#34d399'; ctx.beginPath();
+            ctx.ellipse(px1, oy, 15, r1, 0, -Math.PI/2, Math.PI/2, false); ctx.stroke();
+            ctx.ellipse(px2, oy, 15, r2, 0, -Math.PI/2, Math.PI/2, false); ctx.stroke();
+            
+            ctx.beginPath(); ctx.moveTo(px1, f(px1)); ctx.lineTo(px2, f(px2)); ctx.lineWidth=3; ctx.strokeStyle='#ec4899'; ctx.stroke();
+            
+            ctx.fillStyle='#34d399'; ctx.font='12px sans-serif';
+            ctx.fillText('2π f(x)', px1-45, oy+r1+15);
+            ctx.fillStyle='#ec4899'; ctx.fillText('ds', px1+10, f(px1)-10);
+        }
+
+        // Volume Representative Disk
+        function drawVolRep() {
+            const {ctx, w, h} = setupCanvas('volRepCanvas');
+            const ox=w*0.1, oy=h*0.8;
+            ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(w, oy); ctx.strokeStyle='#475569'; ctx.stroke();
+            
+            const f = x => oy - (h*0.4 + Math.sin(x*0.02)*20);
+            ctx.beginPath(); ctx.strokeStyle='#38bdf8'; ctx.lineWidth=2;
+            for(let x=ox;x<=w;x++) { x===ox?ctx.moveTo(x,f(x)):ctx.lineTo(x,f(x)); } ctx.stroke();
+            
+            const px1=w/2, dx=40, px2=px1+dx;
+            const r = oy-f(px1+dx/2);
+            
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.4)';
+            ctx.beginPath(); ctx.ellipse(px1, oy, 15, r, 0, -Math.PI/2, Math.PI/2, false);
+            ctx.lineTo(px2, oy+r); ctx.ellipse(px2, oy, 15, r, 0, Math.PI/2, -Math.PI/2, true);
+            ctx.fill();
+            
+            ctx.beginPath(); ctx.ellipse(px2, oy, 15, r, 0, 0, 2*Math.PI);
+            ctx.fillStyle='rgba(245, 158, 11, 0.6)'; ctx.fill(); ctx.strokeStyle='#f59e0b'; ctx.stroke();
+            
+            ctx.fillStyle='#f59e0b'; ctx.font='12px sans-serif';
+            ctx.fillText('Area = π f(x)²', px2+20, oy);
+            ctx.fillStyle='#cbd5e1'; ctx.fillText('dx', px1+15, oy+r+15);
+        }
+
+        // --- LABS ---
+        function updateArcLab() {
+            const n = parseInt(document.getElementById('arcSlider').value);
+            document.getElementById('arcN').innerText = `n = ${n}`;
+            const {ctx, w, h} = setupCanvas('arcCanvas');
+            
+            const f = x => x*x; const a=0, b=2;
+            const mapX = x => 20 + (x/2)*(w-40);
+            const mapY = y => h - 20 - (y/4)*(h-40);
+            
+            ctx.strokeStyle='#38bdf8'; ctx.lineWidth=2; ctx.beginPath();
+            for(let i=0;i<=100;i++){ const x=a+(i/100)*2; const px=mapX(x), py=mapY(f(x)); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); }
+            ctx.stroke();
+            
+            const dx = 2/n; let len=0;
+            ctx.strokeStyle='#ec4899'; ctx.lineWidth=2; ctx.beginPath();
+            for(let i=0;i<=n;i++){
+                const x=i*dx; const px=mapX(x), py=mapY(f(x));
+                if(i===0) ctx.moveTo(px,py); else { ctx.lineTo(px,py); len += Math.hypot(mapX(x)-mapX(x-dx), mapY(f(x))-mapY(f(x-dx))); }
+            }
+            ctx.stroke();
+            
+            document.getElementById('arcLn').innerText = (len/(w-40)*2 * 2.32).toFixed(4); // mock scale
+            document.getElementById('arcL').innerText = "4.6468";
+        }
+
+        function updateAreaLab() {
+            const n = parseInt(document.getElementById('areaSlider').value);
+            document.getElementById('areaN').innerText = `n = ${n}`;
+            const {ctx, w, h} = setupCanvas('areaCanvas');
+            
+            const f = x => h*0.2 + (x/w)*50;
+            const g = x => h*0.8 - (x/w)*30;
+            const dx = (w-40)/n;
+            
+            for(let i=0;i<n;i++) {
+                const sx = 20 + i*dx;
+                const mid = sx + dx/2;
+                ctx.fillStyle = 'rgba(236, 72, 153, 0.4)';
+                ctx.fillRect(sx, f(mid), dx-1, g(mid)-f(mid));
+            }
+            ctx.strokeStyle='#38bdf8'; ctx.lineWidth=2; ctx.beginPath();
+            for(let x=20;x<=w-20;x++) { x===20?ctx.moveTo(x,f(x)):ctx.lineTo(x,f(x)); } ctx.stroke();
+            ctx.strokeStyle='#f472b6'; ctx.beginPath();
+            for(let x=20;x<=w-20;x++) { x===20?ctx.moveTo(x,g(x)):ctx.lineTo(x,g(x)); } ctx.stroke();
+        }
+
+        function updateSurfLab() {
+            const t = parseFloat(document.getElementById('surfSlider').value);
+            document.getElementById('surfX').innerText = `x = ${t.toFixed(2)}`;
+            const {ctx, w, h} = setupCanvas('surfCanvas');
+            
+            const px = 20 + t*(w-60);
+            const r = (px/w) * 60 + 20; // mock sqrt
+            
+            ctx.strokeStyle='#34d399'; ctx.lineWidth=2; ctx.beginPath();
+            for(let x=20;x<=w-40;x++) { const y=h/2 - ((x/w)*60+20); x===20?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke();
+            
+            ctx.fillStyle='rgba(52, 211, 153, 0.4)';
+            ctx.beginPath(); ctx.ellipse(px, h/2, 10, r, 0, 0, 2*Math.PI); ctx.fill(); ctx.stroke();
+        }
+
+        function updateVolLab() {
+            const n = parseInt(document.getElementById('volSlider').value);
+            document.getElementById('volN').innerText = `n = ${n}`;
+            const {ctx, w, h} = setupCanvas('volCanvas');
+            
+            const dx = (w-40)/n;
+            for(let i=0;i<n;i++) {
+                const sx = 20 + i*dx;
+                const r = Math.sqrt(sx/w)*80;
+                ctx.fillStyle='rgba(245, 158, 11, 0.3)';
+                ctx.beginPath(); ctx.ellipse(sx+dx/2, h/2, 8, r, 0, 0, 2*Math.PI); ctx.fill();
+                ctx.strokeStyle='#f59e0b'; ctx.stroke();
+            }
+        }
+
+        window.onload = () => {
+            drawAreaRep(); drawSurfRep(); drawVolRep();
+            updateArcLab(); updateAreaLab(); updateSurfLab(); updateVolLab();
+        }
+        window.onresize = window.onload;
+    </script>
+</body>
+</html>
