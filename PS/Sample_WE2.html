@@ -349,6 +349,70 @@
   The original hypothesis excludes the zero function and fixes the value
   of the base $a$.
 </p>
+  <p>
+  <strong>An alternative approach using logarithms:</strong>
+  As shown above, either $f\equiv0$, or $f(x)>0$ for every real $x$.
+  In the latter case, define
+  $$g(x)=\log f(x).$$
+  Then $g$ is continuous and
+  $$g(x+y)=\log(f(x)f(y))=g(x)+g(y).$$
+  We now prove that $g(x)=cx$, where $c=g(1)$.
+</p>
+
+<ol>
+  <li>
+    Taking $x=y=0$ gives $g(0)=0$.
+    Also,
+    $$g(x)+g(-x)=g(0)=0,$$
+    so $g(-x)=-g(x)$.
+    Repeated addition therefore gives
+    $$g(m)=mc\qquad(m\in\mathbb{Z}).$$
+  </li>
+
+  <li>
+    For $q=m/n$, where $m\in\mathbb{Z}$ and $n\in\mathbb{N}$,
+    $$n\,g(q)=g(nq)=g(m)=mc.$$
+    Hence $g(q)=cq$ for every rational $q$.
+  </li>
+
+  <li>
+    For any real $x$, choose rational numbers $q_k\to x$.
+    By continuity,
+    $$g(x)=\lim_{k\to\infty}g(q_k)
+          =\lim_{k\to\infty}cq_k=cx.$$
+    Consequently,
+    $$f(x)=e^{g(x)}=e^{cx}.$$
+    Under the original hypothesis, $c=\log a$, so $f(x)=a^x$.
+  </li>
+</ol>
+
+<p>
+  <strong>A further alternative: integration followed by differentiation.</strong>
+  This method uses the Fundamental Theorem of Calculus.
+  Suppose again that $f$ is not the zero function, so $f$ is strictly
+  positive and $f(0)=1$. Set
+  $$C=\int_0^1 f(t)\,dt>0.$$
+  Integrating the functional equation with respect to $t$ gives
+  $$C f(x)=\int_0^1 f(x+t)\,dt
+          =\int_x^{x+1}f(u)\,du.$$
+  Since $f$ is continuous, the right-hand side is differentiable.
+  Thus $f$ itself is differentiable, and
+  $$C f'(x)=f(x+1)-f(x)
+           =(f(1)-1)f(x).$$
+  Writing
+  $$c=\frac{f(1)-1}{C},$$
+  we obtain $f'(x)=cf(x)$. Therefore,
+  $$\frac{d}{dx}\left(e^{-cx}f(x)\right)=0.$$
+  Hence $e^{-cx}f(x)$ is constant. Its value at $x=0$ is $1$, so
+  $$f(x)=e^{cx}.$$
+</p>
+
+<p>
+  Both approaches yield the same complete classification:
+  $$\boxed{f(x)\equiv0
+    \quad\text{or}\quad
+    f(x)=e^{cx}\ \text{for some }c\in\mathbb{R}.}$$
+</p>
         
         $\blacksquare$
       </div>
