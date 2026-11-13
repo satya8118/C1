@@ -293,7 +293,64 @@
         </li>
       </ol>
       <div class="highlight-box">
-        <strong>Conclusion:</strong> The unique continuous solution is <strong>$f(x) = a^x$</strong>. $\blacksquare$
+        <strong>Conclusion:</strong> The unique continuous solution is <strong>$f(x) = a^x$</strong>. 
+        <p>
+  <strong>Further comments:</strong>
+  In fact, we can remove the hypothesis $f(1)=a>0$ and determine
+  all continuous solutions of the functional equation.
+  The zero function is also a solution.
+</p>
+
+<ol>
+  <li>
+    Putting $x=y=0$, we obtain $f(0)=f(0)^2$.
+    Hence $f(0)=0$ or $f(0)=1$.
+    If $f(0)=0$, then
+    $$f(x)=f(x+0)=f(x)f(0)=0$$
+    for every $x\in\mathbb{R}$. Thus $f\equiv0$.
+  </li>
+
+  <li>
+    Suppose $f(0)=1$. Since
+    $$f(x)f(-x)=f(0)=1,$$
+    we have $f(x)\ne0$ for every $x$. Moreover,
+    $$f(x)=f\left(\frac{x}{2}\right)^2>0.$$
+    Thus $a:=f(1)>0$ follows automatically.
+  </li>
+
+  <li>
+    Repeated application of the functional equation gives
+    $f(n)=a^n$ for positive integers $n$.
+    Together with $f(0)=1$ and $f(-n)=1/f(n)$, this yields
+    $$f(m)=a^m\qquad\text{for every }m\in\mathbb{Z}.$$
+  </li>
+
+  <li>
+    For $q=m/n$, where $m\in\mathbb{Z}$ and $n\in\mathbb{N}$,
+    $$f(q)^n=f(nq)=f(m)=a^m.$$
+    Since $f(q)>0$, taking the unique positive $n$th root gives
+    $$f(q)=a^{m/n}=a^q.$$
+  </li>
+
+  <li>
+    For any real $x$, choose a sequence of rational numbers $q_k\to x$.
+    Continuity then gives
+    $$f(x)=\lim_{k\to\infty}f(q_k)
+          =\lim_{k\to\infty}a^{q_k}=a^x.$$
+  </li>
+</ol>
+
+<p>
+  Therefore, without the hypothesis on $f(1)$, all continuous solutions are
+  $$\boxed{f(x)\equiv0
+    \quad\text{or}\quad
+    f(x)=a^x\ \text{for some }a>0.}$$
+  Conversely, each of these functions satisfies the required conditions.
+  The original hypothesis excludes the zero function and fixes the value
+  of the base $a$.
+</p>
+        
+        $\blacksquare$
       </div>
     </div>
   </section>
