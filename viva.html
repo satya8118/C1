@@ -142,6 +142,19 @@ footer{text-align:center; color:var(--ink-soft); font-size:12.5px; padding:30px 
 #toolbar, .qcard input[type=checkbox]{display:none}
 .interactive #toolbar{display:block}
 .interactive .qcard input[type=checkbox]{display:block}
+
+/* Keep the question list reachable on narrow or short screens. */
+@media screen and (max-width: 760px), screen and (max-height: 600px) {
+  #toolbar { position: static; padding: 10px 12px; margin-bottom: 12px; }
+  .chip-row { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; }
+  .chip-row .chip { flex: 0 0 auto; }
+  .toolbar-bottom { margin-top: 6px; }
+}
+@media screen and (max-width: 480px) {
+  .wrap { padding: 0 12px; }
+  .qcard { padding: 12px; gap: 9px; }
+  .qtext svg { max-width: 100%; }
+}
 </style>
 </head>
 <body>
